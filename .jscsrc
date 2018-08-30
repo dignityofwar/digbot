@@ -1,0 +1,20 @@
+{
+    "preset": "google",
+    "fileExtensions": [".js", "jscs"],
+    "maximumLineLength": null,
+    "requireSemicolons": true,
+    "validateIndentation": 4,
+    "disallowUnusedParams": true,
+    "jsDoc": {
+       "checkAnnotations": "closurecompiler",
+       "checkParamNames": true,
+       "requireParamTypes": true,
+       "checkRedundantParams": true,
+       "checkReturnTypes": true,
+       "checkRedundantReturns": true,
+       "requireReturnTypes": true,
+       "checkTypes": "capitalizedNativeCase",
+       "checkRedundantAccess": true,
+       "requireNewlineAfterDescription": true
+   }
+}

@@ -1,0 +1,14 @@
+# Copyright © 2018 DIG Development team. All rights reserved.
+
+version: '3'
+services:
+    node:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - ./:/var/project
+        entrypoint: /usr/local/bin/run.sh
+        ports:
+            - "1337:1337"
+        restart: always

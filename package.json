@@ -1,0 +1,39 @@
+{
+  "name": "digbot",
+  "version": "1.0.0",
+  "description": "- Nodejs 6.x\r - npm: discord.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://JamesLongman@github.com/JamesLongman/DIGBot.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JamesLongman/DIGBot/issues"
+  },
+  "homepage": "https://github.com/JamesLongman/DIGBot#readme",
+  "dependencies": {
+    "cli-color": "^1.1.0",
+    "discord.js": "11.0.0",
+    "googleapis": "^16.1.0",
+    "erlpack": "hammerandchisel/erlpack#master",
+    "ipaddr.js": "^1.2.0",
+    "node-opus": "^0.2.4",
+    "opusscript": "0.0.1",
+    "request": "^2.79.0",
+    "restify": "^4.1.1",
+    "usage": "^0.7",
+    "ytdl-core": "^0.7.24"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.5.0",
+    "mocha": "^3.2.0",
+    "sinon": "^1.17.6",
+    "sinon-stub-promise": "^4.0.0"
+  }
+}

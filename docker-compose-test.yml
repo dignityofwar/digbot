@@ -1,0 +1,13 @@
+# Copyright © 2018 DIG Development team. All rights reserved.
+
+version: '3'
+services:
+    nodetest:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - ./:/var/project:Z
+        command: /usr/local/bin/test.sh
+        ports:
+            - "1337:1337" # Run locally on the jenkins server, there shouldn't be anything on that port
