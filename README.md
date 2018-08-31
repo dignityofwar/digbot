@@ -15,6 +15,84 @@ Language: Node.js
 Deployment: Docker  
 Discord API handler: discord.js  
 
+## Features
+
+### Command List
+#### !Admin
+Send user a list of admin commands if they have access to them
+
+#### !Catfacts
+Posts a random cat fact
+
+#### !Cats
+Replies with a picture or gif of a cat depending on the request
+
+#### !dragons
+Adds a discord role to the requester giving them access to an otherwise hidden channel
+
+#### !lmgtfy
+(Let me google that for you), replies with a somewhat commical google search link
+
+#### !mentions
+Allows a user to check the number of mentions they are allowed to use
+
+#### !ping:
+Used to check the bot's responsiveness, replies with user message to bot reply ping time
+
+#### !play:
+Used to stream audio into voice channels from youtube videos
+
+#### !poll:
+Holds short surveys which users can vote in
+
+#### !positions
+Sends admin a list of all channels on the server and their associated position veraibles
+
+#### !ps2digfeedback
+Replies with a link where users can give feedback to leaders in planetside
+
+#### !restart
+Manually restarts the bot
+
+#### !roles
+Send admin a list of all roles on the server and their associated IDs
+
+#### !sfx
+Plays sounds effects in voice channels
+
+#### !started
+Show the user the time period for which the bot has been continously running
+
+### !stats
+Posts bot statistics
+
+#### !vote
+Used to vote in !poll surveys
+
+### Admin functionality
+
+#### Anti Spam
+DIGBot has anti spam admin mechanics. It is capable of recognising and taking steps to prevent spam in several sittuations, such as:
+- When users attempt to spam command requests to the bot
+- If a user attempts to use commands outside of designated channels
+- When users make use of mentions to liberally, especially when they are sending notifications to group tags and not individuals
+- When a user is posting links to a twitch stream outside of a designated channel
+
+### Automated functions
+
+#### Channel auto-delete
+DIGBot is capable of creating temporary voice or text channels for users. The bot frequently checks these channels to make sure they're still in use and deletes them when they're no longer required
+
+#### Channel position enforcement
+A frequent problem on servers where many people have permissions to move channels is users will often accidently move the order of channels they are attempting to join into. DIGBot reacts when this happens to enfore the correct ordering of channels
+
+#### Events
+DIGBot is capable of reacting when events are scheduled to remind people of their occurence
+
+#### Modular Channel System (MCS)
+Some channels the community would prefer to always have a free version of. This is the case for channels such as dedicated voice channels for certain games, for example if a member joins a voice channel for a game such as planetside DIGBot will react by creating a second voice channel for that game so there is still a free channel. Everytime a modular channel become populated or empty, DIGBot will respond by creating or deleting a channel as needed
+
+
 ## Development
 
 ### Contributing
