@@ -5,3 +5,4 @@ docker/db
 !docker/db/.gitkeep
 config/development/*
 config/envConfig.js
+/.idea
