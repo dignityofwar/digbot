@@ -1,42 +1,25 @@
-If you need help ask in the dev channel in the DIG discord. Please note this readme requires updating and information may be outdated.
+If you need help ask in the dev channel in the DIG discord.
+
+# Setup procedure
+To give a basic setup procedure:
+- Clone the repo
+- Create a personal discord server for testing the bot
+- Create a personal bot here: (you will need multiple for sub-bots) https://discordapp.com/developers/applications/
+- Update your config files with the parameters you have created with your bots and servers
+- Install and run docker
+- Run the project using `docker-compose up --build`
 
 # Installing Docker
 
-See the [Docker readme](docker/README.md) file for setting up your local development environment.
+DIGBot is ran via docker containers. See the [Docker readme](docker/README.md) file for setting up your local development environment.
 
 # Using local installs of Node
 
-We **HIGHLY** recommend the use of Docker in order to run DIGBot. This will ensure that we **all** have the correct versions of Node.
+We **HIGHLY** recommend the use of Docker in order to run DIGBot. This will ensure that we **all** have the correct versions of Node and will ensure environments are identical from various development environments all the way to production.
 
 # Your local config files
 
-You need a file at config/envConfig.js, this should be git Ignored
-
-Example file:
-```
-(function() {
-    module.exports = {
-        environment: 'development', // development is your local environment
-        apiKey: 'Your API key',
-        showPerfStats: true,
-        token: 'Your primary bot\'s token',
-        youtubeKey: 'Your youtube API key',
-        subBots: {
-            bot2: {
-                booted: false,
-                busy: false, // booted and busy always false in your env file
-                id: 'your sub bot\'s discord user id',
-                token: 'Your first sub bot\'s token'
-            },
-            bot3: {
-                etc...
-            },
-        }
-    }
-}());
-```
-
-You will also need to copy either the staging or production folder under the config folder to craete a development folder. Alter the files in your config/development folder to suit your local discord test server.
+You need a file at config/envConfig.js, this should be git Ignored. You will need to change all parameters in the config/envConfig.js and config/development/\*.js files to ensure they match your personal development discord server and bot API keys and such. It is **CRITICAL** that you keep these files out of the commit history by use of a command such as `git update-index --assume-unchanged config/envConfig.js` if necessary to keep private keys secure
 
 # Code style Guide
 
@@ -90,7 +73,7 @@ function someNonModularFunction {
 ```
 ### Module organization
 
-- Comply with Atom JSLinter and JSCS plugins. Added the .jscsrc file to master so it can be consistent across all developers.
+- Comply with Atom JSLinter and JSCS plugins. Added the .jscsrc file to master so it can be consistent across all developers. (This will soon change to a CI process)
 - Leave a summary comment at the top of each module explaining its purpose
 - Sort functions alphabetically unless using getter and setter functions, example:
 ```
@@ -119,7 +102,7 @@ The main strategy of testing is unit tests for all classes, simply validating
 properties exist and functions return expected outputs for a given set of
 inputs. For example, `server.js` is independent of any other code and is fully
 testable using Chai. To test code interacting with `discord.js` a full test is
-defined in `bot.js`. This method injects messages to excitate code paths.
+defined in `bot.js`.
 
 `bot.js` is also the only file creating dummy messages for testing. Other
 modules should not test by means of creating discord calls.
@@ -215,10 +198,10 @@ There are 3 types of environments used in this project:
 
 ## Branches
 
-The project utilizes 4 types of branches:
+The project utilises 4 types of branches:
 1. Feature Branches (names will vary) - These are the branches you will use when working on issues. Once you are happy you have completed your issue you can PR it into the project development branch.
 
-2. Project Development Branch (named: develop) - This branch is for testing new versions of the project locally, it may host many different changes at once. Major changes such as features and refactors should be PR'd to this branch, however hotfixes on these features may be directly pushed.
+2. Project Development Branch (named: develop) - This branch is for testing new versions of the project locally, it may host many different changes at once. Major changes such as features and refactors should be PR'd to this branch, however hotfixes on these features may be directly pushed into the develop branch.
 
 3. Project Staging Branch (named: staging) - This branch will be used to run versions of the project on our project's test server. Once a new version of the project is completed on the project development branch it will be PR'd to this branch. Direct commits to this branch are permitted however it should only be for hotfixes that need to be pushed to production
 
