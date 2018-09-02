@@ -1,5 +1,3 @@
-If you need help ask in the dev channel in the DIG discord.
-
 <div align="center">
     <h1>DIGBot</h1>
     <h4>DIG community's custom discord bot</h4>
