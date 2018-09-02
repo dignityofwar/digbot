@@ -1,8 +1,16 @@
 #!/bin/bash
+### Copyright © 2018 DIG Development team. All rights reserved.
 
-cd /var/project
+### Move into the docker image's app file we created in the docker file ###
+cd app
+
+### Final setup of dependencies ###
 echo "Running npm install / prune"
 npm install
 npm prune
-echo "Running tests..."
+
+### shopt -s globstar
+
+### Setup now complete, attempt to run the main JS file ###
+echo "Starting Tests!!!"
 npm test

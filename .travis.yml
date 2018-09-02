@@ -1,0 +1,41 @@
+sudo: required
+
+services:
+  - docker
+
+env:
+  # Travis uses docker compose v1.4.2, this is not capable of running the tests we need
+  # so we must update
+  DOCKER_COMPOSE_VERSION: 18.06.0
+
+before_install:
+  # update is required to update the repositories to see the new packages for
+  # Docker
+  - sudo apt-get update
+
+  # Now we can install the newer docker-engine which is required for the newer
+  # docker-composer we will install next. The messy options are to force it to
+  # be non-interactive (normally it asks you a bunch of config questions)
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
+
+  # Print out the current docker-compose version. Once this reports 1.6+ then we
+  # do not need the following steps
+  - docker-compose --version
+
+  # Update docker-compose to specified version
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+
+  # Check that docker-compose is now running the specified version.
+  - docker-compose --version
+
+before_script:
+    - docker-compose -f docker-compose-test-ci.yml up --build -d
+
+script:
+    - docker-compose exec node ./app/test.sh
+
+after_script:
+    - docker-compose down

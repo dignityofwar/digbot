@@ -1,13 +1,14 @@
 # Copyright © 2018 DIG Development team. All rights reserved.
 
-version: '3'
+version: '3.0'
 services:
     node:
         build:
             context: .
-            dockerfile: Dockerfile
-        volumes:
-            - ./:/var/project
-        entrypoint: /usr/local/bin/run.sh
+            dockerfile: docker/Dockerfile
         ports:
-            - "1337:1337"
+            - "5000:5000"
+        volumes:
+            - ./:/DIGBot
+        entrypoint: /app/run.sh
+        tty: true

@@ -1,0 +1,14 @@
+FROM node:7.6
+
+### Add dependencies ###
+RUN apt update
+
+### Add bash script to Docker image ###
+COPY docker/test.sh /app/test.sh
+
+RUN chmod +x /app/test.sh
+
+### Bundle source files into the Docker image's app directory ###
+COPY . /app
+
+ENV PATH "$PATH:./app"

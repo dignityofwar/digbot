@@ -10,5 +10,4 @@ services:
             - "5000:5000"
         volumes:
             - ./:/DIGBot
-        entrypoint: /app/test.sh
         tty: true
