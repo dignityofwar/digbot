@@ -1,4 +1,4 @@
-If you need help ask in the dev channel in the DIG discord. Please note this readme requires updating and information may be outdated.
+If you need help ask in the dev channel in the DIG discord.
 
 <div align="center">
     <h1>DIGBot</h1>
