@@ -1,8 +1,8 @@
-This readme requires updating. Information contained may be outdated
+If you require help please ask in the developer channel on discord
 
 # Using Docker with DIGBot
 
-The server that DIGBot runs upon uses Docker, which also makes sense to use Docker in our development environments.
+Docker allows us to ensure all environments from local branches to production are identical, eliminating "it works on my machine" issues. We **HIGHLY** recomend that you use Docker for local development of DIGBot. If you choose not to you may encounter issues that will not be supported.
 
 For more info on Docker, see: https://www.docker.com/what-docker
 
@@ -28,7 +28,7 @@ Head to https://docs.docker.com/engine/installation/ and install the appropriate
 Once Docker is installed we can run the Bot.
 
 1. Navigate to the project directory on your favourite command line terminal.
-2. Run the command `docker-compose up`
+2. Run the command `docker-compose up --build` (assuming you have completed the other setup steps outlined in the contribution file)
 
 What this will do is build the containers that will run the bot. First time running, this may take a little while as the bot requires some linux libraries.
 
@@ -36,13 +36,11 @@ Once the bot is running, your console should have a bunch of text showing the co
 
 ## Restarting the bot
 
-When you make changes, you'll have to restart the bot. To do this, simply stop the script (usually `control + c` or `cmd + c` on Macs) then `docker-compose up` again.
-
-## Regarding npm install & changing node dependencies
-
-If you change any npm dependencies, the containers require to be rebuilt. To do this, run this command: `docker-compose up --build`. This will tell Docker to rebuild the image.
+When you make changes, you'll have to restart the bot. To do this, simply stop the script (usually `control + c` or `cmd + c` on Macs) then `docker-compose up --build` again.
 
 # Database
+
+(This section is somewhat legacy from the old project, we need to decide what we are going to do regarding the database)
 
 Firstly, you need to download a MySQL database client, e.g. MySQL Workbench (https://dev.mysql.com/downloads/workbench/ - scroll to bottom).
 
@@ -57,7 +55,7 @@ Then you'll need to add a connection using the following details:
 
 # Running tests
 
-Running the command `docker-compose -f docker-compose-test.yml up` will execute the tests.
+Running the command `docker-compose -f docker-compose-test.yml up` will execute the tests locally.
 
 # Troubleshooting
 
@@ -74,3 +72,7 @@ On Windows, if you are accessing your code from another drive other than C:/, yo
 ### "file exists" error
 
 Occasionally you may hit a file exists error while building your container. How I managed to fix it was to wipe your shared drive, press Apply, then reapply the drive, then run the container. Don't ask me why that worked.
+
+### Other errors
+
+You may experience a few other Docker based errors while attempting to run the project. Usually these can be solved by restarting docker and attempting to run the project a few times.
