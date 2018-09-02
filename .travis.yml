@@ -3,25 +3,6 @@ sudo: required
 services:
   - docker
 
-env:
-  # Travis uses docker compose v1.4.2, this is not capable of running the tests we need
-  # so we must update
-  DOCKER_COMPOSE_VERSION: 3.7
-
-before_install:
-  # update is required to update the repositories to see the new packages for
-  # Docker
-  - sudo apt-get update
-
-  # Update docker-compose to specified version
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-
-  # Check that docker-compose is now running the specified version.
-  - docker-compose --version
-
 before_script:
     - docker-compose -f docker-compose-test-ci.yml up --build -d
 
