@@ -78,6 +78,9 @@ DIGBot has anti spam admin mechanics. It is capable of recognising and taking st
 
 ### Automated functions
 
+#### Auto role assignment
+DIGBot detects when people are playing certain games, if this is a game that the community plays DIGBot will automatically give the user the role to see that game's voice and text channels.
+
 #### Channel auto-delete
 DIGBot is capable of creating temporary voice or text channels for users. The bot frequently checks these channels to make sure they're still in use and deletes them when they're no longer required
 
