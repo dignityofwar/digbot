@@ -24,7 +24,7 @@ module.exports = {
             .then(() => {
                 logger.info(TAG, 'Succesfully logged out sub bot: ' + bot.user.id);
                 for (let x in subBots) {
-                    if (subBots[x].id === bot.user.id) {
+                    if (subBots[x].id.replace(/\\/g,'') === bot.user.id) {
                         subBots[x].busy = false;
                     }
                 }
@@ -64,7 +64,7 @@ module.exports = {
             for (let x in subBots) {
                 if (subBots[x].busy !== true && subBots[x].booted) {
                     subBots[x].busy = true;
-                    token = subBots[x].token;
+                    token = subBots[x].token.replace(/\\/g,'');
                     break;
                 }
             }
@@ -96,11 +96,11 @@ module.exports = {
         if (subBots === null) { subBots = config.getConfig().subBots; }
         for (let x in subBots) {
             if (subBots[x].booted === true && subBots[x].busy) {
-                logger.info(TAG, 'Sub bot ' + subBots[x].id + ' marked as busy, skipping');
+                logger.info(TAG, 'Sub bot ' + subBots[x].id.replace(/\\/g,'') + ' marked as busy, skipping');
             };
             subBots[x].busy = true;
             let bot = new Discord.Client();
-            bot.login(subBots[x].token)
+            bot.login(subBots[x].token.replace(/\\/g,''))
                 .then(() => {
                     logger.debug(TAG, 'Sub bot login succesful');
                     if (server.getGuild().members.get(bot.user.id).voiceChannel) {
@@ -111,24 +111,24 @@ module.exports = {
                             crashHandler.logEvent(TAG, '.then setTimeout in ready()');
                             bot.destroy()
                                 .then(() => {
-                                    logger.debug(TAG, `Successfully logged out sub bot: ${subBots[x].id}`);
+                                    logger.debug(TAG, `Successfully logged out sub bot: ${subBots[x].id.replace(/\\/g,'')}`);
                                     subBots[x].busy = false;
                                     subBots[x].booted = true;
                                 })
                                 .catch(() => {
-                                    logger.warning(TAG, 'Failed to log out sub bot: ' + subBots[x].id);
+                                    logger.warning(TAG, 'Failed to log out sub bot: ' + subBots[x].id.replace(/\\/g,''));
                                     retryReady();
                                 });
                         }, 5000);
                     } else {
                         bot.destroy()
                             .then(() => {
-                                logger.debug(TAG, `Successfully logged out sub bot: ${subBots[x].id}`);
+                                logger.debug(TAG, `Successfully logged out sub bot: ${subBots[x].id.replace(/\\/g,'')}`);
                                 subBots[x].busy = false;
                                 subBots[x].booted = true;
                             })
                             .catch(() => {
-                                logger.warning(TAG, 'Failed to log out sub bot: ' + subBots[x].id);
+                                logger.warning(TAG, 'Failed to log out sub bot: ' + subBots[x].id.replace(/\\/g,''));
                                 retryReady();
                             });
                         subBots[x].busy = false;
