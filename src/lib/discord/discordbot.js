@@ -13,7 +13,7 @@ const server = require('../server/server.js');
 const serverEvents = require('./bot-events.js');
 
 // #5 remove before merge
-const const envConfig = require('../../../config/envConfig.js');
+const envConfig = require('../../../config/envConfig.js');
 
 const TAG = 'discordbot';
 const started = new Date();
