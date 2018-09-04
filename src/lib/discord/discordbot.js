@@ -12,6 +12,9 @@ const performance = require('../tools/performance.js');
 const server = require('../server/server.js');
 const serverEvents = require('./bot-events.js');
 
+// #5 remove before merge
+const const envConfig = require('../../../config/envConfig.js');
+
 const TAG = 'discordbot';
 const started = new Date();
 
@@ -43,6 +46,9 @@ function initBot(done) {
     if (done !== undefined) {
         bot.on('ready', done);
     }
+    console.log(config.getConfig().token);
+    console.log('================');
+    console.log(envConfig);
     bot.login(config.getConfig().token)
         .then(() => {
             clearStartClock(); // Make sure more login attempts aren't sent
