@@ -17,7 +17,7 @@ let config = {
     channels: channels.channelMappings,
     showPerfStats: envConfig.showPerfStats || false,
     subBots: envConfig.subBots || false, // Sub bots object
-    token: envConfig.token, // Bot token
+    token: envConfig.token.replace(/\\/g,''), // Bot token
     youtubeKey: envConfig.youtubeKey || false, // Your youtube API key
 
     // General Configs
