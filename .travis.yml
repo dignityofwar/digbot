@@ -5,7 +5,7 @@ services:
 
 before_script:
     - ls
-    - bash ./docker/CISetup.sh ./config/envConfig.js $token
+    - bash ./docker/CISetup.sh $token
 
     - docker-compose -f docker-compose-test-ci.yml up --build -d
 
