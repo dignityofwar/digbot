@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 configFile=$1;
 
-node > out_${configFile} <<EOF
+node > ${configFile} <<EOF
 //Read data
 var config = require('./${configFile}');
 
