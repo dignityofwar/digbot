@@ -4,15 +4,11 @@ services:
   - docker
 
 before_script:
-    - ls
-    - ls config
-    - bash ./docker/CISetup.sh $token
+    - bash ./docker/CISetup.sh $token $subBotID1 $subBotID2 $subBotID3 $subBotID4 $subBotID5 $subBotID6 $subBotToken1 $subBotToken2 $subBotToken3 $subBotToken4 $subBotToken5 $subBotToken6
 
     - docker-compose -f docker-compose-test-ci.yml up --build -d
 
 script:
-    - ls
-    - ls config
     - docker-compose exec node ./app/test.sh
 
 after_script:
