@@ -6,6 +6,6 @@ node > ${configFile} <<EOF
 var config = require('./${configFile}');
 
 // Insert environment variables for testing
-config.token = ${token};
+config.token = token;
 
 EOF
