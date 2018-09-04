@@ -5,15 +5,15 @@
 (function() {
     module.exports = {
         mappings: {
-            chitChatVoice: '224190000554573825',
-            developers: '292740816185589760',
-            digbot: '292741663401443331',
-            digBotLog: '292741716644069376',
-            events: '292739597891534851',
-            general: '224190000554573824',
-            herebedragons: '292740734488936459',
-            staff: '292739522293399552',
-            streams: '274762161148919808'
+            chitChatVoice: '486323117686390789',
+            developers: '486324227142713344',
+            digbot: '486324268137840649',
+            digBotLog: '486324290665578526',
+            events: '486324076017745967',
+            general: '486324123069579274',
+            herebedragons: '486324191868747777',
+            staff: '486324059311833089',
+            streams: '486324208515678228'
         },
         //Array and Object configs
         /*
@@ -37,109 +37,109 @@
         positions: {
             text: {
                 announcements: {
-                    id: '292739218197839882',
+                    id: '486323315401818112',
                     name: 'announcements',
                     position: 1
                 },
                 rulesinfo: {
-                    id: '288045481005678594',
+                    id: '486324041095839754',
                     name: 'rules-info',
                     position: 2
                 },
                 staff: {
-                    id: '292739522293399552',
+                    id: '486324059311833089',
                     name: 'staff',
                     position: 3
                 },
                 events: {
-                    id: '292739597891534851',
+                    id: '486324076017745967',
                     name: 'events',
                     position: 4
                 },
                 general: {
-                    id: '224190000554573824',
+                    id: '486324123069579274',
                     name: 'entrance-general',
                     position: 5
                 },
                 ps2: {
-                    id: '292739890519736320',
+                    id: '486324138940825610',
                     name: 'ps2',
                     position: 6
                 },
                 tts: {
-                    id: '227718729448816641',
+                    id: '486324151838179349',
                     name: 'tts',
                     position: 15
                 },
                 media: {
-                    id: '292740649235644416',
+                    id: '486324167113834498',
                     name: 'media',
                     position: 16
                 },
                 hereBeDragons: {
-                    id: '292740734488936459',
+                    id: '486324191868747777',
                     name: 'herebedragons',
                     position: 17
                 },
                 streams: {
-                    id: '274762161148919808',
+                    id: '486324208515678228',
                     name: 'streams',
                     position: 18
                 },
                 developers: {
-                    id: '292740816185589760',
+                    id: '486324227142713344',
                     name: 'developers',
                     position: 19
                 },
                 developersArt: {
-                    id: '292740896984924162',
+                    id: '486324245916418049',
                     name: 'developers-art',
                     position: 20
                 },
                 digbotspam: {
-                    id: '292741663401443331',
+                    id: '486324268137840649',
                     name: 'digbot',
                     position: 21
                 },
                 digbotLog: {
-                    id: '292741716644069376',
+                    id: '486324290665578526',
                     name: 'digbot-log',
                     position: 22
                 },
                 stellaris: {
-                    id: '292741780431044609',
+                    id: '486324305915936769',
                     name: 'stellaris',
                     position: 23
                 }
             },
             voice: {
                 general: {
-                    id: '224190000554573825',
+                    id: '486323117686390789',
                     name: '💬 Chit Chat',
                     position: 1
                 },
                 staff: {
-                    id: '292742347207475202',
+                    id: '486324472836522004',
                     name: '👔 Staff',
                     position: 2
                 },
                 ps2DigMCS: {
-                    id: '270160059382759424',
+                    id: '486324517279629322',
                     name: '🎮 PS2/DIG/1',
                     position: 3
                 },
                 ps2DigtMCS: {
-                    id: '274410655795249153',
+                    id: '486324583062962201',
                     name: '🎮 PS2/DIGT/1',
                     position: 103
                 },
                 recMCS: {
-                    id: '292742757553012736',
+                    id: '486324659134922752',
                     name: '🎮 Rec/1',
                     position: 406
                 },
                 afk: {
-                    id: '274573766514704384',
+                    id: '486324707126411266',
                     name: '💤 AFK',
                     position: null
                 }

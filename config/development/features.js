@@ -3,7 +3,7 @@
 (function() {
     module.exports = {
         automaticRoleAssignment: true,
-        channelPositionsEnforcement: true,
+        channelPositionsEnforcement: false,
         disableCommandSpam: false,
         disableMentionSpam: false,
         modularChannelSystem: true,
