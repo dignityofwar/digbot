@@ -8,7 +8,7 @@ var config = require('./${configFile}');
 //Manipulate data
 
 //Output data
-constole.log("====TEST LOG====")
+console.log("====TEST LOG====")
 console.log(config.environment);
 
 EOF
