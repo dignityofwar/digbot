@@ -1,9 +1,4 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
-
-// It is CRITICAL that you keep this file out of your commit history, it contains a multitude of keys
-
-(function() {
-    module.exports = {
+{
         environment: 'development',
         apiKey: 'YOUR API KEY',
         showPerfStats: true,
@@ -49,4 +44,4 @@
             }
         }
     }
-}());
+}
