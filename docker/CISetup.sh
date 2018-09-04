@@ -3,9 +3,9 @@ configFile=$1;
 token=$2;
 
 node > ${configFile} <<EOF
-var config = require('./${configFile}');
+var config = require('${configFile}');
 
 // Insert environment variables for testing
-config.token = token;
+config.token = '${token}';
 
 EOF
