@@ -2,7 +2,7 @@
 
 'use strict';
 
-const envConfig = require('./envConfig.js');
+const envConfig = require('./envConfig.json');
 
 const environment = envConfig.environment;
 
