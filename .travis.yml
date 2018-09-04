@@ -5,11 +5,14 @@ services:
 
 before_script:
     - ls
+    - ls config
     - bash ./docker/CISetup.sh $token
 
     - docker-compose -f docker-compose-test-ci.yml up --build -d
 
 script:
+    - ls
+    - ls config
     - docker-compose exec node ./app/test.sh
 
 after_script:
