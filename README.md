@@ -1,225 +1,113 @@
-If you need help ask in the dev channel in the DIG discord. Please note this readme requires updating and information may be outdated.
+<div align="center">
+    <h1>DIGBot</h1>
+    <h4>DIG community's custom discord bot</h4>
+</div>
 
-# Installing Docker
+## About
 
-See the [Docker readme](docker/README.md) file for setting up your local development environment.
+DIGBot is a custom discord bot ran on the [DIG community's discord server](https://discord.gg/cjQBNpc), it was originally created to fulfil all the functionality of the current bots that were on the server and allow the community to implement any feature's they desired.
 
-# Using local installs of Node
+### Tech
 
-We **HIGHLY** recommend the use of Docker in order to run DIGBot. This will ensure that we **all** have the correct versions of Node.
+Language: Node.js  
+Deployment: Docker  
+Discord API handler: discord.js  
 
-# Your local config files
+## Features
 
-You need a file at config/envConfig.js, this should be git Ignored
+### Command List
+#### !Admin
+Send user a list of admin commands if they have access to them
 
-Example file:
-```
-(function() {
-    module.exports = {
-        environment: 'development', // development is your local environment
-        apiKey: 'Your API key',
-        showPerfStats: true,
-        token: 'Your primary bot\'s token',
-        youtubeKey: 'Your youtube API key',
-        subBots: {
-            bot2: {
-                booted: false,
-                busy: false, // booted and busy always false in your env file
-                id: 'your sub bot\'s discord user id',
-                token: 'Your first sub bot\'s token'
-            },
-            bot3: {
-                etc...
-            },
-        }
-    }
-}());
-```
+#### !Catfacts
+Posts a random cat fact
 
-You will also need to copy either the staging or production folder under the config folder to craete a development folder. Alter the files in your config/development folder to suit your local discord test server.
+#### !Cats
+Replies with a picture or gif of a cat depending on the request
 
-# Code style Guide
+#### !dragons
+Adds a discord role to the requester giving them access to an otherwise hidden channel
 
-### Control structures
+#### !lmgtfy
+(Let me google that for you), replies with a somewhat comical google search link
 
-```
-// Functions
-function {
-    ...
-}
+#### !mentions
+Allows a user to check the number of mentions they are allowed to use
 
-// IF statements
-if (! <expression>) {
-    ...
-} else if (<expression>) {
-    ...
-} else {
-    ...
-}
+#### !ping
+Used to check the bot's responsiveness, replies with user message to bot reply ping time
 
-// For loops
-for (let count = 0; count > <something>; count++) {
-    ...
-}
+#### !play
+Used to stream audio into voice channels from youtube videos
 
-// While loops
-while (something !== something) {
-    ...
-}
+#### !poll
+Holds short surveys which users can vote in
 
-```
-### Module variables declarations
+#### !positions
+Sends admin a list of all channels on the server and their associated position variables
 
-```
-"use strict";
+#### !ps2digfeedback
+Replies with a link where users can give feedback to leaders in planetside
 
-const someVar = something;
-let someGlobalVar = something;
+#### !restart
+Manually restarts the bot
 
-modules.exports = {
-    someFunction: function () {
-        ...
-    },
-    someOtherFunction: someNonModularFunction // Pointing to a normal function
-}
+#### !roles
+Send admin a list of all roles on the server and their associated IDs
 
-function someNonModularFunction {
-    ...
-}
+#### !sfx
+Plays sounds effects in voice channels
 
-```
-### Module organization
+#### !started
+Show the user the time period for which the bot has been continuously running
 
-- Comply with Atom JSLinter and JSCS plugins. Added the .jscsrc file to master so it can be consistent across all developers.
-- Leave a summary comment at the top of each module explaining its purpose
-- Sort functions alphabetically unless using getter and setter functions, example:
-```
-getSomething()
-setSomething()
+#### !stats
+Posts bot statistics
 
-getSomethingElse()
-setSomethingElse()
-```
-- If the purpose of a function is not immediately apparent leave a short comment
-- Ensure promise resolutions/rejections are handled
-- Embed promise structures, see code for examples
+#### !vote
+Used to vote in !poll surveys
 
-### Module testing
+### Admin functionality
 
-For testing this codebase uses Chai and Sinon with Mocha as runner. Mocha
-allows organisation of tests by means of describing testable code blocks and
-tests that needs passing. Most tests use the `should` variant of Chai, with
-`expect` in case the returned value is a null variant (null, undefined).
+#### Anti Spam
+DIGBot has anti spam admin mechanics. It is capable of recognising and taking steps to prevent spam in several situations, such as:
+- When users attempt to spam command requests to the bot
+- If a user attempts to use commands outside of designated channels
+- When users make use of mentions to liberally, especially when they are sending notifications to group tags and not individuals
+- When a user is posting links to a twitch stream outside of a designated channel
 
-Sinon stubs certain classes in order to perform full integration tests. For
-example `bot.js` uses stubs of the `discord.js` framework to tap into results
-of messages outputted by the bot.
+### Automated functions
 
-The main strategy of testing is unit tests for all classes, simply validating
-properties exist and functions return expected outputs for a given set of
-inputs. For example, `server.js` is independent of any other code and is fully
-testable using Chai. To test code interacting with `discord.js` a full test is
-defined in `bot.js`. This method injects messages to excitate code paths.
+#### Channel auto-delete
+DIGBot is capable of creating temporary voice or text channels for users. The bot frequently checks these channels to make sure they're still in use and deletes them when they're no longer required
 
-`bot.js` is also the only file creating dummy messages for testing. Other
-modules should not test by means of creating discord calls.
+#### Channel position enforcement
+A frequent problem on servers where many people have permissions to move channels is users will often accidentally move the order of channels they are attempting to join into. DIGBot reacts when this happens to enforce the correct ordering of channels
 
-#### Test structures
+#### Events
+DIGBot is capable of reacting when events are scheduled to remind people of their occurrence
 
-The following example illustrates what a testing module may look like, and validates
-methods by checking the availability and execution results.
+#### Modular Channel System (MCS)
+Some channels the community would prefer to always have a free version of. This is the case for channels such as dedicated voice channels for certain games, for example if a member joins a voice channel for a game such as planetside DIGBot will react by creating a second voice channel for that game so there is still a free channel. Every-time a modular channel become populated or empty, DIGBot will respond by creating or deleting a channel as needed
 
-Try to test all possible situations the module may encounter. And break up these situations into
-several different tests.
 
-```
-// File path: test/src/commands/commands.js (mirror the project directory, test folder = project folder)
-// Example module to test commands.js
+## Development
 
-/* Define the styles the test is using (most of the time this will only be 'should'),
-in most instances these requirements aren't technically needed but it's useful to
-see what tests are actually being used*/
-const assert = require('chai').assert;
-const expect = require('chai').expect;
-const should = require('chai').should();
-const sinon = require('sinon');
+### Contributing
 
-// File under inspection (tested unit) and dependencies
-const commands = require('../../src/commands/commands.js');
+See the [contribution guidelines](CONTRIBUTING.md) file for information on how to contribute to the project and setting up your local development version of the project.
 
-// Defined use case for command calls, all tests in this block
-describe('commands/commands.js', function() {
-    /* If global variables need to be declared, declare them outside of the 'it' tests, but inside of the
-    'describe' block, all code outside of 'it' tests regardless of positioning in the module will run before
-    mocha starts to execute the tests*/
+### Code Usage
 
-    // Individual tests, split tests up to provide a better check for where problems lie
-    it('should have function gif', function() {
-        cats.should.have.property('gif');
-        cats.gif.should.be.a('function');
-    });
+The project is in the process of being open sourced however as of this moment no usage licence is provided.
 
-    it('GIF should be a promise', function() {
-        gifPromise.should.be.a('promise');
-    });
+### Acknowledgements
 
-    it('GIF should return promise', function(done) {
-        this.timeout(10000);
-        gifPromise.then(
-            function(result) {
-                console.log('Cats GIF Result:', result);
-                result.should.be.fulfilled;
-                done();
-            }
-        );
-    });
+This repository was created from an [existing private codebase](https://github.com/JamesLongman/DIGBot/releases/tag/0.0.1) for DIGBot which can be found. The previous project was headed by Maelstromeous who was ultimately responsible for code review, design decisions and deployment.
 
-    // Test as many cases as possible, here we're iterating through all possibilities
-    it('check should identify commands', function() {
-        // Control input
-        commands.check('!ping').should.be.true;
-        // Test all on file
-        for (var x in commands.all) {
-            commands.check(commands.all[x]).should.be.true;
-        }
-        commands.check('!thisisnotarealcommand!').should.be.false;
-    });
-
-    // Asynchronous test example taken from cats.js (test ended by the callback: done)
-    it('GIF should return promise', function(done) {
-        this.timeout(10000);
-        gifPromise.then(
-            function(result) {
-                console.log('Cats GIF Result:', result);
-                result.should.be.fulfilled;
-                done();
-            }
-        );
-    });
-});
-
-```
-
-### Resources on JS conventions
-
-http://javascript.crockford.com/code.html
-
-# Development flow
-
-## Environments
-
-There are 3 types of environments used in this project:
-1. Development - This is your local environment, it will run on your personal discord test server.
-2. Staging - This is the project's test environment, all changes to live will flow through this branch. This branch will be run by the project server on a test discord server.
-3. Production - This is the live environment. It is ran by the project server on our live discord server.
-
-## Branches
-
-The project utilizes 4 types of branches:
-1. Feature Branches (names will vary) - These are the branches you will use when working on issues. Once you are happy you have completed your issue you can PR it into the project development branch.
-
-2. Project Development Branch (named: develop) - This branch is for testing new versions of the project locally, it may host many different changes at once. Major changes such as features and refactors should be PR'd to this branch, however hotfixes on these features may be directly pushed.
-
-3. Project Staging Branch (named: staging) - This branch will be used to run versions of the project on our project's test server. Once a new version of the project is completed on the project development branch it will be PR'd to this branch. Direct commits to this branch are permitted however it should only be for hotfixes that need to be pushed to production
-
-4. Project Production Branch (named: master) - This is the live branch that will be ran on our live discord server, any changes should be PR'd from staging. All major changes should go through the development process. Direct pushes are not permitted to this branch, however if hotfixes are required they can be pushed directly to staging then PR'd in.
+File contributions were as follows  
+Maelstromeous: 510 commits,  7,623 additions, 6,378 deletions  
+JamesLongman: 459 commits, 30,076 additions, 18,144 deletions  
+Euwas: 37 commits, 1,982 additions, 1040 deletions  
+CptCannonFodder: 10 commits, 22 additions, 16 deletions  
+Blacky704: 3 commits, 29 additions, 8 deletions  
