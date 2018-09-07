@@ -16,7 +16,7 @@ module.exports = {
         let message = msg.content.replace(/\s+/g, '').toLowerCase();
         if (message.includes('twitch.tv/') || message.includes('hitbox.tv/') || message.includes('beam.pro/')) {
             if (!message.includes('clips')) {
-                if (msg.channel.id != configget('channels.mappings.streams')) {
+                if (msg.channel.id != config.get('channels.mappings.streams')) {
                     return streamSpamAction(msg);
                 }
             }
@@ -36,7 +36,7 @@ function streamSpamAction(msg) {
         .catch(err => {
             logger.warning(TAG, `Failed to send message, error: ${err}`);
         });
-    msg.guild.channels.get(configget('channels.mappings.streams')).sendMessage(
+    msg.guild.channels.get(config.get('channels.mappings.streams')).sendMessage(
         msg.member.displayName + ': ' + msg.cleanContent)
         .then(message => {
             logger.info(TAG, `Moved to #streams: ${message.content}`);

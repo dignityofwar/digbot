@@ -1,3 +1,4 @@
 --recursive
 --delay
 --retries 3
+--require ./config/config-faker.js

@@ -45,40 +45,36 @@ describe('commands/mentions.js', function() {
 
     it('should let user know if feature is disabled', function() {
         resetTest();
-        features.disableMentionSpam = true;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.disableMentionSpam', true);
         mentions.execute(msg).should.be.false;
-        config.setProperty('features', original);
+        Faker.resetFake();
         channelMessage.indexOf('JBuilds, the mention limits are currently disabled. Ple').should.eql(0);
     });
 
     it('should let user know if they are exempt from limits', function() {
         // Staff role exemption
         resetTest();
-        features.disableMentionSpam = false;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.disableMentionSpam', false);
         msg.member.roles.set(config.get('general.staffRoleID'), {test1: 'test'});
         mentions.execute(msg).should.be.false;
-        config.setProperty('features', original);
+        Faker.resetFake();
         channelMessage.should.eql('JBuilds, you are exempt from the mention limit');
         // Leader role exemptions
         for (let x in config.get('general.leaderRoles')) {
             resetTest();
-            features.disableMentionSpam = false;
-            config.setProperty('features', features);
+            Faker.setFakeProperty('features.disableMentionSpam', false);
             msg.member.roles.set(config.get('general.leaderRoles')[x], {test1: 'test'});
             mentions.execute(msg).should.be.false;
-            config.setProperty('features', features);
+            Faker.resetFake();
             channelMessage.should.eql('JBuilds, you are exempt from the mention limit');
         }
     });
 
     it('should let user know if they are exempt from limits', function() {
         resetTest();
-        features.disableMentionSpam = false;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.disableMentionSpam', false);
         mentions.execute(msg).should.be.true;
-        config.setProperty('features', original);
+        Faker.resetFake();
         channelMessage.indexOf('__JBuilds\'s mention allowance__:').should.eql(0);
         channelMessage.indexOf('mentions remaining:').should.not.eql(-1);
     });

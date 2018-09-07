@@ -12,3 +12,6 @@ services:
         ports:
             - "1338:1338"
         restart: always
+        environment:
+        - NODE_ENV=staging
+        - DIGBOT_PORT=1338

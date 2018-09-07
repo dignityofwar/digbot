@@ -22,13 +22,10 @@ describe('admin/admin.js', function() {
     });
 
     it('check should return true if msg from correct server', function() {
-        const original = config.get('features');
-        let features = original;
-        features.disableMentionSpam = true;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.disableMentionSpam', true);
         const msg = {guild: {id: config.get('general.server')}, member: {id: config.get('botUserID')}};
         admin.check(msg).should.be.true;
-        config.setProperty('features', original);
+        Faker.resetFake();
     });
 
     it('should have function checkEdits', function() {

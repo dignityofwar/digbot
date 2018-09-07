@@ -19,7 +19,6 @@ const server = require('../../src/lib/server/server.js');
 describe('bot-live-tests', function() {
     this.slow(5000);
     // Set test mode (should only be used when necessary for things like stopping messages going live)
-    config.setProperty('testing', true);
     logger.setTesting();
 
     // Ensure the bot is connected and running prior to any tests

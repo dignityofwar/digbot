@@ -65,18 +65,16 @@ describe('sub-bots/sub-bots.js', function() {
 
         before(function(done) {
             result = false;
-            config.setProperty('subBots', false);
+            Faker.setFakeProperty('subBots', false);
             subBots.passBot()
                 .then(passed => {
                     subBots.logout(passed);
-                    config.setProperty('subBots', original);
                     done();
                 })
                 .catch(err => {
                     result = err;
-                    config.setProperty('subBots', original);
                     done();
-                });
+                }).finally(() => Faker.resetFake());
         });
 
         it('should reject if feature disabled', function() {
@@ -91,18 +89,16 @@ describe('sub-bots/sub-bots.js', function() {
 
         before(function(done) {
             result = false;
-            config.setProperty('subBotLimit', -1);
+            Faker.setFakeProperty('subBotLimit', -1);
             subBots.passBot()
                 .then(passed => {
                     subBots.logout(passed);
-                    config.setProperty('subBotLimit', limit);
                     done();
                 })
                 .catch(err => {
                     result = err;
-                    config.setProperty('subBotLimit', limit);
                     done();
-                });
+                }).finally(() => Faker.resetFake());
         });
 
         it('should reject if feature disabled', function() {

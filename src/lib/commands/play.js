@@ -240,7 +240,7 @@ function list(msg) {
 
 // Called after the command has been verified, connects to channel and outsources streaming
 function play() {
-    if (config.get('testing')) { return false; }
+    if (config.util.getEnv('NODE_ENV') === 'testing') { return false; }
     if (server.getReady() === false) {
         logger.debug(TAG, 'Server not ready, setting play on timeout');
         let timer = setTimeout(function() {

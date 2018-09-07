@@ -39,7 +39,7 @@ describe('admin/antispam/streamspam.js', function() {
     let deleted = false;
     let result = false;
     let streamChannelMessage = false;
-    const original = configget('channels.mappings.streams');
+    const original = config.get('channels.mappings.streams');
     const testChannel = '00000123';
     msg.guild.channels.set('00000001', {
         sendMessage: function() {
@@ -68,7 +68,7 @@ describe('admin/antispam/streamspam.js', function() {
 
     // Function to reset results and test object
     function resetTest() {
-        config.setProperty('streamChannel', testChannel);
+        Faker.setFakeProperty('channels.mappings.streams', testChannel);
         deleted = false;
         result = false;
         streamChannelMessage = false;
@@ -83,7 +83,7 @@ describe('admin/antispam/streamspam.js', function() {
         deleted.should.be.false;
         result.should.be.false;
         streamChannelMessage.should.be.false;
-        config.setProperty('streamChannel', original);
+        Faker.resetFake();
     });
 
     it('streamspam should not trigger on clips', function() {
@@ -94,7 +94,7 @@ describe('admin/antispam/streamspam.js', function() {
         deleted.should.be.false;
         result.should.be.false;
         streamChannelMessage.should.be.false;
-        config.setProperty('streamChannel', original);
+        Faker.resetFake();
     });
 
     it('streamspam should trigger on someone spamming a twitch stream', function() {
@@ -105,7 +105,7 @@ describe('admin/antispam/streamspam.js', function() {
         deleted.should.be.true;
         result.indexOf('we have a specific channel for streams').should.not.eql(-1);
         streamChannelMessage.should.eql('Dingbat: cleanTest');
-        config.setProperty('streamChannel', original);
+        Faker.resetFake();
     });
 
     it('streamspam should trigger on someone spamming a hitbox stream', function() {
@@ -116,7 +116,7 @@ describe('admin/antispam/streamspam.js', function() {
         deleted.should.be.true;
         result.indexOf('we have a specific channel for streams').should.not.eql(-1);
         streamChannelMessage.should.eql('Dingbat: cleanTest');
-        config.setProperty('streamChannel', original);
+        Faker.resetFake();
     });
 
     it('streamspam should trigger on someone spamming a beam.pro stream', function() {
@@ -127,17 +127,17 @@ describe('admin/antispam/streamspam.js', function() {
         deleted.should.be.true;
         result.indexOf('we have a specific channel for streams').should.not.eql(-1);
         streamChannelMessage.should.eql('Dingbat: cleanTest');
-        config.setProperty('streamChannel', original);
+        Faker.resetFake();
     });
 
     it('should not trigger if someone is posting their stream in the stream channel', function() {
         resetTest();
         msg.content = 'Watch my stream guyz https://www.beam.pro/45373362';
-        msg.channel.id = configget('channels.mappings.streams');
+        msg.channel.id = config.get('channels.mappings.streams');
         streamspam.execute(msg).should.be.true;
         deleted.should.be.false;
         result.should.be.false;
         streamChannelMessage.should.be.false;
-        config.setProperty('streamChannel', original);
+        Faker.resetFake();
     });
 });

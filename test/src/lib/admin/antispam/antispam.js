@@ -31,30 +31,27 @@ describe('admin/antispam/antispam.js', function() {
     let features = original;
 
     it('Antispam should not kick in if disabled', function() {
-        features.disableCommandSpam = true;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.disableCommandSpam', true);
         // Antispam should never trigger here no matter how many commands sent
         for (let i = -3; i < config.get('antispamCommandLimitCats'); i++) {
             antispam.check(message).should.be.true;
         }
-        config.setProperty('features', original);
+        Faker.resetFake();
     });
 
     it('Commands should trigger antispam', function() {
-        features.disableCommandSpam = false;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.disableCommandSpam', false);
         // Test the !cats command the number of time it should be allowed
         for (let i = 0; i < config.get('antispamCommandLimitCats'); i++) {
             antispam.check(message).should.be.true;
         }
         // Next call should trigger the antispam module
         antispam.check(message).should.be.false;
-        config.setProperty('features', original);
+        Faker.resetFake();
     });
 
     it('Users should trigger antispam', function() {
-        features.disableCommandSpam = false;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.disableCommandSpam', false);
         // User should trigger antispam
         message = {
             author: '90161375896170000',
@@ -77,6 +74,6 @@ describe('admin/antispam/antispam.js', function() {
         }
         // Next call should trigger the antispam module
         antispam.check(message, true).should.be.false;
-        config.setProperty('features', original);
+        Faker.resetFake();
     });
 });

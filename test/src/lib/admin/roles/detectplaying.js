@@ -12,10 +12,7 @@ describe('admin/roles/detectplaying.js', function() {
     });
 
     it('should return false even if no arguements if feature disabled', function() {
-        const original = config.get('features');
-        let features = original;
-        features.automaticRoleAssignment = false;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.automaticRoleAssignment', false);
         let success = false;
         try {
             detectplaying.check();
@@ -23,7 +20,7 @@ describe('admin/roles/detectplaying.js', function() {
         } catch (err) {
             console.log(err);
         }
-        config.setProperty('features', original);
+        Faker.resetFake();
         success.should.be.true;
     });
 

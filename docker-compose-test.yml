@@ -11,3 +11,5 @@ services:
         command: /usr/local/bin/test.sh
         ports:
             - "1337:1337" # Run locally on the jenkins server, there shouldn't be anything on that port
+        environment:
+          - NODE_ENV=testing

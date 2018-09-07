@@ -16,16 +16,14 @@ describe('commands/sort.js', function() {
     let features = original;
 
     it('should refuse request if feature disabled', function() {
-        features.channelPositionsEnforcement = false;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.channelPositionsEnforcement', false);
         sort.execute().should.eql('Sorry but the channel position enforcement feature is currently disabled');
-        config.setProperty('features', original);
+        Faker.resetFake();
     });
 
     it('should return confirmation response', function() {
-        features.channelPositionsEnforcement = true;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.channelPositionsEnforcement', true);
         sort.execute().should.eql('Sent global sort request to channels/positions.js');
-        config.setProperty('features', original);
+        Faker.resetFake();
     });
 });

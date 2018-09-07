@@ -50,8 +50,7 @@ describe('commands/sfx.js', function() {
 
     function resetTest() {
         message.content = '!sfx';
-        features.sfx = true;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.sfx', true);
         channelMessage = false;
         deleted = false;
         userMessage = false;
@@ -64,10 +63,9 @@ describe('commands/sfx.js', function() {
 
     it('should let user know if feature disabled', function() {
         resetTest();
-        features.sfx = false;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.sfx', false);
         sfx.execute(message).should.eql(false);
-        config.setProperty('features', original);
+        Faker.resetFake();
         channelMessage.should.eql('Sorry this feature has been disabled');
         userMessage.should.eql(false);
         deleted.should.eql(false);
@@ -77,7 +75,7 @@ describe('commands/sfx.js', function() {
         resetTest();
         message.content = '!sfx';
         sfx.execute(message).should.eql(false);
-        config.setProperty('features', original);
+        Faker.resetFake();
         channelMessage.should.eql('Please provide an sfx to play. E.g. !sfx cena');
         userMessage.should.eql(false);
         deleted.should.eql(false);
@@ -87,7 +85,7 @@ describe('commands/sfx.js', function() {
         resetTest();
         message.content = '!sfx list';
         sfx.execute(message).should.eql(false);
-        config.setProperty('features', original);
+        Faker.resetFake();
         channelMessage.should.eql('I\'ll PM you the full list of sound effects JBuilds');
         userMessage.indexOf('__Full list of available sound effects__: ').should.eql(0);
         deleted.should.eql(false);
@@ -97,7 +95,7 @@ describe('commands/sfx.js', function() {
         resetTest();
         message.content = '!sfx notARealSFXProperty';
         sfx.execute(message).should.eql(false);
-        config.setProperty('features', original);
+        Faker.resetFake();
         channelMessage.should.eql('Sorry I don\'t recognise that sound effect');
         userMessage.should.be.false;
         deleted.should.eql(false);
@@ -107,7 +105,7 @@ describe('commands/sfx.js', function() {
         resetTest();
         message.content = '!sfx wow';
         sfx.execute(message).should.eql(false);
-        config.setProperty('features', original);
+        Faker.resetFake();
         channelMessage.should.eql('Please be in a voice channel first!');
         userMessage.should.be.false;
         deleted.should.eql(false);
