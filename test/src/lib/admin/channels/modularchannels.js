@@ -2,7 +2,7 @@
 
 const should = require('chai').should();
 
-const config = require('../../../../../config/config.js');
+const config = require('config');
 const MCS = require('../../../../../src/lib/admin/channels/modularchannels.js');
 
 describe('admin/channels/modularchannels.js', function() {
@@ -11,7 +11,7 @@ describe('admin/channels/modularchannels.js', function() {
         MCS.execute.should.be.a('function');
     });
 
-    const original = config.getConfig().features;
+    const original = config.get('features');
     let features = original;
     const noChannelMember = {voiceChannel: false};
 

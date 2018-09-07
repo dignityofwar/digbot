@@ -5,7 +5,7 @@
 // !play module, plays playlists and audio streams of video links in member's channel
 
 const antiDuplicate = require('../tools/antiduplicate.js');
-const config = require('../../../config/config.js');
+const config = require('config');
 const crashHandler = require('../crash-handling.js');
 const google = require('googleapis');
 const logger = require('../logger.js');
@@ -17,7 +17,7 @@ const server = require('../server/server.js');
 const subBots = require('../sub-bots/sub-bots.js');
 const yt = require('ytdl-core');
 
-const youtubeKey = config.getConfig().youtubeKey; // youtube API key
+const youtubeKey = config.get('youtubeKey'); // youtube API key
 const youtube = google.youtube('v3'); // create youtube API client
 let playing = {};
 let verified = {
@@ -29,7 +29,7 @@ let failing = false;
 module.exports = {
     execute: function(msg) {
         failing = false;
-        if (!config.getConfig().features.play) {
+        if (!config.get('features.play')) {
             sendMessageToChannel(msg.channel, 'Sorry this feature has been disabled');
             return false;
         }
@@ -177,7 +177,7 @@ module.exports = {
 
     // Passess an explanation of the command
     passList: function() {
-        if (!config.getConfig().features.play) {
+        if (!config.get('features.play')) {
             return false;
         }
         let message = '__**Play Command:**__' +
@@ -209,7 +209,7 @@ module.exports = {
 
     // Called on bot start then every 24 hours
     ready: function() {
-        if (!config.getConfig().features.play) { return false; }
+        if (!config.get('features.play')) { return false; }
         verified.external = {}; // Wipe cached external verified commands
         verifyLocal();
     }
@@ -240,7 +240,7 @@ function list(msg) {
 
 // Called after the command has been verified, connects to channel and outsources streaming
 function play() {
-    if (config.getConfig().testing) { return false; }
+    if (config.get('testing')) { return false; }
     if (server.getReady() === false) {
         logger.debug(TAG, 'Server not ready, setting play on timeout');
         let timer = setTimeout(function() {

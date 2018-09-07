@@ -5,7 +5,7 @@
 // Antispam module to prevent people spamming the bot
 
 const commands = require('../../commands/commands.js');
-const config = require('../../../../config/config.js');
+const config = require('config');
 const crashHandler = require('../../crash-handling.js');
 const logger = require('../../logger.js');
 const TAG = 'Commands Antispam';
@@ -17,7 +17,7 @@ module.exports = {
     // Check if user is spamming, returns true if not, false for spam but no message, and string for message
     check: function(msg) {
         // If we choose to have antispam disabled as a developer
-        if (config.getConfig().features.disableCommandSpam === true) {
+        if (config.get('features.disableCommandSpam') === true) {
             logger.debug(TAG, 'Antispam disabled!');
             return true;
         }
@@ -32,10 +32,10 @@ module.exports = {
 };
 
 // Global interval to call antispam user release every X secs
-let timer = setInterval(releaseUser, config.getConfig().antispamUserTick);
+let timer = setInterval(releaseUser, config.get('antispamUserTick'));
 
 // Second timer to set the amount of commands to be allowed per interval
-let timer2 = setInterval(releaseCommand, config.getConfig().antispamCommandTick);
+let timer2 = setInterval(releaseCommand, config.get('antispamCommandTick'));
 
 // Count user for anti spam after succesful message
 function antispamCount(offender) {
@@ -50,7 +50,7 @@ function antispamCount(offender) {
 function checkCommand(command, name, channel) {
     switch (command) {
         case '!cats':
-            if (comms.cats >= config.getConfig().antispamCommandLimitCats) {
+            if (comms.cats >= config.get('antispamCommandLimitCats')) {
                 logger.info(TAG, 'Antispam kicked in for command: !cats');
                 channel.sendMessage(name + ', I\'ve decided to severely limit the amount of cats I\'m afraid.')
                     .then(
@@ -71,7 +71,7 @@ function checkCommand(command, name, channel) {
 
 // Check if user is spamming
 function checkSpammer(offender) {
-    if (spammers[offender] >= config.getConfig().antispamUserLimit) {
+    if (spammers[offender] >= config.get('antispamUserLimit')) {
         logger.debug(TAG, 'Antispam kicked in for user: ' + offender);
         return false;
     } else {

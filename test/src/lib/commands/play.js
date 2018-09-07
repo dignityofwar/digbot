@@ -2,7 +2,7 @@
 
 const should = require('chai').should();
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const play = require('../../../../src/lib/commands/play.js');
 
 describe('commands/play.js', function() {
@@ -12,7 +12,7 @@ describe('commands/play.js', function() {
     });
 
     // Store original variable, to set it back after testing is finished
-    const original = config.getConfig().features;
+    const original = config.get('features');
     let features = original;
 
     // Build fake message object for testing

@@ -4,7 +4,7 @@
 
 // Module to store server data
 
-const config = require('../../../config/config.js');
+const config = require('config');
 const crashHandler = require('../crash-handling.js');
 const logger = require('../logger.js');
 const TAG = 'server';
@@ -24,7 +24,7 @@ let membersPlaying = 0;
 
 module.exports = {
     getReady: function() {
-        if (!guilds[config.getConfig().general.server] || guilds[config.getConfig().general.server].available === false) { ready = false; }
+        if (!guilds[config.get('general.server')] || guilds[config.get('general.server')].available === false) { ready = false; }
         return ready;
     },
     getBooted: function() {
@@ -46,7 +46,7 @@ module.exports = {
 
     // Guild stuff
     getGuild: function(id) {
-        if (id === undefined) { id = config.getConfig().general.server; }
+        if (id === undefined) { id = config.get('general.server'); }
         if (guilds[id] === undefined) {
             logger.warning(TAG, 'Guild "' + id + '" doesn\'t exist!');
             return null;
@@ -61,7 +61,7 @@ module.exports = {
         return guilds;
     },
 
-    // You HAVE to pass bot.guilds.get(config.getConfig().general.server) as for some reason it
+    // You HAVE to pass bot.guilds.get(config.get('general.server')) as for some reason it
     // won't save with just the server object
     saveGuild: function(id, guild) {
         if (guilds[id] !== undefined) {
@@ -132,7 +132,7 @@ module.exports = {
     },
     getRoles: function(guild) {
         if (guild === undefined) {
-            guild = config.getConfig().general.server;
+            guild = config.get('general.server');
         }
         if (this.getGuild(guild).roles.array().length === 0) {
             logger.warning(TAG, 'Guild roles list is somehow empty!');
@@ -142,7 +142,7 @@ module.exports = {
     },
     getRoleList: function(guild) {
         if (guild === undefined) {
-            guild = config.getConfig().general.server;
+            guild = config.get('general.server');
         }
         if (this.getRoles().members.array().length === 0) {
             logger.warning(TAG, 'Guild roles list is somehow empty!');
@@ -178,7 +178,7 @@ module.exports = {
         people playing games */
 
         // Ensure we get a most up to date version of the object
-        let members = this.getGuild(config.getConfig().general.server).members.array();
+        let members = this.getGuild(config.get('general.server')).members.array();
         let count = 0;
         for (let x in members) {
             if (members[x].presence.game !== null && members[x].user.bot !== true) {

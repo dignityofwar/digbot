@@ -1,0 +1,85 @@
+{
+  "showPerfStats"           : true,
+
+  "botUserID"               : "",
+  "subBots"                 : {
+    //    "bot2": {
+    //      "booted": false,
+    //      "busy"  : false,
+    //      "id"    : "",
+    //      "token" : ""
+    //    }
+  },
+
+  "token"                   : "",
+  "youtubeKey"              : "",
+
+  "general"                 : {
+    "adminsRoleID"           : "",
+    "devRoleID"              : "",
+    "forcedPTTRoleID"        : "",
+    "herebedragonsRoleID"    : "",
+    "server"                 : "",
+    "staffRoleID"            : "",
+    "superMuteRoleID"        : "",
+    "leaderRoles"            : [
+      ""
+    ],
+    "root"                   : ""
+  },
+
+  "channels"                : {
+    "mappings" : {
+      "chitChatVoice": "",
+      "developers"   : "",
+      "digbot"       : "",
+      "digBotLog"    : "",
+      "events"       : "",
+      "general"      : "",
+      "herebedragons": "",
+      "staff"        : "",
+      "streams"      : "",
+      "ps2dig"       : ""
+    },
+    "positions": {
+      "text" : {
+        //        "stellaris"    : {
+        //          "id"      : "",
+        //          "name"    : "stellaris",
+        //          "position": 1
+        //        }
+      },
+      "voice": {
+        "afk": {
+          // Afk Voice channels is always required
+          "id"      : "",
+          "name"    : "💤 AFK",
+          "position": null
+        }
+      }
+    }
+  },
+
+  "communityGames"          : {
+    //    "PS2": {
+    //      "name": "Planetside 2",
+    //      "roleids": [
+    //        ""
+    //      ],
+    //      "officers": [
+    //        ""
+    //      ],
+    //      "primaryChannel": ""
+    //    }
+  },
+
+  "recreationalGames"       : {
+    //    "Stellaris": {
+    //      "name": "Stellaris",
+    //      "roleids": [
+    //        ""
+    //      ],
+    //      "primaryChannel": ""
+    //    }
+  }
+}

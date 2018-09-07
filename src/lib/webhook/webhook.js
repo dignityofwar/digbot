@@ -4,7 +4,7 @@
 
 // Webhook module
 
-const config = require('../../../config/config.js');
+const config = require('config');
 const crashHandler = require('../crash-handling.js');
 const IPAddr = require('ipaddr.js');
 const logger = require('../logger.js');
@@ -80,16 +80,16 @@ module.exports = {
             return res.send(HTTP_INTERNAL_ERROR, {'error': err.message});
         });
 
-        restify.listen(config.getConfig().general.port, '0.0.0.0', function restifyListen() {
-            logger.info(TAG, 'Server now listening on :' + config.getConfig().general.port);
+        restify.listen(config.get('general.port'), '0.0.0.0', function restifyListen() {
+            logger.info(TAG, 'Server now listening on :' + config.get('general.port'));
         });
     },
 };
 
 function sendBotMessage(ch, msg) {
-    let channel = server.getChannelInGuild(ch, config.getConfig().general.server);
+    let channel = server.getChannelInGuild(ch, config.get('general.server'));
     if (!channel) { return; }
-    server.getChannelInGuild(ch, config.getConfig().general.server).sendMessage(msg)
+    server.getChannelInGuild(ch, config.get('general.server')).sendMessage(msg)
         .then(
             logger.debug(TAG, 'Successfuly sent message')
         )

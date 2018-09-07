@@ -18,16 +18,18 @@
   "homepage": "https://github.com/JamesLongman/DIGBot#readme",
   "dependencies": {
     "cli-color": "^1.1.0",
+    "config": "^2.0.1",
     "discord.js": "11.0.0",
     "googleapis": "^16.1.0",
     "erlpack": "hammerandchisel/erlpack#master",
     "ipaddr.js": "^1.2.0",
+    "lodash": "^4.17.10",
     "node-opus": "^0.2.4",
     "opusscript": "0.0.1",
     "request": "^2.79.0",
     "restify": "^4.1.1",
     "usage": "^0.7",
-    "ytdl-core": "^0.7.24"
+    "ytdl-core": "^0.25.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",

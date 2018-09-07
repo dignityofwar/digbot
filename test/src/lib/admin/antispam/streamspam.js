@@ -2,7 +2,7 @@
 
 const should = require('chai').should();
 
-const config = require('../../../../../config/config.js');
+const config = require('config');
 const streamspam = require('../../../../../src/lib/admin/antispam/streamspam.js');
 
 describe('admin/antispam/streamspam.js', function() {
@@ -29,17 +29,17 @@ describe('admin/antispam/streamspam.js', function() {
         },
         guild: {
             channels: new Map(),
-            id: config.getConfig().general.server,
+            id: config.get('general.server'),
         },
         member: {
             displayName: 'Dingbat',
-            id: config.getConfig().general.server,
+            id: config.get('general.server'),
         }
     };
     let deleted = false;
     let result = false;
     let streamChannelMessage = false;
-    const original = config.getConfig().streamChannel;
+    const original = configget('channels.mappings.streams');
     const testChannel = '00000123';
     msg.guild.channels.set('00000001', {
         sendMessage: function() {
@@ -133,7 +133,7 @@ describe('admin/antispam/streamspam.js', function() {
     it('should not trigger if someone is posting their stream in the stream channel', function() {
         resetTest();
         msg.content = 'Watch my stream guyz https://www.beam.pro/45373362';
-        msg.channel.id = config.getConfig().streamChannel;
+        msg.channel.id = configget('channels.mappings.streams');
         streamspam.execute(msg).should.be.true;
         deleted.should.be.false;
         result.should.be.false;

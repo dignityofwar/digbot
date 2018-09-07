@@ -4,7 +4,7 @@
 
 // !mentions module, lets a member know how many mentions they're allowed
 
-const config = require('../../../config/config.js');
+const config = require('config');
 const logger = require('../logger.js');
 const mentionsCheck = require('../admin/antispam/mentionspam.js');
 const TAG = '!mentions';
@@ -12,7 +12,7 @@ const TAG = '!mentions';
 module.exports = {
     execute: function(msg) {
         // Feature switch
-        if (config.getConfig().features.disableMentionSpam) {
+        if (config.get('features.disableMentionSpam')) {
             msg.channel.sendMessage(msg.member.displayName + ', the ' +
                 'mention limits are currently disabled. Please don\'t make us regret turning it off though')
                 .then(
@@ -39,8 +39,8 @@ module.exports = {
 
         // Calculate mentions limit
         let list = mentionsCheck.passList();
-        let x = config.getConfig().memberMentionLimit;
-        let y = config.getConfig().roleMentionLimit;
+        let x = config.get('memberMentionLimit');
+        let y = config.get('roleMentionLimit');
         if (list[msg.author.id]) {
             x = x - list[msg.author.id].memberMentions;
             y = y - list[msg.author.id].roleMentions;

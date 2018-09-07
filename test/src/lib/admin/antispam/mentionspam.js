@@ -3,7 +3,7 @@
 const expect = require('chai').expect;
 const should = require('chai').should();
 
-const config = require('../../../../../config/config.js');
+const config = require('config');
 const mentionspam = require('../../../../../src/lib/admin/antispam/mentionspam.js');
 
 describe('admin/antispam/mentionspam.js', function() {
@@ -23,12 +23,12 @@ describe('admin/antispam/mentionspam.js', function() {
     wrongRoles.set(role, {id: '23423465246246'});
 
     let staffRoles = new Map();
-    role = config.getConfig().staffRoleID;
-    staffRoles.set(role, {id: config.getConfig().staffRoleID});
+    role = config.get('general.staffRoleID');
+    staffRoles.set(role, {id: config.get('general.staffRoleID')});
 
     let gameLeaderRoles = new Map();
-    role = config.getConfig().general.leaderRoles[0];
-    gameLeaderRoles.set(role, {id: config.getConfig().general.leaderRoles[0]});
+    role = config.get('general.leaderRoles')[0];
+    gameLeaderRoles.set(role, {id: config.get('general.leaderRoles')[0]});
 
     // Construct message, first without the roles
     let message = {

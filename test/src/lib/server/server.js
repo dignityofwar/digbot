@@ -2,7 +2,7 @@
 
 const should = require('chai').should();
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const server = require('../../../../src/lib/server/server.js');
 
 describe('server/server.js', function() {
@@ -116,7 +116,7 @@ describe('server/server.js', function() {
         });
 
         it('should fetch default guild if no ID specified', function() {
-            server.getGuild().id.should.eql(config.getConfig().general.server);
+            server.getGuild().id.should.eql(config.get('general.server'));
         });
 
         it('guild object should have correct properties', function() {

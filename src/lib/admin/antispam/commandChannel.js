@@ -4,7 +4,7 @@
 
 // Enforces DIGBot to only respond to messages inside of #digbot or #developer.
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const commands = require('../../commands/commands.js');
 const crashHandler = require('../../crash-handling.js');
 const logger = require('../../logger.js');
@@ -26,8 +26,8 @@ module.exports = {
         if (msg.guild.id !== server.getGuild().id) { return; }
 
         // If not from #digbot or #developers or a nsfw (in the sense that it is unmoderated) message and if it starts with the prefix
-        if (msg.channel.id !== config.getConfig().channels.mappings.developers &&
-            msg.channel.id !== config.getConfig().channels.mappings.digbot &&
+        if (msg.channel.id !== config.get('channels.mappings.developers') &&
+            msg.channel.id !== config.get('channels.mappings.digbot') &&
             commands.check(msg.content)) {
             let date = new Date();
 

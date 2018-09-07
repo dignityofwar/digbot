@@ -2,7 +2,7 @@
 
 const should = require('chai').should();
 
-const config = require('../../../../../config/config.js');
+const config = require('config');
 const antispam = require('../../../../../src/lib/admin/antispam/antispam.js');
 
 describe('admin/antispam/antispam.js', function() {
@@ -27,14 +27,14 @@ describe('admin/antispam/antispam.js', function() {
             displayName: 'Dingbat1'
         }
     };
-    const original = config.getConfig().features;
+    const original = config.get('features');
     let features = original;
 
     it('Antispam should not kick in if disabled', function() {
         features.disableCommandSpam = true;
         config.setProperty('features', features);
         // Antispam should never trigger here no matter how many commands sent
-        for (let i = -3; i < config.getConfig().antispamCommandLimitCats; i++) {
+        for (let i = -3; i < config.get('antispamCommandLimitCats'); i++) {
             antispam.check(message).should.be.true;
         }
         config.setProperty('features', original);
@@ -44,7 +44,7 @@ describe('admin/antispam/antispam.js', function() {
         features.disableCommandSpam = false;
         config.setProperty('features', features);
         // Test the !cats command the number of time it should be allowed
-        for (let i = 0; i < config.getConfig().antispamCommandLimitCats; i++) {
+        for (let i = 0; i < config.get('antispamCommandLimitCats'); i++) {
             antispam.check(message).should.be.true;
         }
         // Next call should trigger the antispam module
@@ -72,7 +72,7 @@ describe('admin/antispam/antispam.js', function() {
             }
         };
         // Test the commands the number of time they should be allowed
-        for (let i = 0; i < config.getConfig().antispamUserLimit; i++) {
+        for (let i = 0; i < config.get('antispamUserLimit'); i++) {
             antispam.check(message).should.be.true;
         }
         // Next call should trigger the antispam module

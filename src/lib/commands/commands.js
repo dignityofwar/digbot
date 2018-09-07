@@ -22,7 +22,7 @@ const sort = require('./sort.js');
 const started = require('./started.js');
 const stats = require('./stats.js');
 
-const config = require('../../../config/config.js');
+const config = require('config');
 const logger = require('../logger.js');
 const server = require('../server/server.js');
 const TAG = 'commands';
@@ -190,7 +190,7 @@ module.exports = {
     roles: function(msg) {
         if (!adminCheck(msg)) { return false; }
         let output = '';
-        server.getGuild(config.getConfig().general.server).roles.forEach(function(role) {
+        server.getGuild(config.get('general.server')).roles.forEach(function(role) {
             output += '**' + role.id + '**: ' + role.name + '\n';
         });
         msg.author.sendMessage(output);
@@ -248,9 +248,9 @@ function sendMessage(toSend, msg) {
 
 // Checks if a member should have access to the admin commands
 function adminCheck(msg) {
-    if (config.getConfig().environment !== 'production') { return true; } // Always allow staging / dev
-    if (msg.member.roles.has(config.getConfig().general.devRoleID)) { return true; }
-    if (msg.member.roles.has(config.getConfig().general.staffRoleID)) {return true; }
+    if (config.util.getEnv('NODE_ENV') !== 'production') { return true; } // Always allow staging / dev
+    if (msg.member.roles.has(config.get('general.devRoleID'))) { return true; }
+    if (msg.member.roles.has(config.get('general.staffRoleID'))) {return true; }
     sendMessage(`Sorry ${msg.member.displayName} but only staff members and devs ` +
         `have access to admin commands`, msg);
     return false;

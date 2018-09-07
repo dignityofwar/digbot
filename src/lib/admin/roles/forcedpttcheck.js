@@ -4,14 +4,14 @@
 
 // Detects if a member just recieved the mute tag, if so PM them VOIP tips
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const logger = require('../../logger.js');
 const TAG = 'Forced PTT Check';
 
 module.exports = {
     execute: function(oldMember, newMember) {
-        if (!newMember.roles.has(config.getConfig().forcedPTTRoleID)) { return false; }
-        if (oldMember.roles.has(config.getConfig().forcedPTTRoleID)) { return false; }
+        if (!newMember.roles.has(config.get('general.forcedPTTRoleID'))) { return false; }
+        if (oldMember.roles.has(config.get('general.forcedPTTRoleID'))) { return false; }
         newMember.sendMessage('Hey ' + newMember.displayName + message)
             .then(() => {
                 logger.info(TAG, 'Detected member was muted and informed them why');

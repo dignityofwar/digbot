@@ -2,11 +2,11 @@
 
 const should = require('chai').should();
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const subBots = require('../../../../src/lib/sub-bots/sub-bots.js');
 
 describe('sub-bots/sub-bots.js', function() {
-    const original = config.getConfig().subBots;
+    const original = config.get('subBots');
 
     it('should have the function "logout"', function() {
         subBots.should.have.property('logout');
@@ -86,7 +86,7 @@ describe('sub-bots/sub-bots.js', function() {
     });
 
     describe('test passBot rejection due to exceeded limit', function() {
-        const limit = config.getConfig().subBotLimit;
+        const limit = config.get('subBotLimit');
         let result = false;
 
         before(function(done) {

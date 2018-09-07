@@ -2,7 +2,7 @@
 
 const should = require('chai').should();
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const sort = require('../../../../src/lib/commands/sort.js');
 
 describe('commands/sort.js', function() {
@@ -12,7 +12,7 @@ describe('commands/sort.js', function() {
     });
 
     // Tests require to alter this config property, but will reset it back to its original value ASAP
-    const original = config.getConfig().features;
+    const original = config.get('features');
     let features = original;
 
     it('should refuse request if feature disabled', function() {

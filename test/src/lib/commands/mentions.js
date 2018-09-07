@@ -2,7 +2,7 @@
 
 const should = require('chai').should();
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const mentions = require('../../../../src/lib/commands/mentions.js');
 
 // Only test mentions.js code here, mentionspam module has its own tests
@@ -35,7 +35,7 @@ describe('commands/mentions.js', function() {
         msg.member.roles.set('000004', {name: 'testCh4', type: 'voice'});
     }
 
-    const original = config.getConfig().features;
+    const original = config.get('features');
     let features = original;
 
     it('should have function execute', function() {
@@ -57,16 +57,16 @@ describe('commands/mentions.js', function() {
         resetTest();
         features.disableMentionSpam = false;
         config.setProperty('features', features);
-        msg.member.roles.set(config.getConfig().staffRoleID, {test1: 'test'});
+        msg.member.roles.set(config.get('general.staffRoleID'), {test1: 'test'});
         mentions.execute(msg).should.be.false;
         config.setProperty('features', original);
         channelMessage.should.eql('JBuilds, you are exempt from the mention limit');
         // Leader role exemptions
-        for (let x in config.getConfig().general.leaderRoles) {
+        for (let x in config.get('general.leaderRoles')) {
             resetTest();
             features.disableMentionSpam = false;
             config.setProperty('features', features);
-            msg.member.roles.set(config.getConfig().general.leaderRoles[x], {test1: 'test'});
+            msg.member.roles.set(config.get('general.leaderRoles')[x], {test1: 'test'});
             mentions.execute(msg).should.be.false;
             config.setProperty('features', features);
             channelMessage.should.eql('JBuilds, you are exempt from the mention limit');

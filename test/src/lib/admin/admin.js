@@ -3,7 +3,7 @@
 const should = require('chai').should();
 
 const admin = require('../../../../src/lib/admin/admin.js');
-const config = require('../../../../config/config.js');
+const config = require('config');
 
 describe('admin/admin.js', function() {
     it('should have function antispamCheck', function() {
@@ -22,11 +22,11 @@ describe('admin/admin.js', function() {
     });
 
     it('check should return true if msg from correct server', function() {
-        const original = config.getConfig().features;
+        const original = config.get('features');
         let features = original;
         features.disableMentionSpam = true;
         config.setProperty('features', features);
-        const msg = {guild: {id: config.getConfig().general.server}, member: {id: config.getConfig().botUserID}};
+        const msg = {guild: {id: config.get('general.server')}, member: {id: config.get('botUserID')}};
         admin.check(msg).should.be.true;
         config.setProperty('features', original);
     });

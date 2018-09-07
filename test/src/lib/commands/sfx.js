@@ -2,7 +2,7 @@
 
 const should = require('chai').should();
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const sfx = require('../../../../src/lib/commands/sfx.js');
 
 describe('commands/sfx.js', function() {
@@ -12,7 +12,7 @@ describe('commands/sfx.js', function() {
     });
 
     // Store original variable, to set it back after testing is finished
-    const original = config.getConfig().features;
+    const original = config.get('features');
     let features = original;
 
     // Build fake message object for testing

@@ -2,7 +2,7 @@
 
 const should = require('chai').should();
 
-const config = require('../../../../../config/config.js');
+const config = require('config');
 const detectplaying = require('../../../../../src/lib/admin/roles/detectplaying.js');
 
 describe('admin/roles/detectplaying.js', function() {
@@ -12,7 +12,7 @@ describe('admin/roles/detectplaying.js', function() {
     });
 
     it('should return false even if no arguements if feature disabled', function() {
-        const original = config.getConfig().features;
+        const original = config.get('features');
         let features = original;
         features.automaticRoleAssignment = false;
         config.setProperty('features', features);

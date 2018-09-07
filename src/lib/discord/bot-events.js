@@ -6,7 +6,7 @@
 
 const admin = require('../admin/admin.js');
 const commands = require('../commands/commands.js');
-const config = require('../../../config/config.js');
+const config = require('config');
 const directMessage = require('./direct-message.js');
 const crashHandler = require('../crash-handling.js');
 const logger = require('../logger.js');
@@ -22,7 +22,7 @@ module.exports = {
         if (channel.type === 'dm' || channel.type === 'group') { return false; }
         if (!channel || !channel.guild) { return false; }
         if (checkIfValid(channel.guild.id) === false) { return false; }
-        server.saveGuild(channel.guild.id, bot.guilds.get(config.getConfig().general.server));
+        server.saveGuild(channel.guild.id, bot.guilds.get(config.get('general.server')));
         admin.checkCreation(channel);
     },
 
@@ -30,14 +30,14 @@ module.exports = {
         if (channel.type === 'dm' || channel.type === 'group') { return false; }
         if (!channel || !channel.guild) { return false; }
         if (checkIfValid(channel.guild.id) === false) { return false; }
-        server.saveGuild(channel.guild.id, bot.guilds.get(config.getConfig().general.server));
+        server.saveGuild(channel.guild.id, bot.guilds.get(config.get('general.server')));
     },
 
     channelUpdate: function(oldChannel, newChannel, bot) {
         if (newChannel.type === 'dm' || newChannel.type === 'group') { return false; }
         if (!oldChannel || !newChannel || !newChannel.guild) { return false; }
         if (checkIfValid(newChannel.guild.id) === false) { return false; }
-        server.saveGuild(newChannel.guild.id, bot.guilds.get(config.getConfig().general.server));
+        server.saveGuild(newChannel.guild.id, bot.guilds.get(config.get('general.server')));
         admin.checkPositions();
     },
 
@@ -47,13 +47,13 @@ module.exports = {
 
     disconnectEvent: function() {
         logger.botStatus(TAG, 'Client disconected');
-        server.wipeGuild(config.getConfig().general.server);
+        server.wipeGuild(config.get('general.server'));
         server.markAsNotReady();
     },
 
     guildCreate: function(guild, bot) {
         if (server.getBooted() === false) { return false; }
-        server.saveGuild(guild.id, bot.guilds.get(config.getConfig().general.server));
+        server.saveGuild(guild.id, bot.guilds.get(config.get('general.server')));
     },
 
     guildDelete: function(guild) {
@@ -77,7 +77,7 @@ module.exports = {
         nameCheck.execute(member);
         admin.joinChecks(member);
         admin.checkPlaying(member);
-        server.saveGuild(member.guild.id, bot.guilds.get(config.getConfig().general.server));
+        server.saveGuild(member.guild.id, bot.guilds.get(config.get('general.server')));
         server.setMembersOnServer(member.guild, 1);
         admin.presenceUpdate();
     },
@@ -85,7 +85,7 @@ module.exports = {
     guildMemberRemove: function(member, bot) {
         if (checkIfValid(member.guild.id) === false) { return false; }
         logger.info(member.displayName + ' left the server');
-        server.saveGuild(member.guild.id, bot.guilds.get(config.getConfig().general.server));
+        server.saveGuild(member.guild.id, bot.guilds.get(config.get('general.server')));
         server.setMembersOnServer(member.guild, -1);
         admin.presenceUpdate();
     },
@@ -98,7 +98,7 @@ module.exports = {
 
     guildUpdate: function(oldGuild, newGuild, bot) {
         if (checkIfValid(newGuild.id) === false) { return false; }
-        server.saveGuild(newGuild.id, bot.guilds.get(config.getConfig().general.server));
+        server.saveGuild(newGuild.id, bot.guilds.get(config.get('general.server')));
     },
 
     message: function(msg) {
@@ -162,7 +162,7 @@ module.exports = {
     presenceUpdate: function(oldMember, newMember) {
         if (!checkIfValid(newMember.guild.id)) { return false; }
         admin.checkPlaying(oldMember, newMember);
-        server.saveGuild(config.getConfig().general.server, newMember.guild);
+        server.saveGuild(config.get('general.server'), newMember.guild);
         server.setMembersPlaying();
         admin.presenceUpdate();
     },
@@ -170,10 +170,10 @@ module.exports = {
     ready: function(bot) {
         if (server.getBooted() === true) {
             logger.botStatus(TAG, 'Client succesfully reconnected');
-            server.saveGuild(config.getConfig().general.server, bot.guilds.get(config.getConfig().general.server));
+            server.saveGuild(config.get('general.server'), bot.guilds.get(config.get('general.server')));
             server.setConnectedSince();
             server.markAsReady();
-            server.setMembersOnServer(bot.guilds.get(config.getConfig().general.server));
+            server.setMembersOnServer(bot.guilds.get(config.get('general.server')));
             logger.info(TAG, 'DIGBot, Online.');
             return;
         }
@@ -185,7 +185,7 @@ module.exports = {
 
         if (server.getBooted() === false) {
             if (server.getChannel('developers') !== null) {
-                server.getChannel('developers').sendMessage(`DIGBot, reporting for duty! Environment: ${config.getConfig().environment}`)
+                server.getChannel('developers').sendMessage(`DIGBot, reporting for duty! Environment: ${config.util.getEnv('NODE_ENV')}`)
                     .then(
                         logger.debug(TAG, 'Succesfully sent message')
                     )
@@ -196,10 +196,10 @@ module.exports = {
         }
 
         // Store the data for usage from other modules
-        console.log(config.getConfig().general.server);
-        server.saveGuild(config.getConfig().general.server, bot.guilds.get(config.getConfig().general.server));
-        server.setMembersOnServer(bot.guilds.get(config.getConfig().general.server));
-        logger.info(TAG, 'Server member count: ' + server.getGuild(config.getConfig().general.server).memberCount);
+        console.log(config.get('general.server'));
+        server.saveGuild(config.get('general.server'), bot.guilds.get(config.get('general.server')));
+        server.setMembersOnServer(bot.guilds.get(config.get('general.server')));
+        logger.info(TAG, 'Server member count: ' + server.getGuild(config.get('general.server')).memberCount);
 
         commands.ready();
         admin.ready();
@@ -216,22 +216,22 @@ module.exports = {
         if (server.getBooted() === false) { return false; } // Ignore if bot never truly booted
         logger.botStatus(TAG, 'Client disconected, attempting reconnection...');
         logger.warning(TAG, 'Bot got disconnected from Discord, reconnecting...');
-        server.wipeGuild(config.getConfig().general.server);
+        server.wipeGuild(config.get('general.server'));
     },
 
     roleCreate: function(role, bot) {
         if (!checkIfValid(role.guild.id)) { return false; }
-        server.saveGuild(role.guild.id, bot.guilds.get(config.getConfig().general.server));
+        server.saveGuild(role.guild.id, bot.guilds.get(config.get('general.server')));
     },
 
     roleDelete: function(role, bot) {
         if (!checkIfValid(role.guild.id)) { return false; }
-        server.saveGuild(role.guild.id, bot.guilds.get(config.getConfig().general.server));
+        server.saveGuild(role.guild.id, bot.guilds.get(config.get('general.server')));
     },
 
     roleUpdate: function(oldRole, newRole, bot) {
         if (!checkIfValid(newRole.guild.id)) { return false; }
-        server.saveGuild(newRole.guild.id, bot.guilds.get(config.getConfig().general.server));
+        server.saveGuild(newRole.guild.id, bot.guilds.get(config.get('general.server')));
     },
 
     voiceStateUpdate: function(oldMember, newMember) {
@@ -246,7 +246,7 @@ module.exports = {
 
 // Checks if the bot should not take action on the event for some reason (bot not ready or wrong server)
 function checkIfValid(guildID) {
-    if (guildID != config.getConfig().general.server) { return false; }
+    if (guildID != config.get('general.server')) { return false; }
     if (server.getReady() === false || server.getBooted() === false) { return false; }
     return true;
 }
@@ -254,50 +254,50 @@ function checkIfValid(guildID) {
 // Iterates through channel objects that the bot has access to, take action on relevant channels
 function assignChannelStorage(bot) {
     for (let ch of bot.channels) {
-        if (ch[1].id === config.getConfig().channels.mappings.developers) {
+        if (ch[1].id === config.get('channels.mappings.developers')) {
             server.setChannel('developers', ch[1]);
         }
 
-        if (ch[1].id === config.getConfig().channels.mappings.digBotLog) {
+        if (ch[1].id === config.get('channels.mappings.digBotLog')) {
             server.setChannel('digBotLog', ch[1]);
             logger.setChannel(ch[1]);
         }
 
-        if (ch[1].id === config.getConfig().channels.mappings.staff) {
+        if (ch[1].id === config.get('channels.mappings.staff')) {
             server.setChannel('staff', ch[1]);
         }
 
-        if (ch[1].id === config.getConfig().channels.mappings.general) {
+        if (ch[1].id === config.get('channels.mappings.general')) {
             server.setChannel('general', ch[1]);
         }
 
-        if (ch[1].id === config.getConfig().channels.mappings.events) {
+        if (ch[1].id === config.get('channels.mappings.events')) {
             server.setChannel('events', ch[1]);
         }
 
-        if (ch[1].id === config.getConfig().channels.mappings.streams) {
+        if (ch[1].id === config.get('channels.mappings.streams')) {
             server.setChannel('streams', ch[1]);
         }
 
-        if (ch[1].id === config.getConfig().channels.mappings.herebedragons) {
+        if (ch[1].id === config.get('channels.mappings.herebedragons')) {
             server.setChannel('herebedragons', ch[1]);
         }
 
-        if (ch[1].id === config.getConfig().channels.mappings.digbot) {
+        if (ch[1].id === config.get('channels.mappings.digbot')) {
             server.setChannel('digbot', ch[1]);
         }
 
-        if (ch[1].id === config.getConfig().channels.mappings.chitChatVoice) {
+        if (ch[1].id === config.get('channels.mappings.chitChatVoice')) {
             server.setChannel('digChitChatVoice', ch[1]);
         }
 
-        if (ch[1].id === config.getConfig().channels.mappings.ps2dig) {
+        if (ch[1].id === config.get('channels.mappings.ps2dig')) {
             server.setChannel('ps2dig', ch[1]);
         }
 
-        if (config.getConfig().tester !== null && config.getConfig().testerChannel !== null) {
-            if (ch[1].id === config.getConfig().testerChannel) {
-                logger.info(TAG, 'Found ' + config.getConfig().tester + ' channel. Resetting developers');
+        if (config.get('tester') !== null && config.get('testerChannel') !== null) {
+            if (ch[1].id === config.get('testerChannel')) {
+                logger.info(TAG, 'Found ' + config.get('tester') + ' channel. Resetting developers');
                 server.setChannel('digbot', ch[1]);
                 server.setChannel('developers', ch[1]);
                 logger.setChannel(ch[1]);

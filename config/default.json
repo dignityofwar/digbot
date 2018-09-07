@@ -1,0 +1,113 @@
+{
+  "showPerfStats"           : false,
+
+  "botUserID"               : "",
+  "subBotLimit"             : 5,
+  "subBots"                 : {
+    //    "bot2": {
+    //      "booted": false,
+    //      "busy"  : false,
+    //      "id"    : "",
+    //      "token" : ""
+    //    }
+  },
+
+  "token"                   : "",
+  "youtubeKey"              : "",
+
+  "general"                 : {
+    "adminsRoleID"           : "",
+    "devRoleID"              : "",
+    "forcedPTTRoleID"        : "",
+    "herebedragonsRoleID"    : "",
+    "server"                 : "",
+    "staffRoleID"            : "",
+    "superMuteRoleID"        : "",
+    "leaderRoles"            : [],
+    "cpuNotificationLimit"   : 100,
+    "memoryNotificationLimit": 200,
+    "port"                   : 1337,
+    "root"                   : ""
+  },
+
+  "antispamCommandTick"     : 300000, // 5 mins
+  "antispamCommandLimitCats": 2, // Limit on cats command
+  "antispamUserTick"        : 120000, // 2 mins
+  "antispamUserLimit"       : 10, // Commands before antispam shuts someone down
+  "autoDeleteChannels"      : 1200000, // How often autodelete.js checks for deletable channels
+  "eventProtection"         : 900000, // Length of time channels are protected for after an event ends
+  "inactivityLimit"         : 30, //Number of days of innactivity after which a member is pruned
+  "memberMentionLimit"      : 20, // Number we allow people to mention members a day
+  "mentionsMuteTime"        : 7200000, // Time to supermute someone spamming mentions
+  "roleMentionLimit"        : 5, // Number of times we allow people to mention roles a day
+  "textInactive"            : 7200000, // Length of time after which a text channel is considered inactive
+
+  "testing"                 : false,
+  "tester"                  : null,
+  "testerChannel"           : null,
+
+  "channels"                : {
+    "mappings" : {
+      "chitChatVoice": "",
+      "developers"   : "",
+      "digbot"       : "",
+      "digBotLog"    : "",
+      "events"       : "",
+      "general"      : "",
+      "herebedragons": "",
+      "staff"        : "",
+      "streams"      : "",
+      "ps2dig"       : ""
+    },
+    "positions": {
+      "text" : {
+        //        "stellaris"    : {
+        //          "id"      : "",
+        //          "name"    : "stellaris",
+        //          "position": 1
+        //        }
+      },
+      "voice": {
+        "afk": {
+          // Afk Voice channels is always required
+          "id"      : "",
+          "name"    : "💤 AFK",
+          "position": null
+        }
+      }
+    }
+  },
+
+  "communityGames"          : {
+    //    "PS2": {
+    //      "name": "Planetside 2",
+    //      "roleids": [
+    //        ""
+    //      ],
+    //      "officers": [
+    //        ""
+    //      ],
+    //      "primaryChannel": ""
+    //    }
+  },
+
+  "features"                : {
+    "automaticRoleAssignment"    : true,
+    "channelPositionsEnforcement": true,
+    "disableCommandSpam"         : false,
+    "disableMentionSpam"         : false,
+    "modularChannelSystem"       : true,
+    "sfx"                        : true,
+    "play"                       : true
+  },
+
+  "recreationalGames"       : {
+    //    "Stellaris": {
+    //      "name": "Stellaris",
+    //      "roleids": [
+    //        ""
+    //      ],
+    //      "primaryChannel": ""
+    //    }
+  }
+}

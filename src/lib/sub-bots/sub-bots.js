@@ -4,7 +4,8 @@
 
 // Module to control sub bot usage, logs in bots as required
 
-const config = require('../../../config/config.js');
+const _ = require('lodash');
+const config = require('config');
 const crashHandler = require('../crash-handling.js');
 const Discord = require('discord.js');
 const logger = require('../logger.js');
@@ -46,13 +47,13 @@ module.exports = {
         crashHandler.logEvent(TAG, 'passBot');
         return new Promise(function(resolve, reject) {
             // Probably best not to hit this, should be checked by what's calling it for better handling
-            if (!config.getConfig().subBots) {
+            if (!config.get('subBots')) {
                 logger.info(TAG, 'SubBots feature called, but disabled or no subBots on file, rejecting');
                 reject('The sub bot feature is disabled or there are no subBots on file');
                 return;
             }
 
-            if (currentBots >= config.getConfig().subBotLimit) {
+            if (currentBots >= config.get('subBotLimit')) {
                 logger.info(TAG, 'SubBot requested but maximum number logged on');
                 reject('The maximum number of subBots are currently running');
                 return;
@@ -89,11 +90,15 @@ module.exports = {
     // Logs in all bots, should be done on ready and every 24 hours to keep them active
     ready: function() {
         crashHandler.logEvent(TAG, 'ready');
-        if (!config.getConfig().subBots) {
+        if (!config.get('subBots')) {
             logger.info(TAG, 'SubBots feature disabled or no subBots on file');
             return false;
         }
-        if (subBots === null) { subBots = config.getConfig().subBots; }
+
+        if (subBots === null) {
+            subBots = _.mapValues(config.get('subBots'), (subBot) => Object.assign({}, subBot));
+        }
+
         for (let x in subBots) {
             if (subBots[x].booted === true && subBots[x].busy) {
                 logger.info(TAG, 'Sub bot ' + subBots[x].id + ' marked as busy, skipping');
@@ -140,8 +145,8 @@ module.exports = {
                 });
 
             bot.on('ready', () => {
-                if (config.getConfig().environment !== 'production') {
-                    bot.channels.get(config.getConfig().channels.mappings.digbot)
+                if (config.util.getEnv('NODE_ENV') !== 'production') {
+                    bot.channels.get(config.get('channels.mappings.digbot'))
                         .sendMessage('Sub bot reporting for duty')
                         .then(
                             logger.debug(TAG, 'Sub bot succesfully sent message')
