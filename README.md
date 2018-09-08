@@ -1,6 +1,11 @@
 <div align="center">
     <h1>DIGBot</h1>
     <h4>DIG community's custom discord bot</h4>
+    <p>
+     <a href="https://travis-ci.org/JamesLongman/DIGBot"><img src="https://travis-ci.org/JamesLongman/DIGBot.svg?branch=master"/></a>
+     <a class="badge-align" href="https://www.codacy.com/app/JamesLongman/DIGBot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JamesLongman/DIGBot&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/c0c02795174c43ce9f3bfddce5c50e6f"/></a>
+     <a href="https://david-dm.org/JamesLongman/DIGBot" title="dependencies status"><img src="https://david-dm.org/JamesLongman/DIGBot.svg"/></a>
+  </p>
 </div>
 
 ## About
