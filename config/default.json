@@ -5,8 +5,6 @@
   "subBotLimit"             : 5,
   "subBots"                 : {
     //    "bot2": {
-    //      "booted": false,
-    //      "busy"  : false,
     //      "id"    : "",
     //      "token" : ""
     //    }

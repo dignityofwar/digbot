@@ -4,8 +4,6 @@
   "botUserID"               : "",
   "subBots"                 : {
     //    "bot2": {
-    //      "booted": false,
-    //      "busy"  : false,
     //      "id"    : "",
     //      "token" : ""
     //    }
