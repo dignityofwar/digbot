@@ -7,8 +7,5 @@ services:
             context: .
             dockerfile: docker/Dockerfile
         ports:
-            - "5000:5000"
-        volumes:
-            - ./:/DIGBot
-        entrypoint: /app/run.sh
+            - "1337:1337"
         tty: true

@@ -1,9 +1,6 @@
 FROM node:7.6
 ### Copyright © 2018 DIG Development team. All rights reserved. ###
 
-### Add dependencies ###
-RUN apt update
-
 ### Add bash script to Docker image ###
 COPY docker/run.sh /app/run.sh
 
