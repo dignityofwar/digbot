@@ -7,37 +7,23 @@
         Stellaris: {
             name: 'Stellaris',
             roleids: [
-                '240522249432465418'
+                '486335986628821003'
             ],
-            primaryChannel: '240522222467416064'
+            primaryChannel: '486324305915936769'
         },
         EU4: {
             name: 'Europa Universalis 4',
             roleids: [
-                '226068728327045121'
+                '486335986628821003'
             ],
-            primaryChannel: '240522200715755520'
+            primaryChannel: '486324305915936769'
         },
-        SpaceEngineers: {
-            name: 'Space Engineers',
+        GuildWars2: {
+            name: 'Guild Wars 2',
             roleids: [
-                '260853893041225730'
+                '318341912840896515'
             ],
-            primaryChannel: '260854133333032970'
-        },
-        Warframe: {
-            name: 'Warframe',
-            roleids: [
-                '286611246042841088'
-            ],
-            primaryChannel: '286611642589118464'
-        },
-        Minecraft: {
-            name: 'Minecraft',
-            roleids: [
-                '290300247131815936'
-            ],
-            primaryChannel: '290299600739368960'
+            primaryChannel: '489880473699483659'
         }
     };
 }());

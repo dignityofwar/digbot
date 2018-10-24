@@ -3,10 +3,10 @@
 (function() {
     module.exports = {
         automaticRoleAssignment: true,
-        channelPositionsEnforcement: true,
+        channelPositionsEnforcement: false, // Issue #53
         disableCommandSpam: false,
         disableMentionSpam: false,
-        modularChannelSystem: true,
+        modularChannelSystem: false,  // Issue #49
         sfx: true,
         play: true
     };

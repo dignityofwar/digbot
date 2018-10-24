@@ -19,6 +19,6 @@
         memoryNotificationLimit: 150,
         port: 1338,
         root: '/var/web/dignityofwar.com/bot-staging',
-        server: '290582293704343553',
+        server: '290582293704343553'
     };
 }());

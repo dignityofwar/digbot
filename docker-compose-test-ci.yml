@@ -5,9 +5,7 @@ services:
     node:
         build:
             context: .
-            dockerfile: docker/Dockerfile
+            dockerfile: docker/Dockerfile-test
         ports:
             - "1337:1337"
-        entrypoint: /app/run.sh
         tty: true
-        restart: always
