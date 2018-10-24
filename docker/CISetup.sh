@@ -18,7 +18,9 @@ token4=${11}
 token5=${12}
 token6=${13}
 
-# Rewrite enviroment variables
+# Rewrite enviroment variables of envConfig.json pre tests. These lines effectively create and
+# subsequently overrite 13 versions of the config file. There is most likely a much
+# more efficient way of altering the config arguements to cut down on build time 
 jq -c '.token = $newVal' --arg newVal $token $configFile > tmp.$$.json && mv tmp.$$.json $configFile
 
 jq -c '.subBots.subBot1.id = $newVal' --arg newVal $ID1 $configFile > tmp.$$.json && mv tmp.$$.json $configFile

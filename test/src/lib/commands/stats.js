@@ -87,7 +87,7 @@ describe('commands/stats.js', function() {
         });
     });
 
-    /*
+    /* Issue #32 Test Failures
     describe('test timestamps', function() {
 
         // Need custom vars as multiple asynchorous tests using the same vars will conflict

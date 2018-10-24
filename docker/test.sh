@@ -9,8 +9,6 @@ echo "Running npm install / prune"
 npm install
 npm prune
 
-### shopt -s globstar
-
 ### Setup now complete, attempt to run the main JS file ###
 echo "Starting Tests!!!"
 npm test

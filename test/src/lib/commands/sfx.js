@@ -131,7 +131,8 @@ describe('commands/sfx.js', function() {
             const start = setTimeout(done, 50); // Longer timer to wait on verification
         });
 
-        /*it('should attempt to play sfx given a correct command', function() {
+        /*  Issue #32 Test Failures
+        it('should attempt to play sfx given a correct command', function() {
             channelMessageArray[0].should.eql('Playing effect: *wow* for JBuilds');
             channelMessageArray[1].should.eql('Sorry, the sfx encountered an error, please try again.');
             userMessage.should.be.false;

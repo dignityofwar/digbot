@@ -1,4 +1,5 @@
 FROM node:7.6
+### Copyright © 2018 DIG Development team. All rights reserved. ###
 
 ### Add dependencies ###
 RUN apt update
