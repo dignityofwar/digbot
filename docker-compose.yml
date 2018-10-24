@@ -8,4 +8,5 @@ services:
             dockerfile: docker/Dockerfile
         ports:
             - "1337:1337"
+        entrypoint: /app/run.sh
         tty: true

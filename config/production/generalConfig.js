@@ -19,6 +19,6 @@
         memoryNotificationLimit: 200,
         port: 1337,
         root: '/var/web/dignityofwar.com/bot',
-        server: '90078410642034688',
+        server: '90078410642034688'
     };
 }());

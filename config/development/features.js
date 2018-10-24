@@ -6,8 +6,8 @@
         channelPositionsEnforcement: false,
         disableCommandSpam: false,
         disableMentionSpam: false,
-        modularChannelSystem: true,
+        modularChannelSystem: false,  // Issue #49
         sfx: true,
-        play: true,
+        play: true
     };
 }());

@@ -19,6 +19,6 @@
         nsfwChannels: '486324191868747777',
         memoryNotificationLimit: 200,
         port: 1337,
-        root: 'F:/Coding/DIG-discord',
+        root: 'F:/Coding/DIG-discord'
     };
 }());
