@@ -9,5 +9,5 @@ services:
         ports:
             - "1337:1337"
         tty: true
-    environment:
-    - NODE_ENV=testing
+        environment:
+        - NODE_ENV=testing
