@@ -8,5 +8,8 @@
 # Retry failed tests 3 times (useful if an error is just because of a dodgy API connection)
 --retries 3
 
+#Creates a global variable Faker which allows for easy modification of the config during testing
+--require ./config/config-faker.js
+
 # End process after all tests are complete (necessary for CI otherwise builds would hang)
 --exit
