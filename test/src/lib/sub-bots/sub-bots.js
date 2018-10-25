@@ -70,11 +70,13 @@ describe('sub-bots/sub-bots.js', function() {
                 .then(passed => {
                     subBots.logout(passed);
                     done();
+                    Faker.resetFake();
                 })
                 .catch(err => {
                     result = err;
                     done();
-                }).finally(() => Faker.resetFake());
+                    Faker.resetFake();
+                });
         });
 
         it('should reject if feature disabled', function() {
@@ -94,11 +96,13 @@ describe('sub-bots/sub-bots.js', function() {
                 .then(passed => {
                     subBots.logout(passed);
                     done();
+                    Faker.resetFake();
                 })
                 .catch(err => {
                     result = err;
                     done();
-                }).finally(() => Faker.resetFake());
+                    Faker.resetFake();
+                });
         });
 
         it('should reject if feature disabled', function() {
