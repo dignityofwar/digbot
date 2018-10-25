@@ -1,15 +1,12 @@
 # Copyright © 2018 DIG Development team. All rights reserved.
 
-version: '3'
+version: '3.0'
 services:
-    nodetest:
+    node:
         build:
             context: .
-            dockerfile: Dockerfile
-        volumes:
-            - ./:/var/project:Z
-        command: /usr/local/bin/test.sh
+            dockerfile: docker/Dockerfile-test
         ports:
-            - "1337:1337" # Run locally on the jenkins server, there shouldn't be anything on that port
-        environment:
-          - NODE_ENV=testing
+            - "1337:1337"
+        entrypoint: /app/test.sh
+        tty: true
