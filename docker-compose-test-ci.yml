@@ -11,3 +11,5 @@ services:
         tty: true
         environment:
         - NODE_ENV=testing
+        - DISCORD_API_TOKEN
+        - SUBBOTS
