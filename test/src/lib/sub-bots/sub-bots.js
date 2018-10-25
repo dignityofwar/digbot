@@ -65,7 +65,7 @@ describe('sub-bots/sub-bots.js', function() {
 
         before(function(done) {
             result = false;
-            Faker.setFakeProperty('subBots', false);
+            Faker.setFakeProperty('subBots', {});
             subBots.passBot()
                 .then(passed => {
                     subBots.logout(passed);

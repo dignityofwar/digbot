@@ -47,7 +47,7 @@ module.exports = {
         crashHandler.logEvent(TAG, 'passBot');
         return new Promise(function(resolve, reject) {
             // Probably best not to hit this, should be checked by what's calling it for better handling
-            if (!config.get('subBots')) {
+            if (!Object.keys(config.get('subBots')).length) {
                 logger.info(TAG, 'SubBots feature called, but disabled or no subBots on file, rejecting');
                 reject('The sub bot feature is disabled or there are no subBots on file');
                 return;
@@ -90,7 +90,7 @@ module.exports = {
     // Logs in all bots, should be done on ready and every 24 hours to keep them active
     ready: function() {
         crashHandler.logEvent(TAG, 'ready');
-        if (!config.get('subBots')) {
+        if (!Object.keys(config.get('subBots')).length) {
             logger.info(TAG, 'SubBots feature disabled or no subBots on file');
             return false;
         }
