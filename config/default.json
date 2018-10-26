@@ -91,10 +91,10 @@
 
   "features"                : {
     "automaticRoleAssignment"    : true,
-    "channelPositionsEnforcement": true,
+    "channelPositionsEnforcement": false,
     "disableCommandSpam"         : false,
     "disableMentionSpam"         : false,
-    "modularChannelSystem"       : true,
+    "modularChannelSystem"       : false,
     "sfx"                        : true,
     "play"                       : true
   },
