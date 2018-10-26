@@ -46,19 +46,18 @@ module.exports = {
     passBot: function() {
         crashHandler.logEvent(TAG, 'passBot');
         return new Promise(function(resolve, reject) {
-            // Probably best not to hit this, should be checked by what's calling it for better handling
-            if (!Object.keys(config.get('subBots')).length) {
-                logger.info(TAG, 'SubBots feature called, but disabled or no subBots on file, rejecting');
-                reject('The sub bot feature is disabled or there are no subBots on file');
-                return;
-            }
 
             if (currentBots >= config.get('subBotLimit')) {
                 logger.info(TAG, 'SubBot requested but maximum number logged on');
                 reject('The maximum number of subBots are currently running');
                 return;
-            } else {
-                currentBots++;
+            }
+
+            // Probably best not to hit this, should be checked by what's calling it for better handling
+            if (!Object.keys(config.get('subBots')).length) {
+                logger.info(TAG, 'SubBots feature called, but disabled or no subBots on file, rejecting');
+                reject('The sub bot feature is disabled or there are no subBots on file');
+                return;
             }
 
             let token = null;
@@ -77,6 +76,7 @@ module.exports = {
             let bot = new Discord.Client();
             bot.login(token)
                 .then(() => {
+                    currentBots++;
                     logger.debug(TAG, `Succesfully logged in sub bot: ${bot.user.id}`);
                     resolve(bot);
                 })
@@ -98,7 +98,7 @@ module.exports = {
         if (subBots === null) {
             subBots = _.mapValues(
               config.get('subBots'),
-              (subBot) => Object.assign({booted: false, busy: false}, subBot)
+              (subBot) => Object.assign({}, {booted: false, busy: false}, subBot)
             );
         }
 
