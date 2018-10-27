@@ -23,9 +23,24 @@ describe('sub-bots/sub-bots.js', function() {
         subBots.ready.should.be.a('function');
     });
 
-    it('subBots should have correct properties', function() {
-        if (!Object.keys(original).length) { this.skip(); }
+    it('subBots should be an object', function() {
         original.should.be.a('object');
+    });
+
+    it('subBots object should have multiple subBots', function() {
+        Object.keys(original).length.should.be.above(1);
+    });
+
+    it('subBots should have id and token properties', function() {
+        if (!Object.keys(original).length) { this.skip(); }
+        for (let x in original) {
+            original[x].should.have.property('id');
+            original[x].should.have.property('token');
+        }
+    });
+
+    it('subBots object should have id and token strings', function() {
+        if (!Object.keys(original).length) { this.skip(); }
         for (let x in original) {
             original[x].id.should.be.a('string');
             original[x].token.should.be.a('string');
