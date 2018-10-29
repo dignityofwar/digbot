@@ -28,6 +28,27 @@ describe('sub-bots/sub-bots.js', function() {
     });
 
     it('subBots object should have multiple subBots', function() {
+        console.log("======LOG STARTS=========");
+        console.log("=== SUBBOTS env variable given to travis, variable name below is 'original'");
+        console.log(`{"bot2":{"id":"000001","token":"token1"},"bot3":{"id":"000002","token":"token2"},"bot4":{"id":"000003","token":"token3"},"bot5":{"id":"000004","token":"token4"},"bot6":{"id":"000005","token":"token5"}}`);
+        console.log("===1 console.log(original)")
+        console.log(original);
+        console.log("===2 console.log(Object.keys(original))")
+        console.log(Object.keys(original));
+        console.log("===3 for (let x in original) {console.log(original[x]);}")
+        for (let x in original) {
+            console.log(original[x]);
+        }
+        console.log("===4 for (let x in original) {console.log(original[x].id);}")
+        for (let x in original) {
+            console.log(original[x].id);
+        }
+        console.log("===5 for (let x in original) {console.log(original[x].token);}")
+        for (let x in original) {
+            console.log(original[x].token);
+        }
+        console.log("======LOG ENDS===========");
+
         Object.keys(original).length.should.be.above(1);
     });
 
