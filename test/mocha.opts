@@ -9,7 +9,7 @@
 --retries 3
 
 # Creates a global variable Faker which allows for easy modification of the config during testing
---require ./config/config-faker.js
+--require ./test/config-faker.js
 
 # End process after all tests are complete (necessary for CI otherwise builds would hang)
 --exit
