@@ -36,8 +36,8 @@
   "textInactive"            : 7200000,
 
   "testing"                 : false,
-  "tester"                  : null,
-  "testerChannel"           : null,
+  "tester"                  : "",
+  "testerChannel"           : "",
 
   "channels"                : {
     "mappings" : {

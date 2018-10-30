@@ -51,7 +51,7 @@
         "afk": {
           "id"      : "",
           "name"    : "💤 AFK",
-          "position": null,
+          "position": 100,
           "comment": "Afk Voice channel is always required"
         }
       }
