@@ -73,10 +73,12 @@ module.exports = {
                 reject('All sub bots are currently busy');
                 return;
             }
+
+            currentBots++;
+
             let bot = new Discord.Client();
             bot.login(token)
                 .then(() => {
-                    currentBots++;
                     logger.debug(TAG, `Succesfully logged in sub bot: ${bot.user.id}`);
                     resolve(bot);
                 })

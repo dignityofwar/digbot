@@ -13,16 +13,6 @@
     "root"               : "F:/Coding/DIG-discord"
   },
 
-  "features"         : {
-    "automaticRoleAssignment"    : true,
-    "channelPositionsEnforcement": false,
-    "disableCommandSpam"         : false,
-    "disableMentionSpam"         : false,
-    "modularChannelSystem"       : false, // Issue #49
-    "sfx"                        : true,
-    "play"                       : true
-  },
-
   "channels"         : {
     "mappings" : {
       "chitChatVoice": "486323117686390789",

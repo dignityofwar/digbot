@@ -1,32 +1,32 @@
 {
-  "showPerfStats"           : true,
+  "showPerfStats"    : true,
 
-  "botUserID"               : "",
-  "subBots"                 : {
-    //    "bot2": {
-    //      "id"    : "",
-    //      "token" : ""
-    //    }
+  "botUserID"        : "",
+  "subBots"          : {
+    "bot2": {
+      "id"   : "",
+      "token": ""
+    }
   },
 
-  "token"                   : "",
-  "youtubeKey"              : "",
+  "token"            : "",
+  "youtubeKey"       : "",
 
-  "general"                 : {
-    "adminsRoleID"           : "",
-    "devRoleID"              : "",
-    "forcedPTTRoleID"        : "",
-    "herebedragonsRoleID"    : "",
-    "server"                 : "",
-    "staffRoleID"            : "",
-    "superMuteRoleID"        : "",
-    "leaderRoles"            : [
+  "general"          : {
+    "adminsRoleID"       : "",
+    "devRoleID"          : "",
+    "forcedPTTRoleID"    : "",
+    "herebedragonsRoleID": "",
+    "server"             : "",
+    "staffRoleID"        : "",
+    "superMuteRoleID"    : "",
+    "leaderRoles"        : [
       ""
     ],
-    "root"                   : ""
+    "root"               : ""
   },
 
-  "channels"                : {
+  "channels"         : {
     "mappings" : {
       "chitChatVoice": "",
       "developers"   : "",
@@ -41,43 +41,43 @@
     },
     "positions": {
       "text" : {
-        //        "stellaris"    : {
-        //          "id"      : "",
-        //          "name"    : "stellaris",
-        //          "position": 1
-        //        }
+        "stellaris": {
+          "id"      : "",
+          "name"    : "stellaris",
+          "position": 1
+        }
       },
       "voice": {
         "afk": {
-          // Afk Voice channels is always required
           "id"      : "",
           "name"    : "💤 AFK",
-          "position": null
+          "position": null,
+          "comment": "Afk Voice channel is always required"
         }
       }
     }
   },
 
-  "communityGames"          : {
-    //    "PS2": {
-    //      "name": "Planetside 2",
-    //      "roleids": [
-    //        ""
-    //      ],
-    //      "officers": [
-    //        ""
-    //      ],
-    //      "primaryChannel": ""
-    //    }
+  "communityGames"   : {
+    "PS2": {
+      "name"          : "Planetside 2",
+      "roleids"       : [
+        ""
+      ],
+      "officers"      : [
+        ""
+      ],
+      "primaryChannel": ""
+    }
   },
 
-  "recreationalGames"       : {
-    //    "Stellaris": {
-    //      "name": "Stellaris",
-    //      "roleids": [
-    //        ""
-    //      ],
-    //      "primaryChannel": ""
-    //    }
+  "recreationalGames": {
+    "Stellaris": {
+      "name"          : "Stellaris",
+      "roleids"       : [
+        ""
+      ],
+      "primaryChannel": ""
+    }
   }
 }

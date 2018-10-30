@@ -3,4 +3,4 @@ vagrant/.vagrant
 vagrant/ubuntu*
 docker/db
 !docker/db/.gitkeep
-/config/local.json
+config/local.json

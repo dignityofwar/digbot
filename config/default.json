@@ -3,12 +3,7 @@
 
   "botUserID"               : "",
   "subBotLimit"             : 5,
-  "subBots"                 : {
-    //    "bot2": {
-    //      "id"    : "",
-    //      "token" : ""
-    //    }
-  },
+  "subBots"                 : {},
 
   "token"                   : "",
   "youtubeKey"              : "",
@@ -28,17 +23,17 @@
     "root"                   : ""
   },
 
-  "antispamCommandTick"     : 300000, // 5 mins
-  "antispamCommandLimitCats": 2, // Limit on cats command
-  "antispamUserTick"        : 120000, // 2 mins
-  "antispamUserLimit"       : 10, // Commands before antispam shuts someone down
-  "autoDeleteChannels"      : 1200000, // How often autodelete.js checks for deletable channels
-  "eventProtection"         : 900000, // Length of time channels are protected for after an event ends
-  "inactivityLimit"         : 30, //Number of days of innactivity after which a member is pruned
-  "memberMentionLimit"      : 20, // Number we allow people to mention members a day
-  "mentionsMuteTime"        : 7200000, // Time to supermute someone spamming mentions
-  "roleMentionLimit"        : 5, // Number of times we allow people to mention roles a day
-  "textInactive"            : 7200000, // Length of time after which a text channel is considered inactive
+  "antispamCommandTick"     : 300000,
+  "antispamCommandLimitCats": 2,
+  "antispamUserTick"        : 120000,
+  "antispamUserLimit"       : 10,
+  "autoDeleteChannels"      : 1200000,
+  "eventProtection"         : 900000,
+  "inactivityLimit"         : 30,
+  "memberMentionLimit"      : 20,
+  "mentionsMuteTime"        : 7200000,
+  "roleMentionLimit"        : 5,
+  "textInactive"            : 7200000,
 
   "testing"                 : false,
   "tester"                  : null,
@@ -58,36 +53,19 @@
       "ps2dig"       : ""
     },
     "positions": {
-      "text" : {
-        //        "stellaris"    : {
-        //          "id"      : "",
-        //          "name"    : "stellaris",
-        //          "position": 1
-        //        }
-      },
+      "text" : {},
       "voice": {
         "afk": {
-          // Afk Voice channels is always required
           "id"      : "",
           "name"    : "💤 AFK",
-          "position": null
+          "position": null,
+          "comment" : "Afk Voice channel is always required"
         }
       }
     }
   },
 
-  "communityGames"          : {
-    //    "PS2": {
-    //      "name": "Planetside 2",
-    //      "roleids": [
-    //        ""
-    //      ],
-    //      "officers": [
-    //        ""
-    //      ],
-    //      "primaryChannel": ""
-    //    }
-  },
+  "communityGames"          : {},
 
   "features"                : {
     "automaticRoleAssignment"    : true,
@@ -99,13 +77,5 @@
     "play"                       : true
   },
 
-  "recreationalGames"       : {
-    //    "Stellaris": {
-    //      "name": "Stellaris",
-    //      "roleids": [
-    //        ""
-    //      ],
-    //      "primaryChannel": ""
-    //    }
-  }
+  "recreationalGames"       : {}
 }

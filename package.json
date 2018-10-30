@@ -1,7 +1,7 @@
 {
   "name": "digbot",
-  "version": "1.0.0",
-  "description": "- Nodejs 6.x\r - npm: discord.js",
+  "version": "0.1.0",
+  "description": "- Nodejs 7.x\r - npm: discord.js",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
