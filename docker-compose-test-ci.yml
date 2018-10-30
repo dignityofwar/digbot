@@ -12,4 +12,5 @@ services:
         environment:
         - NODE_ENV=testing
         - DISCORD_API_TOKEN
-        - SUBBOTS
+        - SUBBOTS_CONFIG
+        - SUBBOTS_LIMIT
