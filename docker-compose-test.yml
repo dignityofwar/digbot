@@ -8,6 +8,7 @@ services:
             - "1337:1337"
         entrypoint: npm install --only=dev
         volumes:
+            # Links the local.json config to the container for local testing
             - ./config/local.json:/usr/src/digbot/config/local.json
         tty: true
         environment:

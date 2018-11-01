@@ -6,7 +6,7 @@ services:
         build: .
         ports:
             - "1337:1337"
-        entrypoint: ""
+        entrypoint: "" # Overwrites CMD so that the bot will not start
         tty: true
         environment:
         - NODE_ENV=testing

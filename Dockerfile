@@ -9,7 +9,7 @@ WORKDIR /usr/src/digbot
 COPY package*.json ./
 
 # Install dependencies(dev-dependecies are not installed)
-RUN npm install
+RUN npm install --only=prod
 
 # Copies the project into the container
 COPY . .
