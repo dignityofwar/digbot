@@ -1,0 +1,81 @@
+{
+  "showPerfStats"           : false,
+
+  "botUserID"               : "",
+  "subBotLimit"             : 5,
+  "subBots"                 : {},
+
+  "token"                   : "",
+  "youtubeKey"              : "",
+
+  "general"                 : {
+    "adminsRoleID"           : "",
+    "devRoleID"              : "",
+    "forcedPTTRoleID"        : "",
+    "herebedragonsRoleID"    : "",
+    "server"                 : "",
+    "staffRoleID"            : "",
+    "superMuteRoleID"        : "",
+    "leaderRoles"            : [],
+    "cpuNotificationLimit"   : 100,
+    "memoryNotificationLimit": 200,
+    "port"                   : 1337,
+    "root"                   : ""
+  },
+
+  "antispamCommandTick"     : 300000,
+  "antispamCommandLimitCats": 2,
+  "antispamUserTick"        : 120000,
+  "antispamUserLimit"       : 10,
+  "autoDeleteChannels"      : 1200000,
+  "eventProtection"         : 900000,
+  "inactivityLimit"         : 30,
+  "memberMentionLimit"      : 20,
+  "mentionsMuteTime"        : 7200000,
+  "roleMentionLimit"        : 5,
+  "textInactive"            : 7200000,
+
+  "testing"                 : false,
+  "tester"                  : "",
+  "testerChannel"           : "",
+
+  "channels"                : {
+    "mappings" : {
+      "chitChatVoice": "",
+      "developers"   : "",
+      "digbot"       : "",
+      "digBotLog"    : "",
+      "events"       : "",
+      "general"      : "",
+      "herebedragons": "",
+      "staff"        : "",
+      "streams"      : "",
+      "ps2dig"       : ""
+    },
+    "positions": {
+      "text" : {},
+      "voice": {
+        "afk": {
+          "id"      : "",
+          "name"    : "💤 AFK",
+          "position": null,
+          "comment" : "Afk Voice channel is always required"
+        }
+      }
+    }
+  },
+
+  "communityGames"          : {},
+
+  "features"                : {
+    "automaticRoleAssignment"    : true,
+    "channelPositionsEnforcement": false,
+    "disableCommandSpam"         : false,
+    "disableMentionSpam"         : false,
+    "modularChannelSystem"       : false,
+    "sfx"                        : true,
+    "play"                       : true
+  },
+
+  "recreationalGames"       : {}
+}

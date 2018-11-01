@@ -4,14 +4,14 @@
 
 // Handles role requests, can add and remove roles from specified members
 
-const config = require('../../../config/config.js');
+const config = require('config');
 const logger = require('../logger.js');
 const server = require('../server/server.js');
 const TAG = ('Role Requests');
 
 module.exports = {
     execute: function(received) {
-        let guild = server.getGuild(config.getConfig().general.server);
+        let guild = server.getGuild(config.get('general.server'));
         let member = guild.members.get(received.user);
         if (!member) {
             logger.warning(TAG, 'Received roles request for member not found: ' + received.user);

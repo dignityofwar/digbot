@@ -4,7 +4,7 @@
 
 // Checks cpu and memory usage
 
-const config = require('../../../config/config.js');
+const config = require('config');
 const crashHandler = require('../crash-handling.js');
 const logger = require('../logger.js');
 const TAG = 'Performance';
@@ -24,17 +24,17 @@ module.exports = {
             this.getMemory()
         ]);
         promises.then(function(result) {
-            if (config.getConfig().showPerfStats === true) {
+            if (config.get('showPerfStats') === true) {
                 logger.debug(TAG, `CPU: ${result[0]}`);
                 logger.debug(TAG, `MEM: ${result[1]}`);
             }
 
-            if (result[0] > config.getConfig().general.cpuNotificationLimit) {
-                logger.warning(TAG, `CPU usage is above ${config.getConfig().general.cpuNotificationLimit}! ` +
+            if (result[0] > config.get('general.cpuNotificationLimit')) {
+                logger.warning(TAG, `CPU usage is above ${config.get('general.cpuNotificationLimit')}! ` +
                 `Current CPU: ${result[0]}%`);
             }
-            if (result[1] > config.getConfig().general.memoryNotificationLimit) {
-                logger.warning(TAG, `Memory usage is above ${config.getConfig().general.memoryNotificationLimit}MB! ` +
+            if (result[1] > config.get('general.memoryNotificationLimit')) {
+                logger.warning(TAG, `Memory usage is above ${config.get('general.memoryNotificationLimit')}MB! ` +
                 `Current MEM: ${result[1]}MB`);
             }
         });
@@ -46,6 +46,7 @@ module.exports = {
                 if (err) {
                     logger.warning(TAG, `Usage CPU lookup failed! Error: ${err}`);
                     reject();
+                    return;
                 }
                 usage.clearHistory(pid);
                 resolve(result.cpu.toFixed(2));
@@ -59,6 +60,7 @@ module.exports = {
                 if (err) {
                     logger.warning(TAG, `Usage memory lookup failed! Error: ${err}`);
                     reject();
+                    return;
                 }
                 usage.clearHistory(pid);
                 let mem = Math.round(result.memoryInfo.rss) / 1024 / 1024;

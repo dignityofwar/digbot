@@ -2,7 +2,7 @@
 
 const should = require('chai').should();
 
-const config = require('../../../../../config/config.js');
+const config = require('config');
 const MCS = require('../../../../../src/lib/admin/channels/modularchannels.js');
 
 describe('admin/channels/modularchannels.js', function() {
@@ -11,22 +11,20 @@ describe('admin/channels/modularchannels.js', function() {
         MCS.execute.should.be.a('function');
     });
 
-    const original = config.getConfig().features;
+    const original = config.get('features');
     let features = original;
     const noChannelMember = {voiceChannel: false};
 
     it('execute should return false if feature disabled', function() {
-        features.modularChannelSystem = false;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.modularChannelSystem', false);
         MCS.execute(noChannelMember, noChannelMember).should.be.false;
-        config.setProperty('features', original);
+        Faker.resetFake();
     });
 
     it('execute should return true if feature enabled', function() {
-        features.modularChannelSystem = true;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.modularChannelSystem', true);
         MCS.execute(noChannelMember, noChannelMember).should.be.true;
-        config.setProperty('features', original);
+        Faker.resetFake();
     });
 
     it('should have function ready', function() {
@@ -35,16 +33,14 @@ describe('admin/channels/modularchannels.js', function() {
     });
 
     it('ready should return false if feature disabled', function() {
-        features.modularChannelSystem = false;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.modularChannelSystem', false);
         MCS.ready().should.be.false;
-        config.setProperty('features', original);
+        Faker.resetFake();
     });
 
     it('ready should return true if feature enabled', function() {
-        features.modularChannelSystem = true;
-        config.setProperty('features', features);
+        Faker.setFakeProperty('features.modularChannelSystem', true);
         MCS.ready().should.be.true;
-        config.setProperty('features', original);
+        Faker.resetFake();
     });
 });

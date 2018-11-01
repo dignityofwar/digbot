@@ -1,0 +1,16 @@
+{
+  "token"     : "DISCORD_API_TOKEN",
+  "youtubeKey": "YOUTUBE_DATA_API_KEY",
+
+  "subBotLimit" : "SUBBOTS_LIMIT",
+
+  "subBots"   : {
+    "__name"  : "SUBBOTS_CONFIG",
+    "__format": "json"
+  },
+
+  "general"   : {
+    "port": "DIGBOT_PORT",
+    "root": "DIGBOT_ROOT"
+  }
+}

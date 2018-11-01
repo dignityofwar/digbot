@@ -10,3 +10,5 @@ services:
             - "1337:1337"
         entrypoint: /app/test.sh
         tty: true
+        environment:
+        - NODE_ENV=testing

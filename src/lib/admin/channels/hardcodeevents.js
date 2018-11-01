@@ -5,7 +5,7 @@
 // Temporary module to store regular events, to be replaced with website intergration.
 // Note: Please be extremely careful when altering this module, it will and has fucked up our shit
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const logger = require('../../logger.js');
 const TAG = 'Hard Coded Events';
 
@@ -24,7 +24,7 @@ module.exports = {
                 ms = 3600000 * (events[i].endhour + 24 - events[i].starthour);
             }
             ms += 60000 * (events[i].endminute - events[i].startminute);
-            ms += config.getConfig().eventProtection;
+            ms += config.get('eventProtection');
             events[i].eventlength = ms;
         }
     },

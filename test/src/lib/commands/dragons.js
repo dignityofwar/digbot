@@ -3,7 +3,7 @@
 const should = require('chai').should();
 
 const dragons = require('../../../../src/lib/commands/dragons.js');
-const config = require('../../../../config/config.js');
+const config = require('config');
 
 describe('commands/dragons.js', function() {
     it('should have function execute', function() {
@@ -44,7 +44,7 @@ describe('commands/dragons.js', function() {
     msg.guild.channels.set('000002', {name: 'testCh2', type: 'text'});
     msg.guild.channels.set('000003', {name: 'testCh3', type: 'voice'});
     msg.guild.channels.set('000004', {name: 'testCh4', type: 'voice'});
-    msg.guild.channels.set(config.getConfig().channels.mappings.herebedragons, {
+    msg.guild.channels.set(config.get('channels.mappings.herebedragons'), {
         sendMessage: function(relay) {
             channelMessage = relay;
             return new Promise(function(resolve) {
@@ -74,18 +74,18 @@ describe('commands/dragons.js', function() {
 
     it('should remove dragons role if member has it', function() {
         resetTestObject();
-        msg.member.roles.set(config.getConfig().general.herebedragonsRoleID, {test1: '1', test2: '2'});
+        msg.member.roles.set(config.get('general.herebedragonsRoleID'), {test1: '1', test2: '2'});
         dragons.execute(msg).should.be.false;
         added.should.be.false;
         channelMessage.should.be.false;
-        removed.should.eql(config.getConfig().general.herebedragonsRoleID);
+        removed.should.eql(config.get('general.herebedragonsRoleID'));
         reply.indexOf('you already had the herebedragons role.').should.not.eql(-1);
     });
 
     it('should add dragons role if member doesn\'t have it', function() {
         resetTestObject();
         dragons.execute(msg).should.be.true;
-        added.should.eql(config.getConfig().general.herebedragonsRoleID);
+        added.should.eql(config.get('general.herebedragonsRoleID'));
         // .then action so this prob won't come back in time, not worth writing fancy async code for
         if (typeof channelMessage === 'boolean') {
             channelMessage.should.be.false;

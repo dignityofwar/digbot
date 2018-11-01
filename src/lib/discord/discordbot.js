@@ -4,7 +4,7 @@
 
 // Primary bot module, handles all bot events
 
-const config = require('../../../config/config.js');
+const config = require('config');
 const crashHandler = require('../crash-handling.js');
 const Discord = require('discord.js');
 const logger = require('../logger.js');
@@ -43,7 +43,7 @@ function initBot(done) {
     if (done !== undefined) {
         bot.on('ready', done);
     }
-    bot.login(config.getConfig().token)
+    bot.login(config.get('token'))
         .then(() => {
             clearStartClock(); // Make sure more login attempts aren't sent
             clearRestartClock();
@@ -75,7 +75,7 @@ function initBot(done) {
 
     // Emitted for general debugging information
     bot.on('debug', (info) => {
-        if (config.getConfig().enviroment === 'development') {
+        if (config.util.getEnv('NODE_ENV') === 'development') {
             crashHandler.logEvent(TAG, 'debug');
             serverEvents.debug(info);
         }

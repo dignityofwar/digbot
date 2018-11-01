@@ -5,7 +5,7 @@
 /* This module handles the creation of temp channels for events, for now this is hardcoded but will
 eventually be controlled by the website somehow */
 
-const config = require('../../../config/config.js');
+const config = require('config');
 const logger = require('../logger.js');
 const hardcode = require('./channels/hardcodeevents.js');
 const server = require('../server/server.js');
@@ -36,7 +36,7 @@ module.exports = {
 
 // Alerts relevent roles when an event is about to start
 function alert(eventObj) {
-    let serverObj = server.getGuild(config.getConfig().general.server);
+    let serverObj = server.getGuild(config.get('general.server'));
     let mentions = '';
 
     for (let i = 0; i < eventObj.roles.length; i++) {
@@ -76,8 +76,8 @@ function alert(eventObj) {
                     logger.warning(TAG, `Was unable to notify Miller Community Discord of an event - error: ${err}`);
                 });
         } else {
-            if (config.getConfig().environment !== 'production') {
-                logger.info(TAG, 'Non live enviroment so will not attempt to notify Miller Discord');
+            if (config.util.getEnv('NODE_ENV') !== 'production') {
+                logger.info(TAG, 'Non live environment so will not attempt to notify Miller Discord');
             } else {
                 logger.warning(TAG, 'Attempted to notify millerCommunityEvents channel but channel not set');
             }
@@ -91,8 +91,8 @@ function alert(eventObj) {
                     logger.warning(TAG, `Was unable to notify Miller VS Discord of an event - error: ${err}`);
                 });
         } else {
-            if (config.getConfig().environment !== 'production') {
-                logger.info(TAG, 'Non live enviroment so will not attempt to notify Miller VS Discord');
+            if (config.util.getEnv('NODE_ENV') !== 'production') {
+                logger.info(TAG, 'Non live environment so will not attempt to notify Miller VS Discord');
             } else {
                 logger.warning(TAG, 'Attempted to notify millerCommunityEvents channel but channel not set');
             }
@@ -104,7 +104,7 @@ function alert(eventObj) {
 function createChannels(eventObj) {
     for (let i = 0; i < eventObj.channels.length; i++) {
         if (eventObj.channels[i].type === 'text') {
-            server.getGuild(config.getConfig().general.server)
+            server.getGuild(config.get('general.server'))
                 .defaultChannel.clone(eventObj.channels[i].name + '-e-')
                     .then(channel => {
                         channel.setTopic(eventObj.description);
@@ -114,7 +114,7 @@ function createChannels(eventObj) {
                         logger.warning(TAG, `Failed to create channel, error: ${err}`);
                     });
         } else {
-            server.getGuild(config.getConfig().general.server).createChannel(
+            server.getGuild(config.get('general.server')).createChannel(
                 '⏰ ' + eventObj.channels[i].name + '-e-',
                 eventObj.channels[i].type
             )

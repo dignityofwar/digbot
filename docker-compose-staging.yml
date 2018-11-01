@@ -11,3 +11,6 @@ services:
         entrypoint: /app/run.sh
         tty: true
         restart: always
+        environment:
+        - NODE_ENV=staging
+        - DIGBOT_PORT=1338

@@ -4,7 +4,7 @@
 
 // Updates the bots current presence
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const logger = require('../../logger.js');
 const server = require('../../server/server.js');
 const TAG = 'Presence';
@@ -14,7 +14,7 @@ let currentMembers = 0;
 module.exports = {
     execute: function() {
         if (server.getReady() == false) { return; }
-        let clientUser = server.getGuild().members.get(config.getConfig().botUserID).user;
+        let clientUser = server.getGuild().members.get(config.get('botUserID')).user;
         let members = server.getMembersPlaying();
 
         // Don't do an API call if we don't need to

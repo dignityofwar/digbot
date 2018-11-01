@@ -4,7 +4,7 @@
 
 // Calculates and enforces the positions that channels should hold
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const crashHandler = require('../../crash-handling.js');
 const logger = require('../../logger.js');
 const server = require('../../server/server.js');
@@ -18,7 +18,7 @@ module.exports = {
     // Check the positioning of all channels on the server
     globalCheck: function() {
         crashHandler.logEvent(TAG, 'globalCheck');
-        if (!config.getConfig().features.channelPositionsEnforcement) { return; } // Feature switch
+        if (!config.get('features.channelPositionsEnforcement')) { return; } // Feature switch
         // Don't let this module run twice at once
         if (busy) {
             queue = true;
@@ -141,12 +141,12 @@ function indexTextChannels() {
 
     let last = 0;
     // Index permenant channels
-    for (let x in config.getConfig().channels.positions.text) {
-        positions.text[config.getConfig().channels.positions.text[x].position] = config.getConfig().channels.positions.text[x].id;
-        last = config.getConfig().channels.positions.text[x].position;
+    for (let x in config.get('channels.positions.text')) {
+        positions.text[config.get('channels.positions.text')[x].position] = config.get('channels.positions.text')[x].id;
+        last = config.get('channels.positions.text')[x].position;
 
         for (let y in textChannels) {
-            if (textChannels[y].id === config.getConfig().channels.positions.text[x].id) {
+            if (textChannels[y].id === config.get('channels.positions.text')[x].id) {
                 textChannels = removeID(textChannels, textChannels[y].id);
             }
         }
@@ -220,7 +220,7 @@ function indexVoiceChannels() {
     let voiceChannels = [];
     for (let x in channels) {
         if (channels[x].type === 'voice') {
-            if (channels[x].name !== config.getConfig().channels.positions.voice.afk.name) {
+            if (channels[x].name !== config.get('channels.positions.voice.afk.name')) {
                 voiceChannels.push(channels[x]);
             }
         }
@@ -228,36 +228,36 @@ function indexVoiceChannels() {
 
     let last = 0;
     // Index permenant channels
-    for (let x in config.getConfig().channels.positions.voice) {
-        if (config.getConfig().channels.positions.voice[x].position !== null) {
-            positions.voice[config.getConfig().channels.positions.voice[x].position] = config.getConfig().channels.positions.voice[x].id;
+    for (let x in config.get('channels.positions.voice')) {
+        if (config.get('channels.positions.voice')[x].position !== null) {
+            positions.voice[config.get('channels.positions.voice')[x].position] = config.get('channels.positions.voice')[x].id;
         }
-        if (config.getConfig().channels.positions.voice[x].position > last) {
-            last = config.getConfig().channels.positions.voice[x].position;
+        if (config.get('channels.positions.voice')[x].position > last) {
+            last = config.get('channels.positions.voice')[x].position;
         }
 
         for (let y in voiceChannels) {
-            if (voiceChannels[y].id === config.getConfig().channels.positions.voice[x].id) {
+            if (voiceChannels[y].id === config.get('channels.positions.voice')[x].id) {
                 voiceChannels = removeID(voiceChannels, voiceChannels[y].id);
             }
         }
     }
 
     // Index MCS channels
-    for (let x in config.getConfig().channels.positions.voice) {
-        let base = config.getConfig().channels.positions.voice[x].name;
+    for (let x in config.get('channels.positions.voice')) {
+        let base = config.get('channels.positions.voice')[x].name;
         base = base.substring(base.length - 2);
         if (base === '/1') {
-            if (config.getConfig().channels.positions.voice[x].position + 100 > last) {
-                last = config.getConfig().channels.positions.voice[x].position + 100;
+            if (config.get('channels.positions.voice')[x].position + 100 > last) {
+                last = config.get('channels.positions.voice')[x].position + 100;
             }
-            base = config.getConfig().channels.positions.voice[x].name;
+            base = config.get('channels.positions.voice')[x].name;
             base = base.substring(0, base.lastIndexOf('/') + 1);
 
             for (let i = voiceChannels.length - 1; i > -1; i--) {
                 if (voiceChannels[i].name.indexOf(base) !== -1) {
                     let n = parseInt(voiceChannels[i].name.substring(base.length));
-                    positions.voice[config.getConfig().channels.positions.voice[x].position + n - 1] =
+                    positions.voice[config.get('channels.positions.voice')[x].position + n - 1] =
                         voiceChannels[i].id;
                     voiceChannels = removeID(voiceChannels, voiceChannels[i].id);
                 }
@@ -327,7 +327,7 @@ function indexVoiceChannels() {
     }
 
     // Set AFK channel position
-    positions.voice[last + 1] = config.getConfig().channels.positions.voice.afk.id;
+    positions.voice[last + 1] = config.get('channels.positions.voice.afk.id');
 }
 
 // Removes a text channel with a certain ID from an array and returns the new array

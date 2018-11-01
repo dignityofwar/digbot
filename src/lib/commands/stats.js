@@ -4,7 +4,8 @@
 
 // !stats module
 
-const config = require('../../../config/config.js');
+const config = require('config');
+const pjson = require('../../../package');
 const logger = require('../logger.js');
 const performance = require('../tools/performance.js');
 const server = require('../server/server.js');
@@ -38,7 +39,7 @@ function statsCalculations(started, msg, message) {
         let timenow = new Date();
 
         // DIGBot Version
-        let version = '**Version:** ' + config.getConfig().version;
+        let version = '**Version:** ' + pjson.version;
 
         // Message -> Bot pingtime
         let ms = message.createdTimestamp - msg.createdTimestamp;
