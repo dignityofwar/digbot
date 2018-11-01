@@ -4,6 +4,8 @@ version: '3.0'
 services:
     digbot:
         build: .
+        volumes:
+        - ./config/local.json:/usr/src/digbot/config/local.json
         ports:
             - "1337:1337"
         tty: true
