@@ -3,7 +3,7 @@
 const should = require('chai').should();
 
 const botEvents = require('../../../../src/lib/discord/bot-events.js');
-const config = require('../../../../config/config.js');
+const config = require('config');
 const server = require('../../../../src/lib/server/server.js');
 
 describe('discord/bot-events.js', function() {
@@ -40,7 +40,7 @@ describe('discord/bot-events.js', function() {
         });
 
         it('should ignore creation of channels if bot not ready', function() {
-            channel.guild = {id: config.getConfig().general.server};
+            channel.guild = {id: config.get('general.server')};
             const original = server.getReady();
             server.markAsNotReady();
             botEvents.channelCreate(channel, true).should.be.false;
@@ -81,7 +81,7 @@ describe('discord/bot-events.js', function() {
         });
 
         it('should ignore deletion of channels if bot not ready', function() {
-            channel.guild = {id: config.getConfig().general.server};
+            channel.guild = {id: config.get('general.server')};
             const original = server.getReady();
             server.markAsNotReady();
             botEvents.channelDelete(channel, true).should.be.false;
@@ -122,7 +122,7 @@ describe('discord/bot-events.js', function() {
         });
 
         it('should ignore updates of channels if bot not ready', function() {
-            channel.guild = {id: config.getConfig().general.server};
+            channel.guild = {id: config.get('general.server')};
             const original = server.getReady();
             server.markAsNotReady();
             botEvents.channelUpdate(channel, channel, true).should.be.false;
@@ -168,7 +168,7 @@ describe('discord/bot-events.js', function() {
         });
 
         it('should ignore new members if bot not ready', function() {
-            member.guild.id = config.getConfig().general.server;
+            member.guild.id = config.get('general.server');
             const original = server.getReady();
             server.markAsNotReady();
             botEvents.guildMemberAdd(member, true).should.be.false;
@@ -194,7 +194,7 @@ describe('discord/bot-events.js', function() {
         });
 
         it('should ignore leaving members if bot not ready', function() {
-            member.guild.id = config.getConfig().general.server;
+            member.guild.id = config.get('general.server');
             const original = server.getReady();
             server.markAsNotReady();
             botEvents.guildMemberRemove(member, true).should.be.false;
@@ -220,7 +220,7 @@ describe('discord/bot-events.js', function() {
         });
 
         it('should ignore updated members if bot not ready', function() {
-            member.guild.id = config.getConfig().general.server;
+            member.guild.id = config.get('general.server');
             const original = server.getReady();
             server.markAsNotReady();
             botEvents.guildMemberUpdate(member, member).should.be.false;
@@ -246,7 +246,7 @@ describe('discord/bot-events.js', function() {
         });
 
         it('should ignore updated members if bot not ready', function() {
-            guild.id = config.getConfig().general.server;
+            guild.id = config.get('general.server');
             const original = server.getReady();
             server.markAsNotReady();
             botEvents.guildUpdate(guild, guild, true).should.be.false;
@@ -294,7 +294,7 @@ describe('discord/bot-events.js', function() {
         it('should ignore messages that do not have command prefix', function() {
             msg.author.bot = false;
             msg.channel.type = 'text';
-            msg.guild.id = config.getConfig().general.server;
+            msg.guild.id = config.get('general.server');
             msg.content = 'Long live ATRA!';
             botEvents.message(msg).should.be.false;
         });
@@ -302,7 +302,7 @@ describe('discord/bot-events.js', function() {
         it('should ignore messages that are not commands', function() {
             msg.author.bot = false;
             msg.channel.type = 'text';
-            msg.guild.id = config.getConfig().general.server;
+            msg.guild.id = config.get('general.server');
             msg.content = '!!! What in monetization?!';
             botEvents.message(msg).should.be.false;
         });
@@ -310,7 +310,7 @@ describe('discord/bot-events.js', function() {
         it('should ignore messages if bot not ready', function() {
             msg.author.bot = false;
             msg.channel.type = 'text';
-            msg.guild.id = config.getConfig().general.server;
+            msg.guild.id = config.get('general.server');
             msg.content = '!!! What in monetization?!';
             const original = server.getReady();
             server.markAsNotReady();
@@ -338,13 +338,13 @@ describe('discord/bot-events.js', function() {
 
         it('should ignore DM updates', function() {
             msg.channel.type = 'dm';
-            msg.guild.id = config.getConfig().general.server;
+            msg.guild.id = config.get('general.server');
             botEvents.messageUpdate(msg, msg).should.be.false;
         });
 
         it('should ignore group message updates', function() {
             msg.channel.type = 'group';
-            msg.guild.id = config.getConfig().general.server;
+            msg.guild.id = config.get('general.server');
             botEvents.messageUpdate(msg, msg).should.be.false;
         });
 
@@ -354,7 +354,7 @@ describe('discord/bot-events.js', function() {
         });
 
         it('should ignore messages if bot not ready', function() {
-            msg.guild.id = config.getConfig().general.server;
+            msg.guild.id = config.get('general.server');
             const original = server.getReady();
             server.markAsNotReady();
             botEvents.messageUpdate(msg, msg).should.be.false;
@@ -382,7 +382,7 @@ describe('discord/bot-events.js', function() {
         });
 
         it('should ignore messages if bot not ready', function() {
-            member.guild.id = config.getConfig().general.server;
+            member.guild.id = config.get('general.server');
             const original = server.getReady();
             server.markAsNotReady();
             botEvents.presenceUpdate(member, member).should.be.false;
@@ -420,7 +420,7 @@ describe('discord/bot-events.js', function() {
         });
 
         it('should ignore role creations if bot not ready', function() {
-            role.guild.id = config.getConfig().general.server;
+            role.guild.id = config.get('general.server');
             const original = server.getReady();
             server.markAsNotReady();
             botEvents.roleCreate(role, true).should.be.false;
@@ -448,7 +448,7 @@ describe('discord/bot-events.js', function() {
         });
 
         it('should ignore role deletions if bot not ready', function() {
-            role.guild.id = config.getConfig().general.server;
+            role.guild.id = config.get('general.server');
             const original = server.getReady();
             server.markAsNotReady();
             botEvents.roleDelete(role, true).should.be.false;
@@ -476,7 +476,7 @@ describe('discord/bot-events.js', function() {
         });
 
         it('should ignore role updates if bot not ready', function() {
-            role.guild.id = config.getConfig().general.server;
+            role.guild.id = config.get('general.server');
             const original = server.getReady();
             server.markAsNotReady();
             botEvents.roleDelete(role, role, true).should.be.false;
@@ -504,7 +504,7 @@ describe('discord/bot-events.js', function() {
         });
 
         it('should ignore voice state updates if bot not ready', function() {
-            member.guild.id = config.getConfig().general.server;
+            member.guild.id = config.get('general.server');
             const original = server.getReady();
             server.markAsNotReady();
             botEvents.voiceStateUpdate(member, member, true).should.be.false;
@@ -531,13 +531,13 @@ describe('discord/bot-events.js', function() {
                         resolve(message);
                     });
                 },
-                id: config.getConfig().channels.mappings.digbot,
+                id: config.get('channels.mappings.digbot'),
                 type: 'text'
             },
             content: '!ping',
             createdTimestamp: now.getTime(),
             guild: {
-                id: config.getConfig().general.server
+                id: config.get('general.server')
             },
             member: {
                 displayName: 'JBuilds',

@@ -4,19 +4,19 @@
 
 // Module to check if the user is attempting to post a stream outside of the streaming channel
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const logger = require('../../logger.js');
 const server = require('../../server/server.js');
 const TAG = 'Stream Antispam';
 
 module.exports = {
     execute: function(msg) {
-        if (msg.guild.id !== config.getConfig().general.server) { return; }
-        if (msg.member.id === config.getConfig().botUserID) { return; }
+        if (msg.guild.id !== config.get('general.server')) { return; }
+        if (msg.member.id === config.get('botUserID')) { return; }
         let message = msg.content.replace(/\s+/g, '').toLowerCase();
         if (message.includes('twitch.tv/') || message.includes('hitbox.tv/') || message.includes('beam.pro/')) {
             if (!message.includes('clips')) {
-                if (msg.channel.id != config.getConfig().streamChannel) {
+                if (msg.channel.id != config.get('channels.mappings.streams')) {
                     return streamSpamAction(msg);
                 }
             }
@@ -36,7 +36,7 @@ function streamSpamAction(msg) {
         .catch(err => {
             logger.warning(TAG, `Failed to send message, error: ${err}`);
         });
-    msg.guild.channels.get(config.getConfig().streamChannel).sendMessage(
+    msg.guild.channels.get(config.get('channels.mappings.streams')).sendMessage(
         msg.member.displayName + ': ' + msg.cleanContent)
         .then(message => {
             logger.info(TAG, `Moved to #streams: ${message.content}`);

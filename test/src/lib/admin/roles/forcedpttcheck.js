@@ -2,7 +2,7 @@
 
 const should = require('chai').should();
 
-const config = require('../../../../../config/config.js');
+const config = require('config');
 const forcedPTTCheck = require('../../../../../src/lib/admin/roles/forcedpttcheck.js');
 
 describe('admin/roles/forcedpttcheck.js', function() {
@@ -36,8 +36,8 @@ describe('admin/roles/forcedpttcheck.js', function() {
 
     it('forcedPTTCheck should not detect removed role', function() {
         // Old has PTT role but new doesn't, shouldn't send message
-        role = config.getConfig().forcedPTTRoleID;
-        oldMember.roles.set(role, {id: config.getConfig().forcedPTTRoleID});
+        role = config.get('general.forcedPTTRoleID');
+        oldMember.roles.set(role, {id: config.get('general.forcedPTTRoleID')});
         success = false;
         forcedPTTCheck.execute(oldMember, newMember).should.be.false;
         success.should.be.false;
@@ -45,7 +45,7 @@ describe('admin/roles/forcedpttcheck.js', function() {
 
     it('forcedPTTCheck should not detect change in role', function() {
         // Both old and new members have PTT role, shouldn't send message
-        newMember.roles.set(role, {id: config.getConfig().forcedPTTRoleID});
+        newMember.roles.set(role, {id: config.get('general.forcedPTTRoleID')});
         success = false;
         forcedPTTCheck.execute(oldMember, newMember).should.be.false;
         success.should.be.false;

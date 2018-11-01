@@ -4,7 +4,7 @@
 
 // Handles DMs
 
-const config = require('../../../config/config.js');
+const config = require('config');
 const logger = require('../logger.js');
 const server = require('../server/server.js');
 const TAG = 'botDMs';
@@ -43,7 +43,7 @@ module.exports = {
                 });
             let relay = 'Message from: ' + msg.author.username;
             relay += '\nContent: ' + msg.content.substring(7);
-            if (server.getChannel('staff') !== null && !config.getConfig().testing) {
+            if (server.getChannel('staff') !== null && config.util.getEnv('NODE_ENV') !== 'testing') {
                 server.getChannel('staff').sendMessage(relay)
                     .then(function() {
                         logger.debug(TAG, 'Succesfully sent message to staff');
@@ -72,7 +72,7 @@ module.exports = {
             let relay = 'Message from: ' + msg.author.username;
             relay += '\nContent: ' + msg.content.substring(12);
 
-            if (server.getChannel('developers') !== null && !config.getConfig().testing) {
+            if (server.getChannel('developers') !== null && config.util.getEnv('NODE_ENV') !== 'testing') {
                 server.getChannel('developers').sendMessage(relay)
                     .then(function() {
                         logger.debug(TAG, 'Succesfully sent message to developers');

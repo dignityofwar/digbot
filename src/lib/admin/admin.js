@@ -8,7 +8,7 @@ const antispam = require('./antispam/antispam.js');
 const autodelete = require('./channels/autodelete.js');
 const channels = require('./channels/channelsMaster.js');
 const commandChannel = require('./antispam/commandChannel.js');
-const config = require('../../../config/config.js');
+const config = require('config');
 const crashHandler = require('../crash-handling.js');
 const detectPlaying = require('./roles/detectplaying.js');
 const events = require('./events.js');
@@ -33,7 +33,7 @@ module.exports = {
     /* Check is the main function of admin.js, it will call other functions to perform admin checks
     on the message, all server messages will run through the check function. */
     check: function(msg) {
-        if (msg.guild.id === config.getConfig().general.server) {
+        if (msg.guild.id === config.get('general.server')) {
             streamSpam.execute(msg);
             mentionSpam.execute(msg);
             return true;
@@ -101,11 +101,11 @@ module.exports = {
 };
 
 // Interval call auto delete to get rid of inactive temp channels
-let autodeletetimer = setInterval(auto, config.getConfig().autoDeleteChannels);
+let autodeletetimer = setInterval(auto, config.get('autoDeleteChannels'));
 function auto() {
     crashHandler.logEvent(TAG, 'autodelete check');
-    if (server.getGuild(config.getConfig().general.server) === null) { return; }
-    autodelete.execute(server.getGuild(config.getConfig().general.server));
+    if (server.getGuild(config.get('general.server')) === null) { return; }
+    autodelete.execute(server.getGuild(config.get('general.server')));
 }
 
 // Call 5 min admin checks
@@ -123,7 +123,7 @@ let dailychecktimer = setInterval(dailycheck, 86400000);
 // Runs every 24h period after bot start, not on start
 function dailycheck() {
     crashHandler.logEvent(TAG, 'dailycheck');
-    if (server.getGuild(config.getConfig().general.server) === null) { return; } // Check server has been stored
+    if (server.getGuild(config.get('general.server')) === null) { return; } // Check server has been stored
     prune();
     sfx.ready();
     play.ready();
@@ -131,8 +131,8 @@ function dailycheck() {
 
 // Remove members from server that have exceeded our inactivity limit
 function prune() {
-    if (server.getGuild(config.getConfig().general.server) === null) { return; }
-    server.getGuild(config.getConfig().general.server).pruneMembers(config.getConfig().inactivityLimit)
+    if (server.getGuild(config.get('general.server')) === null) { return; }
+    server.getGuild(config.get('general.server')).pruneMembers(config.get('inactivityLimit'))
         .then(pruned => {
             if (pruned > 0) {
                 logger.devAlert(TAG, `${pruned} members pruned`);

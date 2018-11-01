@@ -11,7 +11,7 @@ sinonStubPromise(sinon);
 
 const bot = require('../../src/lib/discord/discordbot.js');
 const commands = require('../../src/lib/commands/commands.js');
-const config = require('../../config/config.js');
+const config = require('config');
 const logger = require('../../src/lib/logger.js');
 const server = require('../../src/lib/server/server.js');
 
@@ -19,7 +19,6 @@ const server = require('../../src/lib/server/server.js');
 describe('bot-live-tests', function() {
     this.slow(5000);
     // Set test mode (should only be used when necessary for things like stopping messages going live)
-    config.setProperty('testing', true);
     logger.setTesting();
 
     // Ensure the bot is connected and running prior to any tests
@@ -93,10 +92,10 @@ describe('bot-live-tests', function() {
 
 function createSimpleMessage(message) {
     let msg = {};
-    console.log('Guild ' + config.getConfig().general.server);
-    server.getGuild(config.getConfig().general.server);
+    console.log('Guild ' + config.get('general.server'));
+    server.getGuild(config.get('general.server'));
 
-    msg.guild = server.getGuild(config.getConfig().general.server);
+    msg.guild = server.getGuild(config.get('general.server'));
     msg.channel = server.getChannel('developers');
     msg.content = message;
     msg.member = msg.guild.members.array()[0];

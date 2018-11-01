@@ -4,7 +4,7 @@
 
 // !sfx module, plays short audio clips in the user's channel
 
-const config = require('../../../config/config.js');
+const config = require('config');
 const crashHandler = require('../crash-handling.js');
 const google = require('googleapis');
 const logger = require('../logger.js');
@@ -13,7 +13,7 @@ const server = require('../server/server.js');
 const sfx = require('../../assets/sfx/sfx-assets.js');
 const yt = require('ytdl-core');
 
-const youtubeKey = config.getConfig().youtubeKey; // youtube API key
+const youtubeKey = config.get('youtubeKey'); // youtube API key
 const youtube = google.youtube('v3'); // create youtube API client
 let busy = false;
 let failing = false;
@@ -22,7 +22,7 @@ let verification = {};
 
 module.exports = {
     execute: function(msg) {
-        if (!config.getConfig().features.sfx) {
+        if (!config.get('features.sfx')) {
             sendMessageToChannel(msg.channel, 'Sorry this feature has been disabled');
             return false;
         }
@@ -72,7 +72,7 @@ module.exports = {
 
     // Called on ready and then every 24 hours, verifies all sfx on file are good links
     ready: function() {
-        if (!config.getConfig().features.sfx) { return false; }
+        if (!config.get('features.sfx')) { return false; }
         for (let x in sfx) {
             if (sfx[x].source === 'youtube') {
                 verify(sfx[x].link, x);
@@ -124,7 +124,7 @@ function play() {
 
     // If sfx is local file
     if (sfx[queue[0].effect].source === 'local') {
-        let file = config.getConfig().general.root + sfx[queue[0].effect].path;
+        let file = config.get('general.root') + sfx[queue[0].effect].path;
         let options = sfx[queue[0].effect].options;
         queue[0].voiceChannel.join()
             .then(connection => {
