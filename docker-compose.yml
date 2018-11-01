@@ -2,11 +2,8 @@
 
 version: '3.0'
 services:
-    node:
-        build:
-            context: .
-            dockerfile: docker/Dockerfile
+    digbot:
+        build: .
         ports:
             - "1337:1337"
-        entrypoint: /app/run.sh
         tty: true

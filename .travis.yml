@@ -5,9 +5,10 @@ services:
 
 before_script:
     - docker-compose -f docker-compose-test-ci.yml up --build -d
+    - docker-compose exec digbot npm install --only=dev
 
 script:
-    - docker-compose exec node ./app/test.sh
+    - docker-compose exec digbot npm test
 
 after_script:
     - docker-compose down

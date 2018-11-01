@@ -4,6 +4,7 @@
   "description": "- Nodejs 7.x\r - npm: discord.js",
   "main": "index.js",
   "scripts": {
+    "start": "node src/bot.js",
     "test": "mocha"
   },
   "repository": {

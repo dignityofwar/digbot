@@ -2,13 +2,13 @@
 
 version: '3.0'
 services:
-    node:
-        build:
-            context: .
-            dockerfile: docker/Dockerfile-test
+    digbot:
+        build: .
         ports:
             - "1337:1337"
-        entrypoint: /app/test.sh
+        entrypoint: npm install --only=dev
+        volumes:
+            - ./config/local.json:config/local.json
         tty: true
         environment:
         - NODE_ENV=testing
