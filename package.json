@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/bot.js",
-    "test": "mocha"
+    "test": "mocha",
+    "start:docker": "docker-compose up --build -d",
+    "test:docker": "docker-compose -f docker-compose-test.yml up --build -d && docker-compose exec digbot npm install --only=dev && docker-compose exec digbot npm test && docker-compose down"
   },
   "repository": {
     "type": "git",
