@@ -111,7 +111,7 @@ It is possible to pull the latest image from Docker Hub using `docker pull digni
 
 ### From the repository
 
-To run the bot locally use `npm run docker:start`, to check the logs use `npm run docker:logs`, and to stop the container and remove it use `npm run docker:stop`. The local.json config file will be automatically linked to the container. It is possible to run the bot without docker using `npm start`, but this is not recommended.
+To run the bot locally use `npm run docker:start`, to check the logs use `npm run docker:logs`, and to stop the container and remove it use `npm run docker:stop`. To quickly run the container and view it's logs use `npm run up`, and for taking it down use `npm run down`. The local.json config file will be automatically linked to the container. It is possible to run the bot without docker using `npm start`, but this is not recommended.
 
 To run the tests you use `npm run test:docker` (this will also link the local.json config file). It is possible to run it without docker using `npm test`, but this is not recommended.
 
