@@ -3,7 +3,7 @@
 FROM node:7.6
 
 # Sets default values for env vars for the image
-ENV NODE_ENV=development
+ENV NODE_ENV=development \
     DIGBOT_PORT=1337
 
 # Create and cd into the directory where the bot will live
