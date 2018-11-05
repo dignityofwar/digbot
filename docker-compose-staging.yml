@@ -10,4 +10,3 @@ services:
         restart: always
         environment:
         - NODE_ENV=staging
-        - DIGBOT_PORT=1337

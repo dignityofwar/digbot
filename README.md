@@ -99,6 +99,22 @@ DIGBot is capable of reacting when events are scheduled to remind people of thei
 Some channels the community would prefer to always have a free version of. This is the case for channels such as dedicated voice channels for certain games, for example if a member joins a voice channel for a game such as planetside DIGBot will react by creating a second voice channel for that game so there is still a free channel. Every-time a modular channel become populated or empty, DIGBot will respond by creating or deleting a channel as needed
 
 
+## Usage
+
+### Requirements
+
+The bot uses docker 1.13.0+. Instruction can be found here: https://docs.docker.com/install/
+
+### From Docker Hub
+
+It is possible to pull the latest image from Docker Hub using `docker pull dignityofwar/digbot`. Check the readme file in config to configure the bot correctly.
+
+### From the repository
+
+To run the bot locally use `npm run docker:start`, to check the logs use `npm run logs`, and to stop the container and remove it use `npm run stop`. The local.json config file will be automatically linked to the container. It is possible to run the bot without docker using `npm start`, but this is not recommended.
+
+To run the tests you use `npm run test:docker` (this will also link the local.json config file). It is possible to run it withput docker using `npm test`, but this is not recommended.
+
 ## Development
 
 ### Contributing
