@@ -2,13 +2,14 @@
 
 version: '3.0'
 services:
-    node:
-        build:
-            context: .
-            dockerfile: docker/Dockerfile-test
+    digbot:
+        build: .
         ports:
             - "1337:1337"
-        entrypoint: /app/test.sh
+        entrypoint: ""
+        volumes:
+            # Links the local.json config to the container for local testing
+            - ./config/local.json:/usr/src/digbot/config/local.json
         tty: true
         environment:
-        - NODE_ENV=testing
+            - NODE_ENV=testing
