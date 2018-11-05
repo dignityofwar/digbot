@@ -103,7 +103,7 @@ Some channels the community would prefer to always have a free version of. This 
 
 ### Requirements
 
-The bot uses docker 1.13.0+. Instruction can be found here: https://docs.docker.com/install/
+The bot uses docker 1.13.0+. Installation instructions can be found here: https://docs.docker.com/install/
 
 ### From Docker Hub
 
@@ -111,9 +111,9 @@ It is possible to pull the latest image from Docker Hub using `docker pull digni
 
 ### From the repository
 
-To run the bot locally use `npm run docker:start`, to check the logs use `npm run logs`, and to stop the container and remove it use `npm run stop`. The local.json config file will be automatically linked to the container. It is possible to run the bot without docker using `npm start`, but this is not recommended.
+To run the bot locally use `npm run docker:start`, to check the logs use `npm run docker:logs`, and to stop the container and remove it use `npm run docker:stop`. The local.json config file will be automatically linked to the container. It is possible to run the bot without docker using `npm start`, but this is not recommended.
 
-To run the tests you use `npm run test:docker` (this will also link the local.json config file). It is possible to run it withput docker using `npm test`, but this is not recommended.
+To run the tests you use `npm run test:docker` (this will also link the local.json config file). It is possible to run it without docker using `npm test`, but this is not recommended.
 
 ## Development
 
