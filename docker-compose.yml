@@ -5,8 +5,8 @@ services:
     digbot:
         build: .
         volumes:
-        # Links the local.json config to the container for local development
-        - ./config/local.json:/usr/src/digbot/config/local.json
+            # Links the local.json config to the container for local development
+            - ./config/local.json:/usr/src/digbot/config/local.json
         ports:
             - "1337:1337"
         tty: true

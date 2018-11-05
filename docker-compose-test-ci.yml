@@ -9,7 +9,7 @@ services:
         entrypoint: "" # Overwrites CMD so that the bot will not start
         tty: true
         environment:
-        - NODE_ENV=testing
-        - DISCORD_API_TOKEN
-        - SUBBOTS_CONFIG
-        - SUBBOTS_LIMIT
+            - NODE_ENV=testing
+            - DISCORD_API_TOKEN
+            - SUBBOTS_CONFIG
+            - SUBBOTS_LIMIT

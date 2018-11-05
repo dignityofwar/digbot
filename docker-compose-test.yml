@@ -12,4 +12,4 @@ services:
             - ./config/local.json:/usr/src/digbot/config/local.json
         tty: true
         environment:
-        - NODE_ENV=testing
+            - NODE_ENV=testing
