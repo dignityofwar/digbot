@@ -2,14 +2,11 @@
 
 version: '3.0'
 services:
-    node:
-        build:
-            context: .
-            dockerfile: docker/Dockerfile
+    digbot:
+        image: "dignityofwar/digbot:latest"
         ports:
             - "1337:1337"
-        entrypoint: /app/run.sh
         tty: true
         restart: always
         environment:
-        - NODE_ENV=production
+            - NODE_ENV=production
