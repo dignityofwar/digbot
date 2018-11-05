@@ -8,7 +8,7 @@ before_script:
     - docker-compose exec digbot npm install --only=dev
 
 script:
-    - docker-compose exec digbot npm mocha
+    - docker-compose exec digbot npm run mocha
 
 after_script:
     - docker-compose down
