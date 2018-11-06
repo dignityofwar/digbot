@@ -32,7 +32,7 @@ module.exports = {
                     return true;
                 }
             }
-            for (let recreationalgame in config.get('recreationalgame')) {
+            for (let recreationalgame in config.get('recreationalGames')) {
                 let ref = config.get('recreationalGames')[recreationalgame];
                 if (typeof oldMember.presence.game.name === 'string' &&
                     oldMember.presence.game.name.includes(ref.name)) {

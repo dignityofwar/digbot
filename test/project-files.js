@@ -53,7 +53,7 @@ describe('critical project files', function() {
     it('should have test docker composition', function() {
         let success = false;
         try {
-            fs.existsSync(config.get('general.root') + '/docker-compose-test.yml');
+            fs.existsSync(config.get('general.root') + '/docker-compose-test-local.yml');
             success = true;
         } catch (err) {
             console.log(err);
