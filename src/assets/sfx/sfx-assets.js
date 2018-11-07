@@ -21,12 +21,6 @@ If you're hosting local and not on youtube you better have a good reason, i.e. D
             options: {volume: 0.8},
             description: 'ADMIN ABUSE!'
         },
-        bad: {
-            source: 'youtube',
-            link: 'https://www.youtube.com/watch?v=scgCjxDByLM',
-            options: {volume: 0.4},
-            description: 'bad bad bad'
-        },
         belleh: {
             source: 'youtube',
             link: 'https://www.youtube.com/watch?v=N6vw1aOEVds',
@@ -189,12 +183,12 @@ If you're hosting local and not on youtube you better have a good reason, i.e. D
             options: {volume: 0.8},
             description: 'Rick and Morty: Pull the trigger!'
         },
-        triggering: {
-            source: 'youtube',
-            link: 'https://www.youtube.com/watch?v=fT8FTHEHfzo',
-            options: {volume: 0.25},
-            description: 'H3H3 triggering effect, sounds hiddious'
-        },
+        // triggering: {
+        //     source: 'youtube',
+        //     link: 'https://www.youtube.com/watch?v=7HoCKlNsolc',
+        //     options: {volume: 0.25},
+        //     description: 'H3H3 triggering effect, sounds hiddious'
+        // },
         triple: {
             source: 'youtube',
             link: 'https://www.youtube.com/watch?v=XlLbsTP0C_U',

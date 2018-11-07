@@ -65,11 +65,11 @@ const fun = {
         link: 'https://www.youtube.com/watch?v=dZLfasMPOU4',
         volume: 0.05
     },
-    11: {
-        name: 'Danger zone',
-        link: 'https://www.youtube.com/watch?v=58QOBqAWNzE',
-        volume: 0.04
-    },
+    // 11: {
+    //     name: 'Danger zone',
+    //     link: 'https://www.youtube.com/watch?v=siwpn14IE7E',
+    //     volume: 0.04
+    // },
     12: {
         name: 'Push it to the limit',
         link: 'https://www.youtube.com/watch?v=9D-QD_HIfjA',
@@ -95,11 +95,11 @@ const fun = {
         link: 'https://www.youtube.com/watch?v=kfVsfOSbJY0',
         volume: 0.025
     },
-    17: {
-        name: 'She said',
-        link: 'https://www.youtube.com/watch?v=x3VOUiLzfF8',
-        volume: 0.03
-    },
+    // 17: {
+    //     name: 'She said',
+    //     link: 'https://www.youtube.com/watch?v=rQjh9H-ymK4',
+    //     volume: 0.03
+    // },
     18: {
         name: 'It\'s the end of the world as we know it',
         link: 'https://www.youtube.com/watch?v=zeo0_3gN190',
@@ -160,11 +160,11 @@ const fun = {
         link: 'https://www.youtube.com/watch?v=pslgz9o8meM',
         volume: 0.04
     },
-    30: {
-        name: 'Mr Boombastic',
-        link: 'https://www.youtube.com/watch?v=_Tvy8-8q6U8',
-        volume: 0.04
-    },
+    // 30: {
+    //     name: 'Mr Boombastic',
+    //     link: 'https://www.youtube.com/watch?v=6W5pq4bIzIw',
+    //     volume: 0.04
+    // },
     31: {
         name: 'Gold digger',
         link: 'https://www.youtube.com/watch?v=6vwNcNOTVzY',
@@ -448,11 +448,11 @@ const nightcore = {
         link: 'https://www.youtube.com/watch?v=a_x92uAgIBM',
         volume: 0.025
     },
-    44: {
-        name: 'Does your mother know',
-        link: 'https://www.youtube.com/watch?v=cLnbXUN3KDg',
-        volume: 0.025
-    },
+    // 44: {
+    //     name: 'Does your mother know',
+    //     link: 'https://www.youtube.com/watch?v=WkL7Fkigfn8',
+    //     volume: 0.025
+    // },
     45: {
         name: 'Blackout',
         link: 'https://www.youtube.com/watch?v=5I-r3Z_tm7I',
@@ -506,11 +506,11 @@ const nineties = {
         link: 'https://www.youtube.com/watch?v=1lyu1KKwC74',
         volume: 0.04
     },
-    2: {
-        name: 'Wonderwall',
-        link: 'https://www.youtube.com/watch?v=9DvRCykzHy4',
-        volume: 0.04
-    },
+    // 2: {
+    //     name: 'Wonderwall',
+    //     link: 'https://www.youtube.com/watch?v=bx1Bh8ZvH84',
+    //     volume: 0.04
+    // },
     3: {
         name: 'Vouge',
         link: 'https://www.youtube.com/watch?v=GuJQSAiODqI',
@@ -531,11 +531,11 @@ const nineties = {
         link: 'https://www.youtube.com/watch?v=Ztk9t_m1FpY',
         volume: 0.04
     },
-    7: {
-        name: 'I do it for you',
-        link: 'https://www.youtube.com/watch?v=ZGoWtY_h4xo',
-        volume: 0.07
-    },
+    // 7: {
+    //     name: 'I do it for you',
+    //     link: 'https://www.youtube.com/watch?v=fXtlWmBM-HU',
+    //     volume: 0.07
+    // },
     8: {
         name: 'Gunna make you sweat',
         link: 'https://www.youtube.com/watch?v=LaTGrV58wec',
@@ -576,11 +576,11 @@ const nineties = {
         link: 'https://www.youtube.com/watch?v=axAtWjn3MfI',
         volume: 0.045
     },
-    16: {
-        name: 'Jump around',
-        link: 'https://www.youtube.com/watch?v=oZ5QLXTUTRA',
-        volume: 0.045
-    },
+    // 16: {
+    //     name: 'Jump around',
+    //     link: 'https://www.youtube.com/watch?v=XhzpxjuwZy0',
+    //     volume: 0.045
+    // },
     17: {
         name: 'G thang',
         link: 'https://www.youtube.com/watch?v=0twahcMCgss',
@@ -616,11 +616,11 @@ const nineties = {
         link: 'https://www.youtube.com/watch?v=JKWV7gX1UkY',
         volume: 0.06
     },
-    24: {
-        name: 'Cotten eyed Joe',
-        link: 'https://www.youtube.com/watch?v=_lSeIkKpKW0',
-        volume: 0.06
-    },
+    // 24: {
+    //     name: 'Cotten eyed Joe',
+    //     link: 'https://www.youtube.com/watch?v=mOYZaiDZ7BM',
+    //     volume: 0.06
+    // },
     25: {
         name: 'Macarena',
         link: 'https://www.youtube.com/watch?v=VjC7HaMSFmo',
@@ -641,21 +641,21 @@ const nineties = {
         link: 'https://www.youtube.com/watch?v=8X-2czaa3WA',
         volume: 0.05
     },
-    29: {
-        name: 'I\'ll be',
-        link: 'https://www.youtube.com/watch?v=YKCpZCOZiZI',
-        volume: 0.06
-    },
+    // 29: {
+    //     name: 'I\'ll be',
+    //     link: 'https://www.youtube.com/watch?v=jtvuFriX7zc',
+    //     volume: 0.06
+    // },
     30: {
         name: 'Go the distance',
         link: 'https://www.youtube.com/watch?v=m6v_gOmVJ4I',
         volume: 0.065
     },
-    31: {
-        name: 'Baby one more time',
-        link: 'https://www.youtube.com/watch?v=-5m1enOt0OQ',
-        volume: 0.055
-    },
+    // 31: {
+    //     name: 'Baby one more time',
+    //     link: 'https://www.youtube.com/watch?v=C-u5WLJ9Yk4',
+    //     volume: 0.055
+    // },
     32: {
         name: 'Genie in a bottle',
         link: 'https://www.youtube.com/watch?v=Iu7Ixskp0dY',
@@ -814,11 +814,11 @@ const noughties = {
         link: 'https://www.youtube.com/watch?v=1cQh1ccqu8M',
         volume: 0.025
     },
-    13: {
-        name: 'Hot in here',
-        link: 'https://www.youtube.com/watch?v=4fUjcPCUWD0',
-        volume: 0.025
-    },
+    // 13: {
+    //     name: 'Hot in here',
+    //     link: 'https://www.youtube.com/watch?v=GeZZr_p6vB8',
+    //     volume: 0.025
+    // },
     14: {
         name: 'Wherever you will go',
         link: 'https://www.youtube.com/watch?v=iAP9AF6DCu4',
@@ -854,11 +854,11 @@ const noughties = {
         link: 'https://www.youtube.com/watch?v=6GiRYc0xgzk',
         volume: 0.03
     },
-    21: {
-        name: 'Ignition',
-        link: 'https://www.youtube.com/watch?v=iD_qRi-jVw4',
-        volume: 0.03
-    },
+    // 21: {
+    //     name: 'Ignition',
+    //     link: 'https://www.youtube.com/watch?v=y6y_4_b6RS8',
+    //     volume: 0.03
+    // },
     22: {
         name: 'Bring me to life',
         link: 'https://www.youtube.com/watch?v=D-Fykb5eyhc',
@@ -884,11 +884,11 @@ const noughties = {
         link: 'https://www.youtube.com/watch?v=qo9EFUWyG8A',
         volume: 0.035
     },
-    27: {
-        name: 'Yeah',
-        link: 'https://www.youtube.com/watch?v=cslvNPk1hps',
-        volume: 0.025
-    },
+    // 27: {
+    //     name: 'Yeah',
+    //     link: 'https://www.youtube.com/watch?v=GxBSyx85Kp8',
+    //     volume: 0.025
+    // },
     28: {
         name: 'This love',
         link: 'https://www.youtube.com/watch?v=pI2Q8L8L3Ks',
@@ -984,11 +984,11 @@ const noughties = {
         link: 'https://www.youtube.com/watch?v=dZJ9tx_zk4A',
         volume: 0.025
     },
-    47: {
-        name: 'I\'m yours',
-        link: 'https://www.youtube.com/watch?v=kMKNyFRW8dw',
-        volume: 0.03
-    },
+    // 47: {
+    //     name: 'I\'m yours',
+    //     link: 'https://www.youtube.com/watch?v=EkHTsc9PU2A',
+    //     volume: 0.03
+    // },
     48: {
         name: 'Hot \'n cold',
         link: 'https://www.youtube.com/watch?v=A_FreDrOFd0',
@@ -1102,11 +1102,11 @@ const tennies = {
         link: 'https://www.youtube.com/watch?v=u4cFNwqX8hA',
         volume: 0.015
     },
-    19: {
-        name: 'Part of me',
-        link: 'https://www.youtube.com/watch?v=eCZv-piPQz8',
-        volume: 0.02
-    },
+    // 19: {
+    //     name: 'Part of me',
+    //     link: 'https://www.youtube.com/watch?v=2Fko7_SV3Lc',
+    //     volume: 0.02
+    // },
     20: {
         name: 'We are never ever getting back together',
         link: 'https://www.youtube.com/watch?v=n2Ez-w-zvd4',
@@ -1127,21 +1127,21 @@ const tennies = {
         link: 'https://www.youtube.com/watch?v=VG3JsmOmDqw',
         volume: 0.015
     },
-    23: {
-        name: 'Roar',
-        link: 'https://www.youtube.com/watch?v=n2f501YWxso',
-        volume: 0.03
-    },
+    // 23: {
+    //     name: 'Roar',
+    //     link: 'https://www.youtube.com/watch?v=LH0itrvHiRw',
+    //     volume: 0.03
+    // },
     24: {
         name: 'Royals',
         link: 'https://www.youtube.com/watch?v=l0SQxIC0utQ',
         volume: 0.025
     },
-    25: {
-        name: 'Hall of fame',
-        link: 'https://www.youtube.com/watch?v=jukv9Q1eR2g',
-        volume: 0.02
-    },
+    // 25: {
+    //     name: 'Hall of fame',
+    //     link: 'https://www.youtube.com/watch?v=NH7I79fLiSw',
+    //     volume: 0.02
+    // },
     26: {
         name: 'Happy',
         link: 'https://www.youtube.com/watch?v=H0m3Lfkzcw4',
@@ -1182,11 +1182,11 @@ const tennies = {
         link: 'https://www.youtube.com/watch?v=ziN7Y1M1v8s',
         volume: 0.02
     },
-    34: {
-        name: 'See you again',
-        link: 'https://www.youtube.com/watch?v=Nfl5m4QTTeg',
-        volume: 0.02
-    },
+    // 34: {
+    //     name: 'See you again',
+    //     link: 'https://www.youtube.com/watch?v=LWfFm-fsXIc',
+    //     volume: 0.02
+    // },
     35: {
         name: 'Sugar',
         link: 'https://www.youtube.com/watch?v=7vw84EkHOlY',
@@ -1202,11 +1202,11 @@ const tennies = {
         link: 'https://www.youtube.com/watch?v=e-ORhEE9VVg',
         volume: 0.02
     },
-    38: {
-        name: 'Cheerleader',
-        link: 'https://www.youtube.com/watch?v=HkiMN8e7mEg',
-        volume: 0.02
-    },
+    // 38: {
+    //     name: 'Cheerleader',
+    //     link: 'https://www.youtube.com/watch?v=9qXAaoBePVg',
+    //     volume: 0.02
+    // },
     39: {
         name: 'Love me like you do',
         link: 'https://www.youtube.com/watch?v=AJtDXIazrMo',
@@ -1227,21 +1227,21 @@ const tennies = {
         link: 'https://www.youtube.com/watch?v=vR18NP-acL4',
         volume: 0.02
     },
-    43: {
-        name: 'One dance',
-        link: 'https://www.youtube.com/watch?v=3IIspaicSnY',
-        volume: 0.02
-    },
-    44: {
-        name: 'Stressed out',
-        link: 'https://www.youtube.com/watch?v=xX1QyE_GcBg',
-        volume: 0.02
-    },
-    45: {
-        name: 'Can\'t stop the feeling',
-        link: 'https://www.youtube.com/watch?v=fJ2ClPjFnB8',
-        volume: 0.02
-    },
+    // 43: {
+    //     name: 'One dance',
+    //     link: 'https://www.youtube.com/watch?v=HBOKbB4Vaco',
+    //     volume: 0.02
+    // },
+    // 44: {
+    //     name: 'Stressed out',
+    //     link: 'https://www.youtube.com/watch?v=ydZZ4p4pKrs',
+    //     volume: 0.02
+    // },
+    // 45: {
+    //     name: 'Can\'t stop the feeling',
+    //     link: 'https://www.youtube.com/watch?v=QEZq4I2wTBc',
+    //     volume: 0.02
+    // },
     46: {
         name: 'Cheap thrills',
         link: 'https://www.youtube.com/watch?v=6mqbAnrtWHo',
@@ -1262,11 +1262,11 @@ const tennies = {
         link: 'https://www.youtube.com/watch?v=Z7CTnA3dTU0',
         volume: 0.02
     },
-    50: {
-        name: 'We don\'t talk any more',
-        link: 'https://www.youtube.com/watch?v=iNGqXWgomRM',
-        volume: 0.02
-    }
+    // 50: {
+    //     name: 'We don\'t talk any more',
+    //     link: 'https://www.youtube.com/watch?v=2FuHbch1dFI',
+    //     volume: 0.02
+    // }
 };
 
 module.exports = {
