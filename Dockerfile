@@ -15,7 +15,7 @@ WORKDIR /usr/src/digbot
 COPY package*.json ./
 
 # Install dependencies(dev-dependecies are not installed)
-RUN apk add --no-cache --virtual .build-deps make "g++" python2 \
+RUN apk add --no-cache --virtual .build-deps make "g++" python2 git \
     && npm install --production \
     && apk del .build-deps
 

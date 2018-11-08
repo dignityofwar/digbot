@@ -34,6 +34,12 @@
     "usage": "^0.7.0",
     "ytdl-core": "^0.28.0"
   },
+  "optionalDependencies": {
+    "bufferutil": "^3.0.3",
+    "erlpack": "discordapp/erlpack",
+    "libsodium-wrappers": "^0.7.3",
+    "node-opus": "^0.2.7"
+  },
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^3.5.0",
