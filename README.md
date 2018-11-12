@@ -105,15 +105,17 @@ Some channels the community would prefer to always have a free version of. This 
 
 The bot uses docker 1.13.0+. Installation instructions can be found here: https://docs.docker.com/install/
 
-### From Docker Hub
+### Deployment via Docker Hub
 
-It is possible to pull the latest image from Docker Hub using `docker pull dignityofwar/digbot`. Check the readme file in config to configure the bot correctly.
+Docker Hub automatically builds and stores docker images of staging and master (our production branch). We deploy the bot using the latest docker images from Docker Hub using `docker pull dignityofwar/digbot`.
 
 ### From the repository
 
-To run the bot locally use `npm run docker:start`, to check the logs use `npm run docker:logs`, and to stop the container and remove it use `npm run docker:stop`. To quickly run the container and view it's logs use `npm run up`, and for taking it down use `npm run down`. The local.json config file will be automatically linked to the container. It is possible to run the bot without docker using `npm start`, but this is not recommended.
+To run the bot locally use `npm run up`, and to stop the container and remove it use `npm run down`. The local.json config file will be automatically linked to the container.
 
-To run the tests you use `npm test` (this will also link the local.json config file). It is possible to run it without docker using `npm run mocha`, but this is not recommended.
+To run the tests you use `npm test` (this will also link the local.json config file). 
+
+It is of course possible to run it without docker, but this is not recommended.
 
 ## Development
 
@@ -123,11 +125,11 @@ See the [contribution guidelines](CONTRIBUTING.md) file for information on how t
 
 ### Code Usage
 
-The project is in the process of being open sourced however as of this moment no usage licence is provided.
+The project is open-sourced under the [MIT license](LICENSE.md).
 
 ### Acknowledgements
 
-This repository was created from an [existing private codebase](https://github.com/JamesLongman/DIGBot/releases/tag/0.0.1) for DIGBot which can be found. The previous project was headed by Maelstromeous who was ultimately responsible for code review, design decisions and deployment.
+This repository was created from an [existing private codebase](https://github.com/JamesLongman/DIGBot/releases/tag/0.0.1). The previous project was headed by Maelstromeous who was ultimately responsible for code review, design decisions and deployment.
 
 File contributions were as follows  
 Maelstromeous: 510 commits,  7,623 additions, 6,378 deletions  
