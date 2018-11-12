@@ -5,9 +5,9 @@
 // !stats module
 
 const config = require('config');
-const pjson = require('../../../package');
 const logger = require('../logger.js');
 const performance = require('../tools/performance.js');
+const pjson = require('../../../package');
 const server = require('../server/server.js');
 const TAG = '!stats';
 

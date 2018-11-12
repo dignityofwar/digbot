@@ -11,6 +11,7 @@ const directMessage = require('./direct-message.js');
 const crashHandler = require('../crash-handling.js');
 const logger = require('../logger.js');
 const nameCheck = require('../welcomepack/namecheck.js');
+const pjson = require('../../../package.json');
 const server = require('../server/server.js');
 const subBots = require('../sub-bots/sub-bots.js');
 const welcome = require('../welcomepack/welcomepack.js');
@@ -185,7 +186,7 @@ module.exports = {
 
         if (server.getBooted() === false) {
             if (server.getChannel('developers') !== null) {
-                server.getChannel('developers').sendMessage(`DIGBot, reporting for duty! Environment: ${config.util.getEnv('NODE_ENV')}`)
+                server.getChannel('developers').sendMessage(`DIGBot, reporting for duty! Environment: ${config.util.getEnv('NODE_ENV')}, Version: ${pjson.version}`)
                     .then(
                         logger.debug(TAG, 'Succesfully sent message')
                     )
