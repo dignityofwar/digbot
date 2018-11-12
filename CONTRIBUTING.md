@@ -7,7 +7,7 @@ To give a basic setup procedure:
 - Create a personal bot here: (you will need multiple for sub-bots) https://discordapp.com/developers/applications/
 - Update your config files with the parameters you have created with your bots and servers
 - Install and run docker
-- Run the project using `docker-compose up --build`
+- Run the project using `npm run up`
 
 # Installing Docker
 
@@ -19,61 +19,11 @@ We **HIGHLY** recommend the use of Docker in order to run DIGBot. This will ensu
 
 # Your local config files
 
-You need a file at config/envConfig.js, this should be git Ignored. You will need to change all parameters in the config/envConfig.js and config/development/\*.js files to ensure they match your personal development discord server and bot API keys and such. It is **CRITICAL** that you keep these files out of the commit history by use of a command such as `git update-index --assume-unchanged config/envConfig.js` if necessary to keep private keys secure
+You need a file at config/local.json, this should be git Ignored. You will need to change all parameters in the config/local.json file to ensure they match your personal development discord server and bot API keys and such, to accomplish this you may use config.local.json.example as a guide. It is **CRITICAL** that you keep these files out of the commit history by use of a command such as `git update-index --assume-unchanged config/local.json` if necessary to keep private keys secure.
 
 # Code style Guide
 
-### Control structures
-
-```
-// Functions
-function {
-    ...
-}
-
-// IF statements
-if (! <expression>) {
-    ...
-} else if (<expression>) {
-    ...
-} else {
-    ...
-}
-
-// For loops
-for (let count = 0; count > <something>; count++) {
-    ...
-}
-
-// While loops
-while (something !== something) {
-    ...
-}
-
-```
-### Module variables declarations
-
-```
-"use strict";
-
-const someVar = something;
-let someGlobalVar = something;
-
-modules.exports = {
-    someFunction: function () {
-        ...
-    },
-    someOtherFunction: someNonModularFunction // Pointing to a normal function
-}
-
-function someNonModularFunction {
-    ...
-}
-
-```
-### Module organization
-
-- Comply with Atom JSLinter and JSCS plugins. Added the .jscsrc file to master so it can be consistent across all developers. (This will soon change to a CI process)
+- Comply with the .jscsrc file, you may use a linter in your IDE to assist you in this however how this is accomplished will depend on your IDE. Style is automatically reviewed in PRs through our CI process.
 - Leave a summary comment at the top of each module explaining its purpose
 - Sort functions alphabetically unless using getter and setter functions, example:
 ```
@@ -83,11 +33,14 @@ setSomething()
 getSomethingElse()
 setSomethingElse()
 ```
-- If the purpose of a function is not immediately apparent leave a short comment
-- Ensure promise resolutions/rejections are handled
-- Embed promise structures, see code for examples
+- If the purpose of a function is not immediately apparent leave a short comment. Please keep in mind our comments are intended to be read by recreational developers, not professsionals.
+- Ensure promise resolutions/rejections are always handled
+- Please keep in mind due to API ping a lot of our code must be designed with asynchronicity in mind
+- Where possible guard against common errors and handle them through our logger (src/lib.logger.js)
 
 ### Module testing
+
+If it can be tested it should be tested, test coverage should be as high as possible. Tests are conducted automatically on all PRs by Travis.
 
 For testing this codebase uses Chai and Sinon with Mocha as runner. Mocha
 allows organisation of tests by means of describing testable code blocks and

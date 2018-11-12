@@ -10,7 +10,7 @@ config/local.json
 # Ignore all md files
 *.md
 
-# Ignore all hidden files(git, travis, docker, etc)
+# Ignore all hidden files (git, travis, docker, etc)
 .*
 
 # Ignore all docker files
