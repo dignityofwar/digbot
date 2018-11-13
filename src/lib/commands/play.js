@@ -7,7 +7,7 @@
 const antiDuplicate = require('../tools/antiduplicate.js');
 const config = require('config');
 const crashHandler = require('../crash-handling.js');
-const google = require('googleapis');
+const {google} = require('googleapis');
 const logger = require('../logger.js');
 const TAG = '!play';
 const playAssets = require('../../assets/music/play-assets.js');
@@ -17,8 +17,7 @@ const server = require('../server/server.js');
 const subBots = require('../sub-bots/sub-bots.js');
 const yt = require('ytdl-core');
 
-const youtubeKey = config.get('youtubeKey'); // youtube API key
-const youtube = google.youtube('v3'); // create youtube API client
+const youtube = google.youtube({version: 'v3', auth: config.get('youtubeKey')}); // create youtube API client
 let playing = {};
 let verified = {
     external: {},
@@ -429,7 +428,6 @@ a playlist ID */
 function searchForPlaylist(msg) {
     let params = {
         fields: 'items/snippet/resourceId/videoId',
-        key: youtubeKey,
         maxResults: 50,
         part: 'snippet',
         playlistId: msg.content.substring(15)
@@ -450,8 +448,8 @@ function searchForPlaylist(msg) {
         } else {
             // Success, create array of video IDs
             let youtubePlaylist = [];
-            for (let x in response.items) {
-                youtubePlaylist.push(response.items[x].snippet.resourceId.videoId);
+            for (let x in response.data.items) {
+                youtubePlaylist.push(response.data.items[x].snippet.resourceId.videoId);
             }
             setup(msg, 'playlist', 'youtube', youtubePlaylist);
         }
@@ -592,7 +590,6 @@ function verify(location, source) {
     // No need to verify pre-verified external sources
     if (location === 'external' && verified.external[source]) { return; }
     let params = {
-        key: youtubeKey,
         part: 'snippet',
         id: source
     };
@@ -600,7 +597,7 @@ function verify(location, source) {
         if (err) {
             verified[location][source] = false;
         } else {
-            if (response.pageInfo.totalResults === 0) {
+            if (response.data.pageInfo.totalResults === 0) {
                 if (location === 'local') {track(source);}
                 verified[location][source] = false;
             } else {

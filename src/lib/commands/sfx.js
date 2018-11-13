@@ -6,15 +6,14 @@
 
 const config = require('config');
 const crashHandler = require('../crash-handling.js');
-const google = require('googleapis');
+const {google} = require('googleapis');
 const logger = require('../logger.js');
 const TAG = '!sfx';
 const server = require('../server/server.js');
 const sfx = require('../../assets/sfx/sfx-assets.js');
 const yt = require('ytdl-core');
 
-const youtubeKey = config.get('youtubeKey'); // youtube API key
-const youtube = google.youtube('v3'); // create youtube API client
+const youtube = google.youtube({version: 'v3', auth: config.get('youtubeKey')}); // create youtube API client
 let busy = false;
 let failing = false;
 let queue = [];
@@ -349,7 +348,6 @@ function verify(source, name) {
         source = source.substring((source.indexOf('?v=') + 3));
     }
     let params = {
-        key: youtubeKey,
         part: 'snippet',
         id: source
     };
@@ -357,7 +355,7 @@ function verify(source, name) {
         if (err) {
             verification[name] = false;
         } else {
-            if (response.pageInfo.totalResults === 0) {
+            if (response.data.pageInfo.totalResults === 0) {
                 logger.warning(TAG, 'Verification process indicates sfx asset: *' + name + '* is bad');
                 verification[name] = false;
             } else {
