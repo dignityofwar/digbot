@@ -4,7 +4,7 @@
 
 // !dragons module
 
-const config = require('../../../config/config.js');
+const config = require('config');
 const logger = require('../logger.js');
 const server = require('../server/server.js');
 const TAG = '!dragons';
@@ -13,10 +13,10 @@ module.exports = {
     execute: function(msg) {
         const roles = msg.member.roles;
 
-        if (roles.has(config.getConfig().general.herebedragonsRoleID)) {
+        if (roles.has(config.get('general.herebedragonsRoleID'))) {
             logger.info(TAG, 'User ' + msg.member.displayName + ' already has herebedragons role. Removing.');
 
-            msg.member.removeRole(config.getConfig().general.herebedragonsRoleID)
+            msg.member.removeRole(config.get('general.herebedragonsRoleID'))
                 .then(function() {
                     logger.info(TAG, 'Unsubscribed ' + msg.member.displayName + ' from herebedragons.');
                 })
@@ -33,11 +33,11 @@ module.exports = {
                 });
             return false;
         } else {
-            msg.member.addRole(config.getConfig().general.herebedragonsRoleID)
+            msg.member.addRole(config.get('general.herebedragonsRoleID'))
                 .then(function() {
                     logger.info(TAG, 'Added herebedragons role to ' + msg.member.displayName);
 
-                    msg.guild.channels.get(config.getConfig().herebedragons).sendMessage(
+                    msg.guild.channels.get(config.get('channels.mappings.herebedragons')).sendMessage(
                         msg.member + ' has been granted access here. ' +
                         'Note, this channel is lawless. If you get triggered, the community staff cannot help you.'
                     )

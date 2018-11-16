@@ -2,14 +2,14 @@
 
 const should = require('chai').should();
 
-const config = require('../config/config.js');
+const config = require('config');
 const fs = require('fs');
 
 describe('critical project files', function() {
     it('should have git attributes', function() {
         let success = false;
         try {
-            fs.existsSync(config.getConfig().general.root + '/.gitattributes');
+            fs.existsSync(config.get('general.root') + '/.gitattributes');
             success = true;
         } catch (err) {
             console.log(err);
@@ -20,7 +20,7 @@ describe('critical project files', function() {
     it('should have git ignore', function() {
         let success = false;
         try {
-            fs.existsSync(config.getConfig().general.root + '/.gitignore');
+            fs.existsSync(config.get('general.root') + '/.gitignore');
             success = true;
         } catch (err) {
             console.log(err);
@@ -31,7 +31,7 @@ describe('critical project files', function() {
     it('should have user config', function() {
         let success = false;
         try {
-            fs.existsSync(config.getConfig().general.root + '/config.user.js');
+            fs.existsSync(config.get('general.root') + '/config.user.js');
             success = true;
         } catch (err) {
             console.log(err);
@@ -42,7 +42,7 @@ describe('critical project files', function() {
     it('should have production docker composition', function() {
         let success = false;
         try {
-            fs.existsSync(config.getConfig().general.root + '/docker-compose-prod.yml');
+            fs.existsSync(config.get('general.root') + '/docker-compose-prod.yml');
             success = true;
         } catch (err) {
             console.log(err);
@@ -53,7 +53,7 @@ describe('critical project files', function() {
     it('should have test docker composition', function() {
         let success = false;
         try {
-            fs.existsSync(config.getConfig().general.root + '/docker-compose-test.yml');
+            fs.existsSync(config.get('general.root') + '/docker-compose-test-local.yml');
             success = true;
         } catch (err) {
             console.log(err);
@@ -64,7 +64,7 @@ describe('critical project files', function() {
     it('should have standard docker composition', function() {
         let success = false;
         try {
-            fs.existsSync(config.getConfig().general.root + '/docker-compose.yml');
+            fs.existsSync(config.get('general.root') + '/docker-compose.yml');
             success = true;
         } catch (err) {
             console.log(err);
@@ -75,7 +75,7 @@ describe('critical project files', function() {
     it('should have standard docker file', function() {
         let success = false;
         try {
-            fs.existsSync(config.getConfig().general.root + '/Dockerfile.yml');
+            fs.existsSync(config.get('general.root') + '/Dockerfile.yml');
             success = true;
         } catch (err) {
             console.log(err);
@@ -86,7 +86,7 @@ describe('critical project files', function() {
     it('should have project readme', function() {
         let success = false;
         try {
-            fs.existsSync(config.getConfig().general.root + '/README.md');
+            fs.existsSync(config.get('general.root') + '/README.md');
             success = true;
         } catch (err) {
             console.log(err);

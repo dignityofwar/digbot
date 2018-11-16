@@ -1,13 +1,26 @@
 # Copyright © 2018 DIG Development team. All rights reserved.
 
-FROM node:7.6
+FROM node:10.13-alpine
 
-# Install bot depdencies
-RUN apt update && apt install -y libav-tools
+# Install the ffmpeg binaries
+RUN apk add --no-cache ffmpeg
 
-# Cleanup
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Sets default values for env vars for the image
+ENV NODE_ENV=development
 
-ADD docker/run.sh /usr/local/bin/run.sh
-ADD docker/test.sh /usr/local/bin/test.sh
-RUN chmod +x /usr/local/bin/run.sh /usr/local/bin/test.sh
+# Create and cd into the directory where the bot will live
+WORKDIR /usr/src/digbot
+
+# Copy package & package-lock files before other files
+COPY package*.json ./
+
+# Install dependencies(dev-dependecies are not installed)
+RUN apk add --no-cache --virtual .build-deps make "g++" python2 git \
+    && npm install --production \
+    && apk del .build-deps
+
+# Copies the project into the container
+COPY . .
+
+# Run the bot
+CMD ["npm", "start"]

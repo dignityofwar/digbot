@@ -4,14 +4,14 @@
 
 // Handles message requests to channels
 
-const config = require('../../../config/config.js');
+const config = require('config');
 const logger = require('../logger.js');
 const server = require('../server/server.js');
 const TAG = ('Message Channel Requests');
 
 module.exports = {
     execute: function(received) {
-        let guild = server.getGuild(config.getConfig().general.server);
+        let guild = server.getGuild(config.get('general.server'));
         let channel = guild.channels.get(received.channel);
         if (!channel) {
             logger.warning(TAG, 'Received message request for channel not found: ' + received.channel);

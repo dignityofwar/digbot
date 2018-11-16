@@ -1,0 +1,15 @@
+# Copyright © 2018 DIG Development team. All rights reserved.
+
+version: '3.0'
+services:
+    digbot:
+        build: .
+        ports:
+            - "1337:1337"
+        entrypoint: "" # Overwrites CMD so that the bot will not start
+        tty: true
+        environment:
+            - NODE_ENV=testing
+            - DISCORD_API_TOKEN
+            - SUBBOTS_CONFIG
+            - SUBBOTS_LIMIT

@@ -1,0 +1,127 @@
+{
+  "botUserID"        : "290609142660464640",
+
+  "general"          : {
+    "adminsRoleID"           : "293047000151359488",
+    "devRoleID"              : "293461166657634304",
+    "forcedPTTRoleID"        : "293826398265540608",
+    "herebedragonsRoleID"    : "293825556238041098",
+    "server"                 : "290582293704343553",
+    "staffRoleID"            : "293046972233940994",
+    "superMuteRoleID"        : "293824403928776705",
+    "leaderRoles"            : [
+      "293063770543226880",
+      "293063814809649163",
+      "293461624583618560"
+    ],
+    "root"                   : "/var/web/dignityofwar.com/bot-staging",
+    "port"                   : 1338,
+    "memoryNotificationLimit": 150
+  },
+
+  "channels"         : {
+    "mappings" : {
+      "chitChatVoice": "290582293704343554",
+      "developers"   : "290638875309637632",
+      "digbot"       : "290638893081034758",
+      "digBotLog"    : "293062328897765378",
+      "events"       : "293061379760455693",
+      "general"      : "290582293704343553",
+      "herebedragons": "293062098114576394",
+      "ps2dig"       : "293061588221427722",
+      "staff"        : "293061334516367361",
+      "streams"      : "293062139696906240"
+    },
+    "positions": {
+      "text" : {
+        "announcements"     : {"id": "293061070057111562", "name": "announcements", "position": 1},
+        "rulesinfo"         : {"id": "293061291231412226", "name": "rules-info", "position": 2},
+        "staff"             : {"id": "293061334516367361", "name": "staff", "position": 3},
+        "events"            : {"id": "293061379760455693", "name": "events", "position": 4},
+        "general"           : {"id": "290582293704343553", "name": "entrance-general", "position": 5},
+        "ps2"               : {"id": "293061540494573580", "name": "ps2", "position": 10},
+        "ps2dig"            : {"id": "293061588221427722", "name": "ps2-dig", "position": 11},
+        "ps2digofficers"    : {"id": "293061636812439552", "name": "ps2-digofficers", "position": 12},
+        "ps2digerecruitment": {"id": "314879384789975073", "name": "ps2-dige-recruitment", "position": 13},
+        "ps2digetraining"   : {"id": "314879411289718786", "name": "ps2-dige-training", "position": 14},
+        "ps2digediscussions": {"id": "314879439198486538", "name": "ps2-dige-discussions", "position": 15},
+        "ps2digt"           : {"id": "222076841631023114", "name": "ps2-digt", "position": 16},
+        "ps2millerupdates"  : {"id": "233914004345585664", "name": "ps2-millerupdates", "position": 17},
+        "overwatch"         : {"id": "293061827926163457", "name": "overwatch", "position": 20},
+        "warframe"          : {"id": "293061967399092224", "name": "warframe", "position": 30},
+        "tts"               : {"id": "293062001381474304", "name": "tts", "position": 40},
+        "media"             : {"id": "293062039994368010", "name": "media", "position": 41},
+        "hereBeDragons"     : {"id": "293062098114576394", "name": "herebedragons", "position": 42},
+        "streams"           : {"id": "293062139696906240", "name": "streams", "position": 43},
+        "developers"        : {"id": "290638875309637632", "name": "developers", "position": 50},
+        "developersArt"     : {"id": "293062219317510144", "name": "developers-art", "position": 51},
+        "digbotspam"        : {"id": "290638893081034758", "name": "digbot", "position": 52},
+        "digbotLog"         : {"id": "293062328897765378", "name": "digbot-log", "position": 53},
+        "paradoxgames"      : {"id": "293062362691272704", "name": "paradox-games", "position": 60},
+        "spaceEngineers"    : {"id": "293062408480489473", "name": "spaceengineers", "position": 61},
+        "squad"             : {"id": "315639815657881611", "name": "squad", "position": 62}
+      },
+      "voice": {
+        "general"     : {"id": "290582293704343554", "name": "💬 Chit Chat", "position": 1},
+        "staff"       : {"id": "293062577624449034", "name": "👔 Staff", "position": 2},
+        "ps2DigMCS"   : {"id": "293062627767353344", "name": "🎮 PS2/DIG/1", "position": 3},
+        "ps2DigEMCS"  : {"id": "294567327939297280", "name": "🎮 PS2/DIGE/HIVE/1", "position": 53},
+        "ps2DigtMCS"  : {"id": "293062661984485386", "name": "🎮 PS2/DIGT/1", "position": 103},
+        "overwatchMCS": {"id": "293062696314732544", "name": "🎮 Overwatch/1", "position": 203},
+        "warframe"    : {"id": "293062837633548298", "name": "🎮 Warframe", "position": 405},
+        "recMCS"      : {"id": "293062873318555658", "name": "🎮 Rec/1", "position": 406},
+        "afk"         : {"id": "293062905518227466", "name": "💤 AFK", "position": null}
+      }
+    }
+  },
+
+  "communityGames"   : {
+    "PS2"      : {
+      "name"          : "Planetside 2",
+      "roleids"       : [
+        "293063533170524172",
+        "293063265246773250",
+        "293063663495938049",
+        "293063770543226880",
+        "293063636119846922",
+        "293063726700036107",
+        "293063814809649163",
+        "314876940529958922",
+        "314876979021348867",
+        "314877024013647881",
+        "314877061636292608"
+      ],
+      "officers"      : ["293063663495938049", "293063770543226880", "293063726700036107", "293063814809649163"],
+      "primaryChannel": "293061540494573580"
+    },
+    "Overwatch": {"name": "Overwatch", "roleids": ["293063866659897344"], "primaryChannel": "293061827926163457"}
+  },
+
+  "recreationalGames": {
+    "Stellaris"     : {"name": "Stellaris", "roleids": ["293825291875385345"], "primaryChannel": "293062362691272704"},
+    "EU4"           : {
+      "name"          : "Europa Universalis 4",
+      "roleids"       : ["293825291875385345"],
+      "primaryChannel": "293062362691272704"
+    },
+    "CK2"           : {
+      "name"          : "Crusader Kings II",
+      "roleids"       : ["293825291875385345"],
+      "primaryChannel": "293062362691272704"
+    },
+    "HOI4"          : {
+      "name"          : "Hearts of Iron IV",
+      "roleids"       : ["293825291875385345"],
+      "primaryChannel": "293062362691272704"
+    },
+    "Vic2"          : {"name": "Victoria 2", "roleids": ["293825291875385345"], "primaryChannel": "240522222467416064"},
+    "SpaceEngineers": {
+      "name"          : "Space Engineers",
+      "roleids"       : ["293825167770124289"],
+      "primaryChannel": "293062408480489473"
+    },
+    "Squad"         : {"name": "Squad", "roleids": ["315638034639093761"], "primaryChannel": "315639815657881611"},
+    "Warframe"      : {"name": "Warframe", "roleids": ["293825418077929483"], "primaryChannel": "293061967399092224"},
+    "Minecraft"     : {"name": "Minecraft", "roleids": ["293826540527943690"], "primaryChannel": "293062483382632448"}
+  }
+}

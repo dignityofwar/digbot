@@ -1,6 +1,11 @@
 <div align="center">
     <h1>DIGBot</h1>
     <h4>DIG community's custom discord bot</h4>
+    <p>
+     <a href="https://travis-ci.org/JamesLongman/DIGBot"><img src="https://travis-ci.org/JamesLongman/DIGBot.svg?branch=master"/></a>
+     <a class="badge-align" href="https://www.codacy.com/app/JamesLongman/DIGBot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JamesLongman/DIGBot&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/c0c02795174c43ce9f3bfddce5c50e6f"/></a>
+     <a href="https://david-dm.org/JamesLongman/DIGBot" title="dependencies status"><img src="https://david-dm.org/JamesLongman/DIGBot.svg"/></a>
+  </p>
 </div>
 
 ## About
@@ -78,6 +83,9 @@ DIGBot has anti spam admin mechanics. It is capable of recognising and taking st
 
 ### Automated functions
 
+#### Auto role assignment
+DIGBot detects when people are playing certain games, if this is a game that the community plays DIGBot will automatically give the user the role to see that game's voice and text channels.
+
 #### Channel auto-delete
 DIGBot is capable of creating temporary voice or text channels for users. The bot frequently checks these channels to make sure they're still in use and deletes them when they're no longer required
 
@@ -91,6 +99,24 @@ DIGBot is capable of reacting when events are scheduled to remind people of thei
 Some channels the community would prefer to always have a free version of. This is the case for channels such as dedicated voice channels for certain games, for example if a member joins a voice channel for a game such as planetside DIGBot will react by creating a second voice channel for that game so there is still a free channel. Every-time a modular channel become populated or empty, DIGBot will respond by creating or deleting a channel as needed
 
 
+## Usage
+
+### Requirements
+
+The bot uses docker 1.13.0+. Installation instructions can be found here: https://docs.docker.com/install/
+
+### Deployment via Docker Hub
+
+Docker Hub automatically builds and stores docker images of staging and master (our production branch). We deploy the bot using the latest docker images from Docker Hub using `docker pull dignityofwar/digbot`.
+
+### From the repository
+
+To run the bot locally use `npm run up`, and to stop the container and remove it use `npm run down`. The local.json config file will be automatically linked to the container.
+
+To run the tests you use `npm test` (this will also link the local.json config file). 
+
+It is of course possible to run it without docker, but this is not recommended.
+
 ## Development
 
 ### Contributing
@@ -99,11 +125,11 @@ See the [contribution guidelines](CONTRIBUTING.md) file for information on how t
 
 ### Code Usage
 
-The project is in the process of being open sourced however as of this moment no usage licence is provided.
+The project is open-sourced under the [MIT license](LICENSE.md).
 
 ### Acknowledgements
 
-This repository was created from an [existing private codebase](https://github.com/JamesLongman/DIGBot/releases/tag/0.0.1) for DIGBot which can be found. The previous project was headed by Maelstromeous who was ultimately responsible for code review, design decisions and deployment.
+This repository was created from an [existing private codebase](https://github.com/JamesLongman/DIGBot/releases/tag/0.0.1). The previous project was headed by Maelstromeous who was ultimately responsible for code review, design decisions and deployment.
 
 File contributions were as follows  
 Maelstromeous: 510 commits,  7,623 additions, 6,378 deletions  

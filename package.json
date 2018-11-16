@@ -1,10 +1,17 @@
 {
   "name": "digbot",
-  "version": "1.0.0",
-  "description": "- Nodejs 6.x\r - npm: discord.js",
+  "version": "0.1.0",
+  "description": "- Nodejs 7.x\r - npm: discord.js",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "start": "node src/bot.js",
+    "mocha": "mocha",
+    "test": "docker-compose -f docker-compose-test-local.yml up --build -d && docker-compose exec digbot npm install --only=dev && docker-compose exec digbot npm run mocha && docker-compose down",
+    "docker:start": "docker-compose up --build -d",
+    "docker:logs": "docker-compose logs -f digbot",
+    "docker:stop": "docker-compose down",
+    "up": "npm run docker:start && npm run docker:logs",
+    "down": "npm run docker:stop"
   },
   "repository": {
     "type": "git",
@@ -17,22 +24,27 @@
   },
   "homepage": "https://github.com/JamesLongman/DIGBot#readme",
   "dependencies": {
-    "cli-color": "^1.1.0",
-    "discord.js": "11.0.0",
+    "cli-color": "^1.4.0",
+    "config": "^2.0.1",
+    "discord.js": "~11.4.0",
     "googleapis": "^16.1.0",
-    "erlpack": "hammerandchisel/erlpack#master",
-    "ipaddr.js": "^1.2.0",
-    "node-opus": "^0.2.4",
-    "opusscript": "0.0.1",
-    "request": "^2.79.0",
-    "restify": "^4.1.1",
-    "usage": "^0.7",
-    "ytdl-core": "^0.7.24"
+    "lodash": "^4.17.11",
+    "opusscript": "^0.0.6",
+    "request": "^2.88.0",
+    "usage": "^0.7.0",
+    "ytdl-core": "^0.28.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^3.0.3",
+    "erlpack": "discordapp/erlpack",
+    "libsodium-wrappers": "^0.7.3",
+    "node-opus": "^0.2.7"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^3.5.0",
-    "mocha": "^3.2.0",
+    "mocha": "^5.2.0",
+    "mock-require": "^3.0.2",
     "sinon": "^1.17.6",
     "sinon-stub-promise": "^4.0.0"
   }

@@ -4,7 +4,7 @@
 
 // Module to administrate mention spam
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const logger = require('../../logger.js');
 const server = require('../../server/server.js');
 const TAG = 'Mention Antispam';
@@ -66,7 +66,7 @@ module.exports = {
 
     // Check server messages for mentions if mention checks are enabled
     execute: function(message) {
-        if (config.getConfig().features.disableMentionSpam) { return; } // Feature switch
+        if (config.get('features.disableMentionSpam')) { return; } // Feature switch
         if (message.guild.id !== server.getGuild().id) { return; }
         if (this.exemptMember(message)) { return; }
         countMentions(message);
@@ -82,9 +82,9 @@ module.exports = {
 
     // Check if member is exempt from the checks
     exemptMember: function(message) {
-        if (message.member.roles.has(config.getConfig().staffRoleID)) { return true; }
-        for (let x in config.getConfig().general.leaderRoles) {
-            if (message.member.roles.has(config.getConfig().general.leaderRoles[x])) { return true; }
+        if (message.member.roles.has(config.get('general.staffRoleID'))) { return true; }
+        for (let x in config.get('general.leaderRoles')) {
+            if (message.member.roles.has(config.get('general.leaderRoles')[x])) { return true; }
         }
         return false;
     },
@@ -95,7 +95,7 @@ module.exports = {
         // If muted is not false, member has attempted to evade a supermute
         if (list[member.user.id].muted) {
             logger.info(TAG, 'Supermute evasion attempt caught for ' + member.displayName);
-            member.addRole(server.getRole(config.getConfig().general.superMuteRoleID))
+            member.addRole(server.getRole(config.get('general.superMuteRoleID')))
                 .then(
                     logger.debug(TAG, 'Succesfully added mute role')
                 )
@@ -125,8 +125,8 @@ module.exports = {
     memberUpdate: function(oldMember, newMember) {
         if (!list[newMember.user.id]) { return false; } // Check user is tracked
         if (!list[newMember.user.id].muted) { return false; } // If user isn't muted no need to check
-        if (!oldMember.roles.has(config.getConfig().general.superMuteRoleID)) { return false; }
-        if (newMember.roles.has(config.getConfig().general.superMuteRoleID)) { return false; }
+        if (!oldMember.roles.has(config.get('general.superMuteRoleID'))) { return false; }
+        if (newMember.roles.has(config.get('general.superMuteRoleID'))) { return false; }
         // Override point
         // Inform staff that override was succesfull
         server.getChannel('staff').sendMessage('Staff member override confirmed for ' +
@@ -158,9 +158,9 @@ module.exports = {
 
     // Called every 5 mins by admin.js
     release: function() {
-        if (config.getConfig().features.disableMentionSpam) { return; } // Feature switch
+        if (config.get('features.disableMentionSpam')) { return; } // Feature switch
         // If there are unlisted muted members (most likely due to bot restart) then unmute them
-        let muteRole = server.getRole(config.getConfig().general.superMuteRoleID);
+        let muteRole = server.getRole(config.get('general.superMuteRoleID'));
         let roleList = [];
 
         if (muteRole !== null) {
@@ -175,7 +175,7 @@ module.exports = {
         }
         for (let x in roleList) {
             if (!list[roleList[x].user.id]) {
-                roleList[x].removeRole(server.getRole(config.getConfig().general.superMuteRoleID))
+                roleList[x].removeRole(server.getRole(config.get('general.superMuteRoleID')))
                     .then(
                         logger.debug(TAG, 'Succesfully removed mute role from ' + roleList[x].displayName)
                     )
@@ -199,7 +199,7 @@ module.exports = {
         let now = new Date();
         for (let x in list) {
             if (!list[x].muted) { continue; }
-            if (now.getTime() - list[x].muted < config.getConfig().mentionsMuteTime) { continue; }
+            if (now.getTime() - list[x].muted < config.get('mentionsMuteTime')) { continue; }
             list[x].muted = false;
             logger.info(TAG, (list[x].member.displayName) + '\'s mute expired, they have been un-muted');
             list[x].member.removeRole(muteRole)
@@ -249,8 +249,8 @@ function checkStaff(message) {
     if (!list[message.author.id].check) { return false; } // See if user needs to be checked
     if (message.mentions.roles.array().length > 0) {
         for (let x in message.mentions.roles.array()) {
-            if (message.mentions.roles.array()[x] === server.getGuild().roles.get(config.getConfig().general.staffRoleID) ||
-                message.mentions.roles.array()[x] === server.getGuild().roles.get(config.getConfig().general.adminsRoleID))  {
+            if (message.mentions.roles.array()[x] === server.getGuild().roles.get(config.get('general.staffRoleID')) ||
+                message.mentions.roles.array()[x] === server.getGuild().roles.get(config.get('general.adminsRoleID')))  {
                 message.author.sendMessage('Hey ' + message.member.displayName + ' thanks for ' +
                     'contacting the DIG community staff, someone will get back to you soon™. Please ' +
                     'only mention staff when you need help though. If you\'re trying to troll, mentioning ' +
@@ -272,7 +272,7 @@ function checkUser(message) {
     if (!list[message.author.id]) { return false; } // Check user has mentioned
     if (!list[message.author.id].check) { return false; } // See if user needs to be checked
     // Check user's member mentions
-    if (list[message.author.id].memberMentions >= config.getConfig().memberMentionLimit &&
+    if (list[message.author.id].memberMentions >= config.get('memberMentionLimit') &&
         list[message.author.id].memberAction) {
         list[message.author.id].memberAction = false;
         if (list[message.author.id].memberWarnings === 0) {
@@ -316,7 +316,7 @@ function checkUser(message) {
         }
     }
     // Check user's role mentions
-    if (list[message.author.id].roleMentions >= config.getConfig().roleMentionLimit &&
+    if (list[message.author.id].roleMentions >= config.get('roleMentionLimit') &&
             list[message.author.id].roleAction) {
         list[message.author.id].roleAction = false;
         if (list[message.author.id].roleWarnings === 0) {
@@ -344,7 +344,7 @@ function checkUser(message) {
                 ', we have a daily mention limit on our server to prevent spam, one which have you ' +
                 'have broken our rules in exceeding. This is your last warning, if you mention again ' +
                 'before you\'re allowed you will be muted in all channels for ' +
-                (config.getConfig().mentionsMuteTime / 3600000) + ' hours and the ' + 'community staff will be ' +
+                (config.get('mentionsMuteTime') / 3600000) + ' hours and the ' + 'community staff will be ' +
                 'notified. Please use \"!mentions\" at any time to check your allowance.')
                 .then(
                     logger.info(TAG, message.member.displayName + ' was sent a warning for exceeding ' +
@@ -404,7 +404,7 @@ function countMentions(message) {
 // Message staff channel about mute
 function informStaff(message) {
     server.getChannel('staff').sendMessage(message.member.displayName + ' was ' +
-        'muted for ' + (config.getConfig().mentionsMuteTime / 3600000) +
+        'muted for ' + (config.get('mentionsMuteTime') / 3600000) +
         ' hours for ignoring multiple warnings of mention spam')
         .then(
             logger.info(TAG, 'Informed staff of mute')
@@ -417,7 +417,7 @@ function informStaff(message) {
 // Issue a supermute, triggered by message
 function issueMute(message) {
     message.reply('is now muted due to ignoring warnings of excessive mention spam');
-    message.member.addRole(server.getRole(config.getConfig().general.superMuteRoleID))
+    message.member.addRole(server.getRole(config.get('general.superMuteRoleID')))
         .then(
             logger.debug(TAG, 'Succesfully added mute role')
         )
@@ -426,7 +426,7 @@ function issueMute(message) {
         });
     message.author.sendMessage('You have repeatedly exceeded your mention limit despite ' +
         'repeated warnings. You have now been muted for ' +
-        (config.getConfig().mentionsMuteTime / 3600000) + ' hours and the community staff have been ' +
+        (config.get('mentionsMuteTime') / 3600000) + ' hours and the community staff have been ' +
         'informed.');
     let now = new Date();
     list[message.author.id].muted = now.getTime();

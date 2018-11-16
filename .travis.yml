@@ -1,0 +1,17 @@
+sudo: required
+
+services:
+  - docker
+
+before_script:
+    - docker-compose -f docker-compose-test-ci.yml up --build -d
+    - docker-compose exec digbot npm install --only=dev
+
+script:
+    - docker-compose exec digbot npm run mocha
+
+after_script:
+    - docker-compose down
+
+notifications:
+    email: false

@@ -4,7 +4,7 @@
 
 // The master module for channel related actions
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const crashHandler = require('../../crash-handling.js');
 const logger = require('../../logger.js');
 const positions = require('./positions.js');
@@ -69,7 +69,7 @@ module.exports = {
                 channel.fetchMessage(channel.lastMessageID)
                     .then(lastMessage => {
                         let now = Date.now();
-                        if (now - lastMessage.createdTimestamp > config.getConfig().textInactive) {
+                        if (now - lastMessage.createdTimestamp > config.get('textInactive')) {
                             this.deleteChannel(channel, msg);
                             return true;
                         } else {

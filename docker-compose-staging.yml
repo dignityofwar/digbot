@@ -1,14 +1,12 @@
 # Copyright © 2018 DIG Development team. All rights reserved.
 
-version: '3'
+version: '3.0'
 services:
-    node:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        volumes:
-            - ./:/var/project
-        entrypoint: /usr/local/bin/run.sh
+    digbot:
+        image: "dignityofwar/digbot:staging"
         ports:
-            - "1338:1338"
+            - "1337:1337"
+        tty: true
         restart: always
+        environment:
+            - NODE_ENV=staging

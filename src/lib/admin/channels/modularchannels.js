@@ -4,7 +4,7 @@
 
 // Module to handle modular channel system (MCS), creates and deletes channels to handle online membership
 
-const config = require('../../../../config/config.js');
+const config = require('config');
 const logger = require('../../logger.js');
 const server = require('../../server/server.js');
 const TAG = 'MCS';
@@ -12,7 +12,7 @@ const TAG = 'MCS';
 module.exports = {
     // Check if a modular channel needs to be created or deleted, if so take action
     execute: function(oldMember, newMember) {
-        if (!config.getConfig().features.modularChannelSystem) { return false; } // Check MCS is enabled
+        if (!config.get('features.modularChannelSystem')) { return false; } // Check MCS is enabled
         if (typeof newMember.voiceChannel === 'object') {
             // Joined channel
             onJoin(newMember);
@@ -30,7 +30,7 @@ module.exports = {
 
     // Called on bot.ready, checks if MCS needs to take any action
     ready: function() {
-        if (!config.getConfig().features.modularChannelSystem) {
+        if (!config.get('features.modularChannelSystem')) {
             logger.info(TAG, 'Modular Channel System confirmed disabled');
             return false;
         }
@@ -38,7 +38,7 @@ module.exports = {
         let populatedChannels = [];
         let emptyChannels = [];
         // Find primary channels
-        for (let ch of server.getGuild(config.getConfig().general.server).channels) {
+        for (let ch of server.getGuild(config.get('general.server')).channels) {
             if (ch[1].type === 'voice' && ch[1].name.endsWith('/1')) {
                 primaryChannels.push(ch[1].name);
             }
@@ -46,7 +46,7 @@ module.exports = {
         // For each primary channel scan MCS for action required
         for (let i = 0; i < primaryChannels.length; i++) {
             let nameSection = primaryChannels[i].substring(0, primaryChannels[i].lastIndexOf('/') + 1);
-            for (let ch of server.getGuild(config.getConfig().general.server).channels) {
+            for (let ch of server.getGuild(config.get('general.server')).channels) {
                 if (ch[1].type === 'voice' && ch[1].name.startsWith(nameSection)) {
                     if (ch[1].members.size === 0) {
                         emptyChannels.push(parseInt(ch[1].name.substring(ch[1].name.lastIndexOf('/') + 1)));
@@ -65,7 +65,7 @@ module.exports = {
                 while (emptyChannels.length > 1) {
                     let number = Math.max.apply(Math, emptyChannels);
                     emptyChannels.splice(emptyChannels.indexOf(number), 1);
-                    let channel = server.getGuild(config.getConfig().general.server).channels.find('name', nameSection + number);
+                    let channel = server.getGuild(config.get('general.server')).channels.find('name', nameSection + number);
                     channel.delete()
                         .then(
                             logger.debug(TAG, 'Channel succesfully deleted')
@@ -83,7 +83,7 @@ module.exports = {
                     if (populatedChannels.indexOf(j) === -1) {
                         let name = nameSection + j;
                         let nameAbove = nameSection + (j - 1);
-                        let aboveChannel = server.getGuild(config.getConfig().general.server).channels.find('name', nameAbove);
+                        let aboveChannel = server.getGuild(config.get('general.server')).channels.find('name', nameAbove);
                         let position = aboveChannel.position;
                         aboveChannel.clone(name, true)
                             .then(channel => {
@@ -125,7 +125,7 @@ function createChannel(nameSection, numbers, newMember) {
                 `doesn\'t exist for channel ${name}`);
                 return;
             }
-            parent = server.getChannelInGuild(parent.id, config.getConfig().general.server); // Get fresh copy
+            parent = server.getChannelInGuild(parent.id, config.get('general.server')); // Get fresh copy
             logger.debug(TAG, 'BEFORE CREATE - Parent position: ' + parent.position);
 
             parent.clone(name, true)
@@ -138,8 +138,8 @@ function createChannel(nameSection, numbers, newMember) {
                             logger.debug(TAG, `New child position: ${channel.position}`);
 
                             // Do a check to make sure the position is correct and is below parent. Issue #190 fix
-                            parent = server.getChannelInGuild(parent.id, config.getConfig().general.server); // Get fresh copy
-                            let child = server.getChannelInGuild(channel.id, config.getConfig().general.server);
+                            parent = server.getChannelInGuild(parent.id, config.get('general.server')); // Get fresh copy
+                            let child = server.getChannelInGuild(channel.id, config.get('general.server'));
                             logger.debug(TAG, 'POST EDIT - Parent position: ' + parent.position);
                             logger.debug(TAG, 'Child position: ' + child.position);
 
