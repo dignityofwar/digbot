@@ -8,15 +8,16 @@ const config = require('config');
 const crashHandler = require('../../crash-handling.js');
 const logger = require('../../logger.js');
 const server = require('../../server/server.js');
+
 const TAG = 'Channel Positions';
 
 let busy = false; // If the module is running
-let positions = {};
+const positions = {};
 let queue = false; // If the module needed to run again, run fresh as soon as the module's free
 
 module.exports = {
     // Check the positioning of all channels on the server
-    globalCheck: function() {
+    globalCheck() {
         crashHandler.logEvent(TAG, 'globalCheck');
         if (!config.get('features.channelPositionsEnforcement')) { return; } // Feature switch
         // Don't let this module run twice at once
@@ -24,10 +25,9 @@ module.exports = {
             queue = true;
             logger.debug(TAG, 'Global sort busy, queuing');
             return;
-        } else {
-            logger.debug(TAG, 'Marking global sort as busy');
-            busy = true;
         }
+        logger.debug(TAG, 'Marking global sort as busy');
+        busy = true;
 
         if (server.getReady) {
             logger.info(TAG, 'Running global check');
@@ -42,7 +42,8 @@ module.exports = {
                         logger.debug(TAG, 'Releasing queue AFTER .then');
                         queueRelease();
                     } else {
-                        let timer = setTimeout(function() {
+                        // eslint-disable-next-line no-unused-vars
+                        const timer = setTimeout(() => {
                             busy = false;
                             logger.debug(TAG, 'Busy marked as false');
                         }, 3000);
@@ -55,11 +56,12 @@ module.exports = {
         } else {
             // If server not ready, try again in 10 secs
             queue = true;
-            let timer = setTimeout(function() {
+            // eslint-disable-next-line no-unused-vars
+            const timer = setTimeout(() => {
                 queueRelease();
             }, 10000);
         }
-    }
+    },
 };
 
 // Build the positions object to dictate the correct position of each channel
@@ -74,11 +76,11 @@ function constructPositions() {
 // If a channel is not holding its calculated correct position then move it
 function enforcePositions() {
     crashHandler.logEvent(TAG, 'enforcePositions');
-    return new Promise(function(resolve, reject) {
-        let channels = server.getGuild().channels.array();
-        let textChannels = [];
-        let voiceChannels = [];
-        for (let x in server.getGuild().channels.array()) {
+    return new Promise((resolve, reject) => {
+        const channels = server.getGuild().channels.array();
+        const textChannels = [];
+        const voiceChannels = [];
+        for (const x in server.getGuild().channels.array()) {
             if (channels[x].type === 'text') {
                 textChannels.push(channels[x]);
             }
@@ -86,12 +88,12 @@ function enforcePositions() {
                 voiceChannels.push(channels[x]);
             }
         }
-        let promises = [];
-        for (let x in textChannels) {
+        const promises = [];
+        for (const x in textChannels) {
             if (positions.text[textChannels[x].position] !== textChannels[x].id) {
-                for (let y in positions.text) {
+                for (const y in positions.text) {
                     if (positions.text[y] === textChannels[x].id) {
-                        let p = requestPosition(textChannels[x], y);
+                        const p = requestPosition(textChannels[x], y);
                         if (p !== false) {
                             promises.push(p);
                         }
@@ -99,11 +101,11 @@ function enforcePositions() {
                 }
             }
         }
-        for (let x in voiceChannels) {
+        for (const x in voiceChannels) {
             if (positions.voice[voiceChannels[x].position] !== voiceChannels[x].id) {
-                for (let y in positions.voice) {
+                for (const y in positions.voice) {
                     if (positions.voice[y] === voiceChannels[x].id) {
-                        let p = requestPosition(voiceChannels[x], y);
+                        const p = requestPosition(voiceChannels[x], y);
                         if (p !== false) {
                             promises.push(p);
                         }
@@ -131,9 +133,9 @@ function enforcePositions() {
 // Build the positions object to dictate the correct position of each text channel
 function indexTextChannels() {
     crashHandler.logEvent(TAG, 'indexTextChannels');
-    let channels = server.getGuild().channels.array();
+    const channels = server.getGuild().channels.array();
     let textChannels = [];
-    for (let x in channels) {
+    for (const x in channels) {
         if (channels[x].type === 'text') {
             textChannels.push(channels[x]);
         }
@@ -141,28 +143,28 @@ function indexTextChannels() {
 
     let last = 0;
     // Index permenant channels
-    for (let x in config.get('channels.positions.text')) {
+    for (const x in config.get('channels.positions.text')) {
         positions.text[config.get('channels.positions.text')[x].position] = config.get('channels.positions.text')[x].id;
         last = config.get('channels.positions.text')[x].position;
 
-        for (let y in textChannels) {
+        for (const y in textChannels) {
             if (textChannels[y].id === config.get('channels.positions.text')[x].id) {
                 textChannels = removeID(textChannels, textChannels[y].id);
             }
         }
     }
     // Index event channels
-    let eventChannels = [];
-    for (let x in textChannels) {
+    const eventChannels = [];
+    for (const x in textChannels) {
         if (textChannels[x].name.indexOf('-e-') !== -1) {
             eventChannels.push(textChannels[x].name);
         }
     }
     eventChannels.sort();
-    for (let x in eventChannels) {
-        for (let y in textChannels) {
+    for (const x in eventChannels) {
+        for (const y in textChannels) {
             if (textChannels[y].name === eventChannels[x]) {
-                last++;
+                last += 1;
                 positions.text[last] = textChannels[y].id;
                 textChannels = removeID(textChannels, textChannels[y].id);
                 break;
@@ -170,17 +172,17 @@ function indexTextChannels() {
         }
     }
     // Index temp channels
-    let tempChannels = [];
-    for (let x in textChannels) {
+    const tempChannels = [];
+    for (const x in textChannels) {
         if (textChannels[x].name.indexOf('-t-') !== -1) {
             tempChannels.push(textChannels[x].name);
         }
     }
     tempChannels.sort();
-    for (let x in tempChannels) {
-        for (let y in textChannels) {
+    for (const x in tempChannels) {
+        for (const y in textChannels) {
             if (textChannels[y].name === tempChannels[x]) {
-                last++;
+                last += 1;
                 positions.text[last] = textChannels[y].id;
                 textChannels = removeID(textChannels, textChannels[y].id);
                 break;
@@ -190,17 +192,17 @@ function indexTextChannels() {
     // Index whatever is left (should be nothing)
     if (textChannels.length !== 0) {
         logger.devAlert(TAG, 'Text channels not on file found in global sort');
-        let extraChannels = [];
-        for (let x in textChannels) {
+        const extraChannels = [];
+        for (const x in textChannels) {
             logger.devAlert(TAG, `Text channel: ${textChannels[x].name} not on file, ` +
                 `id: ${textChannels[x].id}`);
             extraChannels.push(textChannels[x].name);
         }
         extraChannels.sort();
-        for (let x in extraChannels) {
-            for (let y in textChannels) {
+        for (const x in extraChannels) {
+            for (const y in textChannels) {
                 if (textChannels[y].name === extraChannels[x]) {
-                    last++;
+                    last += 1;
                     positions.text[last] = extraChannels[y].id;
                     textChannels = removeID(textChannels, textChannels[y].id);
                     break;
@@ -216,9 +218,9 @@ function indexTextChannels() {
 // Build the positions object to dictate the correct position of each voice channel
 function indexVoiceChannels() {
     crashHandler.logEvent(TAG, 'indexVoiceChannels');
-    let channels = server.getGuild().channels.array();
+    const channels = server.getGuild().channels.array();
     let voiceChannels = [];
-    for (let x in channels) {
+    for (const x in channels) {
         if (channels[x].type === 'voice') {
             if (channels[x].name !== config.get('channels.positions.voice.afk.name')) {
                 voiceChannels.push(channels[x]);
@@ -228,36 +230,37 @@ function indexVoiceChannels() {
 
     let last = 0;
     // Index permenant channels
-    for (let x in config.get('channels.positions.voice')) {
-        if (config.get('channels.positions.voice')[x].position !== null) {
-            positions.voice[config.get('channels.positions.voice')[x].position] = config.get('channels.positions.voice')[x].id;
+    const voicePositions = config.get('channels.positions.voice');
+    for (const x in voicePositions) {
+        if (voicePositions[x].position !== null) {
+            positions.voice[voicePositions[x].position] = voicePositions[x].id;
         }
-        if (config.get('channels.positions.voice')[x].position > last) {
-            last = config.get('channels.positions.voice')[x].position;
+        if (voicePositions[x].position > last) {
+            last = voicePositions[x].position;
         }
 
-        for (let y in voiceChannels) {
-            if (voiceChannels[y].id === config.get('channels.positions.voice')[x].id) {
+        for (const y in voiceChannels) {
+            if (voiceChannels[y].id === voicePositions[x].id) {
                 voiceChannels = removeID(voiceChannels, voiceChannels[y].id);
             }
         }
     }
 
-    // Index MCS channels
-    for (let x in config.get('channels.positions.voice')) {
-        let base = config.get('channels.positions.voice')[x].name;
+    // Inconst MCS channels
+    for (const x in voicePositions) {
+        let base = voicePositions[x].name;
         base = base.substring(base.length - 2);
         if (base === '/1') {
-            if (config.get('channels.positions.voice')[x].position + 100 > last) {
-                last = config.get('channels.positions.voice')[x].position + 100;
+            if (voicePositions[x].position + 100 > last) {
+                last = voicePositions[x].position + 100;
             }
-            base = config.get('channels.positions.voice')[x].name;
+            base = voicePositions[x].name;
             base = base.substring(0, base.lastIndexOf('/') + 1);
 
-            for (let i = voiceChannels.length - 1; i > -1; i--) {
+            for (let i = voiceChannels.length - 1; i > -1; i -= 1) {
                 if (voiceChannels[i].name.indexOf(base) !== -1) {
-                    let n = parseInt(voiceChannels[i].name.substring(base.length));
-                    positions.voice[config.get('channels.positions.voice')[x].position + n - 1] =
+                    const n = parseInt(voiceChannels[i].name.substring(base.length));
+                    positions.voice[(voicePositions[x].position + n) - 1] =
                         voiceChannels[i].id;
                     voiceChannels = removeID(voiceChannels, voiceChannels[i].id);
                 }
@@ -266,17 +269,17 @@ function indexVoiceChannels() {
     }
 
     // Index event channels
-    let eventChannels = [];
-    for (let x in voiceChannels) {
+    const eventChannels = [];
+    for (const x in voiceChannels) {
         if (voiceChannels[x].name.indexOf('-e-') !== -1) {
             eventChannels.push(voiceChannels[x].name);
         }
     }
     eventChannels.sort();
-    for (let x in eventChannels) {
-        for (let y in voiceChannels) {
+    for (const x in eventChannels) {
+        for (const y in voiceChannels) {
             if (voiceChannels[y].name === eventChannels[x]) {
-                last++;
+                last += 1;
                 positions.voice[last] = voiceChannels[y].id;
                 voiceChannels = removeID(voiceChannels, voiceChannels[y].id);
                 break;
@@ -284,17 +287,17 @@ function indexVoiceChannels() {
         }
     }
     // Index temp channels
-    let tempChannels = [];
-    for (let x in voiceChannels) {
+    const tempChannels = [];
+    for (const x in voiceChannels) {
         if (voiceChannels[x].name.indexOf('-t-') !== -1) {
             tempChannels.push(voiceChannels[x].name);
         }
     }
     tempChannels.sort();
-    for (let x in tempChannels) {
-        for (let y in voiceChannels) {
+    for (const x in tempChannels) {
+        for (const y in voiceChannels) {
             if (voiceChannels[y].name === tempChannels[x]) {
-                last++;
+                last += 1;
                 positions.voice[last] = voiceChannels[y].id;
                 voiceChannels = removeID(voiceChannels, voiceChannels[y].id);
                 break;
@@ -304,17 +307,17 @@ function indexVoiceChannels() {
     // Index whatever is left (should be nothing)
     if (voiceChannels.length !== 0) {
         logger.warning(TAG, 'Voice channels not on file found in global sort');
-        let extraChannels = [];
-        for (let x in voiceChannels) {
+        const extraChannels = [];
+        for (const x in voiceChannels) {
             logger.warning(TAG, `Voice channel: ${voiceChannels[x].name} not on file, ` +
                 `id: ${voiceChannels[x].id}`);
             extraChannels.push(voiceChannels[x].name);
         }
         extraChannels.sort();
-        for (let x in extraChannels) {
-            for (let y in voiceChannels) {
+        for (const x in extraChannels) {
+            for (const y in voiceChannels) {
                 if (voiceChannels[y].name === extraChannels[x]) {
-                    last++;
+                    last += 1;
                     positions.voice[last] = extraChannels[y].id;
                     voiceChannels = removeID(voiceChannels, voiceChannels[y].id);
                     break;
@@ -332,26 +335,28 @@ function indexVoiceChannels() {
 
 // Removes a text channel with a certain ID from an array and returns the new array
 function removeID(channels, id) {
-    for (let x in channels) {
+    for (const x in channels) {
         if (channels[x].id === id) {
             channels.splice(x, 1);
             return channels;
         }
     }
     logger.error(TAG, 'Attempted to remove channel not found in array');
+    return false;
 }
 
 // API request to change position of channel
 function requestPosition(channel, position) {
-    let old = channel.position;
+    const old = channel.position;
     if (old === position) {
         logger.debug(TAG, 'requestPosition() sent request to move channnel to its current position');
         return false;
     }
     if (server.getReady() === false) {
         logger.debug(TAG, 'Queueing requestPosition as server not ready');
-        let timer = setTimeout(function() {
-            this.requestPosition(topicId);
+        // eslint-disable-next-line no-unused-vars
+        const timer = setTimeout(() => {
+            this.requestPosition(channel, position);
         }, 3000);
         return false;
     }
@@ -359,14 +364,14 @@ function requestPosition(channel, position) {
         logger.warning(TAG, 'requestPosition() sent request to set a channel to a position that\'s NaN');
         return false;
     }
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
         channel.setPosition(position)
-            .then(channel => {
-                logger.info(TAG, `Moved the ${channel.type} channel ${channel.name} to position ` +
-                    `${channel.position} from ${old}`);
+            .then((channel2) => {
+                logger.info(TAG, `Moved the ${channel2.type} channel ${channel2.name} to position ` +
+                    `${channel2.position} from ${old.position}`);
                 resolve();
             })
-            .catch(err => {
+            .catch((err) => {
                 logger.warning(TAG, `Failed to set new channel position, error: ${err}`);
                 reject();
             });
@@ -376,7 +381,8 @@ function requestPosition(channel, position) {
 // Run the module again and clear the queue
 function queueRelease() {
     crashHandler.logEvent(TAG, 'queueRelease');
-    let timer = setTimeout(function() {
+    // eslint-disable-next-line no-unused-vars
+    const timer = setTimeout(() => {
         busy = false;
         queue = false;
         logger.debug(TAG, 'Busy marked as FALSE');

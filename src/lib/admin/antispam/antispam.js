@@ -24,7 +24,7 @@ module.exports = {
         }
         let command = '';
         if (checkSpammer(msg.author)) {
-            command = commands.filter(msg.content);
+            command = commands.filter(msg.content, 'all');
             return checkCommand(command, msg.member.displayName, msg.channel);
         }
         return userMessage(msg.member.displayName, msg.channel);

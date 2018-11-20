@@ -6,17 +6,18 @@
 
 const logger = require('../logger.js');
 const request = require('request');
+
 const root = 'http://thecatapi.com/api/images/get';
 const TAG = '!cats';
 
 module.exports = {
     // Grabs a random cat gif from TheCatAPI, returns link
-    gif: function() {
-        return new Promise(function(resolve) {
-            let r = request
-                .get(root + '?format=src&type=gif', function() {
-                    logger.debug(TAG, 'API response: ' + r.uri.href);
-                    let cat = r.uri.href;
+    gif() {
+        return new Promise((resolve) => {
+            const r = request
+                .get(`${root}?format=src&type=gif`, () => {
+                    logger.debug(TAG, `API response: ${r.uri.href}`);
+                    const cat = r.uri.href;
                     if (cat.endsWith('gif')) {
                         resolve(cat);
                     } else {
@@ -24,21 +25,21 @@ module.exports = {
                         resolve('http://i.imgur.com/fxorJTQ.jpg');
                     }
                 })
-                .on('response', function(response) {
+                .on('response', (response) => {
                     logger.debug(TAG, response.statusCode); // 200
                     logger.debug(TAG, response.headers['content-type']); // 'image/gif'
-                    if (response.statusCode !== 200) {resolve('http://i.imgur.com/fxorJTQ.jpg');}
+                    if (response.statusCode !== 200) { resolve('http://i.imgur.com/fxorJTQ.jpg'); }
                 });
         });
     },
 
     // Grabs a random cat image from TheCatAPI, returns link
-    img: function() {
-        return new Promise(function(resolve) {
-            let r = request
-                .get(root + '?format=src&type=jpg', function() {
-                    logger.debug(TAG, 'API response: ' + r.uri.href);
-                    let cat = r.uri.href;
+    img() {
+        return new Promise((resolve) => {
+            const r = request
+                .get(`${root}?format=src&type=jpg`, () => {
+                    logger.debug(TAG, `API response: ${r.uri.href}`);
+                    const cat = r.uri.href;
                     if (cat.endsWith('jpg')) {
                         resolve(cat);
                     } else {
@@ -46,11 +47,11 @@ module.exports = {
                         resolve('http://i.imgur.com/fxorJTQ.jpg');
                     }
                 })
-                .on('response', function(response) {
+                .on('response', (response) => {
                     logger.debug(TAG, response.statusCode); // 200
                     logger.debug(TAG, response.headers['content-type']); // 'image/png'
-                    if (response.statusCode !== 200) {resolve('http://i.imgur.com/fxorJTQ.jpg');}
+                    if (response.statusCode !== 200) { resolve('http://i.imgur.com/fxorJTQ.jpg'); }
                 });
         });
-    }
+    },
 };

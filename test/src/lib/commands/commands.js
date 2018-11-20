@@ -34,18 +34,18 @@ describe('commands/commands.js', function() {
     });
 
     it('filter should return the command contained in a string', function() {
-        commands.filter('!help').should.be.equal('!help');
-        commands.filter('!ping').should.be.equal('!ping');
+        commands.filter('!help', 'all').should.be.equal('!help');
+        commands.filter('!ping', 'all').should.be.equal('!ping');
     });
 
     it('filter should work with spaces attached to the string', function() {
-        commands.filter('!help                  ').should.be.equal('!help');
-        commands.filter('!ping               ').should.be.equal('!ping');
+        commands.filter('!help                  ', 'all').should.be.equal('!help');
+        commands.filter('!ping               ', 'all').should.be.equal('!ping');
     });
 
     it('filter should return false when there\'s no command', function() {
-        expect(commands.filter('a')).to.be.false;
-        assert(commands.filter('!thisisnotarealcommand!') === false, 'This should not contain a command');
+        expect(commands.filter('a'), 'all').to.be.false;
+        assert(commands.filter('!thisisnotarealcommand!', 'all') === false, 'This should not contain a command');
     });
 
     it('should have function proxy', function() {

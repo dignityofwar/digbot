@@ -7,21 +7,22 @@
 
 const config = require('config');
 const logger = require('../../logger.js');
+
 const TAG = 'Hard Coded Events';
 
 module.exports = {
-    pass: function() {
+    pass() {
         return events;
     },
 
     // Called on bot.ready, calculates event lengths and stores inside hardcoded event objects
-    ready: function() {
-        for (let i = 0; i < events.length; i++) {
+    ready() {
+        for (let i = 0; i < events.length; i += 1) {
             let ms = 0;
             if (events[i].starthour <= events[i].endhour) {
                 ms = 3600000 * (events[i].endhour - events[i].starthour);
-            } else if (events[i].starthour > events[i].endhour) {
-                ms = 3600000 * (events[i].endhour + 24 - events[i].starthour);
+            } else {
+                ms = 3600000 * ((events[i].endhour + 24) - events[i].starthour);
             }
             ms += 60000 * (events[i].endminute - events[i].startminute);
             ms += config.get('eventProtection');
@@ -30,10 +31,10 @@ module.exports = {
     },
 
     //  Passed channel object from autodelete.js, finds the event and returns its expected length
-    length: function(channel) {
-        for (let i = 0; i < events.length; i++) {
-            if (events[i].days.indexOf(channel.createdAt.getDay()) != -1) {
-                for (let j = 0; j < events[i].channels.length; j++) {
+    length(channel) {
+        for (let i = 0; i < events.length; i += 1) {
+            if (events[i].days.indexOf(channel.createdAt.getDay()) !== -1) {
+                for (let j = 0; j < events[i].channels.length; j += 1) {
                     if (events[i].channels[j].name === channel.name.substring(0, (channel.name.length - 3))) {
                         if (channel.type === events[i].channels[j].type) {
                             return events[i].eventlength;
@@ -42,9 +43,9 @@ module.exports = {
                 }
             }
         }
-        logger.error(TAG, 'Unable to find eventlength for event channel: ' + channel.name);
+        logger.error(TAG, `Unable to find eventlength for event channel: ${channel.name}`);
         return 0;
-    }
+    },
 };
 
 /*
@@ -78,24 +79,24 @@ Starting events between 00:00 and 00:30 will currently fuck us
 }
 
 */
-let DIGTCommonChannels = [
+const DIGTCommonChannels = [
     {
         name: 'DIGT/Ops/Lounge',
-        type: 'voice'
+        type: 'voice',
     },
     {
         name: 'DIGT/Ops/1',
-        type: 'voice'
+        type: 'voice',
     },
     {
         name: 'digt-ops-feedback',
-        type: 'text'
-    }
+        type: 'text',
+    },
 ];
-let DIGTCommonRoles = [
+const DIGTCommonRoles = [
     '90092974523826176',
     '200995317024292865',
-    '189767484495233024'
+    '189767484495233024',
 ];
 
 let events = [
@@ -110,7 +111,7 @@ let events = [
         endminute: 0,
         roles: DIGTCommonRoles,
         channels: DIGTCommonChannels,
-        millernotification: true
+        millernotification: true,
     },
     {
         name: 'DIGT Tactical Ops',
@@ -123,6 +124,6 @@ let events = [
         endminute: 0,
         roles: DIGTCommonRoles,
         channels: DIGTCommonChannels,
-        millernotification: true
-    }
+        millernotification: true,
+    },
 ];
