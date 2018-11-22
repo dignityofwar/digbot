@@ -7,23 +7,24 @@
 const config = require('config');
 const crashHandler = require('../crash-handling.js');
 const logger = require('../logger.js');
-const TAG = 'Performance';
 const usage = require('usage');
+
+const TAG = 'Performance';
 let pid;
 
 module.exports = {
     // Set PID
-    ready: function() {
+    ready() {
         pid = process.pid;
     },
 
-    execute: function() {
+    execute() {
         crashHandler.logEvent(TAG, 'execute');
-        let promises = Promise.all([
+        const promises = Promise.all([
             this.getCpu(),
-            this.getMemory()
+            this.getMemory(),
         ]);
-        promises.then(function(result) {
+        promises.then((result) => {
             if (config.get('showPerfStats') === true) {
                 logger.debug(TAG, `CPU: ${result[0]}`);
                 logger.debug(TAG, `MEM: ${result[1]}`);
@@ -40,9 +41,9 @@ module.exports = {
         });
     },
 
-    getCpu: function() {
-        return new Promise(function(resolve, reject) {
-            usage.lookup(pid, function(err, result) {
+    getCpu() {
+        return new Promise((resolve, reject) => {
+            usage.lookup(pid, (err, result) => {
                 if (err) {
                     logger.warning(TAG, `Usage CPU lookup failed! Error: ${err}`);
                     reject();
@@ -54,18 +55,18 @@ module.exports = {
         });
     },
 
-    getMemory: function() {
-        return new Promise(function(resolve, reject) {
-            usage.lookup(pid, function(err, result) {
+    getMemory() {
+        return new Promise((resolve, reject) => {
+            usage.lookup(pid, (err, result) => {
                 if (err) {
                     logger.warning(TAG, `Usage memory lookup failed! Error: ${err}`);
                     reject();
                     return;
                 }
                 usage.clearHistory(pid);
-                let mem = Math.round(result.memoryInfo.rss) / 1024 / 1024;
+                const mem = Math.round(result.memoryInfo.rss) / 1024 / 1024;
                 resolve(mem.toFixed(2));
             });
         });
-    }
+    },
 };

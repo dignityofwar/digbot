@@ -33,8 +33,8 @@ module.exports = {
             }
         }
         if (count > 0) {
-            logger.info(TAG, `Automatically deleted ${deleted} of ${count} temp/event channels ` +
-                'due to inactivity');
+            logger.info(TAG, `Automatically deleted ${deleted} of ${count} temp/event channels `
+                + 'due to inactivity');
         }
     },
 };

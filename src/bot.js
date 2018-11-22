@@ -3,7 +3,6 @@
 'use strict';
 
 const bot = require('./lib/discord/discordbot.js');
-// const webhook = require('./lib/webhook/webhook.js');
 
 bot.init();
 // webhook.init();

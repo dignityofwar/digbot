@@ -44,7 +44,7 @@ describe('commands/commands.js', function() {
     });
 
     it('filter should return false when there\'s no command', function() {
-        expect(commands.filter('a'), 'all').to.be.false;
+        expect(commands.filter('a', 'all')).to.be.false;
         assert(commands.filter('!thisisnotarealcommand!', 'all') === false, 'This should not contain a command');
     });
 

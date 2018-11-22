@@ -24,8 +24,8 @@ module.exports = {
                     logger.warning(TAG, `Failed to remove #herebedragons role from ${msg.member.displayName}`);
                 });
 
-            msg.reply('you already had the herebedragons role. I\'ve removed it. Type **!dragons** ' +
-                'again to resubscribe.')
+            msg.reply('you already had the herebedragons role. I\'ve removed it. Type **!dragons** '
+                + 'again to resubscribe.')
                 .then(() => {
                     logger.info(TAG, `Informed ${msg.member.displayName} that they already have herebedragons.`);
                 })
@@ -39,8 +39,8 @@ module.exports = {
                 logger.info(TAG, `Added herebedragons role to ${msg.member.displayName}`);
 
                 msg.guild.channels.get(config.get('channels.mappings.herebedragons')).sendMessage(
-                    `${msg.member} has been granted access here. Please note, this channel is ` +
-                    'the wild west. If you get triggered, the community staff cannot help you.')
+                    `${msg.member} has been granted access here. Please note, this channel is `
+                    + 'the wild west. If you get triggered, the community staff cannot help you.')
                     .then(() => {
                         logger.info(TAG, `Sent herebedragons welcome message to ${msg.member.displayName}`);
                     })

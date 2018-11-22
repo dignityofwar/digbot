@@ -4,45 +4,45 @@
 
 // !stats module
 
-const config = require('config');
 const logger = require('../logger.js');
 const performance = require('../tools/performance.js');
 const pjson = require('../../../package');
 const server = require('../server/server.js');
+
 const TAG = '!stats';
 
 module.exports = {
     // Calculate Bot stats and return in message format
-    execute: function(msg) {
+    execute(msg) {
         msg.channel.sendMessage('pong')
-            .then(message => (
-                statsCalculations(server.started, msg, message)
-            ))
-            .catch(err => {
+            .then((message) => {
+                statsCalculations(server.started, msg, message);
+            })
+            .catch((err) => {
                 logger.warning(TAG, `Failed to send message, error: ${err}`);
             });
         return true;
-    }
+    },
 };
 
 function statsCalculations(started, msg, message) {
     // Get performance promises first
-    let performancePromises = Promise.all([
+    const performancePromises = Promise.all([
         performance.getCpu(),
-        performance.getMemory()
+        performance.getMemory(),
     ]);
 
-    performancePromises.then(function(result) {
-        let cpu = '**CPU Usage:** ' + result[0] + '%';
-        let memory = '**Memory Usage:** ' + result[1] + 'MB';
+    performancePromises.then((result) => {
+        const cpu = `**CPU Usage:** ${result[0]}%`;
+        const memory = `**Memory Usage:** ${result[1]}MB`;
 
-        let timenow = new Date();
+        const timenow = new Date();
 
         // DIGBot Version
-        let version = '**Version:** ' + pjson.version;
+        const version = `**Version:** ${pjson.version}`;
 
         // Message -> Bot pingtime
-        let ms = message.createdTimestamp - msg.createdTimestamp;
+        const ms = message.createdTimestamp - msg.createdTimestamp;
         let status = '';
         if (ms < 100) {
             status = '(Excellent)';
@@ -55,11 +55,11 @@ function statsCalculations(started, msg, message) {
         } else {
             status = '(Bad)';
         }
-        let pingTime =  '**Ping:** ' + ms + 'ms ' + status;
+        const pingTime = `**Ping:** ${ms}ms ${status}`;
 
         // Bot Runtime
         let x = timenow.getTime() - started.getTime();
-        x = x / 1000;
+        x /= 1000;
         let seconds = x % 60;
         x /= 60;
         let minutes = x % 60;
@@ -73,18 +73,18 @@ function statsCalculations(started, msg, message) {
         days = Math.floor(days);
         let runtime = '';
         if (days >= 1) {
-            runtime = '**Runtime:** ' + days + ' days, ' + hours + ' hours, ' + minutes + ' minutes, ' + seconds + ' seconds';
+            runtime = `**Runtime:** ${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
         } else if (hours >= 1) {
-            runtime =  '**Runtime:** ' + hours + ' hours, ' + minutes + ' minutes, ' + seconds + ' seconds';
+            runtime = `**Runtime:** ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
         } else if (minutes >= 1) {
-            runtime =  '**Runtime:** ' + minutes + ' minutes, ' + seconds + ' seconds';
+            runtime = `**Runtime:** ${minutes} minutes, ${seconds} seconds`;
         } else {
-            runtime =  '**Runtime:** ' + seconds + ' seconds';
+            runtime = `**Runtime:** ${seconds} seconds`;
         }
 
         // Connection stability
         x = timenow.getTime() - server.getConnectedSince().getTime();
-        x = x / 1000;
+        x /= 1000;
         seconds = x % 60;
         x /= 60;
         minutes = x % 60;
@@ -100,20 +100,22 @@ function statsCalculations(started, msg, message) {
         let stableConnection = '';
 
         if (days >= 1) {
-            stableConnection = '**Stable Discord connection for:** ' + days + ' days, ' + hours + ' hours, ' + minutes + ' minutes, ' + seconds + ' seconds';
+            stableConnection = `**Stable Discord connection for:** ${days} days, ${hours} hours, `
+                + `${minutes} minutes, ${seconds} seconds`;
         } else if (hours >= 1) {
-            stableConnection =  '**Stable Discord connection for:** ' + hours + ' hours, ' + minutes + ' minutes, ' + seconds + ' seconds';
+            stableConnection = `**Stable Discord connection for:** ${hours} hours, ${minutes} `
+                + `minutes, ${seconds} seconds`;
         } else if (minutes >= 1) {
-            stableConnection =  '**Stable Discord connection for:** ' + minutes + ' minutes, ' + seconds + ' seconds';
+            stableConnection = `**Stable Discord connection for:** ${minutes} minutes, ${seconds} seconds`;
         } else {
-            stableConnection =  '**Stable Discord connection for:** ' + seconds + ' seconds';
+            stableConnection = `**Stable Discord connection for:** ${seconds} seconds`;
         }
 
         // Members on server and in-game
-        let membersOnServer = '**Members on server:** ' + server.getMembersOnServer();
-        let ingame = '**Server members in-game:** ' + server.getMembersPlaying();
+        const membersOnServer = `**Members on server:** ${server.getMembersOnServer()}`;
+        const ingame = `**Server members in-game:** ${server.getMembersPlaying()}`;
 
-        //Log, compile and return formated message
+        // Log, compile and return formated message
         logger.debug(TAG, version);
         logger.debug(TAG, pingTime);
         logger.debug(TAG, cpu);
@@ -122,26 +124,26 @@ function statsCalculations(started, msg, message) {
         logger.debug(TAG, stableConnection);
         logger.debug(TAG, membersOnServer);
         logger.debug(TAG, ingame);
-        let reply = '__**DIGBot Stats**__' +
-            '\n' + version +
-            '\n' + pingTime +
-            '\n' + cpu +
-            '\n' + memory +
-            '\n' + runtime +
-            '\n' + stableConnection +
-            '\n' +
-            '\n' + '__**Community Stats**__' +
-            '\n' + membersOnServer +
-            '\n' + ingame;
+        const reply = '__**DIGBot Stats**__'
+            + `\n${version}`
+            + `\n${pingTime}`
+            + `\n${cpu}`
+            + `\n${memory}`
+            + `\n${runtime}`
+            + `\n${stableConnection}`
+            + '\n'
+            + '\n__**Community Stats**__'
+            + `\n ${membersOnServer}`
+            + `\n ${ingame}`;
         message.edit(reply)
-            .then(
-                logger.debug(TAG, 'Message succesfully edited')
-            )
-            .catch(error => {
-                logger.warning(TAG, 'Failed to edit message ' + error);
+            .then(() => {
+                logger.debug(TAG, 'Message succesfully edited');
+            })
+            .catch((error) => {
+                logger.warning(TAG, `Failed to edit message ${error}`);
             });
     })
-    .catch(function(error) {
-        logger.warning(TAG, 'Retrieving process stats failed! ' + error);
+    .catch((error) => {
+        logger.warning(TAG, `Retrieving process stats failed! ${error}`);
     });
 }

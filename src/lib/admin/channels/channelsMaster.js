@@ -31,16 +31,15 @@ module.exports = {
             const name = ch.name;
             ch.delete()
                 .then(() => {
-                    logger.devAlert(TAG, `The channel ${name} was deleted upon creation as it held ` +
-                        'an identical name and type to an existing channel');
+                    logger.devAlert(TAG, `The channel ${name} was deleted upon creation as it held `
+                        + 'an identical name and type to an existing channel');
                 })
                 .catch((err) => {
                     logger.warning(TAG, `Failed to delete channel, error: ${err}`);
                 });
             return;
         }
-        // eslint-disable-next-line no-unused-vars
-        const timer = setTimeout(this.checkPositions, 5000);
+        setTimeout(this.checkPositions, 5000);
     },
 
     // Calls position module check to check position of channels
@@ -57,8 +56,8 @@ module.exports = {
                 return true;
             }
             if (msg !== undefined) {
-                msg.channel.sendMessage('Sorry I can\'t delete a temporary channel when ' +
-                    'people are still in it that would be quite rude.')
+                msg.channel.sendMessage('Sorry I can\'t delete a temporary channel when '
+                    + 'people are still in it that would be quite rude.')
                     .then((message) => {
                         logger.info(TAG, `Sent message: ${message.content}`);
                     })
@@ -96,8 +95,8 @@ module.exports = {
     deleteChannel(channel, msg) {
         logger.info(TAG, `Deleted channel: ${channel.name}`);
         if (msg !== undefined) {
-            msg.channel.sendMessage(`The ${channel.type} channel ${channel.name} was ` +
-                'succesfully deleted')
+            msg.channel.sendMessage(`The ${channel.type} channel ${channel.name} was `
+                + 'succesfully deleted')
                 .then((message) => {
                     logger.info(TAG, `Sent message: ${message.content}`);
                 })
@@ -112,9 +111,9 @@ module.exports = {
 // In case the channel can't be deleted let the requester know and refuse the deletion
 function rejectCase(msg) {
     if (msg !== undefined) {
-        msg.channel.sendMessage('Sorry I can\'t delete that channel as it\'s not ' +
-            'inactive, I only delete text channels where the last message was sent ' +
-            'over 2 hours ago. They\'ll be automatically deleted after then.')
+        msg.channel.sendMessage('Sorry I can\'t delete that channel as it\'s not '
+            + 'inactive, I only delete text channels where the last message was sent '
+            + 'over 2 hours ago. They\'ll be automatically deleted after then.')
             .then((message) => {
                 logger.info(TAG, `Sent message: ${message.content}`);
             })

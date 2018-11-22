@@ -121,8 +121,8 @@ function createChannel(nameSection, numbers, newMember) {
 
             // Fix for if we have a Channel/2 but no Channel/1 - Issue #189
             if (!parent || !parent.id) {
-                logger.info(TAG, 'Attempted to create a voice subchannel when the parent ' +
-                `doesn't exist for channel ${name}`);
+                logger.info(TAG, 'Attempted to create a voice subchannel when the parent '
+                    + `doesn't exist for channel ${name}`);
                 return;
             }
             parent = server.getChannelInGuild(parent.id, config.get('general.server')); // Get fresh copy

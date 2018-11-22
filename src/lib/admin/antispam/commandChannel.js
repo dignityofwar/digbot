@@ -28,20 +28,20 @@ module.exports = {
 
         /* If not from #digbot or #developers or a nsfw channel (in the sense that it is unmoderated)
         and if it starts with the prefix */
-        if (msg.channel.id !== config.get('channels.mappings.developers') &&
-            msg.channel.id !== config.get('channels.mappings.digbot') &&
-            commands.check(msg.content)) {
+        if (msg.channel.id !== config.get('channels.mappings.developers')
+            && msg.channel.id !== config.get('channels.mappings.digbot')
+            && commands.check(msg.content)) {
             const date = new Date();
 
             // Check if already being ignored.
             if (ignoreList[msg.author.id]) {
-                logger.info(TAG, `Ignored message from ${msg.author.id} as they're in the commandChannel ` +
-                'ignore list');
+                logger.info(TAG, `Ignored message from ${msg.author.id} as they're in the commandChannel `
+                    + 'ignore list');
                 return false;
             }
 
-            msg.reply(`Please issue your command in the channel ${digbotChannel} and try again. ` +
-            'I\'ll no longer respond to any further commands.');
+            msg.reply(`Please issue your command in the channel ${digbotChannel} and try again. `
+                + 'I\'ll no longer respond to any further commands.');
 
             ignoreList[msg.author.id] = {
                 expires: date.getTime() + (6 * 60 * 60 * 1000), // Now + 6 hours

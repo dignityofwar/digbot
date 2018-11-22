@@ -32,12 +32,10 @@ module.exports = {
 };
 
 // Global interval to call antispam user release every X secs
-// eslint-disable-next-line no-unused-vars
-const timer = setInterval(releaseUser, config.get('antispamUserTick'));
+setInterval(releaseUser, config.get('antispamUserTick'));
 
 // Second timer to set the amount of commands to be allowed per interval
-// eslint-disable-next-line no-unused-vars
-const timer2 = setInterval(releaseCommand, config.get('antispamCommandTick'));
+setInterval(releaseCommand, config.get('antispamCommandTick'));
 
 // Count user for anti spam after succesful message
 function antispamCount(offender) {
@@ -55,12 +53,12 @@ function checkCommand(command, name, channel) {
         if (comms.cats >= config.get('antispamCommandLimitCats')) {
             logger.info(TAG, 'Antispam kicked in for command: !cats');
             channel.sendMessage(`${name}, I've decided to severely limit the amount of cats I'm afraid.`)
-                    .then(() => {
-                        logger.info(TAG, `Sent antipsam message to ${name}`);
-                    })
-                    .catch((error) => {
-                        logger.warning(TAG, `Message failed to send ${error}`);
-                    });
+                .then(() => {
+                    logger.info(TAG, `Sent antipsam message to ${name}`);
+                })
+                .catch((error) => {
+                    logger.warning(TAG, `Message failed to send ${error}`);
+                });
             return false;
         }
         commandCount('cats');

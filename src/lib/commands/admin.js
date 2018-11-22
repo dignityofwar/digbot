@@ -29,8 +29,8 @@ module.exports = {
                 logger.debug(TAG, `Succesfully sent admin command list to ${member.displayName}`);
             })
             .catch((err) => {
-                logger.warning(TAG, `Failed to send admin command list to ${member.displayName}, ` +
-                    `${err}`);
+                logger.warning(TAG, `Failed to send admin command list to ${member.displayName}, `
+                    + `${err}`);
             });
 
         return `I'll PM you the list of admin commands ${member.displayName}`;

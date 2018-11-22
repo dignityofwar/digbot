@@ -102,8 +102,8 @@ const DIGTCommonRoles = [
 let events = [
     {
         name: 'DIGT Tactical Casual Ops',
-        description: 'DIGT ops on Wednesdays are a mix between Casual and Tactical, usually decided ' +
-        'on the night. All are welcome, usually held on TS at 94.23.13.182:9981',
+        description: 'DIGT ops on Wednesdays are a mix between Casual and Tactical, usually decided '
+        + 'on the night. All are welcome, usually held on TS at 94.23.13.182:9981',
         days: [3],
         starthour: 18,
         startminute: 0,
@@ -115,8 +115,8 @@ let events = [
     },
     {
         name: 'DIGT Tactical Ops',
-        description: 'DIGT Friday ops are tactical, they rely on squad cohesion and comms ' +
-        'discipline. All are welcome, usually held on TS at 94.23.13.182:9981',
+        description: 'DIGT Friday ops are tactical, they rely on squad cohesion and comms '
+        + 'discipline. All are welcome, usually held on TS at 94.23.13.182:9981',
         days: [5],
         starthour: 18,
         startminute: 0,

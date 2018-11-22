@@ -8,7 +8,7 @@ const config = require('config');
 const positions = require('../admin/channels/positions.js');
 
 module.exports = {
-    execute: function() {
+    execute() {
         if (config.get('features.channelPositionsEnforcement') !== true) {
             return 'Sorry but the channel position enforcement feature is currently disabled';
         }
@@ -16,5 +16,5 @@ module.exports = {
         positions.globalCheck();
 
         return 'Sent global sort request to channels/positions.js';
-    }
+    },
 };

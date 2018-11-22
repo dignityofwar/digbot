@@ -18,8 +18,8 @@ module.exports = {
         if (oldMember.presence.game) {
             for (const communitygame in config.get('communityGames')) {
                 const ref = config.get('communityGames')[communitygame];
-                if (typeof oldMember.presence.game.name === 'string' &&
-                    oldMember.presence.game.name.includes(ref.name)) {
+                if (typeof oldMember.presence.game.name === 'string'
+                    && oldMember.presence.game.name.includes(ref.name)) {
                     for (let i = 0; i < ref.roleids.length; i += 1) {
                         if (oldMember.roles.has(ref.roleids[i])) {
                             if (newMember) {
@@ -34,8 +34,8 @@ module.exports = {
             }
             for (const recreationalgame in config.get('recreationalGames')) {
                 const ref = config.get('recreationalGames')[recreationalgame];
-                if (typeof oldMember.presence.game.name === 'string' &&
-                    oldMember.presence.game.name.includes(ref.name)) {
+                if (typeof oldMember.presence.game.name === 'string'
+                    && oldMember.presence.game.name.includes(ref.name)) {
                     for (let i = 0; i < ref.roleids.length; i += 1) {
                         if (oldMember.roles.has(ref.roleids[i])) {
                             if (newMember) {
@@ -62,8 +62,8 @@ function secondCheck(newMember) {
         const communityGames = config.get('communityGames');
         for (const communitygame in communityGames) {
             const ref = communityGames[communitygame];
-            if (typeof newMember.presence.game.name === 'string' &&
-                newMember.presence.game.name.includes(ref.name)) {
+            if (typeof newMember.presence.game.name === 'string'
+                && newMember.presence.game.name.includes(ref.name)) {
                 for (let i = 0; i < ref.roleids.length; i += 1) {
                     if (newMember.roles.has(ref.roleids[i])) {
                         return false;
@@ -76,8 +76,8 @@ function secondCheck(newMember) {
         const recreationalGames = config.get('recreationalGames');
         for (const recreationalGame in recreationalGames) {
             const ref = recreationalGames[recreationalGame];
-            if (typeof newMember.presence.game.name === 'string' &&
-                newMember.presence.game.name.includes(ref.name)) {
+            if (typeof newMember.presence.game.name === 'string'
+                && newMember.presence.game.name.includes(ref.name)) {
                 for (let i = 0; i < ref.roleids.length; i += 1) {
                     if (newMember.roles.has(ref.roleids[i])) {
                         return false;
@@ -93,8 +93,8 @@ function secondCheck(newMember) {
 
 // If the member is missing a role, give them the role and notifty the primary channel
 function addMissingRole(member, game) {
-    logger.info(TAG, `Identified ${member.displayName} was missing the ` +
-        `${game.name} tag, attempting to update roles`);
+    logger.info(TAG, `Identified ${member.displayName} was missing the `
+        + `${game.name} tag, attempting to update roles`);
     if (!server.getRole(game.roleids[0])) {
         logger.warning(TAG, `Missing role for game: ${game.name}`);
         return false;

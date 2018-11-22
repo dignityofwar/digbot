@@ -52,8 +52,8 @@ module.exports = {
 
             // Log discrepancies if there are any
             if (mentionCount > 0) {
-                logger.info(TAG, `${newMessage.member.displayName} edited in mentions to their ` +
-                    'message');
+                logger.info(TAG, `${newMessage.member.displayName} edited in mentions to their `
+                    + 'message');
                 if (!list[newMessage.author.id]) {
                     trackUser(newMessage.author.id);
                 }
@@ -104,16 +104,16 @@ module.exports = {
                 .catch((err) => {
                     logger.warning(TAG, `Failed to add mute role to member, error: ${err}`);
                 });
-            server.getChannel('staff').sendMessage(`${member.displayName} attempted to ` +
-                'evade supermute by rejoining the server to reset their roles. But I\'m smarter than that.')
+            server.getChannel('staff').sendMessage(`${member.displayName} attempted to `
+                + 'evade supermute by rejoining the server to reset their roles. But I\'m smarter than that.')
                 .then(() => {
                     logger.info(TAG, 'informed staff of mute evasion attempt');
                 })
                 .catch((err) => {
                     logger.warning(TAG, err);
                 });
-            member.sendMessage('Attempting to evade a supermute is a serious offence, if you continue ' +
-                'to defy server rules you may be banned from the server')
+            member.sendMessage('Attempting to evade a supermute is a serious offence, if you continue '
+                + 'to defy server rules you may be banned from the server')
                 .then(() => {
                     logger.debug(TAG, 'Succesfully sent message');
                 })
@@ -131,8 +131,8 @@ module.exports = {
         if (newMember.roles.has(config.get('general.superMuteRoleID'))) { return false; }
         // Override point
         // Inform staff that override was succesfull
-        server.getChannel('staff').sendMessage('Staff member override confirmed for ' +
-            `${newMember.displayName}, mentions allowance reset`)
+        server.getChannel('staff').sendMessage('Staff member override confirmed for '
+            + `${newMember.displayName}, mentions allowance reset`)
             .then(() => {
                 logger.info(TAG, 'Informed staff of mute override');
             })
@@ -140,9 +140,9 @@ module.exports = {
                 logger.warning(TAG, `Failed to send message to staff, error: ${err}`);
             });
         // Inform member the mute has been overwritten
-        newMember.sendMessage(`${newMember.displayName} your mute has been overwritten ` +
-            'by a staff member so you\'re free to talk again. Your mention allowance has also been ' +
-            'reset, please be more careful next time.')
+        newMember.sendMessage(`${newMember.displayName} your mute has been overwritten `
+            + 'by a staff member so you\'re free to talk again. Your mention allowance has also been '
+            + 'reset, please be more careful next time.')
             .then(() => {
                 logger.info(TAG, 'Informed member of mute override');
             })
@@ -185,16 +185,16 @@ module.exports = {
                     .catch((err) => {
                         logger.warning(TAG, `Failed to remove members role, error: ${err}`);
                     });
-                roleList[x].sendMessage('Your mute on the DIG server has expired, please ' +
-                    'respect the server rules in the future')
+                roleList[x].sendMessage('Your mute on the DIG server has expired, please '
+                    + 'respect the server rules in the future')
                     .then(() => {
                         logger.debug(TAG, 'Succesfully sent message to member informing of mute removal');
                     })
                     .catch((err) => {
                         logger.warning(TAG, `Failed to send message to member, error: ${err}`);
                     });
-                logger.warning(TAG, `Removed ${roleList[x].displayName} from mute role ` +
-                    '(member not found in list)');
+                logger.warning(TAG, `Removed ${roleList[x].displayName} from mute role `
+                    + '(member not found in list)');
             }
         }
 
@@ -211,10 +211,10 @@ module.exports = {
                     .catch((err) => {
                         logger.warning(TAG, `Failed to remove members role, error: ${err}`);
                     });
-                list[x].member.sendMessage('Your mute on the DIG server has expired, please respect the ' +
-                    'server rules in the future. Your mention allowance however may not have been reset; ' +
-                    'mentioning more before your allowance is reset will result in another immidate mute, ' +
-                    'please use "!mentions" at any time to check your allowance.')
+                list[x].member.sendMessage('Your mute on the DIG server has expired, please respect the '
+                    + 'server rules in the future. Your mention allowance however may not have been reset; '
+                    + 'mentioning more before your allowance is reset will result in another immidate mute, '
+                    + 'please use "!mentions" at any time to check your allowance.')
                     .then(() => {
                         logger.debug(TAG, 'Succesfully sent message to member informing of mute removal');
                     })
@@ -256,10 +256,10 @@ function checkStaff(message) {
         const mentionsArray = message.mentions.roles.array();
         for (const x in message.mentions.roles.array()) {
             if (mentionsArray[x] === staff || mentionsArray[x] === admins) {
-                message.author.sendMessage(`Hey ${message.member.displayName} thanks for ` +
-                    'contacting the DIG community staff, someone will get back to you soon™. Please ' +
-                    'only mention staff when you need help though. If you\'re trying to troll, mentioning ' +
-                    'a load of people with banhammers probably isn\'t the best way to do it.')
+                message.author.sendMessage(`Hey ${message.member.displayName} thanks for `
+                    + 'contacting the DIG community staff, someone will get back to you soon™. Please '
+                    + 'only mention staff when you need help though. If you\'re trying to troll, mentioning '
+                    + 'a load of people with banhammers probably isn\'t the best way to do it.')
                 .then(() => {
                     logger.debug(TAG, '"Don\'t spam admins" message succesfully sent');
                 })
@@ -279,14 +279,14 @@ function checkUser(message) {
     if (!list[message.author.id]) { return false; } // Check user has mentioned
     if (!list[message.author.id].check) { return false; } // See if user needs to be checked
     // Check user's member mentions
-    if (list[message.author.id].memberMentions >= config.get('memberMentionLimit') &&
-        list[message.author.id].memberAction) {
+    if (list[message.author.id].memberMentions >= config.get('memberMentionLimit')
+        && list[message.author.id].memberAction) {
         list[message.author.id].memberAction = false;
         if (list[message.author.id].memberWarnings === 0) {
             list[message.author.id].memberWarnings += 1;
-            message.channel.sendMessage(`${message.member.displayName} you have hit our daily ` +
-                'mention limit for members. You may not mention another member this 24 hour period. ' +
-                'Please use "!mentions" to check your allowance before you mention again.')
+            message.channel.sendMessage(`${message.member.displayName} you have hit our daily `
+                + 'mention limit for members. You may not mention another member this 24 hour period. '
+                + 'Please use "!mentions" to check your allowance before you mention again.')
                 .then(() => {
                     logger.info(TAG, `${message.member.displayName} hit their member mention limit`);
                 })
@@ -304,13 +304,13 @@ function checkUser(message) {
                     logger.warning(TAG, `Failed to send message, error: ${err}`);
                 });
             message.author.sendMessage(`${message.member.displayName}` +
-                ', we have a daily mention limit for members on our server to prevent spam, one which ' +
-                'you have broken our rules in exceeding. This is your last warning, if you mention again ' +
-                'before you\'re allowed you will be muted in all channels for a time and the community ' +
-                'staff will be notified. Please use "!mentions" at any time to check your allowance.')
+                ', we have a daily mention limit for members on our server to prevent spam, one which '
+                + 'you have broken our rules in exceeding. This is your last warning, if you mention again '
+                + 'before you\'re allowed you will be muted in all channels for a time and the community '
+                + 'staff will be notified. Please use "!mentions" at any time to check your allowance.')
                 .then(() => {
-                    logger.info(TAG, `${message.member.displayName} was sent a warning for exceeding ` +
-                        'their member mention allowance');
+                    logger.info(TAG, `${message.member.displayName} was sent a warning for exceeding `
+                        + 'their member mention allowance');
                 })
                 .catch((err) => {
                     logger.warning(TAG, `Message failed to send, error: ${err}`);
@@ -323,14 +323,14 @@ function checkUser(message) {
         }
     }
     // Check user's role mentions
-    if (list[message.author.id].roleMentions >= config.get('roleMentionLimit') &&
-            list[message.author.id].roleAction) {
+    if (list[message.author.id].roleMentions >= config.get('roleMentionLimit')
+            && list[message.author.id].roleAction) {
         list[message.author.id].roleAction = false;
         if (list[message.author.id].roleWarnings === 0) {
             list[message.author.id].roleWarnings += 1;
-            message.channel.sendMessage(`${message.member.displayName} you have hit our daily ` +
-                'mention limit for roles. You may not mention another role this 24 hour period. ' +
-                'Please use "!mentions" to check your allowance before you mention again.')
+            message.channel.sendMessage(`${message.member.displayName} you have hit our daily `
+                + 'mention limit for roles. You may not mention another role this 24 hour period. '
+                + 'Please use "!mentions" to check your allowance before you mention again.')
                 .then(() => {
                     logger.info(TAG, `${message.member.displayName} hit their role mention limit`);
                 })
@@ -347,15 +347,15 @@ function checkUser(message) {
                 .catch((err) => {
                     logger.warning(TAG, `Failed to send message ${err}`);
                 });
-            message.author.sendMessage(`${message.member.displayName}` +
-                ', we have a daily mention limit on our server to prevent spam, one which have you ' +
-                'have broken our rules in exceeding. This is your last warning, if you mention again ' +
-                'before you\'re allowed you will be muted in all channels for ' +
-                `${(config.get('mentionsMuteTime') / 3600000)} hours and the community staff will be ` +
-                'notified. Please use "!mentions" at any time to check your allowance.')
+            message.author.sendMessage(`${message.member.displayName}`
+                + ', we have a daily mention limit on our server to prevent spam, one which have you '
+                + 'have broken our rules in exceeding. This is your last warning, if you mention again '
+                + 'before you\'re allowed you will be muted in all channels for '
+                + `${(config.get('mentionsMuteTime') / 3600000)} hours and the community staff will be `
+                + 'notified. Please use "!mentions" at any time to check your allowance.')
                 .then(() => {
-                    logger.info(TAG, `${message.member.displayName} was sent a warning for exceeding ` +
-                        'their allowance');
+                    logger.info(TAG, `${message.member.displayName} was sent a warning for exceeding `
+                        + 'their allowance');
                 })
                 .catch((err) => {
                     logger.warning(TAG, `Message failed to send, error: ${err}`);
@@ -373,8 +373,8 @@ function checkUser(message) {
 /* Confirm if the message actually contains a mention at the specified index, if it does return an
 identifying portion */
 function confirmMention(message, mentionIndex) {
-    if (message.substring(mentionIndex + 2, mentionIndex + 3) !== '&' &&
-        isNaN(message.substring(mentionIndex + 2, mentionIndex + 3))) {
+    if (message.substring(mentionIndex + 2, mentionIndex + 3) !== '&'
+        && isNaN(message.substring(mentionIndex + 2, mentionIndex + 3))) {
         return false;
     } else if (isNaN(message.substring(mentionIndex + 3, mentionIndex + 4))) {
         return false;
@@ -408,9 +408,9 @@ function countMentions(message) {
 
 // Message staff channel about mute
 function informStaff(message) {
-    server.getChannel('staff').sendMessage(`${message.member.displayName}  was ` +
-        `muted for ${(config.get('mentionsMuteTime') / 3600000)}` +
-        ' hours for ignoring multiple warnings of mention spam')
+    server.getChannel('staff').sendMessage(`${message.member.displayName}  was `
+        + `muted for ${(config.get('mentionsMuteTime') / 3600000)}`
+        + ' hours for ignoring multiple warnings of mention spam')
         .then(() => {
             logger.info(TAG, 'Informed staff of mute');
         })
@@ -429,10 +429,10 @@ function issueMute(message) {
         .catch((err) => {
             logger.warning(TAG, `Failed to add mute role to member, error: ${err}`);
         });
-    message.author.sendMessage('You have repeatedly exceeded your mention limit despite ' +
-        'repeated warnings. You have now been muted for ' +
-        `${(config.get('mentionsMuteTime') / 3600000)} hours and the community staff have been ` +
-        'informed.');
+    message.author.sendMessage('You have repeatedly exceeded your mention limit despite '
+        + 'repeated warnings. You have now been muted for '
+        + `${(config.get('mentionsMuteTime') / 3600000)} hours and the community staff have been `
+        + 'informed.');
     const now = new Date();
     list[message.author.id].muted = now.getTime();
     list[message.author.id].member = message.member;

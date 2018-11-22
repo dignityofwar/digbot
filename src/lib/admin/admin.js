@@ -101,8 +101,7 @@ module.exports = {
 };
 
 // Interval call auto delete to get rid of inactive temp channels
-// eslint-disable-next-line no-unused-vars
-const autodeletetimer = setInterval(auto, config.get('autoDeleteChannels'));
+setInterval(auto, config.get('autoDeleteChannels'));
 function auto() {
     crashHandler.logEvent(TAG, 'autodelete check');
     if (server.getGuild(config.get('general.server')) === null) { return; }
@@ -111,8 +110,7 @@ function auto() {
 
 // Call 5 min admin checks
 // Note: DO NOT CHANGE INTERVAL LENGTH without also changing the events.check function
-// eslint-disable-next-line no-unused-vars
-const fiveMinTimer = setInterval(fiveMinCheck, 300000);
+setInterval(fiveMinCheck, 300000);
 function fiveMinCheck() {
     crashHandler.logEvent(TAG, 'fiveMinCheck');
     events.check();
@@ -121,8 +119,7 @@ function fiveMinCheck() {
 }
 
 // Call daily admin check
-// eslint-disable-next-line no-unused-vars
-const dailychecktimer = setInterval(dailycheck, 86400000);
+setInterval(dailycheck, 86400000);
 // Runs every 24h period after bot start, not on start
 function dailycheck() {
     crashHandler.logEvent(TAG, 'dailycheck');

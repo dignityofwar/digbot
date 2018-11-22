@@ -238,8 +238,8 @@ function sendMessage(toSend, msg) {
     let sendable = toSend;
     // Embed if only image is being sent as link
     if (sendable.indexOf(' ') === -1) {
-        if (sendable.indexOf('.jpg') !== -1 || sendable.indexOf('.png') !== -1 || sendable.indexOf('.gif') !== -1 ||
-             sendable.indexOf('.jpeg') !== -1) {
+        if (sendable.indexOf('.jpg') !== -1 || sendable.indexOf('.png') !== -1 || sendable.indexOf('.gif') !== -1
+            || sendable.indexOf('.jpeg') !== -1) {
             options = { embed: { image: { url: sendable } } };
             sendable = '';
         }
@@ -262,7 +262,7 @@ function adminCheck(msg) {
     if (config.util.getEnv('NODE_ENV') !== 'production') { return true; } // Always allow staging / dev
     if (msg.member.roles.has(config.get('general.devRoleID'))) { return true; }
     if (msg.member.roles.has(config.get('general.staffRoleID'))) { return true; }
-    sendMessage(`Sorry ${msg.member.displayName} but only staff members and devs ` +
-        'have access to admin commands', msg);
+    sendMessage(`Sorry ${msg.member.displayName} but only staff members and devs `
+        + 'have access to admin commands', msg);
     return false;
 }

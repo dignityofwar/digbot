@@ -5,39 +5,39 @@
 // Handles crashes by compiling crash reports and sending them to console/dev channel
 
 const logger = require('./logger.js');
-const TAG = 'Crash Handler';
 
-let eventBuffer = [];
-let messageBuffer = [];
+const TAG = 'Crash Handler';
+const eventBuffer = [];
+const messageBuffer = [];
 
 module.exports = {
     // On bot.error
-    error: function(err) {
+    error(err) {
         crash(err, 'Client Error');
     },
 
     // Store data on the last 3 events that occurred
-    logEvent: function(moduleName, eventName) {
+    logEvent(moduleName, eventName) {
         if (eventBuffer.length >= 3) {
             eventBuffer.splice(0, 1);
         }
-        let now = new Date();
-        let data = {
+        const now = new Date();
+        const data = {
             date: now.toLocaleTimeString(),
-            eventName: eventName,
-            moduleName: moduleName
+            eventName,
+            moduleName,
         };
         eventBuffer.push(data);
         logger.event(moduleName, eventName);
     },
 
     // Store data on the last 3 messages that the bot listened to for debug purposes
-    logMessage: function(msg) {
+    logMessage(msg) {
         if (messageBuffer.length >= 3) {
             messageBuffer.splice(0, 1);
         }
-        let now = new Date();
-        let data = {
+        const now = new Date();
+        const data = {
             date: now.toLocaleTimeString(),
             message: msg.content,
         };
@@ -47,7 +47,7 @@ module.exports = {
             data.server = msg.guild.name;
         }
         messageBuffer.push(data);
-    }
+    },
 };
 
 // Super scary stuff, program in unlcean state and must end soonish
@@ -63,22 +63,22 @@ process.on('unhandledRejection', (reason) => {
 // Compile a crash report and send it to the logger to be delivered
 function crash(err, type) {
     module.exports.logEvent(TAG, 'crash');
-    let now = new Date();
-    let message = '[' + now.toLocaleTimeString() + '] ' + type + ' Crash';
-    if (eventBuffer.length != 0) {
+    const now = new Date();
+    let message = `[${now.toLocaleTimeString()}] ${type} Crash`;
+    if (eventBuffer.length !== 0) {
         message += '\n- Last Events:';
-        for (let x in eventBuffer) {
-            message += '\n- ' + '[' + eventBuffer[x].date + '] (' + eventBuffer[x].moduleName +
-                ') ' + eventBuffer[x].eventName;
+        for (const x in eventBuffer) {
+            message += `\n- [${eventBuffer[x].date}] (${eventBuffer[x].moduleName}) `
+                + `${eventBuffer[x].eventName}`;
         }
     }
-    if (messageBuffer.length != 0) {
+    if (messageBuffer.length !== 0) {
         message += '\n- Last Messages Recieved:';
-        for (let x in messageBuffer) {
-            message += '\n- ' + '[' + messageBuffer[x].date + '] (' + messageBuffer[x].server +
-                ') ' + messageBuffer[x].message;
+        for (const x in messageBuffer) {
+            message += `\n- [${messageBuffer[x].date}] (${messageBuffer[x].server}) `
+                + `${messageBuffer[x].message}`;
         }
     }
-    message += '\n- ' + err.stack;
+    message += `\n- ${err.stack}`;
     logger.error(TAG, message);
 }

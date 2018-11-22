@@ -42,8 +42,7 @@ module.exports = {
                         logger.debug(TAG, 'Releasing queue AFTER .then');
                         queueRelease();
                     } else {
-                        // eslint-disable-next-line no-unused-vars
-                        const timer = setTimeout(() => {
+                        setTimeout(() => {
                             busy = false;
                             logger.debug(TAG, 'Busy marked as false');
                         }, 3000);
@@ -56,8 +55,7 @@ module.exports = {
         } else {
             // If server not ready, try again in 10 secs
             queue = true;
-            // eslint-disable-next-line no-unused-vars
-            const timer = setTimeout(() => {
+            setTimeout(() => {
                 queueRelease();
             }, 10000);
         }
@@ -194,8 +192,8 @@ function indexTextChannels() {
         logger.devAlert(TAG, 'Text channels not on file found in global sort');
         const extraChannels = [];
         for (const x in textChannels) {
-            logger.devAlert(TAG, `Text channel: ${textChannels[x].name} not on file, ` +
-                `id: ${textChannels[x].id}`);
+            logger.devAlert(TAG, `Text channel: ${textChannels[x].name} not on file, `
+                + `id: ${textChannels[x].id}`);
             extraChannels.push(textChannels[x].name);
         }
         extraChannels.sort();
@@ -309,8 +307,8 @@ function indexVoiceChannels() {
         logger.warning(TAG, 'Voice channels not on file found in global sort');
         const extraChannels = [];
         for (const x in voiceChannels) {
-            logger.warning(TAG, `Voice channel: ${voiceChannels[x].name} not on file, ` +
-                `id: ${voiceChannels[x].id}`);
+            logger.warning(TAG, `Voice channel: ${voiceChannels[x].name} not on file, `
+                + `id: ${voiceChannels[x].id}`);
             extraChannels.push(voiceChannels[x].name);
         }
         extraChannels.sort();
@@ -354,8 +352,7 @@ function requestPosition(channel, position) {
     }
     if (server.getReady() === false) {
         logger.debug(TAG, 'Queueing requestPosition as server not ready');
-        // eslint-disable-next-line no-unused-vars
-        const timer = setTimeout(() => {
+        setTimeout(() => {
             this.requestPosition(channel, position);
         }, 3000);
         return false;
@@ -367,8 +364,8 @@ function requestPosition(channel, position) {
     return new Promise((resolve, reject) => {
         channel.setPosition(position)
             .then((channel2) => {
-                logger.info(TAG, `Moved the ${channel2.type} channel ${channel2.name} to position ` +
-                    `${channel2.position} from ${old.position}`);
+                logger.info(TAG, `Moved the ${channel2.type} channel ${channel2.name} to position `
+                    + `${channel2.position} from ${old.position}`);
                 resolve();
             })
             .catch((err) => {
@@ -381,8 +378,7 @@ function requestPosition(channel, position) {
 // Run the module again and clear the queue
 function queueRelease() {
     crashHandler.logEvent(TAG, 'queueRelease');
-    // eslint-disable-next-line no-unused-vars
-    const timer = setTimeout(() => {
+    setTimeout(() => {
         busy = false;
         queue = false;
         logger.debug(TAG, 'Busy marked as FALSE');
