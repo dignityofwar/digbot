@@ -188,7 +188,7 @@ function play() {
 
     // If sfx is youtube link
     if (sfx[queue[0].effect].source === 'youtube') {
-        const source = sfx[queue[0].effect].link;
+        const { link, options } = sfx[queue[0].effect];
 
         // Verify source is good
         if (verification[queue[0].effect] !== true) {
@@ -204,8 +204,7 @@ function play() {
             return false;
         }
 
-        const stream = yt(source, { audioonly: true });
-        const options = sfx[queue[0].effect].options;
+        const stream = yt(link, { audioonly: true });
         queue[0].voiceChannel.join()
             .then((connection) => {
                 crashHandler.logEvent(TAG, `Bot joined channel: ${queue[0].channelName}`);
