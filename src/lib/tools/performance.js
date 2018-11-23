@@ -31,12 +31,12 @@ module.exports = {
             }
 
             if (result[0] > config.get('general.cpuNotificationLimit')) {
-                logger.warning(TAG, `CPU usage is above ${config.get('general.cpuNotificationLimit')}! ` +
-                `Current CPU: ${result[0]}%`);
+                logger.warning(TAG, `CPU usage is above ${config.get('general.cpuNotificationLimit')}! `
+                + `Current CPU: ${result[0]}%`);
             }
             if (result[1] > config.get('general.memoryNotificationLimit')) {
-                logger.warning(TAG, `Memory usage is above ${config.get('general.memoryNotificationLimit')}MB! ` +
-                `Current MEM: ${result[1]}MB`);
+                logger.warning(TAG, `Memory usage is above ${config.get('general.memoryNotificationLimit')}MB! `
+                + `Current MEM: ${result[1]}MB`);
             }
         });
     },

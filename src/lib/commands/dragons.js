@@ -40,7 +40,8 @@ module.exports = {
 
                 msg.guild.channels.get(config.get('channels.mappings.herebedragons')).sendMessage(
                     `${msg.member} has been granted access here. Please note, this channel is `
-                    + 'the wild west. If you get triggered, the community staff cannot help you.')
+                    + 'the wild west. If you get triggered, the community staff cannot help you.',
+                )
                     .then(() => {
                         logger.info(TAG, `Sent herebedragons welcome message to ${msg.member.displayName}`);
                     })

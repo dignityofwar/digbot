@@ -52,11 +52,11 @@ module.exports = {
         if (msg.content.substring(6).startsWith('video')) {
             /* This bit will help dramatically cut down on grief not only from different kinds of youtube
             links but also from people trying to link sound clouds and such */
-            if (msg.content.substring(12).indexOf('http:') !== -1 ||
-                msg.content.substring(12).indexOf('www.') !== -1 ||
-                msg.content.substring(12).indexOf('youtube') !== -1 ||
-                msg.content.substring(12).indexOf('playlist') !== -1 ||
-                msg.content.substring(12).indexOf('time') !== -1) {
+            if (msg.content.substring(12).indexOf('http:') !== -1
+                || msg.content.substring(12).indexOf('www.') !== -1
+                || msg.content.substring(12).indexOf('youtube') !== -1
+                || msg.content.substring(12).indexOf('playlist') !== -1
+                || msg.content.substring(12).indexOf('time') !== -1) {
                 logger.info(TAG, 'Recieved a bad request for a video');
                 sendMessageToChannel(msg.channel, `Sorry ${msg.member.displayName}, but I `
                     + 'can only accept requests by youtube video ID, (the ID after watch?v= in the url)');
@@ -79,13 +79,13 @@ module.exports = {
             return true;
         } else if (msg.content.substring(6).startsWith('playlist')) {
             if (!playAssets.pass[msg.content.substring(15)]) {
-                if (msg.content.substring(15).indexOf('http:') !== -1 ||
-                    msg.content.substring(15).indexOf('www.') !== -1 ||
-                    msg.content.substring(15).indexOf('youtube') !== -1 ||
-                    msg.content.substring(15).indexOf('playlist') !== -1 ||
-                    msg.content.substring(15).indexOf('time') !== -1 ||
-                    msg.content.substring(15).indexOf('/') !== -1 ||
-                    msg.content.substring(15).indexOf('video') !== -1) {
+                if (msg.content.substring(15).indexOf('http:') !== -1
+                    || msg.content.substring(15).indexOf('www.') !== -1
+                    || msg.content.substring(15).indexOf('youtube') !== -1
+                    || msg.content.substring(15).indexOf('playlist') !== -1
+                    || msg.content.substring(15).indexOf('time') !== -1
+                    || msg.content.substring(15).indexOf('/') !== -1
+                    || msg.content.substring(15).indexOf('video') !== -1) {
                     logger.info(TAG, 'Recieved a bad request for a playlist');
                     sendMessageToChannel(msg.channel, `Sorry ${msg.member.displayName}, but I can`
                         + 'only accept requests by youtube playlist ID, (the ID after playlist?list= in the url)');
@@ -99,8 +99,8 @@ module.exports = {
             setup(msg, 'playlist', msg.content.substring(15));
             return true;
         } else if (msg.content.substring(6).startsWith('stop')) {
-            if (playing[msg.member.voiceChannel.id] &&
-                playing[msg.member.voiceChannel.id].connection) {
+            if (playing[msg.member.voiceChannel.id]
+                && playing[msg.member.voiceChannel.id].connection) {
                 logger.info(TAG, `Ending playback in channel: ${msg.member.voiceChannel.name} on `
                     + `request by ${msg.member.displayName}`);
                 sendMessageToChannel(msg.channel, 'Stopping playback in '
@@ -303,7 +303,7 @@ function playEnd(x) {
 }
 
 /* Plays the next song in the channel x, this function runs when there is a connection and
-controls continuous playback*/
+controls continuous playback */
 function playNext(x) {
     if (!playing[x] || playing[x].ending) {
         return false;
@@ -522,8 +522,8 @@ function setup(msg, command, target, youtubePlaylist) {
             .catch((err) => {
                 /* If the bot encounters errors they'll be thrown from the sub bot module and ride up here
                 so we need to account for different types of errors */
-                if (err.toString().indexOf('ReferenceError') === -1 &&
-                    err.toString().indexOf('TypeError') === -1) {
+                if (err.toString().indexOf('ReferenceError') === -1
+                    && err.toString().indexOf('TypeError') === -1) {
                     logger.info(TAG, `Sub bot request rejected, retrying... Error: ${err}`);
                     playing[channel].busy = false;
                     setTimeout(() => {

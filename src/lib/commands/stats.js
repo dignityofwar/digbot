@@ -143,7 +143,7 @@ function statsCalculations(started, msg, message) {
                 logger.warning(TAG, `Failed to edit message ${error}`);
             });
     })
-    .catch((error) => {
-        logger.warning(TAG, `Retrieving process stats failed! ${error}`);
-    });
+        .catch((error) => {
+            logger.warning(TAG, `Retrieving process stats failed! ${error}`);
+        });
 }

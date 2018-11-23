@@ -58,10 +58,10 @@ let test = {
 const test = {
     command: 'messageChannel',
     channel: '227718729448816641',
-    content: 'Dear Sir/Maddamn, I am writing to you today to inform you of our 2 for 1 offer on salt ' +
-        'here at DIG we\'ve been manufacturing salt and refining our distribution network on Miller ' +
-        'for years. If you would like to purchase salt please contact Fluttyman on Miller VS. May the ' +
-        'salt be with you.',
+    content: 'Dear Sir/Maddamn, I am writing to you today to inform you of our 2 for 1 offer on salt '
+        + 'here at DIG we\'ve been manufacturing salt and refining our distribution network on Miller '
+        + 'for years. If you would like to purchase salt please contact Fluttyman on Miller VS. May the '
+        + 'salt be with you.',
 };
 
 

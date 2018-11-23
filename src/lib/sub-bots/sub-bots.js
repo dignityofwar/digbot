@@ -105,8 +105,8 @@ module.exports = {
 
         if (subBots === null) {
             subBots = _.mapValues(
-              config.get('subBots'),
-              subBot => Object.assign({}, { booted: false, busy: false }, subBot),
+                config.get('subBots'),
+                subBot => Object.assign({}, { booted: false, busy: false }, subBot),
             );
         }
 

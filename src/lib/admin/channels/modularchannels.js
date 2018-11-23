@@ -84,7 +84,7 @@ module.exports = {
                         const name = nameSection + j;
                         const nameAbove = nameSection + (j - 1);
                         const aboveChannel = channels.find('name', nameAbove);
-                        const position = aboveChannel.position;
+                        const { position } = aboveChannel;
                         aboveChannel.clone(name, true)
                             .then((channel) => {
                                 channel.setPosition(position)
@@ -237,7 +237,7 @@ function onJoin(newMember) {
         const lastIndex = newMember.voiceChannel.name.lastIndexOf('/');
         const numberSection = newMember.voiceChannel.name.substring(lastIndex + 1);
         const nameSection = newMember.voiceChannel.name.substring(0, lastIndex + 1);
-        if (!isNaN(numberSection)) {
+        if (!Number.isNaN(numberSection)) {
             const numbers = joinCheck(newMember, numberSection, nameSection);
             if (!numbers) {
                 return false;

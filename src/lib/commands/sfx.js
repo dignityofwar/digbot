@@ -124,7 +124,7 @@ function play() {
     // If sfx is local file
     if (sfx[queue[0].effect].source === 'local') {
         const file = config.get('general.root') + sfx[queue[0].effect].path;
-        const options = sfx[queue[0].effect].options;
+        const { options } = sfx[queue[0].effect];
         queue[0].voiceChannel.join()
             .then((connection) => {
                 crashHandler.logEvent(TAG, 'Bot Connected to channel');
@@ -336,13 +336,13 @@ function queueAdd(msg, botMessage) {
     messageObject.botMessage = botMessage;
     queue.push(messageObject);
     msg.delete()
-            .then(() => {
-                logger.debug(TAG, `Recieved and Succesfully deleted command: ${msg.content}`);
-            })
-            .catch((err) => {
-                logger.warning(TAG, `Failed to delete !sfx command message: ${msg.content} `
-                    + `from ${msg.member.displayName}, ${err}`);
-            });
+        .then(() => {
+            logger.debug(TAG, `Recieved and Succesfully deleted command: ${msg.content}`);
+        })
+        .catch((err) => {
+            logger.warning(TAG, `Failed to delete !sfx command message: ${msg.content} `
+                + `from ${msg.member.displayName}, ${err}`);
+        });
 }
 
 function verify(source, name) {
