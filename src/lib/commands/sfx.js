@@ -117,7 +117,7 @@ function play() {
         logger.info(TAG, `Play called, ${(queue.length - 1)} more in queue`);
     }
     busy = true;
-    setTimeout(release, 30000); // Reset busy status after 30 seconds
+    const failSafe = setTimeout(release, 30000); // Reset busy status after 30 seconds
     logger.info(TAG, `${queue[0].user} called the ${queue[0].effect} effect for the channel `
         + `${queue[0].channelName} with ${queue[0].channelSize} occupants`);
 

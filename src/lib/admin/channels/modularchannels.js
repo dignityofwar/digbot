@@ -33,7 +33,7 @@ module.exports = {
             logger.info(TAG, 'Modular Channel System confirmed disabled');
             return false;
         }
-        const channels = server.getGuild(config.get('general.server')).channels;
+        const { channels } = server.getGuild(config.get('general.server'));
         const primaryChannels = [];
         let populatedChannels = [];
         let emptyChannels = [];
@@ -257,7 +257,7 @@ function onLeave(oldMember) {
             const lastIndex = oldMember.voiceChannel.name.lastIndexOf('/');
             const numberSection = oldMember.voiceChannel.name.substring(lastIndex + 1);
             const nameSection = oldMember.voiceChannel.name.substring(0, lastIndex + 1);
-            if (!isNaN(numberSection)) {
+            if (!Number.isNaN(numberSection)) {
                 leaveCheck(oldMember, numberSection, nameSection);
             }
         }

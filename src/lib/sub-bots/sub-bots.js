@@ -34,8 +34,8 @@ module.exports = {
                 }
             })
             .catch(() => {
-                logger.warning(TAG, `Sub bot ${bot.user.id}failed to log out, marking as busy for ` +
-                    '25 hours');
+                logger.warning(TAG, `Sub bot ${bot.user.id}failed to log out, marking as busy for `
+                    + '25 hours');
                 setTimeout(() => {
                     crashHandler.logEvent(TAG, 'release setTimeout in logout()');
                     for (const x in subBots) {

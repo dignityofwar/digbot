@@ -169,7 +169,7 @@ module.exports = {
         /* Use memberCount on ready as non cached members can't be found, after ready count
         members in and out */
         // Note: This will count bots as members.
-        if (!isNaN(change) && change !== 0) {
+        if (!Number.isNaN(change) && change !== 0) {
             membersOnServer += change;
             logger.info(TAG, `Detected change. New count: ${membersOnServer}`);
         } else {

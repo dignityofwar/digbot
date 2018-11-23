@@ -260,12 +260,12 @@ function checkStaff(message) {
                     + 'contacting the DIG community staff, someone will get back to you soon™. Please '
                     + 'only mention staff when you need help though. If you\'re trying to troll, mentioning '
                     + 'a load of people with banhammers probably isn\'t the best way to do it.')
-                .then(() => {
-                    logger.debug(TAG, '"Don\'t spam admins" message succesfully sent');
-                })
-                .catch((err) => {
-                    logger.warning(TAG, `Message failed to send, error: ${err}`);
-                });
+                    .then(() => {
+                        logger.debug(TAG, '"Don\'t spam admins" message succesfully sent');
+                    })
+                    .catch((err) => {
+                        logger.warning(TAG, `Message failed to send, error: ${err}`);
+                    });
             }
             break;
         }
@@ -303,8 +303,8 @@ function checkUser(message) {
                 .catch((err) => {
                     logger.warning(TAG, `Failed to send message, error: ${err}`);
                 });
-            message.author.sendMessage(`${message.member.displayName}` +
-                ', we have a daily mention limit for members on our server to prevent spam, one which '
+            message.author.sendMessage(`${message.member.displayName}`
+                + ', we have a daily mention limit for members on our server to prevent spam, one which '
                 + 'you have broken our rules in exceeding. This is your last warning, if you mention again '
                 + 'before you\'re allowed you will be muted in all channels for a time and the community '
                 + 'staff will be notified. Please use "!mentions" at any time to check your allowance.')
@@ -374,15 +374,15 @@ function checkUser(message) {
 identifying portion */
 function confirmMention(message, mentionIndex) {
     if (message.substring(mentionIndex + 2, mentionIndex + 3) !== '&'
-        && isNaN(message.substring(mentionIndex + 2, mentionIndex + 3))) {
+        && Number.isNaN(message.substring(mentionIndex + 2, mentionIndex + 3))) {
         return false;
-    } else if (isNaN(message.substring(mentionIndex + 3, mentionIndex + 4))) {
+    } else if (Number.isNaN(message.substring(mentionIndex + 3, mentionIndex + 4))) {
         return false;
-    } else if (isNaN(message.substring(mentionIndex + 4, mentionIndex + 5))) {
+    } else if (Number.isNaN(message.substring(mentionIndex + 4, mentionIndex + 5))) {
         return false;
-    } else if (isNaN(message.substring(mentionIndex + 5, mentionIndex + 6))) {
+    } else if (Number.isNaN(message.substring(mentionIndex + 5, mentionIndex + 6))) {
         return false;
-    } else if (isNaN(message.substring(mentionIndex + 6, mentionIndex + 7))) {
+    } else if (Number.isNaN(message.substring(mentionIndex + 6, mentionIndex + 7))) {
         return false;
     }
     return message.substring(mentionIndex + 2, mentionIndex + 7);

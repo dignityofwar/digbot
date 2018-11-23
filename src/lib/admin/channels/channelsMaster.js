@@ -28,10 +28,9 @@ module.exports = {
             if (channels[x].type !== ch.type) { continue; }
             if (channels[x].name !== ch.name) { continue; }
             if (channels[x].id === ch.id) { continue; }
-            const name = ch.name;
             ch.delete()
                 .then(() => {
-                    logger.devAlert(TAG, `The channel ${name} was deleted upon creation as it held `
+                    logger.devAlert(TAG, `The channel ${ch.name} was deleted upon creation as it held `
                         + 'an identical name and type to an existing channel');
                 })
                 .catch((err) => {

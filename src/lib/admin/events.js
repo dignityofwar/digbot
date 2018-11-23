@@ -49,12 +49,12 @@ function alert(eventObj) {
         mentions += `${serverObj.roles.get(eventObj.roles[i])} `;
     }
 
-    const message = `The event **${eventObj.name}** is about to start!` +
-        '\n' +
-        `\nStarts: **${eventObj.starthour}:${format(eventObj.startminute)}** UTC` +
-        `\nEnds: **${eventObj.endhour}:${format(eventObj.endminute)}** UTC` +
-        '\n' +
-        `\n${description(eventObj.description)}`;
+    const message = `The event **${eventObj.name}** is about to start!`
+        + '\n'
+        + `\nStarts: **${eventObj.starthour}:${format(eventObj.startminute)}** UTC`
+        + `\nEnds: **${eventObj.endhour}:${format(eventObj.endminute)}** UTC`
+        + '\n'
+        + `\n${description(eventObj.description)}`;
 
     if (server.getChannel('events') !== null) {
         server.getChannel('events').sendMessage(`${message}\n\n${mentions}`)
@@ -105,13 +105,13 @@ function createChannels(eventObj) {
         if (eventObj.channels[i].type === 'text') {
             server.getGuild(config.get('general.server'))
                 .defaultChannel.clone(`${eventObj.channels[i].name}-e-`)
-                    .then((channel) => {
-                        channel.setTopic(eventObj.description);
-                        logger.info(TAG, `Created new channel ${channel.name}`);
-                    })
-                    .catch((err) => {
-                        logger.warning(TAG, `Failed to create channel, error: ${err}`);
-                    });
+                .then((channel) => {
+                    channel.setTopic(eventObj.description);
+                    logger.info(TAG, `Created new channel ${channel.name}`);
+                })
+                .catch((err) => {
+                    logger.warning(TAG, `Failed to create channel, error: ${err}`);
+                });
         } else {
             server.getGuild(config.get('general.server')).createChannel(
                 `⏰-${eventObj.channels[i].name}-e-`,

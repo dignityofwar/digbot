@@ -37,7 +37,8 @@ function streamSpamAction(msg) {
             logger.warning(TAG, `Failed to send message, error: ${err}`);
         });
     msg.guild.channels.get(config.get('channels.mappings.streams')).sendMessage(
-        `${msg.member.displayName}: ${msg.cleanContent}`)
+        `${msg.member.displayName}: ${msg.cleanContent}`,
+    )
         .then((message) => {
             logger.info(TAG, `Moved to #streams: ${message.content}`);
         })
