@@ -12,7 +12,7 @@ const TAG = 'detectPlaying';
 
 module.exports = {
     /* Check member objects for what game if any the member is playing, if we have a role for the
-    game and the member is missing it add them and announce the action*/
+    game and the member is missing it add them and announce the action */
     check(oldMember, newMember) {
         if (!config.get('features.automaticRoleAssignment')) { return false; } // Feature switch
         if (oldMember.presence.game) {

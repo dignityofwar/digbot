@@ -178,7 +178,7 @@ module.exports = {
         this.setMembersPlaying();
     },
     setMembersPlaying() {
-         crashHandler.logEvent(TAG, 'setMembersPlaying');
+        crashHandler.logEvent(TAG, 'setMembersPlaying');
         /* Check the most up to date server object we have available and scan for number of
         people playing games */
 

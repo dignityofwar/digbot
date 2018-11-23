@@ -258,8 +258,7 @@ function indexVoiceChannels() {
             for (let i = voiceChannels.length - 1; i > -1; i -= 1) {
                 if (voiceChannels[i].name.indexOf(base) !== -1) {
                     const n = parseInt(voiceChannels[i].name.substring(base.length));
-                    positions.voice[(voicePositions[x].position + n) - 1]
-                        = voiceChannels[i].id;
+                    positions.voice[(voicePositions[x].position + n) - 1] = voiceChannels[i].id;
                     voiceChannels = removeID(voiceChannels, voiceChannels[i].id);
                 }
             }

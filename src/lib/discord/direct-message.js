@@ -34,8 +34,8 @@ module.exports = {
                 return this.handleEmptyMessage(msg);
             }
 
-            msg.reply('Thanks, I\'ll pass your message onto the staff, please be sure you\'ve left a way for us to ' +
-                'get back to you if you\'re not contacting us from the DIG server.')
+            msg.reply('Thanks, I\'ll pass your message onto the staff, please be sure you\'ve left a way for us to '
+                + 'get back to you if you\'re not contacting us from the DIG server.')
                 .then(() => {
                     logger.debug(TAG, 'Succesfully sent reply');
                 })

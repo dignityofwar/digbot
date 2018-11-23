@@ -16,48 +16,35 @@ let testing = false;
 module.exports = {
     // General status messages, e.g. Connections, Disconnections, uptime etc
     botStatus: function botStatus(mod, message) {
-        const args = Array.prototype.slice.call(arguments, botStatus.length - 1);
-        args[0] = `[STATUS] (${mod}) ${message}`;
-        colorizeString(cliColor.green.bold, args);
+        const log = `[STATUS] (${mod}) ${message}`;
+        colorizeString(cliColor.green.bold, log);
     },
     // Errors that cannot be recovered, may cause damage, and the server MUST be stopped imediately
     critical: function critical(mod, message) {
-        const args = Array.prototype.slice.call(arguments, critical.length - 1);
-        args[0] = `[CRITICAL_ERROR] (${mod}) ${message}`;
-        colorizeString(cliColor.red.bold, args);
+        colorizeString(cliColor.red.bold, `[CRITICAL_ERROR] (${mod}) ${message}`);
         developeralert(mod, message, '[CRITICAL] ', true);
     },
     // General debug messages
     debug: function debug(mod, message) {
         if (debugs === false) { return; }
-        const args = Array.prototype.slice.call(arguments, debug.length - 1);
-        args[0] = `[DEBUG] (${mod}) ${message}`;
-        colorizeString(blankFormat, args);
+        colorizeString(blankFormat, `[DEBUG] (${mod}) ${message}`);
     },
     // General major info, alert developers but do not crash
     devAlert: function devAlert(mod, message) {
-        const args = Array.prototype.slice.call(arguments, devAlert.length - 1);
-        args[0] = `[INFO] (${mod}) ${message}`;
-        colorizeString(cliColor.yellow.bold, args);
+        colorizeString(cliColor.yellow.bold, `[INFO] (${mod}) ${message}`);
         developeralert(mod, message, '[INFO] ', false);
     },
     // Errors that need to be fixed, and the server should be stopped. Distinct from API errors
     error: function error(mod, message) {
-        const args = Array.prototype.slice.call(arguments, error.length - 1);
-        args[0] = `[ERROR] (${mod}) ${message}`;
-        colorizeString(cliColor.red.bold, args);
+        colorizeString(cliColor.red.bold, `[ERROR] (${mod}) ${message}`);
         developeralert(mod, message, '[ERROR] ', true);
     },
     event: function event(mod, message) {
-        const args = Array.prototype.slice.call(arguments, event.length - 1);
-        args[0] = `[EVENT] (${mod}) ${message}`;
-        colorizeString(cliColor.green, args);
+        colorizeString(cliColor.green, `[EVENT] (${mod}) ${message}`);
     },
     // General information messages
     info: function info(mod, message) {
-        const args = Array.prototype.slice.call(arguments, info.length - 1);
-        args[0] = `[INFO] (${mod}) ${message}`;
-        colorizeString(cliColor.blue, args);
+        colorizeString(cliColor.blue, `[INFO] (${mod}) ${message}`);
     },
     // Set channel the bot will alert on errors on bot start
     setChannel(channel) {
@@ -71,9 +58,7 @@ module.exports = {
     },
     // The server can continue to run, however it's things we maybe should address
     warning: function warning(mod, message) {
-        const args = Array.prototype.slice.call(arguments, warning.length - 1);
-        args[0] = `[WARNING] (${mod}) ${message}`;
-        colorizeString(cliColor.yellow, args);
+        colorizeString(cliColor.yellow, `[WARNING] (${mod}) ${message}`);
         developeralert(mod, message, '[WARNING] ', false);
     },
 };
@@ -82,9 +67,10 @@ function blankFormat(arg) {
     return arg;
 }
 
-function colorizeString(colorFun, args) {
-    args[0] = `[${formatTimestamp()}] ${colorFun(args[0])}`;
-    console.log(...args);
+function colorizeString(colorFun, ...args) {
+    const arguements = args;
+    arguements[0] = `[${formatTimestamp()}] ${colorFun(args[0])}`;
+    console.log(...arguements);
 }
 
 // Alert developers, used to end process upon crash
