@@ -50,15 +50,15 @@ module.exports = {
     }
 };
 
-// Super scary stuff, program in unlcean state and must end soonish
-process.on('uncaughtException', (err) => {
-    crash(err, 'Uncaught Exception');
-});
-
-// Will catch unhandled promise rejections that ride all the way to the top.
-process.on('unhandledRejection', (reason) => {
-    logger.warning(TAG, `Unhandled Rejection: ${reason}`);
-});
+// // Super scary stuff, program in unlcean state and must end soonish
+// process.on('uncaughtException', (err) => {
+//     crash(err, 'Uncaught Exception');
+// });
+//
+// // Will catch unhandled promise rejections that ride all the way to the top.
+// process.on('unhandledRejection', (reason) => {
+//     logger.warning(TAG, `Unhandled Rejection: ${reason}`);
+// });
 
 // Compile a crash report and send it to the logger to be delivered
 function crash(err, type) {

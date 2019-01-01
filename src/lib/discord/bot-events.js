@@ -42,15 +42,15 @@ module.exports = {
         admin.checkPositions();
     },
 
-    debug: function(info) {
-        logger.debug(TAG, `Debug info recieved from bot: ${info}`);
-    },
+    // debug: function(info) {
+    //     logger.debug(TAG, `Debug info recieved from bot: ${info}`);
+    // },
 
-    disconnectEvent: function() {
-        logger.botStatus(TAG, 'Client disconected');
-        server.wipeGuild(config.get('general.server'));
-        server.markAsNotReady();
-    },
+    // disconnectEvent: function() {
+    //     // logger.botStatus(TAG, 'Client disconected');
+    //     server.wipeGuild(config.get('general.server'));
+    //     server.markAsNotReady();
+    // },
 
     guildCreate: function(guild, bot) {
         if (server.getBooted() === false) { return false; }
@@ -213,12 +213,12 @@ module.exports = {
         server.markBooted();
     },
 
-    reconnecting: function() {
-        if (server.getBooted() === false) { return false; } // Ignore if bot never truly booted
-        logger.botStatus(TAG, 'Client disconected, attempting reconnection...');
-        logger.warning(TAG, 'Bot got disconnected from Discord, reconnecting...');
-        server.wipeGuild(config.get('general.server'));
-    },
+    // reconnecting: function() {
+    //     if (server.getBooted() === false) { return false; } // Ignore if bot never truly booted
+    //     logger.botStatus(TAG, 'Client disconected, attempting reconnection...');
+    //     logger.warning(TAG, 'Bot got disconnected from Discord, reconnecting...');
+    //     server.wipeGuild(config.get('general.server'));
+    // },
 
     roleCreate: function(role, bot) {
         if (!checkIfValid(role.guild.id)) { return false; }
@@ -240,9 +240,9 @@ module.exports = {
         admin.modularChannels(oldMember, newMember);
     },
 
-    warning: function(warning) {
-        logger.warning(TAG, `Warning: ${warning}`);
-    }
+    // warning: function(warning) {
+    //     logger.warning(TAG, `Warning: ${warning}`);
+    // }
 };
 
 // Checks if the bot should not take action on the event for some reason (bot not ready or wrong server)
