@@ -36,7 +36,8 @@ module.exports = class DiscordProvider extends ServiceProvider {
             });
 
             client.on('reconnecting', () => {
-                logger.log('info', {
+                // Log level is warn so it will be logged to discord
+                logger.log('warn', {
                     message: 'Client disconnected, attempting reconnection...',
                     label: 'discordjsClient',
                 });
@@ -47,7 +48,9 @@ module.exports = class DiscordProvider extends ServiceProvider {
             });
 
             client.on('disconnect', (event) => {
-                logger.log('info', {
+                // Log level is warn so it will be logged to discord
+                // TODO: Log level should depend on event.code
+                logger.log('warn', {
                     message: `Disconnected(code ${event.code}): ${event.reason}`,
                     label: 'discordjsClient',
                 });
