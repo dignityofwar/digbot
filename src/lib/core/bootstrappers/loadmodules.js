@@ -1,12 +1,18 @@
 module.exports = class LoadModules {
-    constructor({ container }) {
-        this.container = container;
+    /**
+     * Load all modules into the container
+     *
+     * @param app
+     */
+    bootstrap({ app }) {
+        app.loadModules(this.locations);
     }
 
-    bootstrap() {
-        this.container.loadModules(this.locations);
-    }
-
+    /**
+     * Returns all locations loadModules should search in
+     *
+     * @return {Array}
+     */
     get locations() {
         return [];
     }
