@@ -2,6 +2,8 @@
 
 'use strict';
 
+// TODO: Marked for removal. Code has been moved to the Discord service provider
+
 // Primary bot module, handles all bot events
 
 const config = require('config');
