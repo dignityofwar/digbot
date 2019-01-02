@@ -46,11 +46,12 @@ module.exports = class DiscordProvider extends ServiceProvider {
                 }
             });
 
-            client.on('disconnect', () => {
+            client.on('disconnect', (event) => {
                 logger.log('info', {
-                    message: 'Client disconected',
+                    message: `Disconnected(code ${event.code}): ${event.reason}`,
                     label: 'discordjsClient',
                 });
+                
                 server.wipeGuild(config.get('general.server'));
                 server.markAsNotReady();
             });
