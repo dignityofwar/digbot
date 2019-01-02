@@ -164,7 +164,10 @@ module.exports = class DiscordProvider extends ServiceProvider {
             .singleton() // TODO: remove singleton to allow new instances to be created on disconnect
             .disposer(client => client.destroy()));
 
-        this.container.register('loggerDiscordTransport', asClass(DiscordTransport));
+        // TODO: Should ignore all verbose or lower discordjsClient logs. Logging should be separated from the client.
+        this.container.register('loggerDiscordTransport', asFunction(cradle => new DiscordTransport(cradle, {
+            level: 'warn',
+        })));
     }
 
     /**
@@ -176,6 +179,7 @@ module.exports = class DiscordProvider extends ServiceProvider {
         await this.container.resolve('discordjsClient')
             .login(config.get('token'));
 
-        this.container.resolve('logger').add(this.container.resolve('loggerDiscordTransport'));
+        this.container.resolve('logger')
+            .add(this.container.resolve('loggerDiscordTransport'));
     }
 };

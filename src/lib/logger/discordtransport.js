@@ -1,7 +1,9 @@
 const config = require('config');
 const Transport = require('winston-transport');
-// const { TextChannel } = require('discord.js');
-// const util = require('util');
+const { TextChannel } = require('discord.js');
+
+// const MESSAGE = Symbol.for('message');
+const LEVEL = Symbol.for('level');
 
 module.exports = class DiscordTransport extends Transport {
     /**
@@ -17,7 +19,18 @@ module.exports = class DiscordTransport extends Transport {
         this.client = discordjsClient;
         this.queue = queueDiscordLogs;
 
-        this.client.on('disconnect', () => { this.logchannel = null; });
+        // this.queue.pause();
+
+        this.client.on('disconnect', () => {
+            this.queue.pause();
+            this.logchannel = null;
+        });
+
+        this.client.on('ready', () => {
+            if (this.channel instanceof TextChannel) {
+                this.queue.resume();
+            }
+        });
 
         this.queue.process(this.process.bind(this));
     }
@@ -29,11 +42,10 @@ module.exports = class DiscordTransport extends Transport {
      * @param callback
      */
     log(info, callback) {
-        setImmediate(() => {
-            this.emit('logged', info);
-        });
+        setImmediate(() => this.emit('logged', info));
 
-        this.queue.add(info);
+        // TODO: Should use the registered format, but colors allow for unwanted symbols
+        this.queue.add({ message: `${info.timestamp} [${info.label}] ${info[LEVEL]}: ${info.message}` });
 
         callback();
     }
@@ -44,8 +56,8 @@ module.exports = class DiscordTransport extends Transport {
      * @param info
      * @return {Promise}
      */
-    process({ data: info }) {
-        return this.channel.send(this.format(info.MESSAGE));
+    process({ data: { message } }) {
+        return this.channel.send(this.markdownCodeFormat(message));
     }
 
     /**
@@ -54,12 +66,12 @@ module.exports = class DiscordTransport extends Transport {
      * @return {TextChannel}
      */
     get channel() {
-        // if (!this.logchannel) {
-        return this.client.channels.get(this.channelId);
-        // }
+        if (!this.logchannel) {
+            this.logchannel = this.client.channels.get(this.channelId);
+        }
 
         // TODO: Validation that channel is a TextChannel
-        // return this.logchannel;
+        return this.logchannel;
     }
 
     /**
@@ -68,7 +80,7 @@ module.exports = class DiscordTransport extends Transport {
      * @param message
      * @return {string}
      */
-    format(message) {
+    markdownCodeFormat(message) {
         // TODO: Escape backticks in message
         return `\`${message}\``;
     }
