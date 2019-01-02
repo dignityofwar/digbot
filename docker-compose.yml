@@ -13,8 +13,6 @@ services:
             - ./config/local.json:/usr/src/digbot/config/local.json
         ports:
             - "1337:1337"
-        links:
-          - redis
         depends_on:
           - redis
         tty: true
