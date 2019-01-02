@@ -51,7 +51,7 @@ module.exports = class DiscordProvider extends ServiceProvider {
                     message: `Disconnected(code ${event.code}): ${event.reason}`,
                     label: 'discordjsClient',
                 });
-                
+
                 server.wipeGuild(config.get('general.server'));
                 server.markAsNotReady();
             });

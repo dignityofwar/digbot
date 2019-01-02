@@ -8,6 +8,9 @@ module.exports = class Kernel {
      */
     constructor({ app }) {
         this.app = app;
+
+        this.runningServices = [];
+        this.stoppedServices = [];
     }
 
     /**
@@ -22,7 +25,7 @@ module.exports = class Kernel {
             throw e;
         }
 
-        return this.createBot();
+        return await this.createBot();
     }
 
     /**
@@ -30,8 +33,28 @@ module.exports = class Kernel {
      *
      * @return {*}
      */
-    createBot() {
+    async createBot() {
         return this.app.resolve('discordjsClient');
+    }
+
+    /**
+     * Starts all the services of the bot
+     *
+     * @return {Promise<void>}
+     */
+    async startBotServices() {
+        // TODO: Starts all services that depends on the client(commands, management, loggers, etc)
+    }
+
+    /**
+     * Returns an array of services that the bot
+     *
+     * TODO: Maybe let the array of services be inserted in the run command, or as separate function of the kernel
+     *
+     * @return {Array}
+     */
+    get botServices() {
+        return [];
     }
 
     /**
