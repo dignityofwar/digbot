@@ -10,12 +10,15 @@ module.exports = class LoggerProvider extends ServiceProvider {
     register() {
         // TODO: Allow config to alter how logging is done
         this.container.register('loggerConsoleTransport',
-            asFunction(() => new ConsoleTransport(config.get('logger.transports.console'))));
+            asFunction(() => new ConsoleTransport({
+                format: format.combine(
+                    format.colorize(), // TODO: Fix coloring of the level for console
+                ),
+            })));
 
         this.container.register('logger', asFunction(({ loggerConsoleTransport }) => createLogger({
             level: config.util.getEnv('NODE_ENV') === 'development' ? 'silly' : 'info',
             format: format.combine(
-                format.colorize(),
                 format.timestamp({
                     format: 'YYYY-MM-DD HH:mm:ss',
                 }),

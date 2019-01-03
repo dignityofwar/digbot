@@ -2,23 +2,23 @@ const config = require('config');
 const Transport = require('winston-transport');
 const { TextChannel } = require('discord.js');
 
-// const MESSAGE = Symbol.for('message');
-const LEVEL = Symbol.for('level');
+const MESSAGE = Symbol.for('message');
 
 module.exports = class DiscordTransport extends Transport {
     /**
      * @param discordjsClient
-     * @param discordLogQueue
+     * @param discordTransportQueue
      * @param opts
      */
-    constructor({ discordjsClient, queueDiscordLogs }, opts = {}) {
+    constructor({ discordjsClient, discordTransportQueue, opts = {} }) {
         super(opts);
 
         this.channelId = opts.channelId || config.get('channels.mappings.digBotLog');
 
         this.client = discordjsClient;
-        this.queue = queueDiscordLogs;
+        this.queue = discordTransportQueue;
 
+        // TODO: Start and stop the queue when there is no connection to discord
         // this.queue.pause();
 
         this.client.on('disconnect', () => {
@@ -44,8 +44,7 @@ module.exports = class DiscordTransport extends Transport {
     log(info, callback) {
         setImmediate(() => this.emit('logged', info));
 
-        // TODO: Should use the registered format, but colors allow for unwanted symbols
-        this.queue.add({ message: `${info.timestamp} [${info.label}] ${info[LEVEL]}: ${info.message}` });
+        this.queue.add({ message: this.markdownCodeFormat(info[MESSAGE]) });
 
         callback();
     }
@@ -81,7 +80,8 @@ module.exports = class DiscordTransport extends Transport {
      * @return {string}
      */
     markdownCodeFormat(message) {
-        // TODO: Escape backticks in message
+        // TODO: To allow the use of backticks in logs, the message should be wrapped in 2 backticks
+        //  For some reason `\`\`${message}\`\`` doesn't work
         return `\`${message}\``;
     }
 };

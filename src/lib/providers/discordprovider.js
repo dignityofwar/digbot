@@ -169,9 +169,8 @@ module.exports = class DiscordProvider extends ServiceProvider {
             .disposer(client => client.destroy()));
 
         // TODO: Should ignore all verbose or lower discordjsClient logs. Logging should be separated from the client.
-        this.container.register('loggerDiscordTransport', asFunction(cradle => new DiscordTransport(cradle, {
-            level: 'warn',
-        })));
+        this.container.register('loggerDiscordTransport', asClass(DiscordTransport)
+            .inject(() => ({ opts: { level: 'warn' } })));
     }
 
     /**
