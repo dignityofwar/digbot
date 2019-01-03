@@ -1,12 +1,16 @@
+const EventEmitter = require('events');
+
 // const LoadModules = require('./bootstrappers/loadmodules');
 const RegisterProviders = require('./bootstrappers/registerproviders');
 const BootProviders = require('./bootstrappers/bootproviders');
 
-module.exports = class Kernel {
+module.exports = class Kernel extends EventEmitter {
     /**
      * @param app
      */
     constructor({ app }) {
+        super();
+
         this.app = app;
 
         this.runningServices = [];

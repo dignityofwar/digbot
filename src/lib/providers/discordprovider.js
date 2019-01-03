@@ -1,6 +1,7 @@
 const config = require('config');
 const { asClass, asFunction } = require('awilix');
 const { Client } = require('discord.js');
+const { format } = require('winston');
 const ServiceProvider = require('../core/serviceprovider');
 
 const DiscordTransport = require('../logger/discordtransport');
@@ -169,7 +170,14 @@ module.exports = class DiscordProvider extends ServiceProvider {
 
         // TODO: Should ignore all verbose or lower discordjsClient logs. Logging should be separated from the client.
         this.container.register('loggerDiscordTransport', asClass(DiscordTransport)
-            .inject(() => ({ opts: { level: 'warn' } })));
+            .inject(() => ({
+                opts: {
+                    level: 'warn',
+                    format: format.combine(
+                        ...this.container.resolve('loggerDefaultFormat'),
+                    ),
+                },
+            })));
     }
 
     /**
@@ -178,6 +186,7 @@ module.exports = class DiscordProvider extends ServiceProvider {
      * @return {Promise<void>}
      */
     async boot() {
+        // TODO: Shouldn't probably be started here
         await this.container.resolve('discordjsClient')
             .login(config.get('token'));
 
