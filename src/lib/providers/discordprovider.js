@@ -24,7 +24,6 @@ module.exports = class DiscordProvider extends ServiceProvider {
                     message: info,
                     label: 'discordjsClient',
                 });
-                // throw new Error('Hello World');
             });
 
             // TODO: All listeners here should only log.

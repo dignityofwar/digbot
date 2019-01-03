@@ -3,7 +3,7 @@ const { asFunction } = require('awilix');
 const Queue = require('bull');
 const ServiceProvider = require('../core/serviceprovider');
 
-module.exports = class LoggerProvider extends ServiceProvider {
+module.exports = class QueueProvider extends ServiceProvider {
     /**
      * Register any app dependency
      */
