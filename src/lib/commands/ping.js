@@ -33,7 +33,7 @@ function pong(message) {
         return 'Bad';
     };
 
-    message.edit(`Ping: ${message.client.ping}ms (${pingStatus(message.client.ping)})`)
+    message.edit(`Ping: ${Math.round(message.client.ping)}ms (${pingStatus(message.client.ping)})`)
         .then(() => logger.debug(TAG, 'Succesfully editted message'))
         .catch(err => logger.warning(TAG, `Failed to edit message error: ${err}`));
     // logger.info(TAG, 'Called by: ' + msg.member.displayName + ', reply: ' + ms + 'ms');

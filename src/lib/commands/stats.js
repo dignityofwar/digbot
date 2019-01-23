@@ -47,23 +47,14 @@ function statsCalculations(message) {
                 return 'Bad';
             };
 
-            // Log, compile and return formated message
-            // logger.debug(TAG, version);
-            // logger.debug(TAG, pingTime);
-            // logger.debug(TAG, cpu);
-            // logger.debug(TAG, memory);
-            // logger.debug(TAG, runtime);
-            // logger.debug(TAG, stableConnection);
-            // logger.debug(TAG, membersOnServer);
-            // logger.debug(TAG, ingame);
-
-            // TODO: Investegate guild presences size.
+            // TODO: Investegate guild presences size. It probably includes offline users.
+            //  Don't know if a map impact performance
             message.edit(`
             __**DIGBot Stats**__
             **CPU Usage:** ${cpu}%
             **Memory Usage:** ${memory}MB
             **Version:** ${pjson.version}
-            **Ping:** ${message.client.ping}ms (${pingStatus(message.client.ping)})
+            **Ping:** ${Math.round(message.client.ping)}ms (${pingStatus(message.client.ping)})
             **Runtime:** ${duration(process.uptime(), 'seconds').humanize()}
             **Stable Discord connection for:** ${duration(message.client.uptime).humanize()}
             **Members on server:** ${message.guild.memberCount}

@@ -8,6 +8,7 @@ module.exports = class DiscordTransport extends Transport {
     /**
      * @param discordjsClient
      * @param discordTransportQueue
+     * @param process
      * @param opts
      */
     constructor({ discordjsClient, discordTransportQueue, opts = {} }) {
@@ -24,6 +25,14 @@ module.exports = class DiscordTransport extends Transport {
         this.client.on('disconnect', () => {
             this.queue.pause();
             this.logchannel = null;
+        });
+
+        process.on('SIGTERM', () => {
+            this.queue.pause();
+        });
+
+        process.on('SIGINT', () => {
+            this.queue.pause();
         });
 
         this.client.on('ready', () => {

@@ -162,7 +162,7 @@ function preHourCheck(time, eventObj) {
     let minutes = eventObj.startminute + 60 - time.getMinutes();
     if (eventObj.startminute < 30) {
         if (minutes >= 30 && minutes < 35) {
-            createChannels(eventObj);
+            // createChannels(eventObj);
         }
     }
     if (eventObj.startminute < 20) {

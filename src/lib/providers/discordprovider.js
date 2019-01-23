@@ -11,7 +11,6 @@ const commands = require('../commands/commands');
 const subBots = require('../sub-bots/sub-bots');
 
 const crashHandler = require('../crash-handling');
-const serverEvents = require('../discord/bot-events');
 const server = require('../server/server');
 
 module.exports = class DiscordProvider extends ServiceProvider {
@@ -21,8 +20,6 @@ module.exports = class DiscordProvider extends ServiceProvider {
     register() {
         this.container.register('discordjsClient', asFunction(({ logger }) => {
             const client = new Client();
-
-            // client.on('error', () => logger.debug('The Discord Client encountered an error.'));
 
             client.on('debug', (info) => {
                 logger.log('debug', {
@@ -65,103 +62,6 @@ module.exports = class DiscordProvider extends ServiceProvider {
                 });
             });
 
-
-            // When a channel is created
-            client.on('channelCreate', (channel) => {
-                // crashHandler.logEvent('discordbot', 'channelCreate');
-                serverEvents.channelCreate(channel, client);
-            });
-
-            // Emitted whenever a channel is deleted
-            client.on('channelDelete', (channel) => {
-                // crashHandler.logEvent('discordbot', 'channelDelete');
-                serverEvents.channelDelete(channel, client);
-            });
-
-            // Emitted whenever a channel is updated, Ex: Description, name
-            client.on('channelUpdate', (oldChannel, newChannel) => {
-                // crashHandler.logEvent('discordbot', 'channelUpdate');
-                serverEvents.channelUpdate(oldChannel, newChannel, client);
-            });
-
-            // Emitted whenever the client joins a guild.
-            client.on('guildCreate', (guild) => {
-                // crashHandler.logEvent('discordbot', 'guildCreate');
-                serverEvents.guildCreate(guild, client);
-            });
-
-            // Emitted whenever a client leaves a guild or a guild is deleted.
-            client.on('guildDelete', (guild) => {
-                // crashHandler.logEvent('discordbot', 'guildDelete');
-                serverEvents.guildDelete(guild);
-            });
-
-            // Send welcome message DM to new arrivals
-            client.on('guildMemberAdd', (mem) => {
-                // crashHandler.logEvent('discordbot', 'guildMemberAdd');
-                serverEvents.guildMemberAdd(mem, client);
-            });
-
-            // Emitted whenever a member leaves a guild
-            client.on('guildMemberRemove', (member) => {
-                // crashHandler.logEvent('discordbot', 'guildMemberRemove');
-                serverEvents.guildMemberRemove(member, client);
-            });
-
-            // Emitted whenever a Guild Member changes - i.e. new role, removed role, nickname
-            client.on('guildMemberUpdate', (oldMember, newMember) => {
-                // crashHandler.logEvent('discordbot', 'guildMemberUpdate');
-                serverEvents.guildMemberUpdate(oldMember, newMember);
-            });
-
-            // Emitted whenever a member leaves a guild
-            client.on('guildUpdate', (oldGuild, newGuild) => {
-                // crashHandler.logEvent('discordbot', 'guildUpdate');
-                serverEvents.guildUpdate(oldGuild, newGuild, client);
-            });
-
-            // Whenever the client recieves a message from the websocket
-            // client.on('message', (msg) => {
-            //     crashHandler.logEvent('discordbot', 'message');
-            //     serverEvents.message(msg, client);
-            // });
-
-            // Whenever a message that the client can see is updated (edits, embeds, etc.)
-            client.on('messageUpdate', (oldMessage, newMessage) => {
-                crashHandler.logEvent('discordbot', 'messageUpdate');
-                serverEvents.messageUpdate(oldMessage, newMessage);
-            });
-
-            // When a user starts playing a game, check if they have the relevent roles
-            client.on('presenceUpdate', (oldMember, newMember) => {
-                // crashHandler.logEvent('discordbot', 'presenceUpdate');
-                serverEvents.presenceUpdate(oldMember, newMember);
-            });
-
-            // On the creation of a role
-            client.on('roleCreate', (role) => {
-                // crashHandler.logEvent('discordbot', 'roleCreate');
-                serverEvents.roleCreate(role, client);
-            });
-
-            // On the deletion of a role
-            client.on('roleDelete', (role) => {
-                // crashHandler.logEvent('discordbot', 'roleDelete');
-                serverEvents.roleDelete(role, client);
-            });
-
-            // On the update of a role, i.e. perms, ordering etc.
-            client.on('roleUpdate', (oldRole, newRole) => {
-                // crashHandler.logEvent('discordbot', 'roleUpdate');
-                serverEvents.roleUpdate(oldRole, newRole, client);
-            });
-
-            // Emitted whenever a user changes voice state - e.g. joins/leaves a channel, mutes/unmutes.
-            client.on('voiceStateUpdate', (oldMember, newMember) => {
-                // crashHandler.logEvent('discordbot', 'voiceStateUpdate');
-                serverEvents.voiceStateUpdate(oldMember, newMember);
-            });
-
             return client;
         })
             .singleton() // TODO: remove singleton to allow new instances to be created on disconnect
@@ -194,9 +94,13 @@ module.exports = class DiscordProvider extends ServiceProvider {
 
         if (server.getChannel('developers') !== null) {
             server.getChannel('developers')
-                .sendMessage(`DIGBot, reporting for duty! Environment: ${config.util.getEnv('NODE_ENV')}, Version: ${version}`)
-                .then(() => this.container.resolve('logger').log('info', 'Succesfully sent message'))
-                .catch(err => this.container.resolve('logger').log('error', `Failed to send message error: ${err}`));
+                .sendMessage(
+                    `DIGBot, reporting for duty! Environment: ${config.util.getEnv('NODE_ENV')}, Version: ${version}`,
+                )
+                .then(() => this.container.resolve('logger')
+                    .log('info', 'Succesfully sent message'))
+                .catch(err => this.container.resolve('logger')
+                    .log('error', `Failed to send message error: ${err}`));
         }
 
         // Store the data for usage from other modules
@@ -206,7 +110,5 @@ module.exports = class DiscordProvider extends ServiceProvider {
         setTimeout(admin.startchecks, 2000);
 
         subBots.ready();
-
-        server.markBooted();
     }
 };
