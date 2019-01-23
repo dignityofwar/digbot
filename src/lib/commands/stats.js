@@ -7,12 +7,6 @@ const { duration } = require('moment');
 const logger = require('../logger.js');
 const performance = require('../tools/performance.js');
 const pjson = require('../../../package');
-const server = require('../server/server.js');
-
-// TODO: Workaround, client should be injected. Only here for legacy support.
-/* eslint global-require: 0 */
-const client = () => require('../../bootstrap')
-    .resolve('discordjsClient');
 
 const TAG = '!stats';
 
@@ -69,9 +63,9 @@ function statsCalculations(message) {
             **CPU Usage:** ${cpu}%
             **Memory Usage:** ${memory}MB
             **Version:** ${pjson.version}
-            **Ping:** ${client().ping}ms (${pingStatus(client().ping)})
+            **Ping:** ${message.client.ping}ms (${pingStatus(message.client.ping)})
             **Runtime:** ${duration(process.uptime(), 'seconds').humanize()}
-            **Stable Discord connection for:** ${duration(client().uptime).humanize()}
+            **Stable Discord connection for:** ${duration(message.client.uptime).humanize()}
             **Members on server:** ${message.guild.memberCount}
             **Server members in-game:** ${message.guild.presences.size}
             `)

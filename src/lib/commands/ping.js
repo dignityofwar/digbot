@@ -1,46 +1,40 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // !ping module
 
 const logger = require('../logger.js');
+
 const TAG = '!ping';
 
 module.exports = {
     // Replies with pingtime
-    execute: function(msg) {
+    execute(msg) {
         msg.channel.sendMessage('pong')
-            .then(message => {
-                pong(message, msg);
-            })
-            .catch(err => {
-                logger.warning(TAG, `Failed to send message, error: ${err}`);
-            });
-    }
+            .then(message => pong(message))
+            .catch(err => logger.warning(TAG, `Failed to send message, error: ${err}`));
+    },
 };
 
 // Once the "pong" message has been sent, use time between the two messages to calculate ping
-function pong(message, msg) {
-    let ms = message.createdTimestamp - msg.createdTimestamp;
-    let status = '';
-    if (ms < 50) {
-        status = '(Excellent)';
-    } else if (ms < 100) {
-        status = '(Very Good)';
-    } else if (ms < 300) {
-        status = '(Good)';
-    } else if (ms < 1000) {
-        status = '(Mediocre)';
-    } else {
-        status = '(Bad)';
-    }
-    message.edit('Ping: ' + ms + 'ms ' + status)
-        .then(
-            logger.debug(TAG, 'Succesfully editted message')
-        )
-        .catch(err => {
-            logger.warning(TAG, 'Failed to edit message error: ' + err);
-        });
-    logger.info(TAG, 'Called by: ' + msg.member.displayName + ', reply: ' + ms + 'ms');
+function pong(message) {
+    const pingStatus = (ping) => {
+        if (ping < 100) {
+            return 'Excellent';
+        }
+        if (ping < 200) {
+            return 'Very Good';
+        }
+        if (ping < 500) {
+            return 'Good';
+        }
+        if (ping < 1000) {
+            return 'Mediocre';
+        }
+        return 'Bad';
+    };
+
+    message.edit(`Ping: ${message.client.ping}ms (${pingStatus(message.client.ping)})`)
+        .then(() => logger.debug(TAG, 'Succesfully editted message'))
+        .catch(err => logger.warning(TAG, `Failed to edit message error: ${err}`));
+    // logger.info(TAG, 'Called by: ' + msg.member.displayName + ', reply: ' + ms + 'ms');
 }
