@@ -1,4 +1,5 @@
 const EventEmitter = require('events');
+const config = require('config');
 
 /* TODO: This class should be responsible for:
 *   - Keeping a good connection to discord
@@ -12,10 +13,11 @@ module.exports = class DiscordClientWrapper extends EventEmitter {
      *
      * @param discordjsClient
      */
-    constructor({ discordjsClient }) {
+    constructor({ container, discordjsClient }) {
         super();
 
         this.client = discordjsClient;
+        this.container = container;
 
         this.on('newListener', this.newListener.bind(this));
 
@@ -47,11 +49,13 @@ module.exports = class DiscordClientWrapper extends EventEmitter {
      * Replaces the discord.js Client
      */
     replaceClient() {
-        // TODO: Create new client
-        // this.client = newclient;
+        this.client.removeAllListeners(); // Make sure that the garbage collector takes care of this filth
+        this.client = this.container.resolve('discordjsClient');
 
         for (const eventName of this.eventNames()) {
             this.eventPropagator(eventName);
         }
+
+        this.client.login(config.get('token'));
     }
 };

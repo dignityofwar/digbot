@@ -6,11 +6,10 @@ const { version } = require('../../../package');
 const ServiceProvider = require('../core/serviceprovider');
 const DiscordTransport = require('../logger/discordtransport');
 
-const admin = require('../admin/admin');
+const commandChannel = require('../admin/antispam/commandChannel');
 const commands = require('../commands/commands');
+// const events = require('../admin/events');
 const subBots = require('../sub-bots/sub-bots');
-
-const crashHandler = require('../crash-handling');
 const server = require('../server/server');
 
 module.exports = class DiscordProvider extends ServiceProvider {
@@ -28,11 +27,12 @@ module.exports = class DiscordProvider extends ServiceProvider {
                 });
             });
 
-            // TODO: All listeners here should only log.
-
             // Emitted when the client client is ready
             client.on('ready', () => {
-                crashHandler.logEvent('discordbot', 'ready');
+                logger.log('info', {
+                    message: 'Connected to Discord',
+                    label: 'discordjsClient',
+                });
             });
 
             client.on('reconnecting', () => {
@@ -47,7 +47,7 @@ module.exports = class DiscordProvider extends ServiceProvider {
                 // Log level is warn so it will be logged to discord
                 // TODO: Log level should depend on event.code
                 logger.log('warn', {
-                    message: `Disconnected(code ${event.code}): ${event.reason}`,
+                    message: `Disconnected from Discord(code ${event.code}): ${event.reason}`,
                     label: 'discordjsClient',
                 });
 
@@ -64,7 +64,7 @@ module.exports = class DiscordProvider extends ServiceProvider {
 
             return client;
         })
-            .singleton() // TODO: remove singleton to allow new instances to be created on disconnect
+            .singleton()
             .disposer(client => client.destroy()));
 
         // TODO: Should ignore all verbose or lower discordjsClient logs. Logging should be separated from the client.
@@ -92,7 +92,7 @@ module.exports = class DiscordProvider extends ServiceProvider {
         this.container.resolve('logger')
             .add(this.container.resolve('loggerDiscordTransport'));
 
-        if (server.getChannel('developers') !== null) {
+        if (server.getChannel('developers')) {
             server.getChannel('developers')
                 .sendMessage(
                     `DIGBot, reporting for duty! Environment: ${config.util.getEnv('NODE_ENV')}, Version: ${version}`,
@@ -106,9 +106,10 @@ module.exports = class DiscordProvider extends ServiceProvider {
         // Store the data for usage from other modules
 
         commands.ready();
-        admin.ready();
-        setTimeout(admin.startchecks, 2000);
-
+        // events.ready();
+        // TODO: Can be moved to ModeratorDispatcher or CommandDispatcher, we should probably introduce some throttle
+        //   to replace this which retains memory when the bot crashes
+        commandChannel.ready();
         subBots.ready();
     }
 };

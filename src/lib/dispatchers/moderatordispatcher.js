@@ -13,6 +13,7 @@ const welcome = require('../welcomepack/welcomepack');
 module.exports = class ModeratorDispatcher extends Dispatcher {
     /**
      * @param discordjsClient
+     * @param logger
      */
     constructor({ discordjsClient, logger }) {
         super();
@@ -25,8 +26,8 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
      * @return {Promise<void>}
      */
     async start() {
-        this.client.on('channelCreate', this.channelCreate.bind(this));
-        this.client.on('channelUpdate', this.channelUpdate.bind(this));
+        // this.client.on('channelCreate', this.channelCreate.bind(this));
+        // this.client.on('channelUpdate', this.channelUpdate.bind(this));
         this.client.on('guildMemberAdd', this.guildMemberAdd.bind(this));
         // this.client.on('guildMemberRemove', this.guildMemberRemove.bind(this));
         this.client.on('guildMemberUpdate', this.guildMemberUpdate.bind(this));
@@ -41,8 +42,8 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
      */
     async stop() {
         // TODO: Don't know if these are the correct listeners
-        this.client.off('channelCreate', this.channelCreate.bind(this));
-        this.client.off('channelUpdate', this.channelUpdate.bind(this));
+        // this.client.off('channelCreate', this.channelCreate.bind(this));
+        // this.client.off('channelUpdate', this.channelUpdate.bind(this));
         this.client.off('guildMemberAdd', this.guildMemberAdd.bind(this));
         // this.client.off('guildMemberRemove', this.guildMemberRemove.bind(this));
         this.client.off('guildMemberUpdate', this.guildMemberUpdate.bind(this));
@@ -56,6 +57,7 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
      * @return {boolean}
      */
     channelCreate(channel) {
+        // TODO: Disabled for now
         if (channel.type === 'dm' || channel.type === 'group' || !channel || !channel.guild) { return; }
         channels.checkCreation(channel);
     }
@@ -65,6 +67,7 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
      * @param newChannel
      */
     channelUpdate(oldChannel, newChannel) {
+        // TODO: Disabled for now
         if (newChannel.type === 'dm' || newChannel.type === 'group' || !newChannel || !newChannel.guild) { return; }
         channels.checkPositions(); // TODO: Should be disabled?
     }
@@ -114,7 +117,6 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
      * @param newMessage
      */
     messsageUpdate(oldMessage, newMessage) {
-        // Ignore DMs
         if (newMessage.channel.type === 'dm' || newMessage.channel.type === 'group') { return; }
 
         streamSpam.execute(newMessage);
