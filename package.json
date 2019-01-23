@@ -30,9 +30,10 @@
     "discord.js": "~11.4.0",
     "googleapis": "^16.1.0",
     "lodash": "^4.17.11",
+    "moment": "^2.23.0",
     "opusscript": "^0.0.6",
+    "os-utils": "^0.0.14",
     "request": "^2.88.0",
-    "usage": "^0.7.0",
     "winston": "^3.1.0",
     "winston-transport": "^4.3.0",
     "ytdl-core": "^0.28.0"

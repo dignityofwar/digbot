@@ -83,7 +83,7 @@ module.exports = {
     },
 
     presenceUpdate: function() {
-        presence.execute();
+        // presence.execute();
     },
 
     // Called on bot.ready
@@ -96,7 +96,7 @@ module.exports = {
     startchecks: function() {
         crashHandler.logEvent(TAG, 'startchecks');
         channels.checkPositions();
-        presence.execute();
+        // presence.execute();
     },
 };
 

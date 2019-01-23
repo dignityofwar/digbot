@@ -32,4 +32,22 @@ module.exports = class LoggerProvider extends ServiceProvider {
         }))
             .singleton());
     }
+
+    async boot() {
+        process.prependListener('uncaughtException', this.errorHandler.bind(this));
+        process.prependListener('unhandledRejection', this.errorHandler.bind(this));
+    }
+
+    errorHandler(error) {
+        if (error instanceof Error) {
+            this.container.resolve('logger')
+                .log('error', error.stack);
+            throw error;
+        } else {
+            this.container.resolve('logger')
+                .log(error.toString());
+        }
+
+
+    };
 };

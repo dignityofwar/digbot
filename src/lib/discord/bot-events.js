@@ -1,7 +1,5 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // This module handles all bot events and acts upon them
 
 const admin = require('../admin/admin.js');
@@ -19,7 +17,7 @@ const welcome = require('../welcomepack/welcomepack.js');
 const TAG = 'bot-events';
 
 module.exports = {
-    channelCreate: function(channel, bot) {
+    channelCreate: function (channel, bot) {
         if (channel.type === 'dm' || channel.type === 'group') { return false; }
         if (!channel || !channel.guild) { return false; }
         if (checkIfValid(channel.guild.id) === false) { return false; }
@@ -27,14 +25,14 @@ module.exports = {
         admin.checkCreation(channel);
     },
 
-    channelDelete: function(channel, bot) {
+    channelDelete: function (channel, bot) {
         if (channel.type === 'dm' || channel.type === 'group') { return false; }
         if (!channel || !channel.guild) { return false; }
         if (checkIfValid(channel.guild.id) === false) { return false; }
         server.saveGuild(channel.guild.id, bot.guilds.get(config.get('general.server')));
     },
 
-    channelUpdate: function(oldChannel, newChannel, bot) {
+    channelUpdate: function (oldChannel, newChannel, bot) {
         if (newChannel.type === 'dm' || newChannel.type === 'group') { return false; }
         if (!oldChannel || !newChannel || !newChannel.guild) { return false; }
         if (checkIfValid(newChannel.guild.id) === false) { return false; }
@@ -52,23 +50,24 @@ module.exports = {
     //     server.markAsNotReady();
     // },
 
-    guildCreate: function(guild, bot) {
+    guildCreate: function (guild, bot) {
         if (server.getBooted() === false) { return false; }
         server.saveGuild(guild.id, bot.guilds.get(config.get('general.server')));
     },
 
-    guildDelete: function(guild) {
+    guildDelete: function (guild) {
         if (server.getBooted() === false) { return false; }
         logger.devAlert('Left ' + guild.name + ' guild');
     },
 
-    guildMemberAdd: function(member, bot) {
+    guildMemberAdd: function (member, bot) {
         if (checkIfValid(member.guild.id) === false) { return false; }
         if (welcome.check(member)) {
             if (server.getChannel('general') !== null) {
-                server.getChannel('general').sendMessage('Welcome to DIG, **' + member.displayName + '**!')
+                server.getChannel('general')
+                    .sendMessage('Welcome to DIG, **' + member.displayName + '**!')
                     .then(
-                        logger.info(TAG, 'Sent #general message')
+                        logger.info(TAG, 'Sent #general message'),
                     )
                     .catch(err => {
                         logger.warning(TAG, `Message failed to send ${err}`);
@@ -83,7 +82,7 @@ module.exports = {
         admin.presenceUpdate();
     },
 
-    guildMemberRemove: function(member, bot) {
+    guildMemberRemove: function (member, bot) {
         if (checkIfValid(member.guild.id) === false) { return false; }
         logger.info(member.displayName + ' left the server');
         server.saveGuild(member.guild.id, bot.guilds.get(config.get('general.server')));
@@ -91,18 +90,18 @@ module.exports = {
         admin.presenceUpdate();
     },
 
-    guildMemberUpdate: function(oldMember, newMember) {
+    guildMemberUpdate: function (oldMember, newMember) {
         if (checkIfValid(newMember.guild.id) === false) { return false; }
         nameCheck.execute(newMember);
         admin.memberUpdate(oldMember, newMember);
     },
 
-    guildUpdate: function(oldGuild, newGuild, bot) {
+    guildUpdate: function (oldGuild, newGuild, bot) {
         if (checkIfValid(newGuild.id) === false) { return false; }
         server.saveGuild(newGuild.id, bot.guilds.get(config.get('general.server')));
     },
 
-    message: function(msg) {
+    message: function (msg) {
         let prefix = '!';
 
         if (msg.author.bot) { return false; } // Ignore if a bot
@@ -119,10 +118,12 @@ module.exports = {
         if (checkIfValid(msg.guild.id) === false) { return false; }
 
         // Check if the command originated from whitelisted channels
-        if (!admin.commandChannel(msg)) { return false; };
+        if (!admin.commandChannel(msg)) { return false; }
+        ;
 
         // Run admin checks. Stop if the message is invalid.
-        if (!admin.check(msg)) { return false; };
+        if (!admin.check(msg)) { return false; }
+        ;
 
         // Ignore if no prefix
         if (!msg.content.startsWith(prefix)) { return false; }
@@ -147,7 +148,7 @@ module.exports = {
         commands.proxy(msg); // Pass the command to the commands.js proxy to be executed.
     },
 
-    messageUpdate: function(oldMessage, newMessage) {
+    messageUpdate: function (oldMessage, newMessage) {
         // Ignore DMs
         if (newMessage.channel.type === 'dm' || newMessage.channel.type === 'group') {
             return false;
@@ -160,56 +161,38 @@ module.exports = {
     },
 
     // When a user starts playing a game, check if they have the relevent roles
-    presenceUpdate: function(oldMember, newMember) {
+    presenceUpdate: function (oldMember, newMember) {
         if (!checkIfValid(newMember.guild.id)) { return false; }
         admin.checkPlaying(oldMember, newMember);
         server.saveGuild(config.get('general.server'), newMember.guild);
-        server.setMembersPlaying();
         admin.presenceUpdate();
     },
 
-    ready: function(bot) {
+    ready: function (bot) {
         if (server.getBooted() === true) {
             logger.botStatus(TAG, 'Client succesfully reconnected');
-            server.saveGuild(config.get('general.server'), bot.guilds.get(config.get('general.server')));
-            server.setConnectedSince();
-            server.markAsReady();
-            server.setMembersOnServer(bot.guilds.get(config.get('general.server')));
-            logger.info(TAG, 'DIGBot, Online.');
             return;
         }
 
         logger.info(TAG, 'DIGBot, Online.');
-        server.setConnectedSince();
 
         assignChannelStorage(bot);
 
-        if (server.getBooted() === false) {
-            if (server.getChannel('developers') !== null) {
-                server.getChannel('developers').sendMessage(`DIGBot, reporting for duty! Environment: ${config.util.getEnv('NODE_ENV')}, Version: ${pjson.version}`)
-                    .then(
-                        logger.debug(TAG, 'Succesfully sent message')
-                    )
-                    .catch(err => {
-                        logger.warning(TAG, 'Failed to send message error: ' + err);
-                    });
-            }
+        if (server.getChannel('developers') !== null) {
+            server.getChannel('developers')
+                .sendMessage(`DIGBot, reporting for duty! Environment: ${config.util.getEnv('NODE_ENV')}, Version: ${pjson.version}`)
+                .then(() => logger.debug(TAG, 'Succesfully sent message'))
+                .catch(err => logger.warning(TAG, `Failed to send message error: ${err}`));
         }
 
         // Store the data for usage from other modules
-        console.log(config.get('general.server'));
-        server.saveGuild(config.get('general.server'), bot.guilds.get(config.get('general.server')));
-        server.setMembersOnServer(bot.guilds.get(config.get('general.server')));
-        logger.info(TAG, 'Server member count: ' + server.getGuild(config.get('general.server')).memberCount);
 
         commands.ready();
         admin.ready();
-        let adminchecks = setTimeout(admin.startchecks, 2000);
+        setTimeout(admin.startchecks, 2000);
 
         subBots.ready();
 
-        server.started = new Date();
-        server.markAsReady();
         server.markBooted();
     },
 
@@ -220,22 +203,22 @@ module.exports = {
     //     server.wipeGuild(config.get('general.server'));
     // },
 
-    roleCreate: function(role, bot) {
+    roleCreate: function (role, bot) {
         if (!checkIfValid(role.guild.id)) { return false; }
         server.saveGuild(role.guild.id, bot.guilds.get(config.get('general.server')));
     },
 
-    roleDelete: function(role, bot) {
+    roleDelete: function (role, bot) {
         if (!checkIfValid(role.guild.id)) { return false; }
         server.saveGuild(role.guild.id, bot.guilds.get(config.get('general.server')));
     },
 
-    roleUpdate: function(oldRole, newRole, bot) {
+    roleUpdate: function (oldRole, newRole, bot) {
         if (!checkIfValid(newRole.guild.id)) { return false; }
         server.saveGuild(newRole.guild.id, bot.guilds.get(config.get('general.server')));
     },
 
-    voiceStateUpdate: function(oldMember, newMember) {
+    voiceStateUpdate: function (oldMember, newMember) {
         if (!checkIfValid(newMember.guild.id)) { return false; }
         admin.modularChannels(oldMember, newMember);
     },

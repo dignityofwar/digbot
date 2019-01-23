@@ -4,6 +4,8 @@ const EventEmitter = require('events');
 const RegisterProviders = require('./bootstrappers/registerproviders');
 const BootProviders = require('./bootstrappers/bootproviders');
 
+const registeredDispatchers = require('../dispatchers/register');
+
 module.exports = class Kernel extends EventEmitter {
     /**
      * @param app
@@ -13,8 +15,7 @@ module.exports = class Kernel extends EventEmitter {
 
         this.app = app;
 
-        this.runningServices = [];
-        this.stoppedServices = [];
+        this.dispatchers = [];
     }
 
     /**
@@ -23,42 +24,63 @@ module.exports = class Kernel extends EventEmitter {
     async run() {
         try {
             await this.bootstrap();
+
+            await this.runDispatchers();
+
         } catch (e) {
             await this.terminate();
 
             throw e;
         }
 
-        return await this.createBot();
+        return this;
     }
 
     /**
-     * Starts the bot
      *
-     * @return {*}
+     * @return {Promise<void>}
      */
-    async createBot() {
-        return this.app.resolve('discordjsClient');
+    async runDispatchers() {
+        this.registerDispatchers(registeredDispatchers);
+
+        await this.startDispatchers();
     }
 
     /**
      * Starts all the services of the bot
      *
-     * @return {Promise<void>}
+     * @return {Promise<any[]>}
      */
-    async startBotServices() {
-        // TODO: Starts all services that depends on the client(commands, management, loggers, etc)
+    startDispatchers() {
+        return Promise.all(
+            this.dispatchers.map(dispatcher => dispatcher.start()),
+        );
     }
 
     /**
-     * Returns an array of services that the bot
      *
-     * TODO: Maybe let the array of services be inserted in the run command, or as separate function of the kernel
-     *
-     * @return {Array}
+     * @param dispatchers
      */
-    get botServices() {
-        return [];
+    registerDispatchers(dispatchers) {
+        for (const dispatcher of dispatchers) {
+            this.registerDispatcher(dispatcher);
+        }
+    }
+
+    /**
+     *
+     * @param Dispatcher
+     */
+    registerDispatcher(Dispatcher) {
+        this.dispatchers.push(new Dispatcher(this.app.cradle));
+    }
+
+    /**
+     *
+     * @return {*[]}
+     */
+    get startedDispatchers() {
+        return this.dispatchers.filter(({ started }) => started);
     }
 
     /**

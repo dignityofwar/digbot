@@ -2,9 +2,13 @@ const config = require('config');
 const { asClass, asFunction } = require('awilix');
 const { Client } = require('discord.js');
 const { format } = require('winston');
+const { version } = require('../../../package');
 const ServiceProvider = require('../core/serviceprovider');
-
 const DiscordTransport = require('../logger/discordtransport');
+
+const admin = require('../admin/admin');
+const commands = require('../commands/commands');
+const subBots = require('../sub-bots/sub-bots');
 
 const crashHandler = require('../crash-handling');
 const serverEvents = require('../discord/bot-events');
@@ -32,7 +36,6 @@ module.exports = class DiscordProvider extends ServiceProvider {
             // Emitted when the client client is ready
             client.on('ready', () => {
                 crashHandler.logEvent('discordbot', 'ready');
-                serverEvents.ready(client);
             });
 
             client.on('reconnecting', () => {
@@ -41,10 +44,6 @@ module.exports = class DiscordProvider extends ServiceProvider {
                     message: 'Client disconnected, attempting reconnection...',
                     label: 'discordjsClient',
                 });
-
-                if (server.getBooted()) {
-                    server.wipeGuild(config.get('general.server'));
-                }
             });
 
             client.on('disconnect', (event) => {
@@ -55,8 +54,8 @@ module.exports = class DiscordProvider extends ServiceProvider {
                     label: 'discordjsClient',
                 });
 
-                server.wipeGuild(config.get('general.server'));
-                server.markAsNotReady();
+                // Reconnects when connection is lost
+                client.login(config.get('token'));
             });
 
             client.on('warn', (warning) => {
@@ -69,63 +68,63 @@ module.exports = class DiscordProvider extends ServiceProvider {
 
             // When a channel is created
             client.on('channelCreate', (channel) => {
-                crashHandler.logEvent('discordbot', 'channelCreate');
+                // crashHandler.logEvent('discordbot', 'channelCreate');
                 serverEvents.channelCreate(channel, client);
             });
 
             // Emitted whenever a channel is deleted
             client.on('channelDelete', (channel) => {
-                crashHandler.logEvent('discordbot', 'channelDelete');
+                // crashHandler.logEvent('discordbot', 'channelDelete');
                 serverEvents.channelDelete(channel, client);
             });
 
             // Emitted whenever a channel is updated, Ex: Description, name
             client.on('channelUpdate', (oldChannel, newChannel) => {
-                crashHandler.logEvent('discordbot', 'channelUpdate');
+                // crashHandler.logEvent('discordbot', 'channelUpdate');
                 serverEvents.channelUpdate(oldChannel, newChannel, client);
             });
 
             // Emitted whenever the client joins a guild.
             client.on('guildCreate', (guild) => {
-                crashHandler.logEvent('discordbot', 'guildCreate');
+                // crashHandler.logEvent('discordbot', 'guildCreate');
                 serverEvents.guildCreate(guild, client);
             });
 
             // Emitted whenever a client leaves a guild or a guild is deleted.
             client.on('guildDelete', (guild) => {
-                crashHandler.logEvent('discordbot', 'guildDelete');
+                // crashHandler.logEvent('discordbot', 'guildDelete');
                 serverEvents.guildDelete(guild);
             });
 
             // Send welcome message DM to new arrivals
             client.on('guildMemberAdd', (mem) => {
-                crashHandler.logEvent('discordbot', 'guildMemberAdd');
+                // crashHandler.logEvent('discordbot', 'guildMemberAdd');
                 serverEvents.guildMemberAdd(mem, client);
             });
 
             // Emitted whenever a member leaves a guild
             client.on('guildMemberRemove', (member) => {
-                crashHandler.logEvent('discordbot', 'guildMemberRemove');
+                // crashHandler.logEvent('discordbot', 'guildMemberRemove');
                 serverEvents.guildMemberRemove(member, client);
             });
 
             // Emitted whenever a Guild Member changes - i.e. new role, removed role, nickname
             client.on('guildMemberUpdate', (oldMember, newMember) => {
-                crashHandler.logEvent('discordbot', 'guildMemberUpdate');
+                // crashHandler.logEvent('discordbot', 'guildMemberUpdate');
                 serverEvents.guildMemberUpdate(oldMember, newMember);
             });
 
             // Emitted whenever a member leaves a guild
             client.on('guildUpdate', (oldGuild, newGuild) => {
-                crashHandler.logEvent('discordbot', 'guildUpdate');
+                // crashHandler.logEvent('discordbot', 'guildUpdate');
                 serverEvents.guildUpdate(oldGuild, newGuild, client);
             });
 
             // Whenever the client recieves a message from the websocket
-            client.on('message', (msg) => {
-                crashHandler.logEvent('discordbot', 'message');
-                serverEvents.message(msg, client);
-            });
+            // client.on('message', (msg) => {
+            //     crashHandler.logEvent('discordbot', 'message');
+            //     serverEvents.message(msg, client);
+            // });
 
             // Whenever a message that the client can see is updated (edits, embeds, etc.)
             client.on('messageUpdate', (oldMessage, newMessage) => {
@@ -135,31 +134,31 @@ module.exports = class DiscordProvider extends ServiceProvider {
 
             // When a user starts playing a game, check if they have the relevent roles
             client.on('presenceUpdate', (oldMember, newMember) => {
-                crashHandler.logEvent('discordbot', 'presenceUpdate');
+                // crashHandler.logEvent('discordbot', 'presenceUpdate');
                 serverEvents.presenceUpdate(oldMember, newMember);
             });
 
             // On the creation of a role
             client.on('roleCreate', (role) => {
-                crashHandler.logEvent('discordbot', 'roleCreate');
+                // crashHandler.logEvent('discordbot', 'roleCreate');
                 serverEvents.roleCreate(role, client);
             });
 
             // On the deletion of a role
             client.on('roleDelete', (role) => {
-                crashHandler.logEvent('discordbot', 'roleDelete');
+                // crashHandler.logEvent('discordbot', 'roleDelete');
                 serverEvents.roleDelete(role, client);
             });
 
             // On the update of a role, i.e. perms, ordering etc.
             client.on('roleUpdate', (oldRole, newRole) => {
-                crashHandler.logEvent('discordbot', 'roleUpdate');
+                // crashHandler.logEvent('discordbot', 'roleUpdate');
                 serverEvents.roleUpdate(oldRole, newRole, client);
             });
 
             // Emitted whenever a user changes voice state - e.g. joins/leaves a channel, mutes/unmutes.
             client.on('voiceStateUpdate', (oldMember, newMember) => {
-                crashHandler.logEvent('discordbot', 'voiceStateUpdate');
+                // crashHandler.logEvent('discordbot', 'voiceStateUpdate');
                 serverEvents.voiceStateUpdate(oldMember, newMember);
             });
 
@@ -192,5 +191,22 @@ module.exports = class DiscordProvider extends ServiceProvider {
 
         this.container.resolve('logger')
             .add(this.container.resolve('loggerDiscordTransport'));
+
+        if (server.getChannel('developers') !== null) {
+            server.getChannel('developers')
+                .sendMessage(`DIGBot, reporting for duty! Environment: ${config.util.getEnv('NODE_ENV')}, Version: ${version}`)
+                .then(() => this.container.resolve('logger').log('info', 'Succesfully sent message'))
+                .catch(err => this.container.resolve('logger').log('error', `Failed to send message error: ${err}`));
+        }
+
+        // Store the data for usage from other modules
+
+        commands.ready();
+        admin.ready();
+        setTimeout(admin.startchecks, 2000);
+
+        subBots.ready();
+
+        server.markBooted();
     }
 };

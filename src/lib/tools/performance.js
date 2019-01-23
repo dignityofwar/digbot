@@ -1,71 +1,52 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // Checks cpu and memory usage
 
 const config = require('config');
+const { cpuUsage } = require('os-utils');
 const crashHandler = require('../crash-handling.js');
 const logger = require('../logger.js');
+
 const TAG = 'Performance';
-const usage = require('usage');
-let pid;
 
 module.exports = {
-    // Set PID
-    ready: function() {
-        pid = process.pid;
-    },
-
-    execute: function() {
+    execute() {
         crashHandler.logEvent(TAG, 'execute');
-        let promises = Promise.all([
+        Promise.all([
             this.getCpu(),
-            this.getMemory()
-        ]);
-        promises.then(function(result) {
-            if (config.get('showPerfStats') === true) {
-                logger.debug(TAG, `CPU: ${result[0]}`);
-                logger.debug(TAG, `MEM: ${result[1]}`);
-            }
+            this.getMemory(),
+        ])
+            .then(([cpu, memory]) => {
+                if (config.get('showPerfStats') === true) {
+                    logger.debug(TAG, `CPU: ${cpu}`);
+                    logger.debug(TAG, `MEM: ${memory}`);
+                }
 
-            if (result[0] > config.get('general.cpuNotificationLimit')) {
-                logger.warning(TAG, `CPU usage is above ${config.get('general.cpuNotificationLimit')}! ` +
-                `Current CPU: ${result[0]}%`);
-            }
-            if (result[1] > config.get('general.memoryNotificationLimit')) {
-                logger.warning(TAG, `Memory usage is above ${config.get('general.memoryNotificationLimit')}MB! ` +
-                `Current MEM: ${result[1]}MB`);
-            }
-        });
+                if (cpu > config.get('general.cpuNotificationLimit')) {
+                    logger.warning(TAG,
+                        `CPU usage is above ${config.get('general.cpuNotificationLimit')}! Current CPU: ${cpu}%`);
+                }
+                if (memory > config.get('general.memoryNotificationLimit')) {
+                    logger.warning(TAG,
+                        `Memory usage is above ${config.get(
+                            'general.memoryNotificationLimit')}MB! Current MEM: ${memory}MB`);
+                }
+            });
     },
 
-    getCpu: function() {
-        return new Promise(function(resolve, reject) {
-            usage.lookup(pid, function(err, result) {
-                if (err) {
-                    logger.warning(TAG, `Usage CPU lookup failed! Error: ${err}`);
-                    reject();
-                    return;
-                }
-                usage.clearHistory(pid);
-                resolve(result.cpu.toFixed(2));
+    getCpu() {
+        return new Promise((resolve) => {
+            // TODO: Maybe get average? We don't need a dependency or promise for that
+            cpuUsage((result) => {
+                resolve(result.toFixed(2));
             });
         });
     },
 
-    getMemory: function() {
-        return new Promise(function(resolve, reject) {
-            usage.lookup(pid, function(err, result) {
-                if (err) {
-                    logger.warning(TAG, `Usage memory lookup failed! Error: ${err}`);
-                    reject();
-                    return;
-                }
-                usage.clearHistory(pid);
-                let mem = Math.round(result.memoryInfo.rss) / 1024 / 1024;
-                resolve(mem.toFixed(2));
-            });
+    getMemory() {
+        return new Promise((resolve) => {
+            // TODO: Maybe return rss and heap for better comparison of memory usage across different os's
+            resolve((Math.round(process.memoryUsage().rss) / 1048576).toFixed(2));
         });
-    }
+    },
 };
