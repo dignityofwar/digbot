@@ -53,7 +53,7 @@ module.exports = class DiscordTransport extends Transport {
     log(info, callback) {
         setImmediate(() => this.emit('logged', info));
 
-        this.queue.add({ message: this.markdownCodeFormat(info[MESSAGE]) });
+        this.queue.add({ message: this.markdownCodeFormat(info[MESSAGE]) }, { attempts: 3 });
 
         callback();
     }

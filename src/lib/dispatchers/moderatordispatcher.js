@@ -10,6 +10,8 @@ const server = require('../server/server');
 const streamSpam = require('../admin/antispam/streamspam');
 const welcome = require('../welcomepack/welcomepack');
 
+// TODO: This is a temporary dispatcher
+
 module.exports = class ModeratorDispatcher extends Dispatcher {
     /**
      * @param discordjsClient

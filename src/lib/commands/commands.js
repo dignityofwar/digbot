@@ -206,8 +206,8 @@ module.exports = {
     },
 
     started: function(msg) {
-        let date = 'Started: ' + server.started.toDateString() + ' ' + server.started.toLocaleString();
-        module.exports.sendMessage(date, msg);
+        // let date = 'Started: ' + server.started.toDateString() + ' ' + server.started.toLocaleString();
+        // module.exports.sendMessage(date, msg);
         module.exports.sendMessage(started.duration(server.started), msg);
     },
 
