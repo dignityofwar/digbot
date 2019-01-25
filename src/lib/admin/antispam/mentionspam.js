@@ -204,7 +204,7 @@ module.exports = {
             logger.info(TAG, (list[x].member.displayName) + '\'s mute expired, they have been un-muted');
             list[x].member.removeRole(muteRole)
                 .then(
-                    logger.debug(TAG, 'Succesfully removed mute role from ' + member.displayName)
+                    logger.debug(TAG, 'Succesfully removed mute role from ' + list[x].member.displayName)
                 )
                 .catch(err => {
                     logger.warning(TAG, `Failed to remove members role, error: ${err}`);

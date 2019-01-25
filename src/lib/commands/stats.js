@@ -49,17 +49,17 @@ function statsCalculations(message) {
 
             // TODO: Investegate guild presences size. It probably includes offline users.
             //  Don't know if a map impact performance
-            message.edit(`
-            __**DIGBot Stats**__
-            **CPU Usage:** ${cpu}%
-            **Memory Usage:** ${memory}MB
-            **Version:** ${pjson.version}
-            **Ping:** ${Math.round(message.client.ping)}ms (${pingStatus(message.client.ping)})
-            **Runtime:** ${duration(process.uptime(), 'seconds').humanize()}
-            **Stable Discord connection for:** ${duration(message.client.uptime).humanize()}
-            **Members on server:** ${message.guild.memberCount}
-            **Server members in-game:** ${message.guild.presences.size}
-            `)
+            message.edit(
+                '__**DIGBot Stats**__'
+                + `**CPU Usage:** ${cpu}%`
+                + `**Memory Usage:** ${memory}MB`
+                + `**Version:** ${pjson.version}`
+                + `**Ping:** ${Math.round(message.client.ping)}ms (${pingStatus(message.client.ping)})`
+                + `**Runtime:** ${duration(process.uptime(), 'seconds').humanize()}`
+                + `**Stable Discord connection for:** ${duration(message.client.uptime).humanize()}`
+                + `**Members on server:** ${message.guild.memberCount}`
+                + `**Server members in-game:** ${message.guild.presences.size}`,
+            )
                 .then(() => logger.debug(TAG, 'Message succesfully edited'))
                 .catch(error => logger.warning(TAG, `Failed to edit message ${error}`));
         })

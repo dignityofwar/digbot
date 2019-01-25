@@ -27,8 +27,6 @@ const logger = require('../logger.js');
 const server = require('../server/server.js');
 const TAG = 'commands';
 
-let botStarted = new Date();
-
 module.exports = {
     // List all commands that are used by the bot here
     all: [
