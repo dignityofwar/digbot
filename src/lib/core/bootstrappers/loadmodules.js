@@ -21,9 +21,7 @@ module.exports = class LoadModules {
 
                     splat.pop();
 
-                    return splat.shift().toLowerCase()
-                        + splat.reduce((a, b) => a + capitalize(b), '')
-                        + capitalize(name);
+                    return splat.reduce((a, b) => a + capitalize(b), splat.shift().toLowerCase()) + capitalize(name);
                 },
                 resolverOptions: {
                     register: asClass,
@@ -39,8 +37,9 @@ module.exports = class LoadModules {
      */
     get locations() {
         return [
-            'commands/*.js',
             'apis/*.js',
+            'commands/*.js',
+            'util/ratelimiter.js',
         ];
     }
 };
