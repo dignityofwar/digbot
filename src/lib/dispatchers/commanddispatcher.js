@@ -1,5 +1,5 @@
 const config = require('config');
-const { words } = require('lodash');
+const { get, words } = require('lodash');
 const Dispatcher = require('../core/dispatcher');
 
 module.exports = class CommandDispatcher extends Dispatcher {
@@ -8,7 +8,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
      * @param commandRegister
      * @param logger
      */
-    constructor({ discordjsClient, commandRegister, logger }) {
+    constructor({ discordjsClient, commandRegister, logger, utilRatelimiter }) {
         super();
 
         this.prefix = '!';
@@ -16,6 +16,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
         this.client = discordjsClient;
         this.logger = logger;
         this.register = commandRegister;
+        this.ratelimiter = utilRatelimiter;
 
         this.listener = this.handler.bind(this);
     }
@@ -50,7 +51,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
         //     return;
         // }
 
-        if (config.get('commandChannels')
+        if (!config.get('commandChannels')
             .includes(message.channel.id)) { return; }
 
         if (!message.cleanContent.startsWith(this.prefix)) { return; }
@@ -58,6 +59,17 @@ module.exports = class CommandDispatcher extends Dispatcher {
         const command = this.match(message);
 
         if (command) {
+            const throttleKey = `${command.name}:${message.guild.id}:${message.user.id}`;
+
+            if (this.ratelimiter.tooManyAttempts(
+                throttleKey,
+                get(command.throttle, 'attempts', 5),
+            )) {
+                return; // TODO: Custom message when throttled, default add a stop reaction.
+            }
+
+            this.ratelimiter.hit(throttleKey, get(command.throttle, 'decay', 5));
+
             // TODO: Maybe better error handling, like sending a message that the command failed
             //  Note that it should take into account messages that are already send and if it is connected
             //  If it has already send a message it should overwrite that message
