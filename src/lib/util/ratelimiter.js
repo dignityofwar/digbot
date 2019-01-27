@@ -17,7 +17,7 @@ module.exports = class RateLimiter {
      * @param max
      * @return {boolean}
      */
-    tooManyAttepmpts(key, max) {
+    tooManyAttempts(key, max) {
         this.keyValidator(key);
 
         if (this.attempts(key) >= max) {

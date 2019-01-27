@@ -8,6 +8,8 @@ module.exports = class StatsCommand extends Command {
         this.name = 'cats';
 
         this.api = apisThecatapi;
+        // TODO: Should wrapped in a throttle class and only settings should be given here.
+        //  The CommandDispatcher should be in charge of throttling
         this.ratelimiter = utilRatelimiter;
     }
 
@@ -16,7 +18,7 @@ module.exports = class StatsCommand extends Command {
      * @return {Promise<void>}
      */
     async execute(message) {
-        if (this.ratelimiter.tooManyAttepmpts(message.guild.id, 2)) {
+        if (this.ratelimiter.tooManyAttempts(message.guild.id, 2)) {
             return message.channel.send(
                 `${message.member.displayName}, I've decided to severely limit the amount of cats I'm afraid.`,
             );
