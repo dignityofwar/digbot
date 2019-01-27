@@ -15,22 +15,24 @@ module.exports = class StatsCommand extends Command {
      */
     async execute(message) {
         // TODO: Maybe use the reasons parameter?
-        if (message.guild === config.get('general.server')) { return; }
+        if (message.guild === config.get('general.server')) { return; } // TODO: This needs to be removed
 
         const dragonRole = config.get('general.herebedragonsRoleID');
 
         if (message.member.roles.has(dragonRole)) {
-            return message.member.removeRole(dragonRole)
-                .then(() => message.reply(
-                    'you already had the herebedragons role. I\'ve removed it. Type **!dragons** again to resubscribe.',
-                ));
+            await message.member.removeRole(dragonRole);
+
+            return message.reply(
+                'you already had the herebedragons role. I\'ve removed it. Type **!dragons** again to resubscribe.',
+            );
         }
 
-        return message.member.addRole(dragonRole)
-            .then(() => message.guild.channels.get(config.get('channels.mappings.herebedragons'))
-                .sendMessage(
-                    `${message.member.displayName} has been granted access here. Note, this channel is lawless.`
-                    + ' If you get triggered, the community staff cannot help you.',
-                ));
+        await message.member.addRole(dragonRole);
+
+        return message.guild.channels.get(config.get('channels.mappings.herebedragons'))
+            .sendMessage(
+                `${message.member.displayName} has been granted access here. Note, this channel is lawless.`
+                + ' If you get triggered, the community staff cannot help you.',
+            );
     }
 };
