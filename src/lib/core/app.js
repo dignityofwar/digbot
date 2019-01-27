@@ -69,7 +69,7 @@ module.exports = class App extends EventEmitter {
 
         for (const provider of this.serviceProviders) {
             if (provider.boot instanceof Function) {
-                await provider.boot();
+                await provider.boot(this.cradle);
             }
         }
 

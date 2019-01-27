@@ -48,7 +48,7 @@ module.exports = class MessageDispatcher extends Dispatcher {
 
             // Handle DMs
             if (message.channel.type === 'dm' || message.channel.type === 'group') {
-                crashHandler.logEvent(TAG, 'directMessage');
+                crashHandler.logEvent('MessageDispatcher', 'directMessage');
                 directMessage.handle(message);
                 return false;
             }

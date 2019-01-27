@@ -39,7 +39,6 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
     }
 
     /**
-     *
      * @return {Promise<void>}
      */
     async stop() {
@@ -56,7 +55,6 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
 
     /**
      * @param channel
-     * @return {boolean}
      */
     channelCreate(channel) {
         // TODO: Disabled for now
