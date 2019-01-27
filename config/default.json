@@ -29,6 +29,8 @@
 
   "commandChannels": [],
 
+  "guilds": {},
+
   "general"                 : {
     "adminsRoleID"           : "",
     "devRoleID"              : "",

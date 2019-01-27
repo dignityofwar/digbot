@@ -8,6 +8,7 @@ module.exports = class StatsCommand extends Command {
         super();
 
         this.name = 'restart';
+        this.special = true;
 
         this.logger = logger;
     }
@@ -27,5 +28,12 @@ module.exports = class StatsCommand extends Command {
         setTimeout(() => {
             process.exit(0);
         }, 2000);
+    }
+
+    /**
+     * @return {string}
+     */
+    help() {
+        return 'Restarts the bot (Please do not use unless the bot is spazzing the fuck out)';
     }
 };

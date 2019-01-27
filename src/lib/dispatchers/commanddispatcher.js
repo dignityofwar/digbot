@@ -7,6 +7,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
      * @param discordjsClient
      * @param commandRegister
      * @param logger
+     * @param utilRatelimiter
      */
     constructor({ discordjsClient, commandRegister, logger, utilRatelimiter }) {
         super();
@@ -59,7 +60,19 @@ module.exports = class CommandDispatcher extends Dispatcher {
         const command = this.match(message);
 
         if (command) {
-            const throttleKey = `${command.name}:${message.guild.id}:${message.user.id}`;
+            if (
+                command.special
+                && !(
+                    message.member.id !== message.guild.ownerID
+                    || (
+                        config.has(`guilds.${message.guild.id}.adminRoles`)
+                        && config.get(`guilds.${message.guild.id}.adminRoles`)
+                            .find(roleID => message.member.roles.has(roleID))
+                    )
+                )
+            ) { return; }
+
+            const throttleKey = `${command.name}:${message.guild.id}:${message.author.id}`;
 
             if (this.ratelimiter.tooManyAttempts(
                 throttleKey,
@@ -91,7 +104,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
 
     /**
      * @param message
-     * @return {never}
+     * @return {Command|undefined}
      */
     match(message) {
         const parsedName = this.sortOfParser(message.cleanContent)

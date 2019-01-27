@@ -34,4 +34,14 @@ module.exports = class StartedCommand extends Command {
 
         return `I've been running for ${uptime.humanize()}. I haven't even been here a minute why are you asking?`;
     }
+
+    /**
+     * @param {boolean} full
+     * @return {string}
+     */
+    help(full) {
+        return !full
+            ? 'See how long the bot has been running for.'
+            : 'Use "!started" to see when the bot started';
+    }
 };

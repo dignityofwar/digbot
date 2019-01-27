@@ -7,6 +7,7 @@ module.exports = class StatsCommand extends Command {
         super();
 
         this.name = 'dragons';
+        this.onlyHelpFull = true;
     }
 
     /**
@@ -34,5 +35,16 @@ module.exports = class StatsCommand extends Command {
                 `${message.member.displayName} has been granted access here. Note, this channel is lawless.`
                 + ' If you get triggered, the community staff cannot help you.',
             );
+    }
+
+    /**
+     * @param {boolean} full
+     * @return {string}
+     */
+    help(full) {
+        return !full
+            ? '#herebedragons is a private, lawless channel which you can opt into with this command.'
+            : '#herebedragons is a private, lawless channel which you can opt into with this command. If you are '
+            + 'already subscribed, use this command again to unsubscribe.';
     }
 };

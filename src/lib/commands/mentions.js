@@ -56,4 +56,16 @@ module.exports = class StatsCommand extends Command {
 
         return reply;
     }
+
+    /**
+     * @param {boolean} full
+     * @return {string}
+     */
+    help(full) {
+        return !full
+            ? 'Check your DIG server mention allowance, resets daily'
+            : 'Check the number of mentions you have remaining of your daily '
+            + 'mentions allowance. This resets every 24 hour period. Be sure that you check if you\'re not sure '
+            + 'to avoid getting in trouble for spamming';
+    }
 };
