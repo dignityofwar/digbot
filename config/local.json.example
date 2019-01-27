@@ -12,6 +12,18 @@
   "token"            : "",
   "youtubeKey"       : "",
 
+  "commandChannels": [
+    "YOUR COMMAND CHANNEL ID"
+  ],
+
+  "guilds": {
+    "YOUR GUILD ID": {
+      "adminRoles": [
+        "YOUR ADMIN ROLE ID"
+      ]
+    }
+  },
+
   "general"          : {
     "adminsRoleID"       : "",
     "devRoleID"          : "",
