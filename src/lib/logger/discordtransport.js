@@ -19,20 +19,20 @@ module.exports = class DiscordTransport extends Transport {
         this.client = discordjsClient;
         this.queue = discordTransportQueue;
 
-        // TODO: Start and stop the queue when there is no connection to discord
-        // this.queue.pause();
+        this.queue.pause();
 
+        this.registerEvents();
+
+        this.queue.process(this.process.bind(this));
+    }
+
+    /**
+     *
+     */
+    registerEvents() {
         this.client.on('disconnect', () => {
             this.queue.pause();
             this.logchannel = null;
-        });
-
-        process.on('SIGTERM', () => {
-            this.queue.pause();
-        });
-
-        process.on('SIGINT', () => {
-            this.queue.pause();
         });
 
         this.client.on('ready', () => {
@@ -40,8 +40,6 @@ module.exports = class DiscordTransport extends Transport {
                 this.queue.resume();
             }
         });
-
-        this.queue.process(this.process.bind(this));
     }
 
     /**

@@ -4,7 +4,7 @@
 
 // !play module, plays playlists and audio streams of video links in member's channel
 
-const antiDuplicate = require('../tools/antiduplicate.js');
+const antiDuplicate = require('../util/antiduplicate.js');
 const config = require('config');
 const crashHandler = require('../crash-handling.js');
 const google = require('googleapis');

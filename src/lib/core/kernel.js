@@ -1,6 +1,6 @@
 const EventEmitter = require('events');
 
-// const LoadModules = require('./bootstrappers/loadmodules');
+const LoadModules = require('./bootstrappers/loadmodules');
 const RegisterProviders = require('./bootstrappers/registerproviders');
 const BootProviders = require('./bootstrappers/bootproviders');
 
@@ -28,6 +28,8 @@ module.exports = class Kernel extends EventEmitter {
             await this.runDispatchers();
 
         } catch (e) {
+            // TODO: Errors are not printed to the console, probably because the logger is not initialised
+
             await this.terminate();
 
             throw e;
@@ -112,7 +114,7 @@ module.exports = class Kernel extends EventEmitter {
      */
     get bootstrappers() {
         return [
-            // LoadModules, // TODO: Should be enabled, but indexing and namespacing should be determined
+            LoadModules, // TODO: Should be enabled, but indexing and namespacing should be determined
             RegisterProviders,
             BootProviders,
         ];

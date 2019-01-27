@@ -1,67 +1,59 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
-
-// !stats module
-
-// const config = require('config');
 const { duration } = require('moment');
-const logger = require('../logger.js');
-const performance = require('../tools/performance.js');
-const pjson = require('../../../package');
+const Command = require('../core/command');
+const performance = require('../util/performance.js');
+const { version } = require('../../../package');
 
-const TAG = '!stats';
+module.exports = class StatsCommand extends Command {
+    constructor() {
+        super();
 
-/* eslint no-use-before-define: 0 */
-module.exports = {
-    // Calculate Bot stats and return in message format
-    execute(msg) {
-        msg.channel.sendMessage('pong')
-            .then(message => (
-                statsCalculations(message)
-            ))
-            .catch(err => logger.warning(TAG, `Failed to send message, error: ${err}`));
+        this.name = 'stats';
+    }
 
-        return true;
-    },
+    /**
+     * @param message
+     * @return {Promise<void>}
+     */
+    async execute(message) {
+        return Promise.all([
+            message.channel.send('pong'),
+            performance.getCpu(),
+            performance.getMemory(),
+        ])
+            .then(([reply, cpu, memory]) => {
+                // TODO: Investegate guild presences size. It probably includes offline users.
+                //  Don't know if a map impact performance
+                reply.edit(
+                    '__**DIGBot Stats**__\n'
+                    + `**CPU Usage:** ${cpu}%\n`
+                    + `**Memory Usage:** ${memory}MB\n`
+                    + `**Version:** ${version}\n`
+                    + `**Ping:** ${Math.round(message.client.ping)}ms (${this.pingStatus(message.client.ping)})\n`
+                    + `**Runtime:** ${duration(process.uptime(), 'seconds').humanize()}\n`
+                    + `**Stable Discord connection for:** ${duration(message.client.uptime).humanize()}\n`
+                    + `**Members on server:** ${message.guild.memberCount}\n`
+                    + `**Server members in-game:** ${message.guild.presences.size}`,
+                );
+            });
+    }
+
+    /**
+     * @param ping
+     * @return {string}
+     */
+    pingStatus(ping) {
+        if (ping < 100) {
+            return 'Excellent';
+        }
+        if (ping < 200) {
+            return 'Very Good';
+        }
+        if (ping < 500) {
+            return 'Good';
+        }
+        if (ping < 1000) {
+            return 'Mediocre';
+        }
+        return 'Bad';
+    }
 };
-
-function statsCalculations(message) {
-    // Get performance promises first
-    Promise.all([
-        performance.getCpu(),
-        performance.getMemory(),
-    ])
-        .then(([cpu, memory]) => {
-            const pingStatus = (ping) => {
-                if (ping < 100) {
-                    return 'Excellent';
-                }
-                if (ping < 200) {
-                    return 'Very Good';
-                }
-                if (ping < 500) {
-                    return 'Good';
-                }
-                if (ping < 1000) {
-                    return 'Mediocre';
-                }
-                return 'Bad';
-            };
-
-            // TODO: Investegate guild presences size. It probably includes offline users.
-            //  Don't know if a map impact performance
-            message.edit(
-                '__**DIGBot Stats**__'
-                + `**CPU Usage:** ${cpu}%`
-                + `**Memory Usage:** ${memory}MB`
-                + `**Version:** ${pjson.version}`
-                + `**Ping:** ${Math.round(message.client.ping)}ms (${pingStatus(message.client.ping)})`
-                + `**Runtime:** ${duration(process.uptime(), 'seconds').humanize()}`
-                + `**Stable Discord connection for:** ${duration(message.client.uptime).humanize()}`
-                + `**Members on server:** ${message.guild.memberCount}`
-                + `**Server members in-game:** ${message.guild.presences.size}`,
-            )
-                .then(() => logger.debug(TAG, 'Message succesfully edited'))
-                .catch(error => logger.warning(TAG, `Failed to edit message ${error}`));
-        })
-        .catch(error => logger.warning(TAG, `Retrieving process stats failed! ${error}`));
-}

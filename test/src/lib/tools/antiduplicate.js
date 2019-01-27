@@ -2,7 +2,7 @@
 
 const should = require('chai').should();
 
-const antiduplicate = require('../../../../src/lib/tools/antiduplicate.js');
+const antiduplicate = require('../../../../src/lib/util/antiduplicate.js');
 
 describe('tools/antiduplicate.js', function() {
     it('should have function randomise', function() {

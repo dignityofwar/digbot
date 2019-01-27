@@ -7,7 +7,6 @@ const ServiceProvider = require('../core/serviceprovider');
 const DiscordTransport = require('../logger/discordtransport');
 
 const commandChannel = require('../admin/antispam/commandChannel');
-const commands = require('../commands/commands');
 // const events = require('../admin/events');
 const subBots = require('../sub-bots/sub-bots');
 const server = require('../server/server');
@@ -20,13 +19,6 @@ module.exports = class DiscordProvider extends ServiceProvider {
         this.container.register('discordjsClient', asFunction(({ logger }) => {
             const client = new Client();
 
-            client.on('debug', (info) => {
-                logger.log('debug', {
-                    message: info,
-                    label: 'discordjsClient',
-                });
-            });
-
             // Emitted when the client client is ready
             client.on('ready', () => {
                 logger.log('info', {
@@ -35,13 +27,13 @@ module.exports = class DiscordProvider extends ServiceProvider {
                 });
             });
 
-            client.on('reconnecting', () => {
-                // Log level is warn so it will be logged to discord
-                logger.log('warn', {
-                    message: 'Client disconnected, attempting reconnection...',
-                    label: 'discordjsClient',
-                });
-            });
+            // client.on('reconnecting', () => {
+            //     // Log level is warn so it will be logged to discord
+            //     logger.log('warn', {
+            //         message: 'Client disconnected, attempting reconnection...',
+            //         label: 'discordjsClient',
+            //     });
+            // });
 
             client.on('disconnect', (event) => {
                 // Log level is warn so it will be logged to discord
@@ -53,6 +45,13 @@ module.exports = class DiscordProvider extends ServiceProvider {
 
                 // Reconnects when connection is lost
                 client.login(config.get('token'));
+            });
+
+            client.on('debug', (info) => {
+                logger.log('debug', {
+                    message: info,
+                    label: 'discordjsClient',
+                });
             });
 
             client.on('warn', (warning) => {
@@ -105,7 +104,6 @@ module.exports = class DiscordProvider extends ServiceProvider {
 
         // Store the data for usage from other modules
 
-        commands.ready();
         // events.ready();
         // TODO: Can be moved to ModeratorDispatcher or CommandDispatcher, we should probably introduce some throttle
         //   to replace this which retains memory when the bot crashes

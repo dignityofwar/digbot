@@ -1,11 +1,25 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
-
 const { duration } = require('moment');
+const Command = require('../core/command');
 
-// !started module
+module.exports = class StartedCommand extends Command {
+    constructor() {
+        super();
 
-module.exports = {
-    duration() {
+        this.name = 'started';
+    }
+
+    /**
+     * @param message
+     * @return {Promise<*>}
+     */
+    async execute(message) {
+        return message.channel.send(this.createReply());
+    }
+
+    /**
+     * @return {String}
+     */
+    createReply() {
         const uptime = duration(process.uptime(), 'seconds');
 
         if (uptime.asDays() >= 1) {
@@ -19,5 +33,5 @@ module.exports = {
         }
 
         return `I've been running for ${uptime.humanize()}. I haven't even been here a minute why are you asking?`;
-    },
+    }
 };

@@ -68,7 +68,7 @@ module.exports = {
     execute: function(message) {
         if (config.get('features.disableMentionSpam')) { return; } // Feature switch
         if (message.guild.id !== server.getGuild().id) { return; }
-        if (this.exemptMember(message)) { return; }
+        if (this.exemptMember(message.member)) { return; }
         countMentions(message);
         if (checkUser(message)) {
             list[message.author.id].check = false;
@@ -80,11 +80,14 @@ module.exports = {
         }
     },
 
-    // Check if member is exempt from the checks
-    exemptMember: function(message) {
-        if (message.member.roles.has(config.get('general.staffRoleID'))) { return true; }
-        for (let x in config.get('general.leaderRoles')) {
-            if (message.member.roles.has(config.get('general.leaderRoles')[x])) { return true; }
+    /**
+     * @param member
+     * @return {boolean}
+     */
+    exemptMember(member) {
+        if (member.roles.has(config.get('general.staffRoleID'))) { return true; }
+        for (const role of config.get('general.leaderRoles')) {
+            if (member.roles.has(role)) { return true; }
         }
         return false;
     },

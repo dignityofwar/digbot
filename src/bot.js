@@ -12,4 +12,8 @@ kernel.run()
         process.on('SIGINT', async () => {
             await kernel.terminate();
         });
+
+        process.on('exit', async () => {
+            await kernel.terminate();
+        });
     });

@@ -4,4 +4,5 @@ module.exports = [
     require('./loggerprovider'),
     require('./queueprovider'),
     require('./discordprovider'),
+    require('./commandprovider'),
 ];

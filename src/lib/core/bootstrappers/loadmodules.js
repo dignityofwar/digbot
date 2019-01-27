@@ -1,3 +1,7 @@
+const { asClass } = require('awilix');
+const { capitalize } = require('lodash');
+const { join, relative } = require('path');
+
 module.exports = class LoadModules {
     /**
      * Load all modules into the container
@@ -5,7 +9,27 @@ module.exports = class LoadModules {
      * @param app
      */
     bootstrap({ app }) {
-        app.loadModules(this.locations);
+        const root = 'src/lib';
+
+        app.loadModules(
+            this.locations.map(glob => join(root, glob)),
+            {
+                formatName: (name, { path }) => {
+                    // TODO: Probably want to change this more in line with the namespaces from php
+                    const splat = relative(join(process.cwd(), root), path)
+                        .split('/');
+
+                    splat.pop();
+
+                    return splat.shift().toLowerCase()
+                        + splat.reduce((a, b) => a + capitalize(b), '')
+                        + capitalize(name);
+                },
+                resolverOptions: {
+                    register: asClass,
+                },
+            },
+        );
     }
 
     /**
@@ -14,6 +38,9 @@ module.exports = class LoadModules {
      * @return {Array}
      */
     get locations() {
-        return [];
+        return [
+            'commands/*.js',
+            'apis/*.js',
+        ];
     }
 };

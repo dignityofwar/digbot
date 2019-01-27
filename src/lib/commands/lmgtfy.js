@@ -1,14 +1,25 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
+const Command = require('../core/command');
 
-'use strict'
+module.exports = class StatsCommand extends Command {
+    constructor() {
+        super();
 
-// !lmgtfy command, generates lmgtfy link based on input args
+        this.name = 'lmgtfy';
+    }
 
-module.exports = {
-    execute: function(msg) {
-        let args = msg.cleanContent.toString().split(' ');
+    /**
+     * @param message
+     * @return {Promise<void>}
+     */
+    async execute(message) {
+        // TODO: Maybe incorporate some of the standard modules of node like querystring
+        const args = message.cleanContent.split(' ');
         args.shift();
-        if (args.length == 0) {return 'You still need to ask a question, I can\'t do that myself.';}
-        return 'There you go! http://lmgtfy.com/?q=' + encodeURI(args.join('+'));
+
+        return message.channel.send(
+            args.length
+                ? `There you go! http://lmgtfy.com/?q=${encodeURI(args.join('+'))}`
+                : 'You still need to ask a question, I can\'t do that myself.',
+        );
     }
 };

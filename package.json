@@ -25,6 +25,7 @@
   "homepage": "https://github.com/JamesLongman/DIGBot#readme",
   "dependencies": {
     "awilix": "^4.0.1",
+    "axios": "^0.18.0",
     "bull": "~3.5.2",
     "config": "^2.0.1",
     "discord.js": "~11.4.0",

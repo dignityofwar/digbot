@@ -1,29 +1,31 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
+const Command = require('../core/command');
 
-'use strict';
+module.exports = class StatsCommand extends Command {
+    /**
+     * @param logger
+     */
+    constructor({ logger }) {
+        super();
 
-// !restart module, restarts the bot
+        this.name = 'restart';
 
-const crashHandler = require('../crash-handling.js');
-const logger = require('../logger.js');
-const TAG = '!restart';
+        this.logger = logger;
+    }
 
-module.exports = {
-    execute: function(msg) {
-        logger.devAlert(TAG, `Recieved restart request from ${msg.member.displayName}, restarting...`);
-        msg.channel.sendMessage('Restarting bot...')
-            .then(
-                logger.debug(TAG, 'Succesfully sent message to text channel')
-            )
-            .catch(err => {
-                logger.warning(TAG, `Message failed to send, ${err}`);
-            });
-        /* Count down to restart, don't wait on a resolve/reject from above promises as they may be
-        mega slow or something and the reason for restarting */
-        let timer = setTimeout(function() {
-            crashHandler.logEvent(TAG, 'Restarting');
-            console.log('Restarting bot as per request');
+    /**
+     * @param message
+     * @return {Promise<void>}
+     */
+    async execute(message) {
+        // TODO: Add guard that only admins or owners can restart the bot
+
+        this.logger.log('info', {
+            message: `Restarting the bot requested by ${message.author.name}`,
+            label: '!restart',
+        });
+
+        setTimeout(() => {
             process.exit(0);
-        }, 5000);
+        }, 2000);
     }
 };

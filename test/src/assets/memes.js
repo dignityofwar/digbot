@@ -2,9 +2,9 @@
 
 const should = require('chai').should();
 
-const memes = require('../../../src/assets/memes.js');
+const memes = require('../../../src/assets/catfacts.js');
 
-describe('assets/memes.js', function() {
+describe('assets/catfacts.js', function() {
     it('should have category catfacts', function() {
         memes.should.have.property('catfacts');
     });

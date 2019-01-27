@@ -1,23 +1,27 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
+const Command = require('../core/command');
 
-// !ping module
+module.exports = class StatsCommand extends Command {
+    constructor() {
+        super();
 
-const logger = require('../logger.js');
+        this.name = 'ping';
+    }
 
-const TAG = '!ping';
+    /**
+     * @param message
+     * @return {Promise<void>}
+     */
+    async execute(message) {
+        const { ping } = message.client;
 
-module.exports = {
-    // Replies with pingtime
-    execute(msg) {
-        msg.channel.sendMessage('pong')
-            .then(message => pong(message))
-            .catch(err => logger.warning(TAG, `Failed to send message, error: ${err}`));
-    },
-};
+        return message.channel.send(`Ping: ${ping} (${this.pingStatus(ping)})`);
+    }
 
-// Once the "pong" message has been sent, use time between the two messages to calculate ping
-function pong(message) {
-    const pingStatus = (ping) => {
+    /**
+     * @param ping
+     * @return {string}
+     */
+    pingStatus(ping) {
         if (ping < 100) {
             return 'Excellent';
         }
@@ -31,10 +35,5 @@ function pong(message) {
             return 'Mediocre';
         }
         return 'Bad';
-    };
-
-    message.edit(`Ping: ${Math.round(message.client.ping)}ms (${pingStatus(message.client.ping)})`)
-        .then(() => logger.debug(TAG, 'Succesfully editted message'))
-        .catch(err => logger.warning(TAG, `Failed to edit message error: ${err}`));
-    // logger.info(TAG, 'Called by: ' + msg.member.displayName + ', reply: ' + ms + 'ms');
-}
+    }
+};

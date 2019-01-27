@@ -1,19 +1,21 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
-
-'use strict';
-
-/* This module handles all '!channel' command messages,
-Messages form: '!channel action type name' Ex: '!channel create text Planetside2' */
+const Command = require('../core/command');
 
 const channelsMaster = require('../admin/channels/channelsMaster.js');
 const help = require('./help.js');
 const logger = require('../logger.js');
-const server = require('../server/server.js');
-const TAG = '!channel';
 
-module.exports = {
-    // Runs on !channel command, kind of a switch for the route we'll be going down
-    execute: function(msg) {
+module.exports = class StatsCommand extends Command {
+    constructor() {
+        super();
+
+        this.name = 'channel';
+    }
+
+    /**
+     * @param message
+     * @return {Promise<void>}
+     */
+    async execute(message) {
         // Filter out key parts of message
         let action = filterAction(msg);
         if (!action) {return false;}
@@ -84,6 +86,12 @@ module.exports = {
         }
     }
 };
+
+//  Copyright © 2018 DIG Development team. All rights reserved.
+
+/* This module handles all '!channel' command messages,
+Messages form: '!channel action type name' Ex: '!channel create text Planetside2' */
+
 
 // Check for channels by the same name, if one already exists, stop the creation
 function duplicationCheck(name, type, msg) {

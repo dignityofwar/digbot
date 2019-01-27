@@ -1,17 +1,23 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
+const Command = require('../core/command');
 
-'use strict';
+const antiduplicate = require('../util/antiduplicate.js');
+const catfacts = require('../../assets/catfacts.js');
 
-// !catfacts module
+module.exports = class StatsCommand extends Command {
+    constructor() {
+        super();
 
-const antiduplicate = require('../tools/antiduplicate.js');
-const memes = require('../../assets/memes.js');
+        this.name = 'catfacts';
+    }
 
-module.exports = {
-    execute: function() {
-        return antiduplicate.randomise(
+    /**
+     * @param message
+     * @return {Promise<void>}
+     */
+    async execute(message) {
+        return message.channel.send(antiduplicate.randomise(
             'catfacts',
-            memes.catfacts
-        );
+            catfacts,
+        ));
     }
 };

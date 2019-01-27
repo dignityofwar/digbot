@@ -2,7 +2,7 @@
 
 const should = require('chai').should();
 
-const performance = require('../../../../src/lib/tools/performance.js');
+const performance = require('../../../../src/lib/util/performance.js');
 
 describe('tools/performance.js', function() {
     it('should have function ready', function() {

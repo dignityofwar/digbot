@@ -27,6 +27,8 @@
     }
   },
 
+  "commandChannels": [],
+
   "general"                 : {
     "adminsRoleID"           : "",
     "devRoleID"              : "",
