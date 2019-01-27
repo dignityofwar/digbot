@@ -65,6 +65,11 @@ module.exports = class CommandDispatcher extends Dispatcher {
                 throttleKey,
                 get(command.throttle, 'attempts', 5),
             )) {
+                this.logger.log('info', {
+                    message: `Command throttled: ${throttleKey}`,
+                    label: 'CommandDispatcher',
+                });
+
                 return; // TODO: Custom message when throttled, default add a stop reaction.
             }
 
