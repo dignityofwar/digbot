@@ -5,6 +5,10 @@ const ServiceProvider = require('../core/serviceprovider');
 
 const CommandRegister = require('../core/commandregister');
 
+const play = require('../commands/play');
+// const sfx = require('../commands/sfx');
+
+
 module.exports = class QueueProvider extends ServiceProvider {
     /**
      * TODO: Maybe register them in the config file?
@@ -22,7 +26,7 @@ module.exports = class QueueProvider extends ServiceProvider {
             'commandsLmgtfy',
             'commandsMentions',
             'commandsPing',
-            // 'commandsPlay',
+            'commandsPlay',
             // 'commandsPoll',
             // 'commandsPositions',
             // 'commandsPs2digfeedback',
@@ -58,5 +62,8 @@ module.exports = class QueueProvider extends ServiceProvider {
                 register.add(this.container.build(command));
             }
         }
+
+        play.ready();
+        // sfx.ready();
     }
 };
