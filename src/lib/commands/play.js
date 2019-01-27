@@ -1,8 +1,3 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
-
-
-// !play module, plays playlists and audio streams of video links in member's channel
-
 /* eslint no-use-before-define: off */
 
 const config = require('config');
@@ -211,6 +206,13 @@ module.exports = class PlayCommand extends Command {
                 + 'use "!help play" for a more detailed explanation of the command if you\'re confused');
             return false;
         }
+    }
+
+    /**
+     * @return {string}
+     */
+    help() {
+        return 'Plays stuff'; // TODO: Better help stuff
     }
 
     // Passess an explanation of the command

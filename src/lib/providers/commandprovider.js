@@ -6,7 +6,7 @@ const ServiceProvider = require('../core/serviceprovider');
 const CommandRegister = require('../core/commandregister');
 
 const play = require('../commands/play');
-// const sfx = require('../commands/sfx');
+const sfx = require('../commands/sfx');
 
 
 module.exports = class QueueProvider extends ServiceProvider {
@@ -31,7 +31,7 @@ module.exports = class QueueProvider extends ServiceProvider {
             // 'commandsPositions',
             // 'commandsPs2digfeedback',
             'commandsRestart',
-            // 'commandsSfx',
+            'commandsSfx',
             // 'commandsSort',
             'commandsStarted',
             'commandsStats',
@@ -64,6 +64,6 @@ module.exports = class QueueProvider extends ServiceProvider {
         }
 
         play.ready();
-        // sfx.ready();
+        sfx.ready();
     }
 };
