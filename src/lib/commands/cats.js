@@ -1,7 +1,7 @@
 const { words } = require('lodash');
 const Command = require('../core/command');
 
-module.exports = class StatsCommand extends Command {
+module.exports = class CatsCommand extends Command {
     constructor({ apisThecatapi }) {
         super();
 

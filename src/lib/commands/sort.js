@@ -2,7 +2,7 @@ const config = require('config');
 const Command = require('../core/command');
 const positions = require('../admin/channels/positions.js');
 
-module.exports = class StatsCommand extends Command {
+module.exports = class SortCommand extends Command {
     constructor() {
         super();
 

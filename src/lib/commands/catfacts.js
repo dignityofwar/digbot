@@ -3,7 +3,7 @@ const Command = require('../core/command');
 const antiduplicate = require('../util/antiduplicate.js');
 const catfacts = require('../../assets/catfacts.js');
 
-module.exports = class StatsCommand extends Command {
+module.exports = class CatfactsCommand extends Command {
     constructor() {
         super();
 

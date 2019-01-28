@@ -3,7 +3,7 @@ const { get } = require('lodash');
 const Command = require('../core/command');
 const mentionsCheck = require('../admin/antispam/mentionspam.js');
 
-module.exports = class StatsCommand extends Command {
+module.exports = class MentionsCommand extends Command {
     constructor() {
         super();
 

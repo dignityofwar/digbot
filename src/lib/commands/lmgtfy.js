@@ -1,6 +1,6 @@
 const Command = require('../core/command');
 
-module.exports = class StatsCommand extends Command {
+module.exports = class LmgtfyCommand extends Command {
     constructor() {
         super();
 

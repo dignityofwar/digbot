@@ -8,7 +8,7 @@ const logger = require('../logger.js');
 
 const TAG = '!channel';
 
-module.exports = class StatsCommand extends Command {
+module.exports = class ChannelCommand extends Command {
     constructor() {
         super();
 

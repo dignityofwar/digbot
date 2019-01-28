@@ -7,7 +7,7 @@ const Command = require('../core/command');
 //     '**!sort**: Manually trigger a global sort of all channels (Should run automatically when necesary)',
 // ];
 
-module.exports = class StatsCommand extends Command {
+module.exports = class AdminCommand extends Command {
     constructor({ commandRegister }) {
         super();
 

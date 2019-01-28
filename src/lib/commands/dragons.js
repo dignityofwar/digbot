@@ -2,7 +2,7 @@ const config = require('config');
 const Command = require('../core/command');
 
 /* eslint consistent-return: 0 */
-module.exports = class StatsCommand extends Command {
+module.exports = class DragonsCommand extends Command {
     constructor() {
         super();
 
