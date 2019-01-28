@@ -100,34 +100,7 @@ module.exports = {
     },
 };
 
-// Interval call auto delete to get rid of inactive temp channels
-let autodeletetimer = setInterval(auto, config.get('autoDeleteChannels'));
-function auto() {
-    crashHandler.logEvent(TAG, 'autodelete check');
-    if (server.getGuild(config.get('general.server')) === null) { return; }
-    autodelete.execute(server.getGuild(config.get('general.server')));
-}
 
-// Call 5 min admin checks
-// Note: DO NOT CHANGE INTERVAL LENGTH without also changing the events.check function
-let fiveMinTimer = setInterval(fiveMinCheck, 300000);
-function fiveMinCheck() {
-    crashHandler.logEvent(TAG, 'fiveMinCheck');
-    events.check();
-    poll.check();
-    mentionSpam.release();
-}
-
-// Call daily admin check
-let dailychecktimer = setInterval(dailycheck, 86400000);
-// Runs every 24h period after bot start, not on start
-function dailycheck() {
-    crashHandler.logEvent(TAG, 'dailycheck');
-    if (server.getGuild(config.get('general.server')) === null) { return; } // Check server has been stored
-    prune();
-    sfx.ready();
-    play.ready();
-}
 
 // Remove members from server that have exceeded our inactivity limit
 function prune() {
