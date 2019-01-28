@@ -14,7 +14,7 @@ module.exports = class PingCommand extends Command {
     async execute(message) {
         const { ping } = message.client;
 
-        return message.channel.send(`Ping: ${ping} (${this.pingStatus(ping)})`);
+        return message.channel.send(`Ping: ${Math.round(ping)} (${this.pingStatus(ping)})`);
     }
 
     /**
