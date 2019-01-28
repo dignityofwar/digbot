@@ -28,8 +28,8 @@ module.exports = {
                 }
                 if (memory > config.get('general.memoryNotificationLimit')) {
                     logger.warning(TAG,
-                        `Memory usage is above ${config.get(
-                            'general.memoryNotificationLimit')}MB! Current MEM: ${memory}MB`);
+                        `Memory usage is above ${config.get('general.memoryNotificationLimit')}MB! `
+                        + `Current MEM: ${memory}MB`);
                 }
             });
     },
