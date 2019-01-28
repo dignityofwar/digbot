@@ -3,26 +3,20 @@ const { capitalize } = require('lodash');
 const { join, relative } = require('path');
 
 module.exports = class LoadModules {
+    constructor() {
+        this.root = 'src/lib';
+    }
+
     /**
      * Load all modules into the container
      *
      * @param app
      */
     bootstrap({ app }) {
-        const root = 'src/lib';
-
         app.loadModules(
-            this.locations.map(glob => join(root, glob)),
+            this.locations.map(glob => join(this.root, glob)),
             {
-                formatName: (name, { path }) => {
-                    // TODO: Probably want to change this more in line with the namespaces from php
-                    const splat = relative(join(process.cwd(), root), path)
-                        .split('/');
-
-                    splat.pop();
-
-                    return splat.reduce((a, b) => a + capitalize(b), splat.shift().toLowerCase()) + capitalize(name);
-                },
+                formatName: this.format.bind(this),
                 resolverOptions: {
                     register: asClass,
                 },
@@ -39,7 +33,23 @@ module.exports = class LoadModules {
         return [
             'apis/*.js',
             'commands/*.js',
+            'dispatchers/*.js',
             'util/ratelimiter.js',
         ];
+    }
+
+    /**
+     * @param name
+     * @param path
+     * @return {String}
+     */
+    format(name, { path }) {
+        // TODO: Probably want to change this more in line with the namespaces from php
+        const splat = relative(join(process.cwd(), this.root), path)
+            .split('/');
+
+        splat.pop();
+
+        return splat.reduce((a, b) => a + capitalize(b), splat.shift().toLowerCase()) + capitalize(name);
     }
 };

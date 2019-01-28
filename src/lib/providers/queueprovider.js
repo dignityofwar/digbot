@@ -11,6 +11,6 @@ module.exports = class QueueProvider extends ServiceProvider {
         this.container.register('discordTransportQueue',
             asFunction(() => new Queue('discord logs', config.get('services.queue.redis_url')))
                 .singleton()
-                .disposer(queue => queue.close()));
+                .disposer(queue => queue.close().catch(() => {})));
     }
 };

@@ -2,6 +2,7 @@
 
 module.exports = [
     require('./loggerprovider'),
+    require('./dispatcherprovider'),
     require('./queueprovider'),
     require('./discordprovider'),
     require('./commandprovider'),

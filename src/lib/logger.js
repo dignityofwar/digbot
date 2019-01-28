@@ -10,7 +10,7 @@ const logger = () => require('../bootstrap')
 
 module.exports = {
     // General status messages, e.g. Connections, Disconnections, uptime etc
-    botStatusbotStatus(mod, message) {
+    botStatus(mod, message) {
         logger().log('info', {
             message,
             label: 'status',
@@ -20,14 +20,14 @@ module.exports = {
     // TODO: Ready to be removed, used by discord/discordbot.js
     criticalcritical() {},
     // General debug messages
-    debugdebug(mod, message) {
+    debug(mod, message) {
         logger().log('debug', {
             message,
             label: mod,
         });
     },
     // General major info, alert developers but do not crash
-    devAlertdevAlert(mod, message) {
+    devAlert(mod, message) {
         logger().log('info', {
             message,
             label: mod,
@@ -35,21 +35,21 @@ module.exports = {
     },
     // Errors that need to be fixed, and the server should be stopped. Distinct from API errors
     // TODO: Should be deprecated, crashing should be done by trowing errors and then be caught by the logger
-    errorerror(mod, message) {
+    error(mod, message) {
         logger().log('error', {
             message,
             label: mod,
         });
         process.exit(1);
     },
-    eventevent(mod, message) {
+    event(mod, message) {
         logger().log('verbose', {
             message,
             label: mod,
         });
     },
     // General information messages
-    infoinfo(mod, message) {
+    info(mod, message) {
         logger().log('info', {
             message,
             label: mod,
@@ -60,7 +60,7 @@ module.exports = {
     setDebugs() {},
     setTesting() {},
     // The server can continue to run, however it's things we maybe should address
-    warningwarning(mod, message) {
+    warning(mod, message) {
         logger().log('warn', {
             message,
             label: mod,

@@ -4,8 +4,6 @@ const LoadModules = require('./bootstrappers/loadmodules');
 const RegisterProviders = require('./bootstrappers/registerproviders');
 const BootProviders = require('./bootstrappers/bootproviders');
 
-const registeredDispatchers = require('../dispatchers/register');
-
 module.exports = class Kernel extends EventEmitter {
     /**
      * @param app
@@ -25,10 +23,11 @@ module.exports = class Kernel extends EventEmitter {
         try {
             await this.bootstrap();
 
-            await this.runDispatchers();
+            await this.startDispatchers();
 
         } catch (e) {
             // TODO: Errors are not printed to the console, probably because the logger is not initialised
+            console.log(e instanceof Error ? e.stack : e.toString());
 
             await this.terminate();
 
@@ -36,16 +35,6 @@ module.exports = class Kernel extends EventEmitter {
         }
 
         return this;
-    }
-
-    /**
-     *
-     * @return {Promise<void>}
-     */
-    async runDispatchers() {
-        this.registerDispatchers(registeredDispatchers);
-
-        await this.startDispatchers();
     }
 
     /**
@@ -71,10 +60,10 @@ module.exports = class Kernel extends EventEmitter {
 
     /**
      *
-     * @param Dispatcher
+     * @param dispatcher
      */
-    registerDispatcher(Dispatcher) {
-        this.dispatchers.push(new Dispatcher(this.app.cradle));
+    registerDispatcher(dispatcher) {
+        this.dispatchers.push(dispatcher);
     }
 
     /**
