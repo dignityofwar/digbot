@@ -1,3 +1,5 @@
+/* eslint max-len: off */
+
 module.exports = [
     'Unlike dogs, cats do not have a sweet tooth. Scientists believe this is due to a mutation in a key taste receptor.',
     'When a cat chases its prey, it keeps its head level. Dogs and humans bob their heads up and down.',

@@ -9,7 +9,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
      * @param logger
      * @param utilRatelimiter
      */
-    constructor({ discordjsClient, commandRegister, logger, utilRatelimiter }) {
+    constructor({ discordjsClient, commandRegister, logger, utilRatelimiter }) {// eslint-disable-line
         super();
 
         this.prefix = '!';

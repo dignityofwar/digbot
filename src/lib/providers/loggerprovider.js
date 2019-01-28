@@ -46,5 +46,5 @@ module.exports = class LoggerProvider extends ServiceProvider {
             this.container.resolve('logger')
                 .log('error', error.stack);
         }
-    };
+    }
 };

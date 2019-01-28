@@ -107,9 +107,9 @@ function list(msg) {
     }
     if (message.length < 2000) {
         msg.author.sendMessage(message)
-            .then(
-                logger.debug(TAG, 'Succesfully sent message'),
-            )
+            .then(() => {
+                logger.debug(TAG, 'Succesfully sent message');
+            })
             .catch((err) => {
                 logger.warning(TAG, `Failed to send message error: ${err}`);
             });
@@ -127,7 +127,7 @@ function play() {
     crashHandler.logEvent(TAG, 'play');
     if (server.getReady() === false) {
         logger.debug(TAG, 'Server not ready, setting play on timeout');
-        setTimeout(function () {
+        setTimeout(() => {
             logger.debug(TAG, 'Calling play again');
             this.play();
         }, 10000);
@@ -172,9 +172,9 @@ function play() {
                 dispatcher.on('end', () => {
                     queue[0].voiceChannel.leave();
                     queue[0].botMessage.delete()
-                        .then(
-                            logger.info(TAG, 'Succesfully finished playing and deleted message'),
-                        )
+                        .then(() => {
+                            logger.info(TAG, 'Succesfully finished playing and deleted message');
+                        })
                         .catch((err) => {
                             logger.warning(TAG, `Failed to delete message after playing, ${err}`);
                         });
@@ -217,9 +217,9 @@ function play() {
             queue[0].textChannel.sendMessage(
                 `The SFX *${queue[0].effect}* is currently unavailable, please try a different SFX`,
             )
-                .then(
-                    logger.debug(TAG, 'Succesfully sent message regarding source'),
-                )
+                .then(() => {
+                    logger.debug(TAG, 'Succesfully sent message regarding source');
+                })
                 .catch((err) => {
                     logger.warning(TAG, `Failed to send message regarding source error: ${err}`);
                 });
@@ -235,9 +235,9 @@ function play() {
                 connection.on('disconnect', () => {
                     crashHandler.logEvent(TAG, `Bot disconnected from channel: ${queue[0].channelName}`);
                     queue[0].botMessage.delete()
-                        .then(
-                            logger.info(TAG, 'Succesfully finished playing and deleted message'),
-                        )
+                        .then(() => {
+                            logger.info(TAG, 'Succesfully finished playing and deleted message');
+                        })
                         .catch((err) => {
                             logger.warning(TAG, `Failed to delete message after playing, ${err}`);
                         });
@@ -250,9 +250,9 @@ function play() {
                 connection.on('error', (err) => {
                     crashHandler.logEvent(TAG, `Bot connection error to channel: ${queue[0].channelName}`);
                     queue[0].textChannel.sendMessage('Error with connection, please try again')
-                        .then(
-                            logger.debug(TAG, 'Succesfully sent message'),
-                        )
+                        .then(() => {
+                            logger.debug(TAG, 'Succesfully sent message');
+                        })
                         .catch((errr) => {
                             logger.warning(TAG, `Failed to send message error: ${errr}`);
                         });
@@ -271,9 +271,9 @@ function play() {
                     crashHandler.logEvent(TAG,
                         `Bot playback error: ${queue[0].effect} in ${queue[0].channelName} effect: ${err}`);
                     queue[0].textChannel.sendMessage('Error during playback, please try again')
-                        .then(
-                            logger.debug(TAG, 'Succesfully sent message'),
-                        )
+                        .then(() => {
+                            logger.debug(TAG, 'Succesfully sent message');
+                        })
                         .catch((errr) => {
                             logger.warning(TAG, `Failed to send message error: ${errr}`);
                         });
@@ -283,9 +283,9 @@ function play() {
                 crashHandler.logEvent(TAG, 'Bot unable to connect to channel');
                 if (failing === false) {
                     queue[0].textChannel.sendMessage('Error establishing connection, re-trying...')
-                        .then(
-                            logger.debug(TAG, 'Succesfully sent message'),
-                        )
+                        .then(() => {
+                            logger.debug(TAG, 'Succesfully sent message');
+                        })
                         .catch((errr) => {
                             logger.warning(TAG, `Failed to send message error: ${errr}`);
                         });
@@ -339,9 +339,9 @@ function sendMessageToChannel(channel, message, promise) {
         });
     }
     return channel.sendMessage(message)
-        .then(
-            logger.debug(TAG, `Succesfully sent message: ${message}`),
-        )
+        .then(() => {
+            logger.debug(TAG, `Succesfully sent message: ${message}`);
+        })
         .catch((err) => {
             logger.warning(TAG, `Failed to send message to channel, ${err}`);
         });

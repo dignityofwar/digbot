@@ -12,7 +12,8 @@ module.exports = class StatsCommand extends Command {
      * @return {Promise<void>}
      */
     async execute(message) {
-        return message.channel.send('@here Please post your PS2 Platoon feedback at this form: http://bit.ly/DIGPLFeedback. '
-            + 'Note, your feedback **can** be anonymous if you wish it. Simply don\'t fill out your name.)');
+        return message.channel.send('@here Please post your PS2 Platoon feedback at this form: '
+            + 'http://bit.ly/DIGPLFeedback. Note, your feedback **can** be anonymous if you wish it. '
+            + 'Simply don\'t fill out your name.)');
     }
 };
