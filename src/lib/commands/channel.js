@@ -13,6 +13,7 @@ module.exports = class ChannelCommand extends Command {
         super();
 
         this.name = 'channel';
+        this.onlyHelpFull = true;
     }
 
     /**
@@ -69,6 +70,14 @@ module.exports = class ChannelCommand extends Command {
             name = nameCheckDelete(name, type);
             manDelete(msg, type, name);
         }
+    }
+
+    /**
+     * @param {boolean} full
+     * @return {string}
+     */
+    help() {
+        return 'Used to create and delete temporary channels denoted by "-t-", works for both voice and text.';
     }
 };
 
