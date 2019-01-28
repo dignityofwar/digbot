@@ -1,5 +1,5 @@
 const config = require('config');
-const { get, words } = require('lodash');
+const { get, intersection, words } = require('lodash');
 const Dispatcher = require('../core/dispatcher');
 
 module.exports = class CommandDispatcher extends Dispatcher {
@@ -62,14 +62,13 @@ module.exports = class CommandDispatcher extends Dispatcher {
         if (command) {
             if (
                 command.special
-                && !(
-                    message.member.id !== message.guild.ownerID
-                    || (
-                        config.has(`guilds.${message.guild.id}.adminRoles`)
-                        && config.get(`guilds.${message.guild.id}.adminRoles`)
-                            .find(roleID => message.member.roles.has(roleID))
-                    )
-                )
+                && message.member.id === message.guild.ownerID
+                && !!intersection(
+                    message.member.roles,
+                    config.has(`guilds.${message.guild.id}.adminRoles`)
+                        ? config.get(`guilds.${message.guild.id}.adminRoles`)
+                        : [],
+                ).length
             ) { return; }
 
             const throttleKey = `${command.name}:${message.guild.id}:${message.author.id}`;
