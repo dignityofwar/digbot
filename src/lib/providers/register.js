@@ -6,4 +6,5 @@ module.exports = [
     require('./queueprovider'),
     require('./discordprovider'),
     require('./commandprovider'),
+    require('./checkprovider'),
 ];
