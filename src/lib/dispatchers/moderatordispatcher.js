@@ -7,7 +7,7 @@ const mentionSpam = require('../admin/antispam/mentionspam');
 const modularChannelSystem = require('../admin/channels/modularchannels');
 const nameCheck = require('../welcomepack/namecheck');
 const server = require('../server/server');
-const streamSpam = require('../admin/antispam/streamspam');
+// const streamSpam = require('../admin/antispam/streamspam');
 const welcome = require('../welcomepack/welcomepack');
 
 // TODO: This is a temporary dispatcher
@@ -33,6 +33,7 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
         this.client.on('guildMemberAdd', this.guildMemberAdd.bind(this));
         // this.client.on('guildMemberRemove', this.guildMemberRemove.bind(this));
         this.client.on('guildMemberUpdate', this.guildMemberUpdate.bind(this));
+        this.client.on('message', this.message.bind(this));
         this.client.on('messageUpdate', this.messsageUpdate.bind(this));
         this.client.on('presenceUpdate', this.presenceUpdate.bind(this));
         this.client.on('voiceStateUpdate', this.voiceStateUpdate.bind(this));
@@ -48,6 +49,7 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
         this.client.off('guildMemberAdd', this.guildMemberAdd.bind(this));
         // this.client.off('guildMemberRemove', this.guildMemberRemove.bind(this));
         this.client.off('guildMemberUpdate', this.guildMemberUpdate.bind(this));
+        this.client.off('message', this.message.bind(this));
         this.client.off('messageUpdate', this.messsageUpdate.bind(this));
         this.client.off('presenceUpdate', this.presenceUpdate.bind(this));
         this.client.off('voiceStateUpdate', this.voiceStateUpdate.bind(this));
@@ -113,13 +115,22 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
     }
 
     /**
+     * @param message
+     */
+    message(message) {
+        if (message.channel.type === 'dm' || message.channel.type === 'group') { return; }
+
+        mentionSpam.execute(message);
+    }
+
+    /**
      * @param oldMessage
      * @param newMessage
      */
     messsageUpdate(oldMessage, newMessage) {
         if (newMessage.channel.type === 'dm' || newMessage.channel.type === 'group') { return; }
 
-        streamSpam.execute(newMessage);
+        // streamSpam.execute(newMessage);
         mentionSpam.edits(oldMessage, newMessage);
     }
 
