@@ -35,6 +35,7 @@ module.exports = class QueueProvider extends ServiceProvider {
             // 'commandsSort',
             'commandsStarted',
             'commandsStats',
+            'commandsTrivia',
         ];
     }
 

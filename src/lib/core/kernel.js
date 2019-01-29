@@ -103,7 +103,7 @@ module.exports = class Kernel extends EventEmitter {
      */
     get bootstrappers() {
         return [
-            LoadModules, // TODO: Should be enabled, but indexing and namespacing should be determined
+            LoadModules,
             RegisterProviders,
             BootProviders,
         ];
