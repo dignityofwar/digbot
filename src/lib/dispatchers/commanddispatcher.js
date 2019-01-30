@@ -42,7 +42,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
      *
      * @param message
      */
-    handler(message) {
+    async handler(message) {
         if (message.author.bot || message.system) { return; }
 
         // Handle DMs
@@ -73,7 +73,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
 
             const throttleKey = `${command.name}:${message.guild.id}:${message.author.id}`;
 
-            if (this.ratelimiter.tooManyAttempts(
+            if (await this.ratelimiter.tooManyAttempts(
                 throttleKey,
                 get(command.throttle, 'attempts', 5),
             )) {
@@ -85,7 +85,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
                 return; // TODO: Custom message when throttled, default add a stop reaction.
             }
 
-            this.ratelimiter.hit(throttleKey, get(command.throttle, 'decay', 5));
+            await this.ratelimiter.hit(throttleKey, get(command.throttle, 'decay', 5));
 
             // TODO: Maybe better error handling, like sending a message that the command failed
             //  Note that it should take into account messages that are already send and if it is connected
