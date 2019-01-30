@@ -1,6 +1,6 @@
 const config = require('config');
 const Transport = require('winston-transport');
-const { TextChannel } = require('discord.js');
+// const { TextChannel } = require('discord.js');
 
 const MESSAGE = Symbol.for('message');
 
@@ -8,7 +8,6 @@ module.exports = class DiscordTransport extends Transport {
     /**
      * @param discordjsClient
      * @param discordTransportQueue
-     * @param process
      * @param opts
      */
     constructor({ discordjsClient, discordTransportQueue, opts = {} }) {
@@ -19,7 +18,7 @@ module.exports = class DiscordTransport extends Transport {
         this.client = discordjsClient;
         this.queue = discordTransportQueue;
 
-        this.queue.pause();
+        // this.queue.pause();
 
         this.registerEvents();
 
@@ -32,13 +31,10 @@ module.exports = class DiscordTransport extends Transport {
     registerEvents() {
         this.client.on('disconnect', () => {
             this.queue.pause();
-            this.logchannel = null;
         });
 
         this.client.on('ready', () => {
-            if (this.channel instanceof TextChannel) {
-                this.queue.resume();
-            }
+            this.queue.resume();
         });
     }
 
@@ -51,7 +47,7 @@ module.exports = class DiscordTransport extends Transport {
     log(info, callback) {
         setImmediate(() => this.emit('logged', info));
 
-        this.queue.add({ message: this.markdownCodeFormat(info[MESSAGE]) }, { attempts: 3 });
+        this.queue.add({ message: info[MESSAGE] }, { attempts: 3 });
 
         callback();
     }
@@ -62,8 +58,10 @@ module.exports = class DiscordTransport extends Transport {
      * @param info
      * @return {Promise}
      */
-    process({ data: { message } }) {
-        return this.channel.send(this.markdownCodeFormat(message));
+    async process({ data: { message } }) {
+        // TODO: Solution to a problem that isn't a problem? Fuck Bull with their stupid circular structure error
+        await this.channel.send(this.markdownCodeFormat(message));
+        return true;
     }
 
     /**
@@ -72,12 +70,7 @@ module.exports = class DiscordTransport extends Transport {
      * @return {TextChannel}
      */
     get channel() {
-        if (!this.logchannel) {
-            this.logchannel = this.client.channels.get(this.channelId);
-        }
-
-        // TODO: Validation that channel is a TextChannel
-        return this.logchannel;
+        return this.client.channels.get(this.channelId);
     }
 
     /**

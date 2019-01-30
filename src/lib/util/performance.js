@@ -1,7 +1,3 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
-
-// Checks cpu and memory usage
-
 const config = require('config');
 const { cpuUsage } = require('os-utils');
 const crashHandler = require('../crash-handling.js');
@@ -43,10 +39,8 @@ module.exports = {
         });
     },
 
-    getMemory() {
-        return new Promise((resolve) => {
-            // TODO: Maybe return rss and heap for better comparison of memory usage across different os's
-            resolve((Math.round(process.memoryUsage().rss) / 1048576).toFixed(2));
-        });
+    async getMemory() {
+        // TODO: Maybe return rss and heap for better comparison of memory usage across different os's
+        return (Math.round(process.memoryUsage().rss) / 1048576).toFixed(2);
     },
 };

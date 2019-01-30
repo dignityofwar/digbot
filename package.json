@@ -26,7 +26,7 @@
   "dependencies": {
     "awilix": "^4.0.1",
     "axios": "^0.18.0",
-    "bull": "~3.5.2",
+    "bull": "~3.6.0",
     "config": "^2.0.1",
     "discord.js": "~11.4.0",
     "googleapis": "^16.1.0",
@@ -34,6 +34,7 @@
     "moment": "^2.23.0",
     "opusscript": "^0.0.6",
     "os-utils": "^0.0.14",
+    "ioredis": "^4.5.1",
     "winston": "^3.1.0",
     "winston-transport": "^4.3.0",
     "ytdl-core": "^0.28.0"

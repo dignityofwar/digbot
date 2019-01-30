@@ -68,7 +68,8 @@ module.exports = class StatsCommand extends Command {
     async process({ data: { channelID, messageID, trivia } }) {
         const message = await this.client.channels.get(channelID).fetchMessage(messageID);
 
-        return message.edit(this.format(trivia, true));
+        await message.edit(this.format(trivia, true));
+        return true;
     }
 
     /**
