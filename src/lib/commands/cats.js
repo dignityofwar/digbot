@@ -30,8 +30,7 @@ module.exports = class CatsCommand extends Command {
      * @return {boolean}
      */
     wantsGif(content) {
-        // TODO: Needs to be improved
-        return (words(content)[1] || '').toUpperCase() === 'GIF';
+        return (words(content).find((e, i) => i > 0 && e) || '').toUpperCase() === 'GIF';
     }
 
     /**

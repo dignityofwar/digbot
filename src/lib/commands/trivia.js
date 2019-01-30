@@ -47,16 +47,13 @@ module.exports = class StatsCommand extends Command {
         this.queue.add({
             channelID: reply.channel.id,
             messageID: reply.id,
-            trivia: {
-                question: trivia.question,
-                answer: trivia.answer,
-            },
+            trivia,
         }, {
             attempts: 3,
             delay: 30000,
         });
 
-        return reply.edit(this.format(trivia, false));
+        return reply.edit(this.createMessage(trivia, false));
     }
 
     /**
@@ -68,7 +65,7 @@ module.exports = class StatsCommand extends Command {
     async process({ data: { channelID, messageID, trivia } }) {
         const message = await this.client.channels.get(channelID).fetchMessage(messageID);
 
-        await message.edit(this.format(trivia, true));
+        await message.edit(this.createMessage(trivia, true));
         return true;
     }
 
@@ -77,11 +74,16 @@ module.exports = class StatsCommand extends Command {
      * @param {boolean} showAnswer
      * @return {string}
      */
-    format(trivia, showAnswer) {
-        return '```'
-            + `\n${trivia.question}`
-            + `\n\n${showAnswer ? trivia.answer : 'I will show the answer shortly'}`
-            + '\n```';
+    createMessage(trivia, showAnswer) {
+        return {
+            embed: {
+                title: trivia.question,
+                description: showAnswer ? trivia.answer : 'I will show the answer shortly.',
+                footer: {
+                    text: `${trivia.id} | ${trivia.category.title}`
+                }
+            },
+        };
     }
 
     /**

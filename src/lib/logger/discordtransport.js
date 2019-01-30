@@ -1,8 +1,9 @@
 const config = require('config');
+const { get } = require('lodash');
 const Transport = require('winston-transport');
-// const { TextChannel } = require('discord.js');
 
 const MESSAGE = Symbol.for('message');
+const LEVEL = Symbol.for('level');
 
 module.exports = class DiscordTransport extends Transport {
     /**
@@ -47,7 +48,10 @@ module.exports = class DiscordTransport extends Transport {
     log(info, callback) {
         setImmediate(() => this.emit('logged', info));
 
-        this.queue.add({ message: info[MESSAGE] }, { attempts: 3 });
+        this.queue.add({
+            message: info[MESSAGE],
+            level: info[LEVEL],
+        }, { attempts: 3 });
 
         callback();
     }
@@ -58,9 +62,9 @@ module.exports = class DiscordTransport extends Transport {
      * @param info
      * @return {Promise}
      */
-    async process({ data: { message } }) {
-        // TODO: Solution to a problem that isn't a problem? Fuck Bull with their stupid circular structure error
-        await this.channel.send(this.markdownCodeFormat(message));
+    async process({ data: log }) {
+        // TODO: Solution to a problem that isn't a problem? Fuck Bull with their stupid circular structure errors
+        await this.channel.send(this.formatLog(log));
         return true;
     }
 
@@ -79,9 +83,26 @@ module.exports = class DiscordTransport extends Transport {
      * @param message
      * @return {string}
      */
-    markdownCodeFormat(message) {
-        // TODO: To allow the use of backticks in logs, the message should be wrapped in 2 backticks
-        //  For some reason `\`\`${message}\`\`` doesn't work
-        return `\`${message}\``;
+    formatLog({ message, level }) {
+        return {
+            embed: {
+                description: message,
+                color: this.getColor(level),
+            },
+        };
+    }
+
+    /**
+     * @param level
+     * @return {Number}
+     */
+    getColor(level) {
+        return get({
+            error: 15073280, // Red
+            warn: 16763904, // Yellow
+            info: 3394611, // Green
+            verbose: 52479, // Light Blue
+            debug: 230, // Indigo
+        }, level, 808080);
     }
 };

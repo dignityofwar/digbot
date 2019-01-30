@@ -62,8 +62,8 @@ module.exports = class CommandDispatcher extends Dispatcher {
         if (command) {
             if (
                 command.special
-                && message.member.id === message.guild.ownerID
-                && !!intersection(
+                && message.member.id !== message.guild.ownerID
+                && !intersection(
                     message.member.roles,
                     config.has(`guilds.${message.guild.id}.adminRoles`)
                         ? config.get(`guilds.${message.guild.id}.adminRoles`)
