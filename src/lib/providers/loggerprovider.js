@@ -40,11 +40,6 @@ module.exports = class LoggerProvider extends ServiceProvider {
 
     errorHandler(error) {
         this.container.resolve('logger')
-            .log('error', error.toString());
-
-        if (error instanceof Error) {
-            this.container.resolve('logger')
-                .log('error', error.stack);
-        }
+            .log('error', error instanceof Error ? error.stack : error.toString());
     }
 };

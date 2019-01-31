@@ -106,8 +106,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
      * @return {Command|undefined}
      */
     match(message) {
-        const parsedName = this.sortOfParser(message.cleanContent)
-            .toUpperCase();
+        const parsedName = this.sortOfParser(message.cleanContent).toUpperCase();
 
         return this.register.commands.find(({ name }) => name.toUpperCase() === parsedName);
     }
@@ -117,6 +116,6 @@ module.exports = class CommandDispatcher extends Dispatcher {
      * @return {String}
      */
     sortOfParser(content) {
-        return words(content)[0].slice(0);
+        return content.match(/[^\s]+/)[0].slice(1);
     }
 };
