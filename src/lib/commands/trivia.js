@@ -6,6 +6,8 @@ module.exports = class StatsCommand extends Command {
 
         this.name = 'trivia';
 
+        this.revealDuration = 30;
+
         this.client = discordjsClient;
         this.jservice = apisJservice;
         this.logger = logger;
@@ -80,19 +82,17 @@ module.exports = class StatsCommand extends Command {
                 title: trivia.question,
                 description: showAnswer ? trivia.answer : 'I will show the answer shortly.',
                 footer: {
-                    text: `${trivia.id} | ${trivia.category.title}`
-                }
+                    text: `${trivia.id} | ${trivia.category.title}`,
+                },
             },
         };
     }
 
     /**
-     * @param {boolean} full
      * @return {string}
      */
-    help(full) {
-        return !full
-            ? 'Let\'s you play some trivia'
-            : 'It will give you a random trivia question, and after 3 minutes the answer will be revealed.';
+    help() {
+        return `It will give you a random trivia question, and after ${this.revealDuration} seconds `
+            + 'the answer will be revealed.';
     }
 };

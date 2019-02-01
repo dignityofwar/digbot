@@ -7,7 +7,6 @@ const ServiceProvider = require('../core/serviceprovider');
 const DiscordTransport = require('../logger/discordtransport');
 
 const commandChannel = require('../admin/antispam/commandChannel');
-// const events = require('../admin/events');
 const subBots = require('../sub-bots/sub-bots');
 const server = require('../server/server');
 
@@ -57,6 +56,13 @@ module.exports = class DiscordProvider extends ServiceProvider {
             client.on('warn', (warning) => {
                 logger.log('warn', {
                     message: warning,
+                    label: 'discordjsClient',
+                });
+            });
+
+            client.on('error', (error) => {
+                logger.log('error', {
+                    message: error.message,
                     label: 'discordjsClient',
                 });
             });
