@@ -1,12 +1,3 @@
 # Include sub directories (runs through ./test/*)
 --recursive
 
-# Allow asynchronous operations to be performed before tests run. This is used to get
-# the testing bot up and running before tests are run
---delay
-
-# Retry failed tests 3 times (useful if an error is just because of a dodgy API connection)
---retries 3
-
-# End process after all tests are complete (necessary for CI otherwise builds would hang)
---exit

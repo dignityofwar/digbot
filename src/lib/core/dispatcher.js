@@ -14,15 +14,11 @@ module.exports = class Dispatcher extends EventEmitter {
      *
      * @return {Promise<void>}
      */
-    async start() {
-
-    }
+    async start() {}
 
     /**
      *
      * @return {Promise<void>}
      */
-    async stop() {
-
-    }
+    async stop() {}
 };

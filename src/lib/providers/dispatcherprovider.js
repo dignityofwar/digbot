@@ -3,7 +3,6 @@ const ServiceProvider = require('../core/serviceprovider');
 module.exports = class DispatcherProvider extends ServiceProvider {
     get dispatchers() {
         return [
-            // 'dispatchersMessagedispatcher',
             'dispatchersCommanddispatcher',
             'dispatchersModeratordispatcher',
         ];

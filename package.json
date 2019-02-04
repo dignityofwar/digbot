@@ -1,7 +1,7 @@
 {
   "name": "digbot",
   "version": "0.1.0",
-  "description": "- Nodejs 7.x\r - npm: discord.js",
+  "description": "- Nodejs 8.x\r - npm: discord.js",
   "main": "index.js",
   "scripts": {
     "start": "node src/bot.js",
@@ -46,13 +46,11 @@
     "node-opus": "^0.2.7"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.2.0",
     "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "mocha": "^5.2.0",
-    "mock-require": "^3.0.2",
-    "sinon": "^1.17.6",
-    "sinon-stub-promise": "^4.0.0"
+    "sinon": "^7.2.3"
   }
 }

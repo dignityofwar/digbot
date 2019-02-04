@@ -14,6 +14,16 @@ module.exports = class PollCommand extends Command {
     async execute(message) {
         return message.channel.send('Miep');
     }
+
+    /**
+     * @param {boolean} full
+     * @return {string}
+     */
+    help(full) {
+        return !full
+            ? 'Comes back with bot statistics. "Mildy interesting quantifiable data"'
+            : 'Display bot statistics such as uptime, memory usage and number of servers.';
+    }
 };
 
 
