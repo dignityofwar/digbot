@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/bot.js",
-    "mocha": "mocha",
-    "test": "docker-compose -f docker-compose-test-local.yml up --build -d && docker-compose exec digbot npm install --only=dev && docker-compose exec digbot npm run mocha && docker-compose down",
+    "test": "mocha",
     "docker:start": "docker-compose up --build -d",
     "docker:logs": "docker-compose logs -f digbot",
     "docker:stop": "docker-compose down",
