@@ -5,6 +5,7 @@ const directMessage = require('../discord/direct-message.js');
 const crashHandler = require('../crash-handling.js');
 
 // TODO: This is a temporary dispatcher
+//  DO NOT USE, MARKED FOR DELETION!! ONLY HERE FOR REFERENCE!!
 
 module.exports = class MessageDispatcher extends Dispatcher {
     /**
