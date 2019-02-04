@@ -52,12 +52,9 @@ module.exports = class Ps2digCommand extends Command {
     }
 
     /**
-     * @param {boolean} full
      * @return {string}
      */
-    help(full) {
-        return !full
-            ? 'Miep.'
-            : 'Miep full.';
+    help() {
+        return 'Assign the dig-ps2 role to yourself by providing your ps2 charactername';
     }
 };

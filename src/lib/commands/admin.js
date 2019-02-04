@@ -1,12 +1,5 @@
 const Command = require('../core/command');
 
-// const messages = [
-//     '__Admin Commands__:',
-//     '**!roles**: PM a list of all roles and their associated IDs',
-//     '**!positions**: PM a list of all channels and their associated position variables',
-//     '**!sort**: Manually trigger a global sort of all channels (Should run automatically when necesary)',
-// ];
-
 module.exports = class AdminCommand extends Command {
     constructor({ commandRegister }) {
         super();

@@ -1,6 +1,6 @@
 const Command = require('../core/command');
 
-module.exports = class StatsCommand extends Command {
+module.exports = class TriviaCommand extends Command {
     constructor({ apisJservice, discordjsClient, logger, triviaCommandQueue }) {
         super();
 

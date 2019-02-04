@@ -22,12 +22,9 @@ module.exports = class CatfactsCommand extends Command {
     }
 
     /**
-     * @param {boolean} full
      * @return {string}
      */
-    help(full) {
-        return !full
-            ? 'Posts a random cat fact'
-            : 'Will return a random cat fact, drawing from a repository of over 100 cat facts!';
+    help() {
+        return 'Will post a random cat fact, drawing from a repository of over 100 cat facts!';
     }
 };

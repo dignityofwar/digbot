@@ -48,14 +48,9 @@ module.exports = class CatsCommand extends Command {
     }
 
     /**
-     * @param {boolean} full
      * @return {string}
      */
-    help(full) {
-        return !full
-            ? 'Shows a random cat image from the interwebs. Append "gif" on the end to return a gif version.'
-            : 'This command will fetch a random cat image from the internet, it is capable of providing both gifs and images: '
-            + '\n"!cats" will return a random cat image'
-            + '\n"!cats gif" will return a random cat gif';
+    help() {
+        return 'Shows a random cat image from the interwebs. Append "gif" on the end to return a gif version.';
     }
 };

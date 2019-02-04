@@ -36,12 +36,9 @@ module.exports = class StartedCommand extends Command {
     }
 
     /**
-     * @param {boolean} full
      * @return {string}
      */
-    help(full) {
-        return !full
-            ? 'See how long the bot has been running for.'
-            : 'Use "!started" to see when the bot started';
+    help() {
+        return 'See how long the bot has been running for.';
     }
 };

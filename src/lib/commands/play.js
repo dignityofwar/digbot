@@ -212,7 +212,7 @@ module.exports = class PlayCommand extends Command {
      * @return {string}
      */
     help() {
-        return 'Plays stuff'; // TODO: Better help stuff
+        return 'Controls playing of music'; // TODO: Better help stuff
     }
 
     // Passess an explanation of the command

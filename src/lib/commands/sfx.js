@@ -94,7 +94,7 @@ module.exports = class SfxCommand extends Command {
      * @return {string}
      */
     help() {
-        return 'Plays some sfx stuff';
+        return 'Play a sound effect in your voice channel';
     }
 };
 

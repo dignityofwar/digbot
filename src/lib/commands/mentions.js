@@ -25,8 +25,6 @@ module.exports = class MentionsCommand extends Command {
             return message.channel.send(`${message.member.displayName}, you are exempt from the mention limit`);
         }
 
-        // TODO: Maybe simplify this code using lodash
-
         const memberMentions = config.get('memberMentionLimit')
             - get(mentionsCheck.passList(), `[${message.author.id}].memberMentions`, 0);
         const roleMentions = config.get('roleMentionLimit')
@@ -58,14 +56,10 @@ module.exports = class MentionsCommand extends Command {
     }
 
     /**
-     * @param {boolean} full
      * @return {string}
      */
-    help(full) {
-        return !full
-            ? 'Check your DIG server mention allowance, resets daily'
-            : 'Check the number of mentions you have remaining of your daily '
-            + 'mentions allowance. This resets every 24 hour period. Be sure that you check if you\'re not sure '
-            + 'to avoid getting in trouble for spamming';
+    help() {
+        return 'Check the number of mentions you have remaining of your daily mentions allowance. This resets every '
+            + '24 hour period. Be sure that you check if you\'re not sure to avoid getting in trouble for spamming';
     }
 };

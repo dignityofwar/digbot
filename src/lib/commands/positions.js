@@ -12,17 +12,14 @@ module.exports = class PositionsCommand extends Command {
      * @return {Promise<void>}
      */
     async execute(message) {
-        return message.channel.send('Miep');
+        return message.channel.send('This needs some work');
     }
 
     /**
-     * @param {boolean} full
      * @return {string}
      */
-    help(full) {
-        return !full
-            ? 'Comes back with bot statistics. "Mildy interesting quantifiable data"'
-            : 'Display bot statistics such as uptime, memory usage and number of servers.';
+    help() {
+        return 'PM a list of all channels and their associated position variables';
     }
 };
 

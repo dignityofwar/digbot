@@ -38,13 +38,9 @@ module.exports = class DragonsCommand extends Command {
     }
 
     /**
-     * @param {boolean} full
      * @return {string}
      */
-    help(full) {
-        return !full
-            ? '#herebedragons is a private, lawless channel which you can opt into with this command.'
-            : '#herebedragons is a private, lawless channel which you can opt into with this command. If you are '
-            + 'already subscribed, use this command again to unsubscribe.';
+    help() {
+        return '#herebedragons is a private, lawless channel which you can opt into with this command.';
     }
 };

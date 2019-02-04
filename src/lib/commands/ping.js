@@ -38,13 +38,9 @@ module.exports = class PingCommand extends Command {
     }
 
     /**
-     * @param {boolean} full
      * @return {string}
      */
-    help(full) {
-        return !full
-            ? 'Pong! Test if the bot is alive.'
-            : ' This is a classic command use the command "!ping" to get the bot to reply '
-            + '"pong", mainly used to test latency, i.e. ping';
+    help() {
+        return 'Pong! Test if the bot is alive.';
     }
 };

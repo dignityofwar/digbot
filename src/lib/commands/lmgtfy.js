@@ -24,13 +24,9 @@ module.exports = class LmgtfyCommand extends Command {
     }
 
     /**
-     * @param {boolean} full
      * @return {string}
      */
-    help(full) {
-        return !full
-            ? 'Someone being lazy and not using Google? Generate them a link to use!'
-            : 'Generates a link to http://lmgtfy.com (short for Let Me Google That For You) '
-            + 'which you can use when people are being lazy and not Googling things.';
+    help() {
+        return 'Someone being lazy and not using Google? Generate them a link to use!';
     }
 };
