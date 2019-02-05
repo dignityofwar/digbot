@@ -6,7 +6,6 @@ const { version } = require('../../../package');
 const ServiceProvider = require('../core/serviceprovider');
 const DiscordTransport = require('../logger/discordtransport');
 
-const commandChannel = require('../admin/antispam/commandChannel');
 const subBots = require('../sub-bots/sub-bots');
 const server = require('../server/server');
 
@@ -43,6 +42,7 @@ module.exports = class DiscordProvider extends ServiceProvider {
                 });
 
                 // Reconnects when connection is lost
+                // TODO: Should not try to reconnect when terminating the app, Dispatcher?
                 client.login(config.get('token'));
             });
 
@@ -113,7 +113,7 @@ module.exports = class DiscordProvider extends ServiceProvider {
         // events.ready();
         // TODO: Can be moved to ModeratorDispatcher or CommandDispatcher, we should probably introduce some throttle
         //   to replace this which retains memory when the bot crashes
-        commandChannel.ready();
+        // commandChannel.ready();
         subBots.ready();
     }
 };

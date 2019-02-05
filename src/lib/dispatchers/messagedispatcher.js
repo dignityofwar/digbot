@@ -1,6 +1,6 @@
 const Dispatcher = require('../core/dispatcher');
-const admin = require('../admin/admin.js');
-const commands = require('../commands/commands.js');
+// const admin = require('../admin/admin.js');
+// const commands = require('../commands/commands.js');
 const directMessage = require('../discord/direct-message.js');
 const crashHandler = require('../crash-handling.js');
 
