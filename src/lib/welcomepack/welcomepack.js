@@ -10,12 +10,12 @@ const server = require('../server/server.js');
 const TAG = 'welcomepack';
 
 let recentJoiners = [];
+const users = [];
 
 module.exports = {
     // Checks if the user should recieve a welcome message, if so send one
     check: function(mem) {
         crashHandler.logEvent(TAG, 'check');
-        let users = server.userList();
         if (users.indexOf(mem.user.id) !== -1) {
             logger.info(TAG, 'User: ' + mem.user.id + ' re-joined server but they are already logged as a member');
             return false;
@@ -24,7 +24,7 @@ module.exports = {
                 'has recently been welcomed');
             return false;
         } else {
-            server.saveUser(mem.user.id);
+            users.push(mem.user.id);
             logger.debug(TAG, 'New user count: ' + users.length);
             mem.sendFile('src/assets/pictures/welcome-banner.png')
                 .then(() => {

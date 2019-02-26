@@ -1,5 +1,5 @@
 const config = require('config');
-const { get, intersection, words } = require('lodash');
+const { get, intersection } = require('lodash');
 const Dispatcher = require('../core/dispatcher');
 
 module.exports = class CommandDispatcher extends Dispatcher {

@@ -1,7 +1,7 @@
 const Command = require('../core/command');
 
 module.exports = class TriviaCommand extends Command {
-    constructor({ apisJservice, discordjsClient, logger, triviaCommandQueue }) {
+    constructor({ apisJservice, discordjsClient, logger, triviaCommandQueue }) { // eslint-disable-line
         super();
 
         this.name = 'trivia';

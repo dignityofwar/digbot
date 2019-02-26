@@ -15,11 +15,13 @@ module.exports = class RateLimiter {
     /**
      * @param {String} key
      * @param {Number} decay
+     * @param {Number} times
+     * @return {Promise<Number>}
      */
-    async hit(key, decay) {
+    async hit(key, decay, times = 1) {
         const hits = await this.attempts(key);
 
-        const pipeline = this.redis.pipeline().incr(`ratelimiter:${key}`);
+        const pipeline = this.redis.pipeline().incrby(`ratelimiter:${key}`, times);
 
         if (!hits) {
             pipeline.expire(`ratelimiter:${key}`, decay * 60);

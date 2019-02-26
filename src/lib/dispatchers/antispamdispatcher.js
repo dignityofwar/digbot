@@ -33,7 +33,5 @@ module.exports = class AntiSpamDispatcher extends Dispatcher {
      *
      * @param message
      */
-    handler(message) {
-
-    }
+    handler() {}
 };

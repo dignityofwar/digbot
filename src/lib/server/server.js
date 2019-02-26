@@ -5,16 +5,9 @@
 
 const { Collection } = require('discord.js');
 const config = require('config');
-const logger = require('../logger.js');
 
 // TODO: Workaround, client should be injected. Only here for legacy support.
-/* eslint global-require: 0 */
-const client = () => require('../../bootstrap')
-    .resolve('discordjsClient');
-
-const TAG = 'server';
-
-const users = []; // Array to store ID of all members on the server
+const client = () => require('../../bootstrap').resolve('discordjsClient'); // eslint-disable-line global-require
 
 module.exports = {
     getReady() {
@@ -25,13 +18,6 @@ module.exports = {
             return false;
         }
     },
-
-    getBooted() {
-        return true;
-    },
-
-
-    markBooted() {},
 
     getGuild(id) {
         return client()
@@ -48,36 +34,20 @@ module.exports = {
                     : id,
             );
     },
+
     getChannelInGuild(id, guildID) {
         // TODO: Investigate if this function is needed
         const channel = this.getChannel(id);
         return channel.guild.id === guildID ? channel : null;
     },
 
-    saveUser(id) {
-        users.push(id);
-    },
-    userList() {
-        return users;
-    },
-
     getRole(id) {
         return this.getRoles()
             .get(id);
     },
+
     getRoles(guildId) {
         const guild = this.getGuild(guildId);
         return guild ? guild.roles : new Collection();
     },
-
-    // TODO: Marked for removal
-    markAsReady() {},
-    markAsNotReady() {},
-    saveGuild() {},
-    wipeGuild() {},
-    wipeAllGuilds() {},
-    setChannel() {},
-    wipeChannel() {},
-    wipeChannels() {},
-    setMembersOnServer() {},
 };

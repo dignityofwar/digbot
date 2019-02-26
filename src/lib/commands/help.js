@@ -1,4 +1,3 @@
-const { words } = require('lodash');
 const Command = require('../core/command');
 
 module.exports = class HelpCommand extends Command {
@@ -8,8 +7,8 @@ module.exports = class HelpCommand extends Command {
         this.name = 'help';
 
         this.throttle = {
-            attempts: 2,
-            decay: 10,
+            attempts: 1,
+            decay: 30,
         };
 
         this.register = commandRegister;
@@ -20,10 +19,6 @@ module.exports = class HelpCommand extends Command {
      * @return {Promise<void>}
      */
     async execute(message) {
-        if (this.wantsFull(message.cleanContent)) {
-            return message.member.send(this.createDM());
-        }
-
         // const commandMessage = this.wantsSomething(message.cleanContent);
         //
         // if (commandMessage) {
@@ -33,39 +28,20 @@ module.exports = class HelpCommand extends Command {
         return message.channel.send(this.createReply());
     }
 
-    /**
-     * @param content
-     * @return {boolean}
-     */
-    wantsFull(content) {
-        return (words(content)[1] || '').toUpperCase() === 'FULL';
-    }
-
-    /**
-     * @param content
-     */
+    // /**
+    //  * @param content
+    //  */
     // wantsSomething(content) {
-    //     return get(details, (words(content)[1] || '').toUpperCase(), false);
+    //     return ;
     // }
 
     /**
      * @return {string}
      */
     createReply() {
-        return this.register.commands.filter(({ onlyHelpFull, special }) => !onlyHelpFull && !special)
-            .reduce(
-                (message, { name, help }) => `${message}\n**!${name}**: ${help(false)}`,
-                '__Core Commands__',
-            );
-    }
-
-    /**
-     * @return {string}
-     */
-    createDM() {
         return this.register.commands.filter(({ special }) => !special)
             .reduce(
-                (message, { name, help }) => `${message}\n**!${name}**: ${help(true)}`,
+                (message, { name, help }) => `${message}\n**!${name}**: ${help(false)}`,
                 '__Core Commands__',
             );
     }
