@@ -1,5 +1,5 @@
 const config = require('config');
-const google = require('googleapis');
+const { google } = require('googleapis');
 const ytdl = require('ytdl-core');
 
 const Command = require('../core/command');
@@ -14,8 +14,10 @@ const subBots = require('../sub-bots/sub-bots.js');
 
 const TAG = '!play';
 
-const youtubeKey = config.get('youtubeKey'); // youtube API key
-const youtube = google.youtube('v3'); // create youtube API client
+const youtube = google.youtube({
+    version: 'v3',
+    auth: config.get('youtubeKey'),
+}); // create youtube API client
 
 const root = 'https://www.youtube.com/watch?v=';
 
@@ -478,15 +480,20 @@ a playlist ID */
 function searchForPlaylist(msg) {
     const params = {
         fields: 'items/snippet/resourceId/videoId',
-        key: youtubeKey,
         maxResults: 50,
         part: 'snippet',
         playlistId: msg.content.substring(15),
     };
 
-    youtube.playlistItems.list(params, (err, response) => {
-        if (err) {
-            // If failed cos playlist ID was bad
+    youtube.playlistItems.list(params)
+        .then((response) => {
+            const youtubePlaylist = [];
+            for (const { snippet } of response.data.items) {
+                youtubePlaylist.push(snippet.resourceId.videoId);
+            }
+            setup(msg, 'playlist', 'youtube', youtubePlaylist);
+        })
+        .catch((err) => {
             if (String(err)
                 .indexOf('cannot be found') !== -1) {
                 sendMessageToChannel(msg.channel, `Sorry ${msg.member.displayName}, it `
@@ -497,15 +504,7 @@ function searchForPlaylist(msg) {
                     + 'playlist request encountered an unexpected error, please try again');
                 logger.warning(TAG, `Failed to retrieve youtube playlist: ${err}`);
             }
-        } else {
-            // Success, create array of video IDs
-            const youtubePlaylist = [];
-            for (const { snippet } in response.items) {
-                youtubePlaylist.push(snippet.resourceId.videoId);
-            }
-            setup(msg, 'playlist', 'youtube', youtubePlaylist);
-        }
-    });
+        });
 }
 
 // Function to send messages to channels, optional promise functionality to get the new message back
@@ -653,22 +652,23 @@ function verify(location, source) {
     // No need to verify pre-verified external sources
     if (location === 'external' && verified.external[source]) { return; }
     const params = {
-        key: youtubeKey,
         part: 'snippet',
         id: source,
     };
-    youtube.videos.list(params, (err, response) => {
-        if (err) {
-            verified[location][source] = false;
-        } else if (response.pageInfo.totalResults === 0) {
-            if (location === 'local') {
-                track(source);
+    youtube.videos.list(params)
+        .then((response) => {
+            if (response.data.pageInfo.totalResults === 0) {
+                if (location === 'local') {
+                    track(source);
+                }
+                verified[location][source] = false;
+            } else {
+                verified[location][source] = true;
             }
+        })
+        .catch(() => {
             verified[location][source] = false;
-        } else {
-            verified[location][source] = true;
-        }
-    });
+        });
 }
 
 // Confirms all non locally called videos that are slated to be streamed in a channel are streamable

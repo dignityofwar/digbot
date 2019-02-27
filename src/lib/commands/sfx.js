@@ -1,5 +1,5 @@
 const config = require('config');
-const google = require('googleapis');
+const { google } = require('googleapis');
 const yt = require('ytdl-core');
 
 const Command = require('../core/command');
@@ -8,8 +8,10 @@ const logger = require('../logger.js');
 const server = require('../server/server.js');
 const sfx = require('../../assets/sfx/sfx-assets.js');
 
-const youtubeKey = config.get('youtubeKey'); // youtube API key
-const youtube = google.youtube('v3'); // create youtube API client
+const youtube = google.youtube({
+    version: 'v3',
+    auth: config.get('youtubeKey'),
+}); // create youtube API client
 
 const TAG = '!sfx';
 
@@ -371,18 +373,19 @@ function verify(source, name) {
         source = source.substring((source.indexOf('?v=') + 3)); // eslint-disable-line no-param-reassign
     }
     const params = {
-        key: youtubeKey,
         part: 'snippet',
         id: source,
     };
-    youtube.videos.list(params, (err, response) => {
-        if (err) {
+    youtube.videos.list(params)
+        .then((response) => {
+            if (response.data.pageInfo.totalResults === 0) {
+                logger.warning(TAG, `Verification process indicates sfx asset: *${name}* is bad`);
+                verification[name] = false;
+            } else {
+                verification[name] = true;
+            }
+        })
+        .catch(() => {
             verification[name] = false;
-        } else if (response.pageInfo.totalResults === 0) {
-            logger.warning(TAG, `Verification process indicates sfx asset: *${name}* is bad`);
-            verification[name] = false;
-        } else {
-            verification[name] = true;
-        }
-    });
+        });
 }
