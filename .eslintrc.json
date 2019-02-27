@@ -15,6 +15,7 @@
     "no-plusplus"           : "off",
     "no-empty-function"     : "off",
     "no-param-reassign"     : "off",
+    "no-unused-expressions" : "off",
     "no-use-before-define"  : ["error", {"functions": false, "classes": true, "variables": true}],
     "guard-for-in"          : "off",
     "no-restricted-syntax"  : "off",

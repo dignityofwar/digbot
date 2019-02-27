@@ -1,6 +1,7 @@
 const { expect } = require('chai');
-const fs = require('fs');
 const { join } = require('path');
+
+const { readdirfilesSync } = require('../src/lib/util/fs');
 
 const BaseCommand = require('../src/lib/commands/foundation/command');
 
@@ -8,7 +9,7 @@ const AsyncFunction = (async () => {}).constructor;
 const COMMANDS_DIR = join(process.cwd(), 'src/lib/commands');
 
 describe('Commands', () => {
-    for (const cf of fs.readdirSync(COMMANDS_DIR)) {
+    for (const cf of readdirfilesSync(COMMANDS_DIR)) {
         const Command = require(join(COMMANDS_DIR, cf)); // eslint-disable-line
 
         describe(`${Command.name}`, () => {
