@@ -301,7 +301,7 @@ module.exports = class PollCommand extends Command {
 //         message += '\nThis is a multiple choice poll, only the specified replies will be counted.' +
 //             '\nOptions:';
 //         votes[msg.channel.id].options = [];
-//         let optionsString = msg.content.substring(msg.content.indexOf('?') + 3, msg.content.length - 1).replace(/\s+/g, '');
+//  let optionsString = msg.content.substring(msg.content.indexOf('?') + 3, msg.content.length - 1).replace(/\s+/g, '');
 //         if (optionsString.length > 2) {
 //             let i = 0;
 //             let x = 0;

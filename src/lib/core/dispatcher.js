@@ -1,5 +1,7 @@
 const EventEmitter = require('events');
 
+/* eslint no-useless-constructor: off */
+
 module.exports = class Dispatcher extends EventEmitter {
     /**
      *

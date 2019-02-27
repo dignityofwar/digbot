@@ -166,6 +166,7 @@ function manDelete(msg, type, name) {
         .catch(err => logger.warning(TAG, `Failed to send message, error: ${err}`));
 }
 
+/* eslint no-param-reassign: off */
 // Filter name format for creations, returns false if name can't be made suitable
 function nameCheckCreate(name, type) {
     if (type !== 'voice') {
@@ -193,7 +194,7 @@ function nameCheckCreate(name, type) {
 
 // Filter name format for deletions
 function nameCheckDelete(name, type) {
-    while (name.indexOf(' ') != -1) {
+    while (name.indexOf(' ') !== -1) {
         name = name.replace(' ', '_');
     }
     if (type === 'voice' && name.indexOf('⏳') === -1) {

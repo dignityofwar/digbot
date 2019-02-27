@@ -24,7 +24,6 @@ module.exports = class Kernel extends EventEmitter {
             await this.bootstrap();
 
             await this.startDispatchers();
-
         } catch (e) {
             // TODO: Errors are not printed to the console, probably because the logger is not initialised
             console.log(e instanceof Error ? e.stack : e.toString()); // eslint-disable-line no-console
