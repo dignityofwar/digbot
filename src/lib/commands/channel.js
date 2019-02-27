@@ -1,7 +1,4 @@
-/* eslint no-use-before-define: off */
-
 const Command = require('../core/command');
-
 const channelsMaster = require('../admin/channels/channelsMaster.js');
 const help = require('./help.js');
 const logger = require('../logger.js');

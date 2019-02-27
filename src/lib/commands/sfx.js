@@ -1,5 +1,3 @@
-/* eslint no-use-before-define: off */
-
 const config = require('config');
 const google = require('googleapis');
 const yt = require('ytdl-core');

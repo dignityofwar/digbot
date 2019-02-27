@@ -9,16 +9,6 @@ const logger = () => require('../bootstrap')
     .resolve('logger');
 
 module.exports = {
-    // General status messages, e.g. Connections, Disconnections, uptime etc
-    botStatus(mod, message) {
-        logger().log('info', {
-            message,
-            label: 'status',
-        });
-    },
-    // Errors that cannot be recovered, may cause damage, and the server MUST be stopped imediately
-    // TODO: Ready to be removed, used by discord/discordbot.js
-    criticalcritical() {},
     // General debug messages
     debug(mod, message) {
         logger().log('debug', {
@@ -55,10 +45,6 @@ module.exports = {
             label: mod,
         });
     },
-    // Set channel the bot will alert on errors on bot start
-    setChannel() {},
-    setDebugs() {},
-    setTesting() {},
     // The server can continue to run, however it's things we maybe should address
     warning(mod, message) {
         logger().log('warn', {

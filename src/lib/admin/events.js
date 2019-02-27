@@ -10,8 +10,6 @@ const server = require('../server/server.js');
 
 const TAG = 'events';
 
-/* eslint no-use-before-define: off */
-
 module.exports = {
     // Called every 5 mins by admin.js, checks for events starting and ending
     check() {

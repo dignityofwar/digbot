@@ -1,5 +1,3 @@
-/* eslint no-use-before-define: off */
-
 const config = require('config');
 const logger = require('../../logger.js');
 const server = require('../../server/server.js');

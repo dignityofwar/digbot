@@ -1,12 +1,10 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // Module to control welcomepack sent to new users joining the server
 
 const crashHandler = require('../crash-handling.js');
 const logger = require('../logger.js');
-const server = require('../server/server.js');
+
 const TAG = 'welcomepack';
 
 let recentJoiners = [];

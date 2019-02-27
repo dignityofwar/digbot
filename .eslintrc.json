@@ -14,8 +14,9 @@
     ],
     "no-plusplus"           : "off",
     "no-empty-function"     : "off",
-    "guard-for-in"          : 0,
-    "no-restricted-syntax"  : 0,
+    "no-use-before-define": ["error", { "functions": false, "classes": true, "variables": true }],
+    "guard-for-in"          : "off",
+    "no-restricted-syntax"  : "off",
     "class-methods-use-this": "off"
   }
 }
