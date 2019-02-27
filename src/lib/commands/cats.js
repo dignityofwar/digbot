@@ -16,13 +16,13 @@ module.exports = class CatsCommand extends Command {
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(message) {
-        const img = await this.getCat(this.wantsGif(message.cleanContent));
+    async execute(request) {
+        const img = await this.getCat(this.wantsGif(request.content));
 
-        return message.channel.send({ embed: { image: { url: img } } });
+        return request.respond({ embed: { image: { url: img } } });
     }
 
     /**
@@ -52,5 +52,9 @@ module.exports = class CatsCommand extends Command {
      */
     help() {
         return 'Shows a random cat image from the interwebs. Append "gif" on the end to return a gif version.';
+    }
+
+    throttled() {
+        return 'I\'ve decided to severely limit the amount of cats I\'m afraid.';
     }
 };

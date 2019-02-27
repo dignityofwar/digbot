@@ -1,40 +1,21 @@
 const Command = require('./foundation/command');
+const { pingStatus } = require('../util/ping');
 
 module.exports = class PingCommand extends Command {
-    constructor() {
+    constructor({ discordjsClient }) {
         super();
 
         this.name = 'ping';
+
+        this.client = discordjsClient;
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(message) {
-        const { ping } = message.client;
-
-        return message.channel.send(`Ping: ${Math.round(ping)} (${this.pingStatus(ping)})`);
-    }
-
-    /**
-     * @param ping
-     * @return {string}
-     */
-    pingStatus(ping) {
-        if (ping < 100) {
-            return 'Excellent';
-        }
-        if (ping < 200) {
-            return 'Very Good';
-        }
-        if (ping < 500) {
-            return 'Good';
-        }
-        if (ping < 1000) {
-            return 'Mediocre';
-        }
-        return 'Bad';
+    async execute(request) {
+        return request.respond(`Ping: ${Math.round(this.client.ping)} (${pingStatus(this.client.ping)})`);
     }
 
     /**

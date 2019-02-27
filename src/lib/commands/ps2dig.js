@@ -12,35 +12,33 @@ module.exports = class Ps2digCommand extends Command {
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(message) {
-        if (message.member.roles.has(config.get(`guilds.${message.guild.id}.digRole`))) {
-            return message.reply('You already have this role. Don\'t be greedy now.');
+    async execute(request) {
+        if (request.member.roles.has(config.get(`guilds.${request.guild.id}.digRole`))) {
+            return request.reply('You already have this role. Don\'t be greedy now.');
         }
 
-        const characterName = this.getCharacterName(message.cleanContent);
+        const characterName = this.getCharacterName(request.content);
 
         if (!characterName) {
-            return message.reply('A bot needs a name.');
+            return request.reply('A bot needs a name.');
         }
 
         const character = await this.ps2api.getCharacterByName(characterName);
 
         if (character) {
             if (get(character, 'outfit.outfit_id') === '37509488620604883') {
-                await message.member.addRole(config.get(`guilds.${message.guild.id}.digRole`));
+                await request.member.addRole(config.get(`guilds.${request.guild.id}.digRole`));
 
-                return message.reply(`Welcome to the outfit ${get(character, 'name.first')}`);
+                return request.reply(`Welcome to the outfit ${get(character, 'name.first')}`);
             }
 
-            return message.reply(
-                'I asked command and they have never heard of you private. *suspicion intensifies*',
-            );
+            return request.reply('I asked command and they have never heard of you private. *suspicion intensifies*');
         }
 
-        return message.reply('I couldn\'t find your character.');
+        return request.reply('I couldn\'t find your character.');
     }
 
     /**

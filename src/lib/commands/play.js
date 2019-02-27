@@ -36,7 +36,7 @@ module.exports = class PlayCommand extends Command {
         this.name = 'play';
     }
 
-    async execute(msg) { // eslint-disable-line consistent-return
+    async execute({ message: msg }) { // eslint-disable-line consistent-return
         failing = false;
         if (!config.get('features.play')) {
             sendMessageToChannel(msg.channel, 'Sorry this feature has been disabled');
@@ -59,8 +59,7 @@ module.exports = class PlayCommand extends Command {
             return false;
         }
 
-        if (msg.content.substring(6)
-            .startsWith('video')) {
+        if (msg.content.substring(6).startsWith('video')) {
             /* This bit will help dramatically cut down on grief not only from different kinds of youtube
             links but also from people trying to link sound clouds and such */
             if (
@@ -97,8 +96,7 @@ module.exports = class PlayCommand extends Command {
 
                 return true;
             }
-        } else if (msg.content.substring(6)
-            .startsWith('playlist')) {
+        } else if (msg.content.substring(6).startsWith('playlist')) {
             if (!playAssets.pass[msg.content.substring(15)]) {
                 if (
                     msg.content.substring(15).indexOf('http:') !== -1

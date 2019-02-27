@@ -14,16 +14,18 @@ module.exports = class RestartCommand extends Command {
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(message) {
+    async execute(request) {
         // TODO: Add guard that only admins or owners can restart the bot
 
         this.logger.log('info', {
-            message: `Restarting the bot requested by ${message.author.name}`,
+            message: `Restarting the bot requested by ${request.message.author.name}`,
             label: '!restart',
         });
+
+        request.respond('See you in a bit.');
 
         setTimeout(() => {
             process.exit(0);

@@ -11,13 +11,13 @@ module.exports = class AdminCommand extends Command {
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(message) {
+    async execute(request) {
         return Promise.all([
-            message.member.send(this.createReply()),
-            message.channel.send(`I'll PM you the list of admin commands ${message.member.displayName}`),
+            request.member.send(this.createReply()),
+            request.respond(`I'll PM you the list of admin commands ${request.member.displayName}`),
         ]);
     }
 
@@ -30,7 +30,7 @@ module.exports = class AdminCommand extends Command {
     createReply() {
         return this.register.commands.filter(({ special }) => special)
             .reduce(
-                (message, { name, help }) => `${message}\n**!${name}**: ${help(false)}`,
+                (message, { name, help }) => `${message}\n**!${name}**: ${help()}`,
                 '__Admin Commands__',
             );
     }

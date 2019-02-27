@@ -1,12 +1,12 @@
 const Command = require('./foundation/command');
 
+const revealDuration = 30;
+
 module.exports = class TriviaCommand extends Command {
     constructor({ apisJservice, discordjsClient, logger, triviaCommandQueue }) { // eslint-disable-line
         super();
 
         this.name = 'trivia';
-
-        this.revealDuration = 30;
 
         this.client = discordjsClient;
         this.jservice = apisJservice;
@@ -37,12 +37,12 @@ module.exports = class TriviaCommand extends Command {
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(message) {
+    async execute(request) {
         const [reply, trivia] = await Promise.all([
-            message.channel.send('Let me fetch you a question.'),
+            request.respond('Let me fetch you a question.'),
             this.jservice.random(),
         ]);
 
@@ -55,7 +55,7 @@ module.exports = class TriviaCommand extends Command {
             delay: 30000,
         });
 
-        return reply.edit(this.createMessage(trivia, false));
+        return request.respond(this.createMessage(trivia, false));
     }
 
     /**
@@ -92,7 +92,7 @@ module.exports = class TriviaCommand extends Command {
      * @return {string}
      */
     help() {
-        return `It will give you a random trivia question, and after ${this.revealDuration} seconds `
+        return `It will give you a random trivia question, and after ${revealDuration} seconds `
             + 'the answer will be revealed.';
     }
 };

@@ -10,17 +10,17 @@ module.exports = class SortCommand extends Command {
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<*>}
      */
-    async execute(message) {
+    async execute(request) {
         if (!config.get('features.channelPositionsEnforcement')) {
-            return message.channel.send('Sorry but the channel position enforcement feature is currently disabled');
+            return request.respond('Sorry but the channel position enforcement feature is currently disabled');
         }
 
         positions.globalCheck();
 
-        return message.channel.send('Sent global sort request to channels/positions.js');
+        return request.respond('Sent global sort request to channels/positions.js');
     }
 
     /**

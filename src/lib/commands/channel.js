@@ -14,10 +14,10 @@ module.exports = class ChannelCommand extends Command {
     }
 
     /**
-     * @param msg
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(msg) {
+    async execute({ message: msg }) {
         // Filter out key parts of message
         const action = filterAction(msg);
         if (!action) { return; }
@@ -164,6 +164,7 @@ function manDelete(msg, type, name) {
 }
 
 /* eslint no-param-reassign: off */
+
 // Filter name format for creations, returns false if name can't be made suitable
 function nameCheckCreate(name, type) {
     if (type !== 'voice') {

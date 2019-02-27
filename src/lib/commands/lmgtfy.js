@@ -8,15 +8,15 @@ module.exports = class LmgtfyCommand extends Command {
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(message) {
+    async execute(request) {
         // TODO: Maybe incorporate some of the standard modules of node like querystring
-        const args = message.cleanContent.split(' ');
+        const args = request.content.split(' ');
         args.shift();
 
-        return message.channel.send(
+        return request.respond(
             args.length
                 ? `There you go! http://lmgtfy.com/?q=${encodeURI(args.join('+'))}`
                 : 'You still need to ask a question, I can\'t do that myself.',

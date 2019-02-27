@@ -11,26 +11,26 @@ module.exports = class MentionsCommand extends Command {
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(message) {
+    async execute(request) {
         if (config.get('features.disableMentionSpam')) {
-            return message.channel.send(`${message.member.displayName}, the mention limits are currently disabled. `
+            return request.respond(`${request.member.displayName}, the mention limits are currently disabled. `
                 + 'Please don\'t make us regret turning it off though');
         }
 
         // If member is exempt from limits
-        if (mentionsCheck.exemptMember(message.member)) {
-            return message.channel.send(`${message.member.displayName}, you are exempt from the mention limit`);
+        if (mentionsCheck.exemptMember(request.member)) {
+            return request.respond(`${request.member.displayName}, you are exempt from the mention limit`);
         }
 
         const memberMentions = config.get('memberMentionLimit')
-            - get(mentionsCheck.passList(), `[${message.author.id}].memberMentions`, 0);
+            - get(mentionsCheck.passList(), `[${request.author.id}].memberMentions`, 0);
         const roleMentions = config.get('roleMentionLimit')
-            - get(mentionsCheck.passList(), `[${message.author.id}].roleMentions`, 0);
+            - get(mentionsCheck.passList(), `[${request.author.id}].roleMentions`, 0);
 
-        return message.channel.sendMessage(this.createReply(message.member.displayName, memberMentions, roleMentions));
+        return request.respond(this.createReply(request.member.displayName, memberMentions, roleMentions));
     }
 
     /**

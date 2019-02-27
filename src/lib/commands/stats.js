@@ -1,60 +1,44 @@
 const { duration } = require('moment');
 const Command = require('./foundation/command');
 const performance = require('../util/performance.js');
+const { pingStatus } = require('../util/ping');
 const { version } = require('../../../package');
 
 module.exports = class StatsCommand extends Command {
-    constructor() {
+    constructor({ discordjsClient }) {
         super();
+
+        this.client = discordjsClient;
 
         this.name = 'stats';
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(message) {
+    async execute(request) {
         return Promise.all([
-            message.channel.send('pong'),
+            request.respond('pong'),
             performance.getCpu(),
             performance.getMemory(),
         ])
             .then(([reply, cpu, memory]) => {
                 // TODO: Investegate guild presences size. It probably includes offline users.
                 //  Don't know if a map impact performance
+                // TODO: Use RichEmbed
                 reply.edit(
                     '__**DIGBot Stats**__\n'
                     + `**CPU Usage:** ${cpu}%\n`
                     + `**Memory Usage:** ${memory}MB\n`
                     + `**Version:** ${version}\n`
-                    + `**Ping:** ${Math.round(message.client.ping)}ms (${this.pingStatus(message.client.ping)})\n`
+                    + `**Ping:** ${Math.round(this.client.ping)}ms (${pingStatus(this.client.ping)})\n`
                     + `**Runtime:** ${duration(process.uptime(), 'seconds').humanize()}\n`
-                    + `**Stable Discord connection for:** ${duration(message.client.uptime).humanize()}\n`
-                    + `**Members on server:** ${message.guild.memberCount}\n`
-                    + `**Server members in-game:** ${message.guild.presences.size}`,
+                    + `**Stable Discord connection for:** ${duration(this.client.uptime).humanize()}\n`
+                    + `**Members on server:** ${request.message.guild.memberCount}\n`
+                    + `**Server members in-game:** ${request.message.guild.presences.size}`,
                 );
             });
-    }
-
-    /**
-     * @param ping
-     * @return {string}
-     */
-    pingStatus(ping) {
-        if (ping < 100) {
-            return 'Excellent';
-        }
-        if (ping < 200) {
-            return 'Very Good';
-        }
-        if (ping < 500) {
-            return 'Good';
-        }
-        if (ping < 1000) {
-            return 'Mediocre';
-        }
-        return 'Bad';
     }
 
     /**

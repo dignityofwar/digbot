@@ -9,23 +9,24 @@ module.exports = class HelpCommand extends Command {
         this.throttle = {
             attempts: 1,
             decay: 30,
+            peruser: false,
         };
 
         this.register = commandRegister;
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(message) {
+    async execute(request) {
         // const commandMessage = this.wantsSomething(message.cleanContent);
         //
         // if (commandMessage) {
         //     return message.channel.send(commandMessage);
         // }
 
-        return message.channel.send(this.createReply());
+        return request.respond(this.createReply());
     }
 
     // /**

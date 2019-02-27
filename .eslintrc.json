@@ -14,7 +14,8 @@
     ],
     "no-plusplus"           : "off",
     "no-empty-function"     : "off",
-    "no-use-before-define": ["error", { "functions": false, "classes": true, "variables": true }],
+    "no-param-reassign"     : "off",
+    "no-use-before-define"  : ["error", {"functions": false, "classes": true, "variables": true}],
     "guard-for-in"          : "off",
     "no-restricted-syntax"  : "off",
     "class-methods-use-this": "off"

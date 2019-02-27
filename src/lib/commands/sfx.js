@@ -29,7 +29,7 @@ module.exports = class SfxCommand extends Command {
         this.name = 'sfx';
     }
 
-    async execute(msg) {
+    async execute({ message: msg }) {
         if (!config.get('features.sfx')) {
             sendMessageToChannel(msg.channel, 'Sorry this feature has been disabled');
             return false;

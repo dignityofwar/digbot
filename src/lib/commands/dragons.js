@@ -11,30 +11,28 @@ module.exports = class DragonsCommand extends Command {
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(message) {
+    async execute(request) {
         // TODO: Maybe use the reasons parameter?
-        if (message.guild === config.get('general.server')) { return; } // TODO: This needs to be removed
+        if (request.guild === config.get('general.server')) { return; } // TODO: This needs to be removed
 
         const dragonRole = config.get('general.herebedragonsRoleID');
 
-        if (message.member.roles.has(dragonRole)) {
-            await message.member.removeRole(dragonRole);
+        if (request.member.roles.has(dragonRole)) {
+            await request.member.removeRole(dragonRole);
 
-            return message.reply(
+            return request.reply(
                 'you already had the herebedragons role. I\'ve removed it. Type **!dragons** again to resubscribe.',
             );
         }
 
-        await message.member.addRole(dragonRole);
+        await request.member.addRole(dragonRole);
 
-        return message.guild.channels.get(config.get('channels.mappings.herebedragons'))
-            .sendMessage(
-                `${message.member.displayName} has been granted access here. Note, this channel is lawless.`
-                + ' If you get triggered, the community staff cannot help you.',
-            );
+        return request.guild.channels.get(config.get('channels.mappings.herebedragons'))
+            .send(`${request.member.displayName} has been granted access here. Note, this channel is lawless.`
+                + ' If you get triggered, the community staff cannot help you.');
     }
 
     /**

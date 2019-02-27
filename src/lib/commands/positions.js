@@ -8,11 +8,11 @@ module.exports = class PositionsCommand extends Command {
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(message) {
-        return message.channel.send('This needs some work');
+    async execute(request) {
+        return request.respond('This needs some work');
     }
 
     /**

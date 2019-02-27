@@ -11,11 +11,11 @@ module.exports = class CatfactsCommand extends Command {
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<void>}
      */
-    async execute(message) {
-        return message.channel.send(antiduplicate.randomise(
+    async execute(request) {
+        return request.respond(antiduplicate.randomise(
             'catfacts',
             catfacts,
         ));

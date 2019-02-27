@@ -9,11 +9,11 @@ module.exports = class StartedCommand extends Command {
     }
 
     /**
-     * @param message
+     * @param request
      * @return {Promise<*>}
      */
-    async execute(message) {
-        return message.channel.send(this.createReply());
+    async execute(request) {
+        return request.respond(this.createReply());
     }
 
     /**

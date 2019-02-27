@@ -1,6 +1,7 @@
 const config = require('config');
 const { get, intersection } = require('lodash');
 const Dispatcher = require('../foundation/dispatcher');
+const Request = require('../commands/foundation/request');
 
 module.exports = class CommandDispatcher extends Dispatcher {
     /**
@@ -43,6 +44,8 @@ module.exports = class CommandDispatcher extends Dispatcher {
      * @param message
      */
     async handler(message) {
+        // TODO: Bit of a cluster fuck, maybe split this up in multiple parts
+
         if (message.author.bot || message.system) { return; }
 
         // Handle DMs
@@ -60,6 +63,8 @@ module.exports = class CommandDispatcher extends Dispatcher {
         const command = this.match(message);
 
         if (command) {
+            const request = new Request(command, message);
+
             if (
                 command.special
                 && message.member.id !== message.guild.ownerID
@@ -71,7 +76,9 @@ module.exports = class CommandDispatcher extends Dispatcher {
                 ).length
             ) { return; }
 
-            const throttleKey = `${command.name}:${message.guild.id}:${message.author.id}`;
+            const throttleKey = get(command, 'throttle.peruser', true)
+                ? `${command.name}:${message.guild.id}:${message.author.id}`
+                : `${command.name}:${message.guild.id}`;
 
             if (await this.ratelimiter.tooManyAttempts(
                 throttleKey,
@@ -82,22 +89,29 @@ module.exports = class CommandDispatcher extends Dispatcher {
                     label: 'CommandDispatcher',
                 });
 
+                if (command.throttled instanceof Function) {
+                    get(command, 'throttle.peruser', true)
+                        ? request.reply(command.throttled())
+                        : request.respond(command.throttled());
+                } else {
+                    request.react('🛑');
+                }
+
                 return; // TODO: Custom message when throttled, default add a stop reaction.
             }
 
             await this.ratelimiter.hit(throttleKey, get(command.throttle, 'decay', 5));
 
-            // TODO: Maybe better error handling, like sending a message that the command failed
-            //  Note that it should take into account messages that are already send and if it is connected
-            //  If it has already send a message it should overwrite that message
-            //  If it lost the connection to discord, push the command with it's state to a queue
-            //  This will probably requires a wrapper for the message which will be passed to the command, also the
-            //  commands need to be split up in stages when necessary so it can resume execution
-            command.execute(message)
-                .catch(error => this.logger.log('error', {
-                    message: error.toString(),
-                    label: 'commandDispatcher',
-                }));
+
+            command.execute(request)
+                .catch((error) => {
+                    this.logger.log('error', {
+                        message: error.toString(),
+                        label: 'commandDispatcher',
+                    });
+
+                    request.respond('I failed you'); // TODO: Better error message
+                });
         }
     }
 
