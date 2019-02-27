@@ -1,4 +1,4 @@
-const Command = require('../core/command');
+const Command = require('./foundation/command');
 
 module.exports = class TriviaCommand extends Command {
     constructor({ apisJservice, discordjsClient, logger, triviaCommandQueue }) { // eslint-disable-line

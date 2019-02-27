@@ -2,13 +2,12 @@ const config = require('config');
 const { google } = require('googleapis');
 const ytdl = require('ytdl-core');
 
-const Command = require('../core/command');
+const Command = require('./foundation/command');
 
 const antiDuplicate = require('../util/antiduplicate.js');
 const crashHandler = require('../crash-handling.js');
 const logger = require('../logger.js');
 const playAssets = require('../../assets/music/play-assets.js');
-// const request = require('request');
 const server = require('../server/server.js');
 const subBots = require('../sub-bots/sub-bots.js');
 

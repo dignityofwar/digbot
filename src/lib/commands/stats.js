@@ -1,5 +1,5 @@
 const { duration } = require('moment');
-const Command = require('../core/command');
+const Command = require('./foundation/command');
 const performance = require('../util/performance.js');
 const { version } = require('../../../package');
 

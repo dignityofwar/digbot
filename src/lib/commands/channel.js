@@ -1,4 +1,4 @@
-const Command = require('../core/command');
+const Command = require('./foundation/command');
 const channelsMaster = require('../admin/channels/channelsMaster.js');
 const help = require('./help.js');
 const logger = require('../logger.js');

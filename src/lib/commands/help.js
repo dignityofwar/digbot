@@ -1,4 +1,4 @@
-const Command = require('../core/command');
+const Command = require('./foundation/command');
 
 module.exports = class HelpCommand extends Command {
     constructor({ commandRegister }) {

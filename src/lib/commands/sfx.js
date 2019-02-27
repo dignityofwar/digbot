@@ -2,7 +2,7 @@ const config = require('config');
 const { google } = require('googleapis');
 const yt = require('ytdl-core');
 
-const Command = require('../core/command');
+const Command = require('./foundation/command');
 const crashHandler = require('../crash-handling.js');
 const logger = require('../logger.js');
 const server = require('../server/server.js');

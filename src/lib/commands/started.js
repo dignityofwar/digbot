@@ -1,5 +1,5 @@
 const { duration } = require('moment');
-const Command = require('../core/command');
+const Command = require('./foundation/command');
 
 module.exports = class StartedCommand extends Command {
     constructor() {

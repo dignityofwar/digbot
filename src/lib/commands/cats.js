@@ -1,5 +1,5 @@
 const { words } = require('lodash');
-const Command = require('../core/command');
+const Command = require('./foundation/command');
 
 module.exports = class CatsCommand extends Command {
     constructor({ apisThecatapi }) {

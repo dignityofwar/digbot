@@ -1,6 +1,6 @@
 const config = require('config');
 const { get } = require('lodash');
-const Command = require('../core/command');
+const Command = require('./foundation/command');
 const mentionsCheck = require('../admin/antispam/mentionspam.js');
 
 module.exports = class MentionsCommand extends Command {

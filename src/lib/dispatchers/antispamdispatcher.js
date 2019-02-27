@@ -1,4 +1,4 @@
-const Dispatcher = require('../core/dispatcher');
+const Dispatcher = require('../foundation/dispatcher');
 
 module.exports = class AntiSpamDispatcher extends Dispatcher {
     /**

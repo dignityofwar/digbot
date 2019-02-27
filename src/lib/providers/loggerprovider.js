@@ -1,7 +1,7 @@
 const { asFunction, asValue } = require('awilix');
 const { createLogger, format, transports: { Console: ConsoleTransport } } = require('winston');
 const config = require('config');
-const ServiceProvider = require('../core/serviceprovider');
+const ServiceProvider = require('../foundation/serviceprovider');
 
 module.exports = class LoggerProvider extends ServiceProvider {
     /**

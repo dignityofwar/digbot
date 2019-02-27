@@ -1,5 +1,5 @@
 const config = require('config');
-const Command = require('../core/command');
+const Command = require('./foundation/command');
 const positions = require('../admin/channels/positions.js');
 
 module.exports = class SortCommand extends Command {

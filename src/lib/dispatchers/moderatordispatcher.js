@@ -1,4 +1,4 @@
-const Dispatcher = require('../core/dispatcher');
+const Dispatcher = require('../foundation/dispatcher');
 
 const channels = require('../admin/channels/channelsMaster');
 const detectPlaying = require('../admin/roles/detectplaying');

@@ -1,6 +1,6 @@
 const config = require('config');
 const { get, intersection } = require('lodash');
-const Dispatcher = require('../core/dispatcher');
+const Dispatcher = require('../foundation/dispatcher');
 
 module.exports = class CommandDispatcher extends Dispatcher {
     /**

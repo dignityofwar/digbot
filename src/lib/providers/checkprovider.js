@@ -1,5 +1,5 @@
 const config = require('config');
-const ServiceProvider = require('../core/serviceprovider');
+const ServiceProvider = require('../foundation/serviceprovider');
 
 const autodelete = require('../admin/channels/autodelete.js');
 const crashHandler = require('../crash-handling.js');

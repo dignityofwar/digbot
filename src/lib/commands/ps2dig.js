@@ -1,6 +1,6 @@
 const config = require('config');
 const { get } = require('lodash');
-const Command = require('../core/command');
+const Command = require('./foundation/command');
 
 module.exports = class Ps2digCommand extends Command {
     constructor({ apisPs2 }) {

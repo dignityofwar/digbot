@@ -1,5 +1,5 @@
 const config = require('config');
-const Command = require('../core/command');
+const Command = require('./foundation/command');
 
 /* eslint consistent-return: 0 */
 module.exports = class DragonsCommand extends Command {

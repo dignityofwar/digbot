@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const fs = require('fs');
 const { join } = require('path');
 
-const BaseCommand = require('../src/lib/core/command');
+const BaseCommand = require('../src/lib/commands/foundation/command');
 
 const AsyncFunction = (async () => {}).constructor;
 const COMMANDS_DIR = join(process.cwd(), 'src/lib/commands');

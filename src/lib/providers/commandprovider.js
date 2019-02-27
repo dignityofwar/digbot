@@ -1,9 +1,9 @@
 // const config = require('config');
 const { asClass } = require('awilix');
 const { isString } = require('lodash');
-const ServiceProvider = require('../core/serviceprovider');
+const ServiceProvider = require('../foundation/serviceprovider');
 
-const CommandRegister = require('../core/commandregister');
+const CommandRegister = require('../commands/foundation/commandregister');
 
 const play = require('../commands/play');
 const sfx = require('../commands/sfx');

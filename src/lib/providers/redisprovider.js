@@ -2,7 +2,7 @@ const config = require('config');
 const { asFunction } = require('awilix');
 const Queue = require('bull');
 const Redis = require('ioredis');
-const ServiceProvider = require('../core/serviceprovider');
+const ServiceProvider = require('../foundation/serviceprovider');
 
 module.exports = class QueueProvider extends ServiceProvider {
     /**

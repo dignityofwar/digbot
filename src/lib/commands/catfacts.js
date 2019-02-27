@@ -1,4 +1,4 @@
-const Command = require('../core/command');
+const Command = require('./foundation/command');
 
 const antiduplicate = require('../util/antiduplicate.js');
 const catfacts = require('../../assets/catfacts.js');

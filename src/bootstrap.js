@@ -1,6 +1,6 @@
 const { asClass } = require('awilix');
-const App = require('./lib/core/app');
-const Kernel = require('./lib/core/kernel');
+const App = require('./lib/foundation/app');
+const Kernel = require('./lib/foundation/kernel');
 
 const app = new App();
 

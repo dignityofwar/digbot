@@ -1,4 +1,4 @@
-const ServiceProvider = require('../core/serviceprovider');
+const ServiceProvider = require('../foundation/serviceprovider');
 
 module.exports = class DispatcherProvider extends ServiceProvider {
     get dispatchers() {
