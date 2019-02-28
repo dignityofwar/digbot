@@ -5,6 +5,7 @@ module.exports = class CommandRegistery extends Map {
     constructor() {
         super();
     }
+
     /**
      * @param command
      */

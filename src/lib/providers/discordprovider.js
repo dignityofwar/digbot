@@ -84,28 +84,21 @@ module.exports = class DiscordProvider extends ServiceProvider {
      *
      * @return {Promise<void>}
      */
-    async boot() {
+    async boot({ discordjsClient, logger }) {
         // TODO: Shouldn't probably be started here
-        await this.container.resolve('discordjsClient')
-            .login(config.get('token'));
+        await discordjsClient.login(config.get('token'));
 
-        this.container.resolve('logger')
-            .add(this.container.resolve('loggerDiscordTransport'));
+        logger.add(this.container.resolve('loggerDiscordTransport'));
 
         if (server.getChannel('developers')) {
             server.getChannel('developers')
                 .sendMessage(
                     `DIGBot, reporting for duty! Environment: ${config.util.getEnv('NODE_ENV')}, Version: ${version}`,
                 )
-                .then(() => this.container.resolve('logger')
-                    .log('info', 'Succesfully sent message'))
-                .catch(err => this.container.resolve('logger')
-                    .log('error', `Failed to send message error: ${err}`));
+                .then(() => logger.log('info', 'Succesfully sent message'))
+                .catch(err => logger.log('error', `Failed to send message error: ${err}`));
         }
 
-        // Store the data for usage from other modules
-
-        // events.ready();
         // TODO: Can be moved to ModeratorDispatcher or CommandDispatcher, we should probably introduce some throttle
         //   to replace this which retains memory when the bot crashes
         // commandChannel.ready();

@@ -53,15 +53,12 @@ module.exports = class QueueProvider extends ServiceProvider {
      *
      * @return {Promise<void>}
      */
-    async boot() {
-        // TODO: Maybe add some boot method to commands?
-        const register = this.container.resolve('commandRegister');
-
+    async boot({ commandRegister }) {
         for (const command of this.commands) {
             if (isString(command)) {
-                register.add(this.container.resolve(command));
+                commandRegister.add(this.container.resolve(command));
             } else {
-                register.add(this.container.build(command));
+                commandRegister.add(this.container.build(command));
             }
         }
 
