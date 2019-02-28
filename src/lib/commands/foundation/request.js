@@ -12,7 +12,7 @@ module.exports = class Request {
      * @return {Promise<Message>}
      */
     async respond(content, options) {
-        if (this.responseMessage instanceof Message) {
+        if (this.response instanceof Message) {
             return this.response.edit(content, options);
         }
 
