@@ -17,7 +17,6 @@ module.exports = class DiscordProvider extends ServiceProvider {
         this.container.register('discordjsClient', asFunction(({ logger }) => {
             const client = new Client();
 
-            // Emitted when the client client is ready
             client.on('ready', () => {
                 logger.log('info', {
                     message: 'Connected to Discord',
@@ -25,13 +24,13 @@ module.exports = class DiscordProvider extends ServiceProvider {
                 });
             });
 
-            // client.on('reconnecting', () => {
-            //     // Log level is warn so it will be logged to discord
-            //     logger.log('warn', {
-            //         message: 'Client disconnected, attempting reconnection...',
-            //         label: 'discordjsClient',
-            //     });
-            // });
+            client.on('reconnecting', () => {
+                // Log level is warn so it will be logged to discord
+                logger.log('warn', {
+                    message: 'Reconnected to Discord',
+                    label: 'discordjsClient',
+                });
+            });
 
             client.on('disconnect', (event) => {
                 // Log level is warn so it will be logged to discord
@@ -40,10 +39,6 @@ module.exports = class DiscordProvider extends ServiceProvider {
                     message: `Disconnected from Discord(code ${event.code}): ${event.reason}`,
                     label: 'discordjsClient',
                 });
-
-                // Reconnects when connection is lost
-                // TODO: Should not try to reconnect when terminating the app, Dispatcher?
-                client.login(config.get('token'));
             });
 
             client.on('debug', (info) => {

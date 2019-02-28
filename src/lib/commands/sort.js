@@ -7,6 +7,7 @@ module.exports = class SortCommand extends Command {
         super();
 
         this.name = 'sort';
+        this.special = true;
     }
 
     /**

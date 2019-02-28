@@ -40,11 +40,19 @@ module.exports = class HelpCommand extends Command {
      * @return {string}
      */
     createReply() {
-        return this.register.commands.filter(({ special }) => !special)
-            .reduce(
-                (message, { name, help }) => `${message}\n**!${name}**: ${help(false)}`,
-                '__Core Commands__',
-            );
+        return {
+            embed: {
+                title: 'Commands',
+                fields: [
+                    ...this.register.toArray()
+                        .filter(({ special }) => !special)
+                        .map(({ name, help }) => ({
+                            name: `!${name}`,
+                            value: help(),
+                        })),
+                ],
+            },
+        };
     }
 
     /**

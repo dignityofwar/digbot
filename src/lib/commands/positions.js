@@ -5,6 +5,8 @@ module.exports = class PositionsCommand extends Command {
         super();
 
         this.name = 'positions';
+
+        this.special = true;
     }
 
     /**

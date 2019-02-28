@@ -6,6 +6,7 @@ module.exports = class StartedCommand extends Command {
         super();
 
         this.name = 'started';
+        this.special = true;
     }
 
     /**

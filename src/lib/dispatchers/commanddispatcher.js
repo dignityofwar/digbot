@@ -89,6 +89,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
                     label: 'CommandDispatcher',
                 });
 
+                // TODO: Should probably throttle the throttle message
                 if (command.throttled instanceof Function) {
                     get(command, 'throttle.peruser', true)
                         ? request.reply(command.throttled())
@@ -97,7 +98,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
                     request.react('🛑');
                 }
 
-                return; // TODO: Custom message when throttled, default add a stop reaction.
+                return;
             }
 
             await this.ratelimiter.hit(throttleKey, get(command.throttle, 'decay', 5));
@@ -120,9 +121,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
      * @return {Command|undefined}
      */
     match(message) {
-        const parsedName = this.sortOfParser(message.cleanContent).toUpperCase();
-
-        return this.register.commands.find(({ name }) => name.toUpperCase() === parsedName);
+        return this.register.get(this.sortOfParser(message.cleanContent));
     }
 
     /**

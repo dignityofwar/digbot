@@ -3,6 +3,7 @@ const ServiceProvider = require('../foundation/serviceprovider');
 module.exports = class DispatcherProvider extends ServiceProvider {
     get dispatchers() {
         return [
+            'dispatchersDiscordconnectiondispatcher',
             'dispatchersCommanddispatcher',
             'dispatchersModeratordispatcher',
         ];

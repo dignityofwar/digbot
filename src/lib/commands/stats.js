@@ -11,6 +11,7 @@ module.exports = class StatsCommand extends Command {
         this.client = discordjsClient;
 
         this.name = 'stats';
+        this.special = true;
     }
 
     /**

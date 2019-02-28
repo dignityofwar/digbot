@@ -12,7 +12,7 @@ module.exports = class QueueProvider extends ServiceProvider {
         this.container.register('redisClient',
             asFunction(() => new Redis(config.get('services.queue.redis_url')))
                 .singleton()
-                .disposer(redis => redis.disconnect().catch(() => {})));
+                .disposer(redis => redis.disconnect()));
 
         this.container.register('discordTransportQueue',
             asFunction(() => new Queue('discord logs', config.get('services.queue.redis_url')))

@@ -66,6 +66,17 @@ module.exports = class Kernel extends EventEmitter {
     }
 
     /**
+     * Stops all the services of the bot
+     *
+     * @return {Promise<any[]>}
+     */
+    stopDispatchers() {
+        return Promise.all(
+            this.dispatchers.map(dispatcher => dispatcher.stop()),
+        );
+    }
+
+    /**
      *
      * @return {*[]}
      */
@@ -82,6 +93,8 @@ module.exports = class Kernel extends EventEmitter {
                 message: 'Terminating',
                 label: 'kernel',
             });
+
+        await this.stopDispatchers();
 
         await this.app.dispose();
     }
