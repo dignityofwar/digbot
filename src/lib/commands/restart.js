@@ -6,24 +6,24 @@
 
 const crashHandler = require('../crash-handling.js');
 const logger = require('../logger.js');
+
 const TAG = '!restart';
 
 module.exports = {
-    execute: function(msg) {
+    execute(msg) {
         logger.devAlert(TAG, `Recieved restart request from ${msg.member.displayName}, restarting...`);
         msg.channel.sendMessage('Restarting bot...')
-            .then(
-                logger.debug(TAG, 'Succesfully sent message to text channel')
-            )
-            .catch(err => {
+            .then(() => {
+                logger.debug(TAG, 'Succesfully sent message to text channel');
+            })
+            .catch((err) => {
                 logger.warning(TAG, `Message failed to send, ${err}`);
             });
         /* Count down to restart, don't wait on a resolve/reject from above promises as they may be
         mega slow or something and the reason for restarting */
-        let timer = setTimeout(function() {
+        setTimeout(() => {
             crashHandler.logEvent(TAG, 'Restarting');
-            console.log('Restarting bot as per request');
-            process.exit(0);
+            logger.error(TAG, 'Restarting bot as per request');
         }, 5000);
-    }
+    },
 };

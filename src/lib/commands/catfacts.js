@@ -8,10 +8,10 @@ const antiduplicate = require('../tools/antiduplicate.js');
 const memes = require('../../assets/memes.js');
 
 module.exports = {
-    execute: function() {
+    execute() {
         return antiduplicate.randomise(
             'catfacts',
-            memes.catfacts
+            memes.catfacts,
         );
-    }
+    },
 };

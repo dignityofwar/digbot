@@ -26,13 +26,13 @@ const streamSpam = require('./antispam/streamspam.js');
 const TAG = 'admin.js';
 
 module.exports = {
-    antispamCheck: function(msg) {
+    antispamCheck(msg) {
         return antispam.check(msg);
     },
 
     /* Check is the main function of admin.js, it will call other functions to perform admin checks
     on the message, all server messages will run through the check function. */
-    check: function(msg) {
+    check(msg) {
         if (msg.guild.id === config.get('general.server')) {
             streamSpam.execute(msg);
             mentionSpam.execute(msg);
@@ -44,27 +44,27 @@ module.exports = {
     },
 
     // Check created channel is valid
-    checkCreation: function(channel) {
+    checkCreation(channel) {
         channels.checkCreation(channel);
     },
 
     // Check edited messages
-    checkEdits: function(oldMessage, newMessage) {
+    checkEdits(oldMessage, newMessage) {
         streamSpam.execute(newMessage);
         mentionSpam.edits(oldMessage, newMessage);
     },
 
     // Check if fed member is playing a community game, if so give them the game's role if they don't have it
-    checkPlaying: function(oldMember, newMember) {
+    checkPlaying(oldMember, newMember) {
         return detectPlaying.check(oldMember, newMember);
     },
 
     // Calls a global check of all channel positions
-    checkPositions: function() {
+    checkPositions() {
         channels.checkPositions();
     },
 
-    commandChannel: function(msg) {
+    commandChannel(msg) {
         return commandChannel.execute(msg);
     },
 
@@ -73,27 +73,27 @@ module.exports = {
         mentionSpam.joinCheck(member);
     },
 
-    memberUpdate: function(oldMember, newMember) {
+    memberUpdate(oldMember, newMember) {
         mentionSpam.memberUpdate(oldMember, newMember);
         forcedPTTCheck.execute(oldMember, newMember);
     },
 
-    modularChannels: function(oldMember, newMember) {
+    modularChannels(oldMember, newMember) {
         modularChannelSystem.execute(oldMember, newMember);
     },
 
-    presenceUpdate: function() {
+    presenceUpdate() {
         presence.execute();
     },
 
     // Called on bot.ready
-    ready: function() {
+    ready() {
         events.ready();
         commandChannel.ready();
     },
 
     // Called on bot.ready after a short delay
-    startchecks: function() {
+    startchecks() {
         crashHandler.logEvent(TAG, 'startchecks');
         channels.checkPositions();
         presence.execute();
@@ -101,7 +101,7 @@ module.exports = {
 };
 
 // Interval call auto delete to get rid of inactive temp channels
-let autodeletetimer = setInterval(auto, config.get('autoDeleteChannels'));
+setInterval(auto, config.get('autoDeleteChannels'));
 function auto() {
     crashHandler.logEvent(TAG, 'autodelete check');
     if (server.getGuild(config.get('general.server')) === null) { return; }
@@ -110,7 +110,7 @@ function auto() {
 
 // Call 5 min admin checks
 // Note: DO NOT CHANGE INTERVAL LENGTH without also changing the events.check function
-let fiveMinTimer = setInterval(fiveMinCheck, 300000);
+setInterval(fiveMinCheck, 300000);
 function fiveMinCheck() {
     crashHandler.logEvent(TAG, 'fiveMinCheck');
     events.check();
@@ -119,7 +119,7 @@ function fiveMinCheck() {
 }
 
 // Call daily admin check
-let dailychecktimer = setInterval(dailycheck, 86400000);
+setInterval(dailycheck, 86400000);
 // Runs every 24h period after bot start, not on start
 function dailycheck() {
     crashHandler.logEvent(TAG, 'dailycheck');
@@ -133,12 +133,12 @@ function dailycheck() {
 function prune() {
     if (server.getGuild(config.get('general.server')) === null) { return; }
     server.getGuild(config.get('general.server')).pruneMembers(config.get('inactivityLimit'))
-        .then(pruned => {
+        .then((pruned) => {
             if (pruned > 0) {
                 logger.devAlert(TAG, `${pruned} members pruned`);
             }
         })
-        .catch(err => {
+        .catch((err) => {
             logger.warning(TAG, `Failed to prune members, error ${err}`);
         });
 }

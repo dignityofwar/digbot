@@ -9,19 +9,19 @@ const config = require('config');
 const logger = require('../logger.js');
 const hardcode = require('./channels/hardcodeevents.js');
 const server = require('../server/server.js');
+
 const TAG = 'events';
 
 module.exports = {
-    // Called every 5 mins by admin.js, checks for events starting and ending
-    check: function() {
-        let events = hardcode.pass();
-        let time = new Date();
-        for (let i = 0; i < events.length; i++) {
+    check() {
+        const events = hardcode.pass();
+        const time = new Date();
+        for (let i = 0; i < events.length; i += 1) {
             if (events[i].days.indexOf(time.getDay()) !== -1) {
-                if (events[i].starthour == time.getHours()) {
+                if (events[i].starthour === time.getHours()) {
                     hourCheck(time, events[i]);
                 }
-                if (events[i].starthour == time.getHours() + 1) {
+                if (events[i].starthour === time.getHours() + 1) {
                     preHourCheck(time, events[i]);
                 }
             }
@@ -29,39 +29,39 @@ module.exports = {
         return true;
     },
 
-    ready: function() {
+    ready() {
         hardcode.ready();
     },
 };
 
 // Alerts relevent roles when an event is about to start
 function alert(eventObj) {
-    let serverObj = server.getGuild(config.get('general.server'));
+    const serverObj = server.getGuild(config.get('general.server'));
     let mentions = '';
 
-    for (let i = 0; i < eventObj.roles.length; i++) {
-        let role = serverObj.roles.get(eventObj.roles[i]);
+    for (let i = 0; i < eventObj.roles.length; i += 1) {
+        const role = serverObj.roles.get(eventObj.roles[i]);
 
         if (!role) {
-            logger.warning(TAG, `Was unable to get role ${eventObject.roles[i]} for event ${eventObj.name}`);
+            logger.warning(TAG, `Was unable to get role ${eventObj.roles[i]} for event ${eventObj.name}`);
             return false;
         }
-        mentions += serverObj.roles.get(eventObj.roles[i]) + ' ';
+        mentions += `${serverObj.roles.get(eventObj.roles[i])} `;
     }
 
-    let message = 'The event **' + eventObj.name + '** is about to start!' +
-        '\n' +
-        '\nStarts: **' + eventObj.starthour + ':' + format(eventObj.startminute) + '** UTC' +
-        '\nEnds: **' + eventObj.endhour + ':' + format(eventObj.endminute) + '** UTC' +
-        '\n' +
-        '\n' + description(eventObj.description);
+    const message = `The event **${eventObj.name}** is about to start!`
+        + '\n'
+        + `\nStarts: **${eventObj.starthour}:${format(eventObj.startminute)}** UTC`
+        + `\nEnds: **${eventObj.endhour}:${format(eventObj.endminute)}** UTC`
+        + '\n'
+        + `\n${description(eventObj.description)}`;
 
     if (server.getChannel('events') !== null) {
-        server.getChannel('events').sendMessage(message + '\n\n' + mentions)
+        server.getChannel('events').sendMessage(`${message}\n\n${mentions}`)
             .then(() => {
                 logger.info(TAG, 'Notified DIG Discord of event start');
             })
-            .catch(err => {
+            .catch((err) => {
                 logger.warning(TAG, `Was unable to notify DIG Discord of an event - error: ${err}`);
             });
     }
@@ -72,57 +72,56 @@ function alert(eventObj) {
                 .then(() => {
                     logger.info(TAG, 'Notified Miller Community Discord of event start');
                 })
-                .catch(err => {
+                .catch((err) => {
                     logger.warning(TAG, `Was unable to notify Miller Community Discord of an event - error: ${err}`);
                 });
         } else {
             if (config.util.getEnv('NODE_ENV') !== 'production') {
                 logger.info(TAG, 'Non live environment so will not attempt to notify Miller Discord');
-            } else {
-                logger.warning(TAG, 'Attempted to notify millerCommunityEvents channel but channel not set');
             }
+            logger.warning(TAG, 'Attempted to notify millerCommunityEvents channel but channel not set');
         }
         if (server.getChannel('millerVSEvents') !== null) {
             server.getChannel('millerVSEvents').sendMessage(message)
                 .then(() => {
                     logger.info(TAG, 'Notified Miller VS Discord of event start');
                 })
-                .catch(err => {
+                .catch((err) => {
                     logger.warning(TAG, `Was unable to notify Miller VS Discord of an event - error: ${err}`);
                 });
         } else {
             if (config.util.getEnv('NODE_ENV') !== 'production') {
                 logger.info(TAG, 'Non live environment so will not attempt to notify Miller VS Discord');
-            } else {
-                logger.warning(TAG, 'Attempted to notify millerCommunityEvents channel but channel not set');
             }
+            logger.warning(TAG, 'Attempted to notify millerCommunityEvents channel but channel not set');
         }
     }
+    return true;
 }
 
 // This function is called to create channels for events
 function createChannels(eventObj) {
-    for (let i = 0; i < eventObj.channels.length; i++) {
+    for (let i = 0; i < eventObj.channels.length; i += 1) {
         if (eventObj.channels[i].type === 'text') {
             server.getGuild(config.get('general.server'))
-                .defaultChannel.clone(eventObj.channels[i].name + '-e-')
-                    .then(channel => {
-                        channel.setTopic(eventObj.description);
-                        logger.info(TAG, `Created new channel ` + channel.name);
-                    })
-                    .catch(err => {
-                        logger.warning(TAG, `Failed to create channel, error: ${err}`);
-                    });
+                .defaultChannel.clone(`${eventObj.channels[i].name}-e-`)
+                .then((channel) => {
+                    channel.setTopic(eventObj.description);
+                    logger.info(TAG, `Created new channel ${channel.name}`);
+                })
+                .catch((err) => {
+                    logger.warning(TAG, `Failed to create channel, error: ${err}`);
+                });
         } else {
             server.getGuild(config.get('general.server')).createChannel(
-                '⏰ ' + eventObj.channels[i].name + '-e-',
-                eventObj.channels[i].type
+                `⏰-${eventObj.channels[i].name}-e-`,
+                eventObj.channels[i].type,
             )
-                .then(channel => {
+                .then((channel) => {
                     channel.setTopic(eventObj.description);
-                    logger.info(TAG, `Created new channel ` + channel.name);
+                    logger.info(TAG, `Created new channel ${channel.name}`);
                 })
-                .catch(err => {
+                .catch((err) => {
                     logger.warning(TAG, `Failed to create channel, error: ${err}`);
                 });
         }
@@ -131,24 +130,25 @@ function createChannels(eventObj) {
 
 // Check if there is a description for the event, if so format and return for alert
 function description(desc) {
-    if (desc != undefined) {
-        desc = '*' + desc + '*';
-        return desc;
+    if (desc !== undefined) {
+        return `*${desc}*`;
     }
+    logger.info(TAG, 'No description found for event');
     return '';
 }
 
 // Formats into clock format for single digit minutes, so 9 will return 09, Ex: 17:0 => 17:00
 function format(num) {
-    if (num < 10) {
-        num = '0' + num.toString();
+    let number = num;
+    if (number < 10) {
+        number = `0 ${num.toString()}`;
     }
-    return num;
+    return number;
 }
 
 // Called whenever the check sees an event starts this day this hour
 function hourCheck(time, eventObj) {
-    let minutes = eventObj.startminute - time.getMinutes();
+    const minutes = eventObj.startminute - time.getMinutes();
     if (minutes >= 15 && minutes < 20) {
         alert(eventObj);
     }
@@ -159,7 +159,7 @@ function hourCheck(time, eventObj) {
 
 // Called whenever the check sees an event starts this day next hour
 function preHourCheck(time, eventObj) {
-    let minutes = eventObj.startminute + 60 - time.getMinutes();
+    const minutes = (eventObj.startminute + 60) - time.getMinutes();
     if (eventObj.startminute < 30) {
         if (minutes >= 30 && minutes < 35) {
             createChannels(eventObj);

@@ -37,7 +37,7 @@ describe('tools/performance.js', function() {
 
         it('getCpu should resolve CPU performance', function() {
             result.should.not.be.false;
-            isNaN(result).should.be.false;
+            Number.isNaN(result).should.be.false;
         });
     });
 
@@ -63,7 +63,7 @@ describe('tools/performance.js', function() {
 
         it('getCpu should resolve memory performance', function() {
             result.should.not.be.false;
-            isNaN(result).should.be.false;
+            Number.isNaN(result).should.be.false;
         });
     });
 });

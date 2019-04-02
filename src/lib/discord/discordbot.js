@@ -9,11 +9,9 @@ const crashHandler = require('../crash-handling.js');
 const Discord = require('discord.js');
 const logger = require('../logger.js');
 const performance = require('../tools/performance.js');
-const server = require('../server/server.js');
 const serverEvents = require('./bot-events.js');
 
 const TAG = 'discordbot';
-const started = new Date();
 
 let bot = null;
 let restarting = false; // Don't overload requests, for if load time exceeds retry interval
@@ -22,7 +20,7 @@ let restarting = false; // Don't overload requests, for if load time exceeds ret
 after which the bot's own reconnect functionality should take over */
 let startClock = setInterval(restart, 3000);
 let restartClock = null; // Global var for a backup incase the bot's reconnect functionality breaks
-let performanceTimer = setInterval(function() {
+setInterval(() => {
     performance.execute();
 }, 30000);
 
@@ -30,7 +28,7 @@ performance.ready();
 
 module.exports = {
     init: initBot,
-    injectMessage: (msg) => bot.emit('message', msg)
+    injectMessage: msg => bot.emit('message', msg),
 };
 
 function initBot(done) {
@@ -50,7 +48,7 @@ function initBot(done) {
             restarting = false;
             crashHandler.logEvent(TAG, 'login');
         })
-        .catch(err => {
+        .catch((err) => {
             restarting = false;
             logger.warning(TAG, `Error on bot login: ${err}`);
         });
@@ -126,7 +124,7 @@ function initBot(done) {
     });
 
     // Whenever the bot recieves a message from the websocket
-    bot.on('message', msg => {
+    bot.on('message', (msg) => {
         crashHandler.logEvent(TAG, 'message');
         serverEvents.message(msg, bot);
     });
