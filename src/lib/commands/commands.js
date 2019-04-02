@@ -3,6 +3,8 @@
 'use strict';
 
 // Master module for commands, redirects to other modules
+
+// Command modules
 const admin = require('./admin.js');
 const catfacts = require('./catfacts.js');
 const cats = require('./cats.js');
@@ -22,12 +24,12 @@ const sort = require('./sort.js');
 const started = require('./started.js');
 const stats = require('./stats.js');
 
+// Other modules
 const config = require('config');
 const logger = require('../logger.js');
 const server = require('../server/server.js');
-const TAG = 'commands';
 
-let botStarted = new Date();
+const TAG = 'commands';
 
 module.exports = {
     // List all commands that are used by the bot here
@@ -58,23 +60,21 @@ module.exports = {
     // ---- Exported code functions ----
 
     // Checks for a valid command
-    check: function(message) {
+    check(message) {
         if (this.filter(message, 'all')) {
             return true;
         }
-        logger.info(TAG, 'Could not recognise command: ' + message);
+        logger.info(TAG, `Could not recognise command: ${message}`);
         return false;
     },
 
     // Filters the command out from the message
-    filter: function(message, list) {
-        if (list === undefined) {
-            list = 'all';
-        }
-        message = message.toLowerCase();
-        let commandList = this[list];
-        for (let i = 0; i < commandList.length; i++) {
-            if (message.startsWith(commandList[i])) {
+    filter(message, list) {
+        let filtered = message;
+        filtered = message.toLowerCase();
+        const commandList = this[list];
+        for (let i = 0; i < commandList.length; i += 1) {
+            if (filtered.startsWith(commandList[i])) {
                 return commandList[i];
             }
         }
@@ -82,20 +82,19 @@ module.exports = {
     },
 
     // Sends the command to the function, rather than doing a bunch of IF statements
-    proxy: function(msg) {
+    proxy(msg) {
         // Strip out the ! so we can proxy it to the command function
-        let command = msg.content.split(' ')[0].replace('!', '');
+        const command = msg.content.split(' ')[0].replace('!', '');
 
         // Check if the command function actually exists
-        if (module.exports.hasOwnProperty(command)) {
+        if (Object.prototype.hasOwnProperty.call(module.exports, command)) {
             return this[command](msg);
-        } else {
-            logger.warning(TAG, 'Command \"' + command + '\" does not exist');
-            return false;
         }
+        logger.warning(TAG, `Command "${command}" does not exist`);
+        return false;
     },
 
-    ready: function() {
+    ready() {
         help.ready();
         sfx.ready();
         play.ready();
@@ -103,145 +102,157 @@ module.exports = {
 
     // ---- Commands ----
 
-    admin: function(msg) {
+    admin(msg) {
         if (!adminCheck(msg)) { return false; }
         module.exports.sendMessage(admin.execute(msg.member), msg);
+        return true;
     },
 
-    catfacts: function(msg) {
+    catfacts(msg) {
         module.exports.sendMessage(catfacts.execute(), msg);
     },
 
-    cats: function(msg) {
+    cats(msg) {
         if (msg.content.endsWith('gif')) {
             cats.gif()
-                .then(result => {
+                .then((result) => {
                     module.exports.sendMessage(result, msg);
+                })
+                .catch((err) => {
+                    logger.warn(TAG, `Promise reject cats gif: ${err}`);
                 });
         } else {
             cats.img()
-                .then(result => {
+                .then((result) => {
                     module.exports.sendMessage(result, msg);
+                })
+                .catch((err) => {
+                    logger.warn(TAG, `Promise reject cats img: ${err}`);
                 });
         }
     },
 
-    channel: function(msg) {
+    channel(msg) {
         return channels.execute(msg);
     },
 
-    dragons: function(msg) {
+    dragons(msg) {
         return dragons.execute(msg);
     },
 
-    help: function(msg) {
+    help(msg) {
         let reply = help.execute(msg);
         if (typeof reply === 'string') {
             module.exports.sendMessage(reply, msg);
         } else if (typeof reply === 'number') {
-            module.exports.sendMessage('I\'ll PM you the full command list ' +
-                msg.member.displayName, msg);
-            let x = reply + 1;
-            for (let i = 0; i < x; i++) {
+            module.exports.sendMessage(`I'll PM you the full command list ${msg.member.displayName}`,
+                msg);
+            const x = reply + 1;
+            for (let i = 0; i < x; i += 1) {
                 reply = help.helpFull(i);
                 msg.author.sendMessage(reply);
             }
         }
     },
 
-    helppass: function() {
+    helppass() {
         return help.pass();
     },
 
-    lmgtfy: function(msg) {
+    lmgtfy(msg) {
         module.exports.sendMessage(lmgtfy.execute(msg), msg);
     },
 
-    mentions: function(msg) {
+    mentions(msg) {
         mentions.execute(msg);
     },
 
-    ping: function(msg) {
+    ping(msg) {
         ping.execute(msg);
     },
 
-    play: function(msg) {
+    play(msg) {
         play.execute(msg);
     },
 
-    poll: function(msg) {
+    poll(msg) {
         module.exports.sendMessage(poll.execute(msg), msg);
     },
 
-    positions: function(msg) {
+    positions(msg) {
         if (!adminCheck(msg)) { return false; }
         module.exports.sendMessage(positions.execute(msg.member), msg);
+        return true;
     },
 
-    ps2digfeedback: function(msg) {
+    ps2digfeedback(msg) {
         ps2digfeedback.execute(msg);
     },
 
-    restart: function(msg) {
+    restart(msg) {
         if (!adminCheck(msg)) { return false; }
         restart.execute(msg);
+        return true;
     },
 
-    roles: function(msg) {
+    roles(msg) {
         if (!adminCheck(msg)) { return false; }
         let output = '';
-        server.getGuild(config.get('general.server')).roles.forEach(function(role) {
-            output += '**' + role.id + '**: ' + role.name + '\n';
+        server.getGuild(config.get('general.server')).roles.forEach((role) => {
+            output += `**${role.id}**: ${role.name}\n`;
         });
-        msg.author.sendMessage(output);
+        module.exports.sendMessage(output, msg);
+        return true;
     },
 
-    sfx: function(msg) {
+    sfx(msg) {
         sfx.execute(msg);
     },
 
-    sort: function(msg) {
+    sort(msg) {
         if (!adminCheck(msg)) { return false; }
         module.exports.sendMessage(sort.execute(), msg);
+        return false;
     },
 
-    started: function(msg) {
-        let date = 'Started: ' + server.started.toDateString() + ' ' + server.started.toLocaleString();
+    started(msg) {
+        const date = `Started: ${server.started.toDateString()} ${server.started.toLocaleString()}`;
         module.exports.sendMessage(date, msg);
         module.exports.sendMessage(started.duration(server.started), msg);
     },
 
-    stats: function(msg) {
+    stats(msg) {
         stats.execute(msg);
     },
 
-    vote: function(msg) {
+    vote(msg) {
         module.exports.sendMessage(poll.vote(msg), msg);
     },
 
-    sendMessage: sendMessage
+    sendMessage,
 };
 
 // Sends messages to channels
 function sendMessage(toSend, msg) {
     let options = {};
+    let sendable = toSend;
     // Embed if only image is being sent as link
-    if (toSend.indexOf(' ') === -1) {
-        if (toSend.indexOf('.jpg') !== -1 || toSend.indexOf('.png') !== -1 || toSend.indexOf('.gif') !== -1 ||
-             toSend.indexOf('.jpeg') !== -1) {
-            options = {embed: {image: {url: toSend}}};
-            toSend = '';
+    if (sendable.indexOf(' ') === -1) {
+        if (sendable.indexOf('.jpg') !== -1 || sendable.indexOf('.png') !== -1 || sendable.indexOf('.gif') !== -1
+            || sendable.indexOf('.jpeg') !== -1) {
+            options = { embed: { image: { url: sendable } } };
+            sendable = '';
         }
     }
-    msg.channel.sendMessage(toSend, options)
-        .then(message => {
+    msg.channel.sendMessage(sendable, options)
+        .then((message) => {
             if (message.content !== '') {
                 logger.info(TAG, `Sent message: ${message.content}`);
             } else {
                 logger.info(TAG, `Sent message: ${options.embed.image.url}`);
             }
         })
-        .catch(error => {
+        .catch((error) => {
             logger.warning(TAG, `Message failed to send, error: ${error}`);
         });
 }
@@ -250,8 +261,8 @@ function sendMessage(toSend, msg) {
 function adminCheck(msg) {
     if (config.util.getEnv('NODE_ENV') !== 'production') { return true; } // Always allow staging / dev
     if (msg.member.roles.has(config.get('general.devRoleID'))) { return true; }
-    if (msg.member.roles.has(config.get('general.staffRoleID'))) {return true; }
-    sendMessage(`Sorry ${msg.member.displayName} but only staff members and devs ` +
-        `have access to admin commands`, msg);
+    if (msg.member.roles.has(config.get('general.staffRoleID'))) { return true; }
+    sendMessage(`Sorry ${msg.member.displayName} but only staff members and devs `
+        + 'have access to admin commands', msg);
     return false;
 }

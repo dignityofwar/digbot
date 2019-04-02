@@ -24,13 +24,18 @@
             2,
             "always"
         ],
-        "no-console": 1,
+        "radix": [
+            2,
+            "as-needed"
+        ],
         "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+        "no-console": 1,
         "max-len": [
             1,
             120
         ],
         "no-use-before-define": 0,
+        "no-continue": 0,
         "guard-for-in": 0,
         "no-restricted-syntax": 0
     }

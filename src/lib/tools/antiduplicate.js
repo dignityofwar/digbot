@@ -5,14 +5,15 @@
 // Module to prevent passed messages repeating for commands like !catfacts
 
 const logger = require('../logger.js');
+
 const TAG = 'Anti Duplicate';
 
 // Define global object to store the indentifier of the last dank ass meme posted for each command
-let lastpost = {};
+const lastpost = {};
 
 module.exports = {
     // Searches the array and compares against recent messages, ensuring we get semi-random values
-    randomise: function(ref, array) {
+    randomise(ref, array) {
         // If theres only one message, then return it.
         if (array.length === 1) {
             return array[0];
@@ -28,7 +29,7 @@ module.exports = {
         }
 
         if (lastpost[ref].indexOf(message) > -1) {
-            logger.debug(TAG, 'antiduplicate', 'Anti duplicate code triggered for check: ' + ref);
+            logger.debug(TAG, 'antiduplicate', `Anti duplicate code triggered for check: ${ref}`);
 
             let runs = 0;
             let check = lastpost[ref].indexOf(message);
@@ -37,11 +38,11 @@ module.exports = {
             while (runs < 30 && check !== -1) {
                 rand = Math.floor(Math.random() * array.length);
                 message = array[rand];
-                runs++;
+                runs += 1;
                 check = lastpost[ref].indexOf(message);
-                logger.debug(TAG, 'antiduplicate', 'Run ' + runs);
-                logger.debug(TAG, 'antiduplicate', 'Rand ' + rand);
-                logger.debug(TAG, 'antiduplicate', 'Check ' + check);
+                logger.debug(TAG, 'antiduplicate', `Run ${runs}`);
+                logger.debug(TAG, 'antiduplicate', `Rand ${rand}`);
+                logger.debug(TAG, 'antiduplicate', `Check ${check}`);
             }
         }
 
@@ -49,5 +50,5 @@ module.exports = {
         lastpost[ref] = message;
 
         return message;
-    }
+    },
 };

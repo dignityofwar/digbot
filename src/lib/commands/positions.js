@@ -6,40 +6,41 @@
 
 const logger = require('../logger.js');
 const server = require('../server/server.js');
+
 const TAG = '!sort';
 
 module.exports = {
-    execute: function(member) {
+    execute(member) {
         if (server.getReady() !== true) {
             return 'Sorry but server is currently not ready, please try again in a second';
         }
 
-        let channels = server.getGuild().channels.array();
+        const channels = server.getGuild().channels.array();
         let message = '**Text channel positions**:';
-        for (let x in channels) {
+        for (const x in channels) {
             if (channels[x].type === 'text') {
-                message += '\n ' + channels[x].name + ': ' + channels[x].position;
+                message += `\n ${channels[x].name}: ${channels[x].position}`;
             }
         }
         sendMessageToMember(message, member);
         message = '**Voice channel positions**:';
-        for (let x in channels) {
+        for (const x in channels) {
             if (channels[x].type === 'voice') {
-                message += '\n ' + channels[x].name + ': ' + channels[x].position;
+                message += `\n ${channels[x].name}: ${channels[x].position}`;
             }
         }
         sendMessageToMember(message, member);
 
         return 'I\'ll PM you a list of channel positions';
-    }
+    },
 };
 
 function sendMessageToMember(message, member) {
     member.sendMessage(message)
-        .then(
-            logger.debug(TAG, 'Succesfully sent message to member')
-        )
-        .catch(err => {
+        .then(() => {
+            logger.debug(TAG, 'Succesfully sent message to member');
+        })
+        .catch((err) => {
             logger.warning(TAG, `Failed to send message to member, ${err}`);
         });
 }

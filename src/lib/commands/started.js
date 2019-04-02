@@ -6,10 +6,10 @@
 
 module.exports = {
     // Calculates runtime and returns formated message
-    duration: function(started) {
-        let timenow = new Date();
+    duration(started) {
+        const timenow = new Date();
         let x = timenow.getTime() - started.getTime();
-        x = x / 1000;
+        x /= 1000;
         let seconds = x % 60;
         x /= 60;
         let minutes = x % 60;
@@ -26,13 +26,16 @@ module.exports = {
         bots been running. Plural and singular is an issue here, may have to
         come up with a better solution. */
         if (days >= 1) {
-            return 'I\'ve been running for: ' + days + ' days, ' + hours + ' hours, ' + minutes + ' minutes, ' + seconds + ' seconds. Give a bot a break.';
+            return `I've been running for: ${days} days, ${hours} hours, ${minutes} minutes, `
+                + `${seconds} seconds. Give a bot a break.`;
         } else if (hours >= 1) {
-            return 'I\'ve been running for: ' + hours + ' hours, ' + minutes + ' minutes, ' + seconds + ' seconds. Starting to get tired.';
+            return `I've been running for: ${hours} hours, ${minutes} minutes, ${seconds} seconds. `
+                + 'Starting to get tired.';
         } else if (minutes >= 1) {
-            return 'I\'ve been running for: ' + minutes + ' minutes, ' + seconds + ' seconds. One of these days I\'ll make it to an hour without some fool restarting me.';
-        } else {
-            return 'I\'ve been running for: ' + seconds + ' seconds. I haven\'t even been here a minute why are you asking?';
+            return `I've been running for: ${minutes} minutes, ${seconds} seconds. `
+                + 'One of these days I\'ll make it to an hour without some fool restarting me.';
         }
-    }
+        return `I've been running for: ${seconds} seconds. I haven't even been here a minute `
+            + 'why are you asking?';
+    },
 };

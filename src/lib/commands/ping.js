@@ -5,24 +5,25 @@
 // !ping module
 
 const logger = require('../logger.js');
+
 const TAG = '!ping';
 
 module.exports = {
     // Replies with pingtime
-    execute: function(msg) {
+    execute(msg) {
         msg.channel.sendMessage('pong')
-            .then(message => {
+            .then((message) => {
                 pong(message, msg);
             })
-            .catch(err => {
+            .catch((err) => {
                 logger.warning(TAG, `Failed to send message, error: ${err}`);
             });
-    }
+    },
 };
 
 // Once the "pong" message has been sent, use time between the two messages to calculate ping
 function pong(message, msg) {
-    let ms = message.createdTimestamp - msg.createdTimestamp;
+    const ms = message.createdTimestamp - msg.createdTimestamp;
     let status = '';
     if (ms < 50) {
         status = '(Excellent)';
@@ -35,12 +36,12 @@ function pong(message, msg) {
     } else {
         status = '(Bad)';
     }
-    message.edit('Ping: ' + ms + 'ms ' + status)
-        .then(
-            logger.debug(TAG, 'Succesfully editted message')
-        )
-        .catch(err => {
-            logger.warning(TAG, 'Failed to edit message error: ' + err);
+    message.edit(`Ping: ${ms}ms ${status}`)
+        .then(() => {
+            logger.debug(TAG, 'Succesfully editted message');
+        })
+        .catch((err) => {
+            logger.warning(TAG, `Failed to edit message error: ${err}`);
         });
-    logger.info(TAG, 'Called by: ' + msg.member.displayName + ', reply: ' + ms + 'ms');
+    logger.info(TAG, `Called by: ${msg.member.displayName}, reply: ${ms}ms`);
 }
