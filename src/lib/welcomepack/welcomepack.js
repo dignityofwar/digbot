@@ -1,30 +1,29 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // Module to control welcomepack sent to new users joining the server
 
 const crashHandler = require('../crash-handling.js');
 const logger = require('../logger.js');
-const server = require('../server/server.js');
 
 const TAG = 'welcomepack';
+
 const recentJoiners = [];
+const users = [];
 
 module.exports = {
     // Checks if the user should recieve a welcome message, if so send one
     check(mem) {
         crashHandler.logEvent(TAG, 'check');
-        const users = server.userList();
         if (users.indexOf(mem.user.id) !== -1) {
             logger.info(TAG, `User: ${mem.user.id} re-joined server but they are already logged as a member`);
             return false;
-        } else if (duplicationCheck(mem) === false) {
+        }
+        if (duplicationCheck(mem) === false) {
             logger.info(TAG, `${mem.displayName} joined the server, but a member by the same name `
                 + 'has recently been welcomed');
             return false;
         }
-        server.saveUser(mem.user.id);
+        users.push(mem.user.id);
         logger.debug(TAG, `New user count: ${users.length}`);
         mem.sendFile('src/assets/pictures/welcome-banner.png')
             .then(() => {
