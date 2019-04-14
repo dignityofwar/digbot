@@ -1,7 +1,5 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // Automatically assign roles if the member is missing them
 
 const config = require('config');

@@ -1,7 +1,5 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // Module to handle modular channel system (MCS), creates and deletes channels to handle online membership
 
 const config = require('config');
@@ -49,9 +47,9 @@ module.exports = {
             for (const ch of channels) {
                 if (ch[1].type === 'voice' && ch[1].name.startsWith(nameSection)) {
                     if (ch[1].members.size === 0) {
-                        emptyChannels.push(parseInt(ch[1].name.substring(ch[1].name.lastIndexOf('/') + 1)));
+                        emptyChannels.push(parseInt(ch[1].name.substring(ch[1].name.lastIndexOf('/') + 1), 10));
                     } else {
-                        populatedChannels.push(parseInt(ch[1].name.substring(ch[1].name.lastIndexOf('/') + 1)));
+                        populatedChannels.push(parseInt(ch[1].name.substring(ch[1].name.lastIndexOf('/') + 1), 10));
                     }
                 }
             }
@@ -59,7 +57,8 @@ module.exports = {
             if (emptyChannels.length === 1) {
                 populatedChannels = [];
                 emptyChannels = [];
-                continue;
+                // TODO: Remove eslint disable line
+                continue; // eslint-disable-line
             // One or more channel needs deleting
             } else if (emptyChannels.length > 1) {
                 while (emptyChannels.length > 1) {
@@ -198,7 +197,7 @@ function joinCheck(newMember, numberSection, nameSection) {
     for (const ch of newMember.guild.channels) {
         if (ch[1] && ch[1].type === 'voice') {
             if (ch[1].name.startsWith(nameSection)) {
-                array.push(parseInt(ch[1].name.substring(nameSection.length)));
+                array.push(parseInt(ch[1].name.substring(nameSection.length), 10));
                 if (ch[1].members.size === 0) {
                     create = false;
                 }
@@ -218,7 +217,7 @@ function leaveCheck(oldMember, numberSection, nameSection) {
         if (ch[1] && ch[1].type === 'voice') {
             if (ch[1].name.startsWith(nameSection)) {
                 if (ch[1].members.size === 0) {
-                    array.push(parseInt(ch[1].name.substring(nameSection.length)));
+                    array.push(parseInt(ch[1].name.substring(nameSection.length), 10));
                 }
             }
         }

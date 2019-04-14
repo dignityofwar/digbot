@@ -1,7 +1,5 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // Temporary module to store regular events, to be replaced with website intergration.
 // Note: Please be extremely careful when altering this module, it will and has fucked up our shit
 
@@ -9,44 +7,6 @@ const config = require('config');
 const logger = require('../../logger.js');
 
 const TAG = 'Hard Coded Events';
-
-module.exports = {
-    pass() {
-        return events;
-    },
-
-    // Called on bot.ready, calculates event lengths and stores inside hardcoded event objects
-    ready() {
-        for (let i = 0; i < events.length; i += 1) {
-            let ms = 0;
-            if (events[i].starthour <= events[i].endhour) {
-                ms = 3600000 * (events[i].endhour - events[i].starthour);
-            } else {
-                ms = 3600000 * ((events[i].endhour + 24) - events[i].starthour);
-            }
-            ms += 60000 * (events[i].endminute - events[i].startminute);
-            ms += config.get('eventProtection');
-            events[i].eventlength = ms;
-        }
-    },
-
-    //  Passed channel object from autodelete.js, finds the event and returns its expected length
-    length(channel) {
-        for (let i = 0; i < events.length; i += 1) {
-            if (events[i].days.indexOf(channel.createdAt.getDay()) !== -1) {
-                for (let j = 0; j < events[i].channels.length; j += 1) {
-                    if (events[i].channels[j].name === channel.name.substring(0, (channel.name.length - 3))) {
-                        if (channel.type === events[i].channels[j].type) {
-                            return events[i].eventlength;
-                        }
-                    }
-                }
-            }
-        }
-        logger.error(TAG, `Unable to find eventlength for event channel: ${channel.name}`);
-        return 0;
-    },
-};
 
 /*
 This module stores repeating event objects as an array, the format for these events are:
@@ -99,11 +59,11 @@ const DIGTCommonRoles = [
     '189767484495233024',
 ];
 
-let events = [
+const events = [
     {
         name: 'DIGT Tactical Casual Ops',
         description: 'DIGT ops on Wednesdays are a mix between Casual and Tactical, usually decided '
-        + 'on the night. All are welcome, usually held on TS at 94.23.13.182:9981',
+            + 'on the night. All are welcome, usually held on TS at 94.23.13.182:9981',
         days: [3],
         starthour: 18,
         startminute: 0,
@@ -116,7 +76,7 @@ let events = [
     {
         name: 'DIGT Tactical Ops',
         description: 'DIGT Friday ops are tactical, they rely on squad cohesion and comms '
-        + 'discipline. All are welcome, usually held on TS at 94.23.13.182:9981',
+            + 'discipline. All are welcome, usually held on TS at 94.23.13.182:9981',
         days: [5],
         starthour: 18,
         startminute: 0,
@@ -127,3 +87,43 @@ let events = [
         millernotification: true,
     },
 ];
+
+/** */
+
+module.exports = {
+    pass() {
+        return events;
+    },
+
+    // Called on bot.ready, calculates event lengths and stores inside hardcoded event objects
+    ready() {
+        for (let i = 0; i < events.length; i += 1) {
+            let ms = 0;
+            if (events[i].starthour <= events[i].endhour) {
+                ms = 3600000 * (events[i].endhour - events[i].starthour);
+            } else {
+                ms = 3600000 * ((events[i].endhour + 24) - events[i].starthour);
+            }
+            ms += 60000 * (events[i].endminute - events[i].startminute);
+            ms += config.get('eventProtection');
+            events[i].eventlength = ms;
+        }
+    },
+
+    //  Passed channel object from autodelete.js, finds the event and returns its expected length
+    length(channel) {
+        for (let i = 0; i < events.length; i += 1) {
+            if (events[i].days.indexOf(channel.createdAt.getDay()) !== -1) {
+                for (let j = 0; j < events[i].channels.length; j += 1) {
+                    if (events[i].channels[j].name === channel.name.substring(0, (channel.name.length - 3))) {
+                        if (channel.type === events[i].channels[j].type) {
+                            return events[i].eventlength;
+                        }
+                    }
+                }
+            }
+        }
+        logger.error(TAG, `Unable to find eventlength for event channel: ${channel.name}`);
+        return 0;
+    },
+};

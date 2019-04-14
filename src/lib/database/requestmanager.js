@@ -1,7 +1,5 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // WORK IN PROGRESS MODULE, NOT FUNCTIONAL
 
 /* Recieves commands from website's database to take action on discord, most often this will be
@@ -64,13 +62,12 @@ const test = {
         + 'salt be with you.',
 };
 
-
-let command = JSON.stringify(test);
+// TODO: I fixed the styling, but I am not sure what this code does
 
 // Sort command
-const received = JSON.parse(command);
-command = received.command;
+const received = JSON.parse(JSON.stringify(test));
+const { command } = received;
 
 function run() {
-    action[received.command](received);
+    action[command](received);
 }

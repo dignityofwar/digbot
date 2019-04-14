@@ -1,7 +1,5 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // Handles message requests to channels
 
 const config = require('config');

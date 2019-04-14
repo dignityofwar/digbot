@@ -1,7 +1,5 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // Handles DMs
 
 const config = require('config');
@@ -17,14 +15,9 @@ module.exports = {
             msg.reply('Hey, thanks for contacting DIGBot. You should know I\'m just a bunch of '
                 + '1s and 0s so if you\'re looking for a chat I\'d look elsewhere. If however you\'re '
                 + 'attempting to contact this bot\'s devs or the DIG community staff then you can do so by '
-                + 'starting your message with "!staff" or "!developers"',
-            )
-                .then(() => {
-                    logger.debug(TAG, 'Succesfully sent reply');
-                })
-                .catch((err) => {
-                    logger.warning(TAG, `Failed to send reply, error: ${err}`);
-                });
+                + 'starting your message with "!staff" or "!developers"')
+                .then(() => logger.debug(TAG, 'Succesfully sent reply'))
+                .catch(err => logger.warning(TAG, `Failed to send reply, error: ${err}`));
 
             return true;
         }
@@ -36,22 +29,14 @@ module.exports = {
 
             msg.reply('Thanks, I\'ll pass your message onto the staff, please be sure you\'ve left a way for us to '
                 + 'get back to you if you\'re not contacting us from the DIG server.')
-                .then(() => {
-                    logger.debug(TAG, 'Succesfully sent reply');
-                })
-                .catch((err) => {
-                    logger.warning(TAG, `Failed to send reply, error: ${err}`);
-                });
+                .then(() => logger.debug(TAG, 'Succesfully sent reply'))
+                .catch(err => logger.warning(TAG, `Failed to send reply, error: ${err}`));
             let relay = `Message from: ${msg.author.username}`;
             relay += `\nContent: ${msg.content.substring(7)}`;
             if (server.getChannel('staff') !== null && config.util.getEnv('NODE_ENV') !== 'testing') {
                 server.getChannel('staff').sendMessage(relay)
-                    .then(() => {
-                        logger.debug(TAG, 'Succesfully sent message to staff');
-                    })
-                    .catch((err) => {
-                        logger.warning(TAG, `Failed to send message to staff, error: ${err}`);
-                    });
+                    .then(() => logger.debug(TAG, 'Succesfully sent message to staff'))
+                    .catch(err => logger.warning(TAG, `Failed to send message to staff, error: ${err}`));
             }
 
             return true;
@@ -62,25 +47,17 @@ module.exports = {
                 return this.handleEmptyMessage(msg);
             }
 
-            msg.reply('Thanks, I\'ll pass your message onto the devs, please be sure you\'ve left a way for us to ' +
-                'get back to you if you\'re not contacting us from the DIG server.')
-                .then(() => {
-                    logger.debug(TAG, 'Succesfully sent reply');
-                })
-                .catch((err) => {
-                    logger.warning(TAG, `Failed to send reply, error: ${err}`);
-                });
+            msg.reply('Thanks, I\'ll pass your message onto the devs, please be sure you\'ve left a way for us to '
+                + 'get back to you if you\'re not contacting us from the DIG server.')
+                .then(() => logger.debug(TAG, 'Succesfully sent reply'))
+                .catch(err => logger.warning(TAG, `Failed to send reply, error: ${err}`));
             let relay = `Message from: ${msg.author.username}`;
             relay += `\nContent: ${msg.content.substring(12)}`;
 
             if (server.getChannel('developers') !== null && config.util.getEnv('NODE_ENV') !== 'testing') {
                 server.getChannel('developers').sendMessage(relay)
-                    .then(() => {
-                        logger.debug(TAG, 'Succesfully sent message to developers');
-                    })
-                    .catch((err) => {
-                        logger.warning(TAG, `Failed to send message to developers, error: ${err}`);
-                    });
+                    .then(() => logger.debug(TAG, 'Succesfully sent message to developers'))
+                    .catch(err => logger.warning(TAG, `Failed to send message to developers, error: ${err}`));
             }
 
             return true;
@@ -89,14 +66,10 @@ module.exports = {
         return false;
     },
     handleEmptyMessage(msg) {
-        msg.reply('Please make sure you type us a message, or we don\'t know what your request is regarding. ' +
-            'Please try again.')
-            .then(() => {
-                logger.debug(TAG, 'Succesfully sent reply');
-            })
-            .catch((err) => {
-                logger.warning(TAG, `Failed to send reply, error: ${err}`);
-            });
+        msg.reply('Please make sure you type us a message, or we don\'t know what your request is regarding. '
+            + 'Please try again.')
+            .then(() => logger.debug(TAG, 'Succesfully sent reply'))
+            .catch(err => logger.warning(TAG, `Failed to send reply, error: ${err}`));
         return false;
     },
 };

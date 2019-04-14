@@ -43,7 +43,7 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
      * @return {Promise<void>}
      */
     async stop() {
-        // TODO: Don't know if these are the correct listeners
+        // TODO: These are probably not the correct listeners, but this function is not that important for now
         // this.client.off('channelCreate', this.channelCreate.bind(this));
         // this.client.off('channelUpdate', this.channelUpdate.bind(this));
         this.client.off('guildMemberAdd', this.guildMemberAdd.bind(this));
