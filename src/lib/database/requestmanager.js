@@ -7,31 +7,29 @@
 /* Recieves commands from website's database to take action on discord, most often this will be
 to update member roles or promote upcomming events or some such */
 
-const logger = require('../logger.js');
 const messageChannelRequests = require('./messagechannelrequests.js');
 const messageUserRequests = require('./messageuserrequests.js');
 const roleRequests = require('./rolerequests.js');
-const TAG = ('Request Manager');
 
 // Command handler
-let action = {
-    messageChannel: function(received) {
+const action = {
+    messageChannel(received) {
         messageChannelRequests.execute(received);
     },
 
-    messageUser: function(received) {
+    messageUser(received) {
         messageUserRequests.execute(received);
     },
 
-    roles: function(received) {
+    roles(received) {
         roleRequests.execute(received);
-    }
+    },
 };
 
 module.exports = {
-    execute: function() {
+    execute() {
         run();
-    }
+    },
 };
 
 // Recieve some command (fake while under construction)
@@ -57,22 +55,22 @@ let test = {
 */
 
 // Message channels
-let test = {
+const test = {
     command: 'messageChannel',
     channel: '227718729448816641',
-    content: 'Dear Sir/Maddamn, I am writing to you today to inform you of our 2 for 1 offer on salt ' +
-        'here at DIG we\'ve been manufacturing salt and refining our distribution network on Miller ' +
-        'for years. If you would like to purchase salt please contact Fluttyman on Miller VS. May the ' +
-        'salt be with you.'
+    content: 'Dear Sir/Maddamn, I am writing to you today to inform you of our 2 for 1 offer on salt '
+        + 'here at DIG we\'ve been manufacturing salt and refining our distribution network on Miller '
+        + 'for years. If you would like to purchase salt please contact Fluttyman on Miller VS. May the '
+        + 'salt be with you.',
 };
 
 
 let command = JSON.stringify(test);
 
 // Sort command
-let received = JSON.parse(command);
+const received = JSON.parse(command);
 command = received.command;
 
 function run() {
     action[received.command](received);
-};
+}

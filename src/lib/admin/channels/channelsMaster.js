@@ -9,110 +9,114 @@ const crashHandler = require('../../crash-handling.js');
 const logger = require('../../logger.js');
 const positions = require('./positions.js');
 const server = require('../../server/server.js');
+
 const TAG = 'Channels Master';
 
-let timelog = {}; // To log time the last message was sent in temp and event text channels
+const timelog = {}; // To log time the last message was sent in temp and event text channels
 
 module.exports = {
     // Passed all messages sent in -e- and -t- text channels, stores timestamps for inactivity checks
-    activityLog: function(msg) {
+    activityLog(msg) {
         timelog[msg.channel.id] = msg.createdTimestamp;
     },
 
     // Approve the creation of channels
-    checkCreation: function(ch) {
-        let channels = server.getGuild().channels.array();
+    checkCreation(ch) {
+        const channels = server.getGuild().channels.array();
         // Do not allow channels of same type with identical names
-        for (let x in channels) {
+        for (const x in channels) {
             if (channels[x].type !== ch.type) { continue; }
             if (channels[x].name !== ch.name) { continue; }
             if (channels[x].id === ch.id) { continue; }
-            let name = ch.name;
             ch.delete()
-                .then(
-                    logger.devAlert(TAG, `The channel ${name} was deleted upon creation as it held ` +
-                        `an identical name and type to an existing channel`)
-                )
-                .catch(err => {
+                .then(() => {
+                    logger.devAlert(TAG, `The channel ${ch.name} was deleted upon creation as it held `
+                        + 'an identical name and type to an existing channel');
+                })
+                .catch((err) => {
                     logger.warning(TAG, `Failed to delete channel, error: ${err}`);
                 });
             return;
         }
-        let timer = setTimeout(this.checkPositions, 5000);
+        setTimeout(this.checkPositions, 5000);
     },
 
     // Calls position module check to check position of channels
-    checkPositions: function() {
+    checkPositions() {
         crashHandler.logEvent(TAG, 'checkPositions');
         positions.globalCheck();
     },
 
     // Check if channel is being used, deletes channel if inactive, takes channel and msg objects
-    deleteInactive: function(channel, msg) {
+    deleteInactive(channel, msg) {
         if (channel.type === 'voice') {
             if (channel.members.size === 0) {
                 this.deleteChannel(channel, msg);
                 return true;
-            } else {
-                if (msg !== undefined) {
-                    msg.channel.sendMessage('Sorry I can\'t delete a temporary channel when ' +
-                        'people are still in it that would be quite rude.')
-                        .then(message => {
-                            logger.info(TAG, `Sent message: ${message.content}`);
-                        })
-                        .catch(console.log);
-                }
-                return false;
             }
+            if (msg !== undefined) {
+                msg.channel.sendMessage('Sorry I can\'t delete a temporary channel when '
+                    + 'people are still in it that would be quite rude.')
+                    .then((message) => {
+                        logger.info(TAG, `Sent message: ${message.content}`);
+                    })
+                    .catch((err) => {
+                        logger.warning(TAG, `Failed to send message, error: ${err}`);
+                    });
+            }
+            return false;
         } else if (channel.type === 'text') {
             if (channel.lastMessageID) {
                 channel.fetchMessage(channel.lastMessageID)
-                    .then(lastMessage => {
-                        let now = Date.now();
+                    .then((lastMessage) => {
+                        const now = Date.now();
                         if (now - lastMessage.createdTimestamp > config.get('textInactive')) {
                             this.deleteChannel(channel, msg);
                             return true;
-                        } else {
-                            rejectCase(msg);
                         }
+                        rejectCase(msg);
+                        return false;
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         logger.warning(TAG, `Failed to fetch message, error: ${err}`);
                         return false;
                     });
             } else {
                 rejectCase(msg);
             }
+        } else {
+            logger.error(TAG, `Channel.type neither text nor voice, type: ${channel.type}`);
         }
+        return false;
     },
 
     // Function to delete channel and log, msg arguement optional
-    deleteChannel: function(channel, msg) {
-        logger.info(TAG, 'Deleted channel: ' + channel.name);
+    deleteChannel(channel, msg) {
+        logger.info(TAG, `Deleted channel: ${channel.name}`);
         if (msg !== undefined) {
-            msg.channel.sendMessage('The ' + channel.type + ' channel ' + channel.name +
-                ' was succesfully deleted')
-                .then(message => {
+            msg.channel.sendMessage(`The ${channel.type} channel ${channel.name} was `
+                + 'succesfully deleted')
+                .then((message) => {
                     logger.info(TAG, `Sent message: ${message.content}`);
                 })
-                .catch(err => {
+                .catch((err) => {
                     logger.warning(TAG, `Failed to send message: ${err}`);
                 });
         }
         channel.delete();
-    }
+    },
 };
 
 // In case the channel can't be deleted let the requester know and refuse the deletion
 function rejectCase(msg) {
     if (msg !== undefined) {
-        msg.channel.sendMessage('Sorry I can\'t delete that channel as it\'s not ' +
-            'inactive, I only delete text channels where the last message was sent ' +
-            'over 2 hours ago. They\'ll be automatically deleted after then.')
-            .then(message => {
+        msg.channel.sendMessage('Sorry I can\'t delete that channel as it\'s not '
+            + 'inactive, I only delete text channels where the last message was sent '
+            + 'over 2 hours ago. They\'ll be automatically deleted after then.')
+            .then((message) => {
                 logger.info(TAG, `Sent message: ${message.content}`);
             })
-            .catch(err => {
+            .catch((err) => {
                 logger.warning(TAG, `Failed to send meesage, error: ${err}`);
             });
     }
