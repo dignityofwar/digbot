@@ -11,7 +11,7 @@ module.exports = class MuteModeratorProcessor {
      * @return {Promise<boolean>}
      */
     async processor({ data: { guild, user } }) {
-        await this.client.guilds.get(guild).members.get(user)
+        await this.client.guilds.get(guild).members.find(({ user: { id } }) => id === user)
             .removeRole(config.get(`guilds.${guild}.supermuteRole`));
 
         return true;

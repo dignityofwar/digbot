@@ -11,18 +11,12 @@ module.exports = class MuteModerator extends EventEmitter {
      * @param redisClient
      * @param muteModeratorQueue
      */
-    constructor({ ratelimiter, redisClient, muteModeratorQueue }) {
+    constructor({ utilRatelimiter, redisClient, muteModeratorQueue }) {
         super();
 
         this.queue = muteModeratorQueue;
-        this.ratelimiter = ratelimiter;
+        this.ratelimiter = utilRatelimiter;
         this.redis = redisClient;
-
-        this.queue.process(this.process.bind(this));
-    }
-
-    async process({ data: { guild, user } }) {
-        this.client.guilds.get(guild).members.get(user);
     }
 
     /**
