@@ -12,10 +12,9 @@ module.exports = class DiscordLogProcessor {
      * @param info
      * @return {Promise}
      */
-    async processor({ data: log }) {
+    processor({ data: log }) {
         // TODO: Solution to a problem that isn't a problem? Fuck Bull with their stupid circular structure errors
-        await this.channel.send(this.formatLog(log));
-        return true;
+        return this.channel.send(this.formatLog(log)).then(({ id }) => id);
     }
 
     /**
@@ -51,7 +50,7 @@ module.exports = class DiscordLogProcessor {
      */
     getColor(level) {
         return get({
-            error: 15073280, // Red
+            error: 15073281, // Red
             warn: 16763904, // Yellow
             info: 3394611, // Green
             verbose: 52479, // Light Blue

@@ -12,8 +12,7 @@ module.exports = class TriviaCommandProcessor {
     async processor({ data: { channelID, messageID, trivia } }) {
         const message = await this.client.channels.get(channelID).fetchMessage(messageID);
 
-        await message.edit(this.createMessage(trivia, true));
-        return true;
+        return message.edit(this.createMessage(trivia, true)).then(({ id }) => id);
     }
 
     /**
