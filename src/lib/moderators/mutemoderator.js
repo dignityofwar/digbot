@@ -64,6 +64,12 @@ module.exports = class MuteModerator extends EventEmitter {
         await guildMember.addRole(config.get(`guilds.${guildMember.guild.id}.supermuteRole`));
     }
 
+    async unmuteGuildMember(guildMember) {
+        await guildMember.removeRole(config.get(`guilds.${guildMember.guild.id}.supermuteRole`));
+
+        await (await this.queue.getJob(`${guildMember.guild.id}:${guildMember.user.id}`)).moveToCompleted();
+    }
+
     async commitedOffence(guildMember) {
         await this.muteGuildMember(guildMember);
 
