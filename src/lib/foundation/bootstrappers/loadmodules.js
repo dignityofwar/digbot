@@ -34,6 +34,7 @@ module.exports = class LoadModules {
             'apis/*.js',
             'commands/*.js',
             'dispatchers/*.js',
+            'processors/*.js',
             'util/ratelimiter.js',
         ];
     }

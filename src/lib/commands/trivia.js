@@ -19,8 +19,6 @@ module.exports = class TriviaCommand extends Command {
         }));
 
         this.registerEvents();
-
-        this.queue.process(this.process.bind(this));
     }
 
     /**
@@ -56,36 +54,6 @@ module.exports = class TriviaCommand extends Command {
         });
 
         return request.respond(this.createMessage(trivia, false));
-    }
-
-    /**
-     * @param channelID
-     * @param messageID
-     * @param trivia
-     * @return {Promise<Message>}
-     */
-    async process({ data: { channelID, messageID, trivia } }) {
-        const message = await this.client.channels.get(channelID).fetchMessage(messageID);
-
-        await message.edit(this.createMessage(trivia, true));
-        return true;
-    }
-
-    /**
-     * @param {object} trivia
-     * @param {boolean} showAnswer
-     * @return {string}
-     */
-    createMessage(trivia, showAnswer) {
-        return {
-            embed: {
-                title: trivia.question,
-                description: showAnswer ? trivia.answer : 'I will show the answer shortly.',
-                footer: {
-                    text: `${trivia.id} | ${trivia.category.title}`,
-                },
-            },
-        };
     }
 
     /**

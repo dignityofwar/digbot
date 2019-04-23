@@ -1,6 +1,7 @@
 const ServiceProvider = require('../foundation/serviceprovider');
 
 module.exports = class DispatcherProvider extends ServiceProvider {
+    // TODO: Dynamically add dispatchers
     get dispatchers() {
         return [
             'dispatchersDiscordconnectiondispatcher',
