@@ -1,6 +1,6 @@
 const Command = require('../foundation/command');
 
-module.exports = class CatsCommand extends Command {
+module.exports = class ReleaseCommand extends Command {
     constructor({ moderatorsMutemoderator }) {
         super();
 
