@@ -10,8 +10,6 @@ module.exports = class DiscordconnectionDispatcher extends Dispatcher {
         super();
 
         this.client = discordjsClient;
-
-        this.listener = this.handler.bind(this);
     }
 
     /**
@@ -19,7 +17,9 @@ module.exports = class DiscordconnectionDispatcher extends Dispatcher {
      * @return {Promise<void>}
      */
     async start() {
-        this.client.on('disconnect', this.listener);
+        this.registerListenersTo(this.client, {
+            disconnect: this.handler.bind(this),
+        });
     }
 
     /**
@@ -27,7 +27,7 @@ module.exports = class DiscordconnectionDispatcher extends Dispatcher {
      * @return {Promise<void>}
      */
     async stop() {
-        this.client.off('disconnect', this.listener);
+        this.unregisterListenersFromAll();
     }
 
     /**

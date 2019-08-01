@@ -19,8 +19,6 @@ module.exports = class CommandDispatcher extends Dispatcher {
         this.logger = logger;
         this.register = commandRegister;
         this.ratelimiter = utilRatelimiter;
-
-        this.listener = this.handler.bind(this);
     }
 
     /**
@@ -28,7 +26,9 @@ module.exports = class CommandDispatcher extends Dispatcher {
      * @return {Promise<void>}
      */
     async start() {
-        this.client.on('message', this.listener);
+        this.registerListenersTo(this.client, {
+            message: this.handler.bind(this),
+        });
     }
 
     /**
@@ -36,7 +36,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
      * @return {Promise<void>}
      */
     async stop() {
-        this.client.off('message', this.listener);
+        this.unregisterListenersFromAll();
     }
 
     /**
@@ -68,12 +68,10 @@ module.exports = class CommandDispatcher extends Dispatcher {
             if (
                 command.special
                 && message.member.id !== message.guild.ownerID
-                && !intersection(
-                    message.member.roles,
+                && !intersection(message.member.roles,
                     config.has(`guilds.${message.guild.id}.adminRoles`)
                         ? config.get(`guilds.${message.guild.id}.adminRoles`)
-                        : [],
-                ).length
+                        : []).length
             ) { return; }
 
             const throttleKey = get(command, 'throttle.peruser', true)
