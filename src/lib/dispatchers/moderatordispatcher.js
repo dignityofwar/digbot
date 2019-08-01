@@ -28,7 +28,7 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
      * @return {Promise<void>}
      */
     async start() {
-        registerListeners(this.client, {
+        this.registerListenersTo(this.client, {
             // channelCreate: this.channelCreate.bind(this),
             // channelUpdate: this.channelUpdate.bind(this),
             guildMemberAdd: this.guildMemberAdd.bind(this),
@@ -45,7 +45,7 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
      * @return {Promise<void>}
      */
     async stop() {
-        unregisterAllListeners();
+        this.unregisterListenersFromAll();
     }
 
     /**

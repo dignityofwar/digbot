@@ -22,7 +22,7 @@ module.exports = class Dispatcher extends EventEmitter {
      */
     async stop() {}
 
-    registerListeners(emitter, listeners) {
+    registerListenersTo(emitter, listeners) {
         for (const [event, listener] of Object.entries(listeners)) {
             emitter.on(event, listener);
 
@@ -30,7 +30,7 @@ module.exports = class Dispatcher extends EventEmitter {
         }
     }
 
-    unregisterAllListeners() {
+    unregisterListenersFromAll() {
         for (const [emitter, event, listener] of this.registeredListeners) {
             emitter.off(event, listener);
         }
