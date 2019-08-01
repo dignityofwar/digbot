@@ -1,7 +1,5 @@
 const EventEmitter = require('events');
 
-/* eslint no-useless-constructor: off */
-
 module.exports = class Dispatcher extends EventEmitter {
     /**
      *
@@ -9,7 +7,7 @@ module.exports = class Dispatcher extends EventEmitter {
     constructor() {
         super();
 
-        // this.restart = 'always';
+        this.registeredListeners = [];
     }
 
     /**
@@ -23,4 +21,20 @@ module.exports = class Dispatcher extends EventEmitter {
      * @return {Promise<void>}
      */
     async stop() {}
+
+    registerListeners(emitter, listeners) {
+        for (const [event, listener] of Object.entries(listeners)) {
+            emitter.on(event, listener);
+
+            this.registeredListeners.push([emitter, event, listener]);
+        }
+    }
+
+    unregisterAllListeners() {
+        for (const [emitter, event, listener] of this.registeredListeners) {
+            emitter.off(event, listener);
+        }
+
+        this.registeredListeners = [];
+    }
 };

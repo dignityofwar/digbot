@@ -28,31 +28,24 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
      * @return {Promise<void>}
      */
     async start() {
-        // this.client.on('channelCreate', this.channelCreate.bind(this));
-        // this.client.on('channelUpdate', this.channelUpdate.bind(this));
-        this.client.on('guildMemberAdd', this.guildMemberAdd.bind(this));
-        // this.client.on('guildMemberRemove', this.guildMemberRemove.bind(this));
-        this.client.on('guildMemberUpdate', this.guildMemberUpdate.bind(this));
-        this.client.on('message', this.message.bind(this));
-        this.client.on('messageUpdate', this.messsageUpdate.bind(this));
-        this.client.on('presenceUpdate', this.presenceUpdate.bind(this));
-        this.client.on('voiceStateUpdate', this.voiceStateUpdate.bind(this));
+        registerListeners(this.client, {
+            // channelCreate: this.channelCreate.bind(this),
+            // channelUpdate: this.channelUpdate.bind(this),
+            guildMemberAdd: this.guildMemberAdd.bind(this),
+            // guildMemberRemove: this.guildMemberRemove.bind(this),
+            guildMemberUpdate: this.guildMemberUpdate.bind(this),
+            message: this.message.bind(this),
+            messageUpdate: this.messsageUpdate.bind(this),
+            presenceUpdate: this.presenceUpdate.bind(this),
+            voiceStateUpdate: this.voiceStateUpdate.bind(this),
+        });
     }
 
     /**
      * @return {Promise<void>}
      */
     async stop() {
-        // TODO: These are probably not the correct listeners, but this function is not that important for now
-        // this.client.off('channelCreate', this.channelCreate.bind(this));
-        // this.client.off('channelUpdate', this.channelUpdate.bind(this));
-        this.client.off('guildMemberAdd', this.guildMemberAdd.bind(this));
-        // this.client.off('guildMemberRemove', this.guildMemberRemove.bind(this));
-        this.client.off('guildMemberUpdate', this.guildMemberUpdate.bind(this));
-        this.client.off('message', this.message.bind(this));
-        this.client.off('messageUpdate', this.messsageUpdate.bind(this));
-        this.client.off('presenceUpdate', this.presenceUpdate.bind(this));
-        this.client.off('voiceStateUpdate', this.voiceStateUpdate.bind(this));
+        unregisterAllListeners();
     }
 
     /**
