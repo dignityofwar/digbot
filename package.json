@@ -25,33 +25,33 @@
   "homepage": "https://github.com/JamesLongman/DIGBot#readme",
   "dependencies": {
     "awilix": "^4.2.0",
-    "axios": "^0.18.0",
-    "bull": "~3.7.0",
-    "config": "^3.0.1",
-    "discord.js": "~11.4.2",
-    "googleapis": "^37.2.0",
-    "lodash": "^4.17.11",
+    "axios": "^0.19.0",
+    "bull": "~3.10.0",
+    "config": "^3.2.2",
+    "discord.js": "~11.5.1",
+    "googleapis": "^39.2.0",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "opusscript": "^0.0.6",
     "os-utils": "^0.0.14",
-    "ioredis": "^4.6.2",
+    "ioredis": "^4.14.0",
     "winston": "^3.2.1",
     "winston-transport": "^4.3.0",
-    "ytdl-core": "^0.29.1"
+    "ytdl-core": "^0.29.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.1",
     "erlpack": "discordapp/erlpack",
-    "libsodium-wrappers": "^0.7.4",
+    "libsodium-wrappers": "^0.7.5",
     "node-opus": "^0.3.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^5.14.1",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0",
-    "mocha": "^6.0.2",
-    "nyc": "^13.3.0",
-    "sinon": "^7.2.4"
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.2",
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
+    "sinon": "^7.3.2"
   }
 }
