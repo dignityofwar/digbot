@@ -15,7 +15,7 @@ module.exports = class DiscordTransport extends Transport {
         this.client = discordjsClient;
         this.queue = discordTransportQueue;
 
-        // this.queue.pause();
+        this.channelID = opts.channelID;
 
         this.registerEvents();
     }
@@ -45,8 +45,41 @@ module.exports = class DiscordTransport extends Transport {
         this.queue.add({
             message: info[MESSAGE],
             level: info[LEVEL],
+            channel: this.channelID,
         }, { attempts: 3 });
 
         callback();
+    }
+
+    /**
+     * Formats the message to Markdown code syntax
+     *
+     * @param message
+     * @param level
+     * @return {{embed: {color: Number, description: *}}}
+     */
+    formatLog({ message, level }) {
+        return {
+            embed: {
+                description: message,
+                color: this.getColor(level),
+            },
+        };
+    }
+
+    /**
+     * Maps a level to a color in decimal notation
+     *
+     * @param level
+     * @return {Number}
+     */
+    getColor(level) {
+        return get({
+            error: 15073281, // Red
+            warn: 16763904, // Yellow
+            info: 3394611, // Green
+            verbose: 52479, // Light Blue
+            debug: 230, // Indigo
+        }, level, 808080);
     }
 };

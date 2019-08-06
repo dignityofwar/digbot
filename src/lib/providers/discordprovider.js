@@ -66,17 +66,6 @@ module.exports = class DiscordProvider extends ServiceProvider {
         })
             .singleton()
             .disposer(client => client.destroy()));
-
-        // TODO: Should ignore all verbose or lower discordjsClient logs. Logging should be separated from the client.
-        this.container.register('loggerDiscordTransport', asClass(DiscordTransport)
-            .inject(() => ({
-                opts: {
-                    level: 'warn',
-                    format: format.combine(
-                        ...this.container.resolve('loggerDefaultFormat'),
-                    ),
-                },
-            })));
     }
 
     /**
@@ -85,10 +74,7 @@ module.exports = class DiscordProvider extends ServiceProvider {
      * @return {Promise<void>}
      */
     async boot({ discordjsClient, logger }) {
-        // TODO: Shouldn't probably be started here
         await discordjsClient.login(config.get('token'));
-
-        logger.add(this.container.resolve('loggerDiscordTransport'));
 
         if (server.getChannel('developers')) {
             server.getChannel('developers')
@@ -101,7 +87,6 @@ module.exports = class DiscordProvider extends ServiceProvider {
 
         // TODO: Can be moved to ModeratorDispatcher or CommandDispatcher, we should probably introduce some throttle
         //   to replace this which retains memory when the bot crashes
-        // commandChannel.ready();
         subBots.ready();
     }
 };

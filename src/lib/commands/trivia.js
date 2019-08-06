@@ -1,37 +1,15 @@
 const Command = require('./foundation/command');
 
-const revealDuration = 30;
+const revealDuration = 30; // TODO: Should be inside the class
 
 module.exports = class TriviaCommand extends Command {
-    constructor({ apisJservice, discordjsClient, logger, triviaCommandQueue }) { // eslint-disable-line
+    constructor({ apisJservice, queuesDiscordmessagequeue }) {
         super();
 
         this.name = 'trivia';
 
-        this.client = discordjsClient;
         this.jservice = apisJservice;
-        this.logger = logger;
-        this.queue = triviaCommandQueue;
-
-        this.queue.on('failed', (job, err) => this.logger.log('error', {
-            message: err.toString(),
-            label: '!trivia queue',
-        }));
-
-        this.registerEvents();
-    }
-
-    /**
-     *
-     */
-    registerEvents() {
-        this.client.on('disconnect', () => {
-            this.queue.pause();
-        });
-
-        this.client.on('ready', () => {
-            this.queue.resume();
-        });
+        this.queue = queuesDiscordmessagequeue;
     }
 
     /**
@@ -44,16 +22,21 @@ module.exports = class TriviaCommand extends Command {
             this.jservice.random(),
         ]);
 
-        this.queue.add({
-            channelID: reply.channel.id,
-            messageID: reply.id,
-            trivia,
-        }, {
-            attempts: 3,
-            delay: 30000,
-        });
+        const content = {
+            embed: {
+                title: trivia.question,
+                description: trivia.answer,
+                footer: {
+                    text: `${trivia.id} | ${trivia.category.title}`,
+                },
+            },
+        };
 
-        return request.respond(this.createMessage(trivia, false));
+        this.queue.updateMessage(content, reply.channel.id, reply.id, { delay: revealDuration * 1000 });
+
+        content.embed.description = 'I will show the answer shortly.';
+
+        return request.respond(content);
     }
 
     /**

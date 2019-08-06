@@ -17,19 +17,21 @@
   "logger"                  : {
     "level"     : "info",
 
-    "transports": {
-
-      "console": {},
-
-      "discord": {
-        "channelId": ""
+    "transports": [
+      {
+        "transport": "console"
+      },
+      {
+        "transport": "discord",
+        "channelID": "",
+        "level"    : "warn"
       }
-    }
+    ]
   },
 
-  "commandChannels": [],
+  "commandChannels"         : [],
 
-  "guilds": {},
+  "guilds"                  : {},
 
   "general"                 : {
     "adminsRoleID"           : "",

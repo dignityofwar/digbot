@@ -36,7 +36,7 @@ module.exports = class LoadModules {
             'commands/!(foundation)/**.js',
             'dispatchers/*.js',
             'moderators/*.js',
-            'processors/*.js',
+            'queues/*.js',
             'util/ratelimiter.js',
         ];
     }
