@@ -17,16 +17,7 @@
   "logger"                  : {
     "level"     : "info",
 
-    "transports": [
-      {
-        "transport": "console"
-      },
-      {
-        "transport": "discord",
-        "channelID": "",
-        "level"    : "warn"
-      }
-    ]
+    "transports": []
   },
 
   "commandChannels"         : [],

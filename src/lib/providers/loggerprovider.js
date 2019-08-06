@@ -34,7 +34,7 @@ module.exports = class LoggerProvider extends ServiceProvider {
             }));
 
         this.container.register('loggerDiscordTransportFactory',
-            asFunction(({ discordjsClient, discordTransportQueue }) => (channelID, level) => {
+            asFunction(({ discordjsClient, queuesDiscordmessagequeue }) => (channelID, level) => {
                 const opts = {
                     format: format.combine(
                         ...this.container.resolve('loggerDefaultFormat'),
@@ -47,14 +47,16 @@ module.exports = class LoggerProvider extends ServiceProvider {
 
                 return new DiscordTransport({
                     discordjsClient,
-                    discordTransportQueue,
+                    queuesDiscordmessagequeue,
                     opts,
                 });
             }));
 
-        this.container.register('logger', asFunction(() => createLogger({
+        this.container.register('logger', asFunction(({ loggerConsoleTransportFactory }) => createLogger({
             level: config.get('logger.level'),
-            transports: [],
+            transports: [
+                loggerConsoleTransportFactory(),
+            ],
         }))
             .singleton());
     }
@@ -75,8 +77,6 @@ module.exports = class LoggerProvider extends ServiceProvider {
 
     createTransport(transportConfig) {
         switch (transportConfig.transport) {
-        case 'console':
-            return this.container.resolve('loggerConsoleTransportFactory')(transportConfig.level);
         case 'discord':
             return this.container.resolve('loggerDiscordTransportFactory')(transportConfig.channelID, transportConfig.level);
         default:

@@ -10,7 +10,7 @@ module.exports = class DiscordMessageQueue extends Queue {
             },
         });
 
-        this.client = discordjsClient;
+        this.discordclient = discordjsClient;
 
         this.registerEvents();
 
@@ -22,12 +22,12 @@ module.exports = class DiscordMessageQueue extends Queue {
      * Queue is started immediately, so a Discord connection should be already established
      */
     registerEvents() {
-        this.client.on('disconnect', () => {
-            this.queue.pause();
+        this.discordclient.on('disconnect', () => {
+            this.pause();
         });
 
-        this.client.on('ready', () => {
-            this.queue.resume();
+        this.discordclient.on('ready', () => {
+            this.resume();
         });
     }
 
@@ -38,7 +38,7 @@ module.exports = class DiscordMessageQueue extends Queue {
      * @return {Promise}
      */
     workerSend({ data: { content, channel } }) {
-        return this.client.channels.get(channel).send(content).then(({ id }) => id);
+        return this.discordclient.channels.get(channel).send(content).then(({ id }) => id);
     }
 
     /**
@@ -50,7 +50,7 @@ module.exports = class DiscordMessageQueue extends Queue {
      * @return {Promise<string>}
      */
     async workerUpdate({ data: { content, channel, message } }) {
-        return (await this.client.channels.get(channel).fetchMessage(message)).edit(content).then(({ id }) => id);
+        return (await this.discordclient.channels.get(channel).fetchMessage(message)).edit(content).then(({ id }) => id);
     }
 
     /**
@@ -88,6 +88,8 @@ module.exports = class DiscordMessageQueue extends Queue {
 
 module.exports[RESOLVER] = {
     injector: () => ({
-        redisOpts: config.get('services.queue.redis_url'),
+        opts: {
+            redisOpts: config.get('services.queue.redis_url'),
+        },
     }),
 };

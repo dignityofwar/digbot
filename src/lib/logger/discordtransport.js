@@ -7,7 +7,7 @@ const LEVEL = Symbol.for('level');
 module.exports = class DiscordTransport extends Transport {
     /**
      * @param discordjsClient
-     * @param discordTransportQueue
+     * @param queuesDiscordmessagequeue
      * @param opts
      */
     constructor({ discordjsClient, queuesDiscordmessagequeue, opts = {} }) {
