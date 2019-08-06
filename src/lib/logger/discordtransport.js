@@ -1,3 +1,4 @@
+const { get } = require('lodash');
 const Transport = require('winston-transport');
 
 const MESSAGE = Symbol.for('message');
@@ -9,28 +10,13 @@ module.exports = class DiscordTransport extends Transport {
      * @param discordTransportQueue
      * @param opts
      */
-    constructor({ discordjsClient, discordTransportQueue, opts = {} }) {
+    constructor({ discordjsClient, queuesDiscordmessagequeue, opts = {} }) {
         super(opts);
 
         this.client = discordjsClient;
-        this.queue = discordTransportQueue;
+        this.queue = queuesDiscordmessagequeue;
 
-        this.channelID = opts.channelID;
-
-        this.registerEvents();
-    }
-
-    /**
-     * TODO: Probably not the best place for this
-     */
-    registerEvents() {
-        this.client.on('disconnect', () => {
-            this.queue.pause();
-        });
-
-        this.client.on('ready', () => {
-            this.queue.resume();
-        });
+        this.channel = opts.channelID;
     }
 
     /**
@@ -42,29 +28,16 @@ module.exports = class DiscordTransport extends Transport {
     log(info, callback) {
         setImmediate(() => this.emit('logged', info));
 
-        this.queue.add({
-            message: info[MESSAGE],
-            level: info[LEVEL],
-            channel: this.channelID,
-        }, { attempts: 3 });
-
-        callback();
-    }
-
-    /**
-     * Formats the message to Markdown code syntax
-     *
-     * @param message
-     * @param level
-     * @return {{embed: {color: Number, description: *}}}
-     */
-    formatLog({ message, level }) {
-        return {
+        const content = {
             embed: {
-                description: message,
-                color: this.getColor(level),
+                description: info[MESSAGE],
+                color: this.getColor(info[LEVEL]),
             },
         };
+
+        this.queue.sendMessage(content, this.channel);
+
+        callback();
     }
 
     /**
