@@ -5,7 +5,7 @@ const Queue = require('bull');
 const [SEND_JOB, UPDATE_JOB] = ['send', 'update'];
 
 module.exports = class DiscordMessageQueue extends Queue {
-    constructor({ discordjsClient, opts: { redisOpts } }) {
+    constructor({ logger, discordjsClient, opts: { redisOpts } }) {
         super('discord messages', redisOpts, {
             defaultJobOptions: {
                 attempts: 3,
@@ -19,7 +19,7 @@ module.exports = class DiscordMessageQueue extends Queue {
         this.process(SEND_JOB, this.workerSend.bind(this));
         this.process(UPDATE_JOB, this.workerUpdate.bind(this));
 
-        this.on('failed', (job, err) => console.log(err.stack));
+        this.on('failed', (job, err) => logger.warn(`Discord Message Queue job failed: ${err}`));
     }
 
     /**
