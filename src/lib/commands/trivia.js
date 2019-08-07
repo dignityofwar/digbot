@@ -32,7 +32,7 @@ module.exports = class TriviaCommand extends Command {
             },
         };
 
-        this.queue.updateMessage(content, reply.channel.id, reply.id, { delay: revealDuration * 1000 });
+        await this.queue.updateMessage(content, reply.channel.id, reply.id, { delay: revealDuration * 1000 });
 
         content.embed.description = 'I will show the answer shortly.';
 

@@ -39,6 +39,7 @@ module.exports = class LoggerProvider extends ServiceProvider {
                     format: format.combine(
                         ...this.container.resolve('loggerDefaultFormat'),
                     ),
+                    channelID,
                 };
 
                 if (!isEmpty(level)) {
@@ -78,7 +79,8 @@ module.exports = class LoggerProvider extends ServiceProvider {
     createTransport(transportConfig) {
         switch (transportConfig.transport) {
         case 'discord':
-            return this.container.resolve('loggerDiscordTransportFactory')(transportConfig.channelID, transportConfig.level);
+            return this.container.resolve('loggerDiscordTransportFactory')(transportConfig.channelID,
+                transportConfig.level);
         default:
             throw new Error(`Unkown log transport: ${transportConfig.transport}`);
         }

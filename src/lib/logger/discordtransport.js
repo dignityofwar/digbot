@@ -28,6 +28,7 @@ module.exports = class DiscordTransport extends Transport {
     log(info, callback) {
         setImmediate(() => this.emit('logged', info));
 
+        console.log(info[MESSAGE]);
         const content = {
             embed: {
                 description: info[MESSAGE],

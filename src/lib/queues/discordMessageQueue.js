@@ -2,6 +2,8 @@ const config = require('config');
 const { RESOLVER } = require('awilix');
 const Queue = require('bull');
 
+const [SEND_JOB, UPDATE_JOB] = ['send', 'update'];
+
 module.exports = class DiscordMessageQueue extends Queue {
     constructor({ discordjsClient, opts: { redisOpts } }) {
         super('discord messages', redisOpts, {
@@ -14,8 +16,10 @@ module.exports = class DiscordMessageQueue extends Queue {
 
         this.registerEvents();
 
-        this.process('send', this.workerSend.bind(this));
-        this.process('update', this.workerUpdate.bind(this));
+        this.process(SEND_JOB, this.workerSend.bind(this));
+        this.process(UPDATE_JOB, this.workerUpdate.bind(this));
+
+        this.on('failed', (job, err) => console.log(err.stack));
     }
 
     /**
@@ -50,7 +54,8 @@ module.exports = class DiscordMessageQueue extends Queue {
      * @return {Promise<string>}
      */
     async workerUpdate({ data: { content, channel, message } }) {
-        return (await this.discordclient.channels.get(channel).fetchMessage(message)).edit(content).then(({ id }) => id);
+        return (await this.discordclient.channels.get(channel).fetchMessage(message)).edit(content)
+            .then(({ id }) => id);
     }
 
     /**
@@ -62,7 +67,7 @@ module.exports = class DiscordMessageQueue extends Queue {
      * @return {*}
      */
     sendMessage(content, channel, jobOpts = {}) {
-        return this.add('send', {
+        return this.add(SEND_JOB, {
             content,
             channel,
         }, jobOpts);
@@ -78,7 +83,7 @@ module.exports = class DiscordMessageQueue extends Queue {
      * @return {*}
      */
     updateMessage(content, channel, message, jobOpts = {}) {
-        return this.add('update', {
+        return this.add(UPDATE_JOB, {
             content,
             channel,
             message,
