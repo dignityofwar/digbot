@@ -3,9 +3,8 @@
 // The master module for channel related actions
 
 const config = require('config');
-const crashHandler = require('../../crash-handling.js');
 const logger = require('../../logger.js');
-const positions = require('./positions.js');
+// const positions = require('./positions.js');
 const server = require('../../server/server.js');
 
 const TAG = 'Channels Master';
@@ -37,13 +36,6 @@ module.exports = {
                 return;
             }
         }
-        setTimeout(this.checkPositions, 5000);
-    },
-
-    // Calls position module check to check position of channels
-    checkPositions() {
-        crashHandler.logEvent(TAG, 'checkPositions');
-        positions.globalCheck();
     },
 
     // Check if channel is being used, deletes channel if inactive, takes channel and msg objects
