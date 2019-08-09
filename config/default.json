@@ -26,9 +26,7 @@
 
   "general"                 : {
     "adminsRoleID"           : "",
-    "devRoleID"              : "",
     "forcedPTTRoleID"        : "",
-    "herebedragonsRoleID"    : "",
     "server"                 : "",
     "staffRoleID"            : "",
     "superMuteRoleID"        : "",
@@ -60,19 +58,7 @@
       "developers"   : "",
       "digbot"       : "",
       "general"      : "",
-      "herebedragons": "",
       "staff"        : ""
-    },
-    "positions": {
-      "text" : {},
-      "voice": {
-        "afk": {
-          "id"      : "",
-          "name"    : "💤 AFK",
-          "position": null,
-          "comment" : "Afk Voice channel is always required"
-        }
-      }
     }
   },
 

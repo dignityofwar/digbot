@@ -4,7 +4,6 @@
 
 const config = require('config');
 const logger = require('../../logger.js');
-// const positions = require('./positions.js');
 const server = require('../../server/server.js');
 
 const TAG = 'Channels Master';
