@@ -34,7 +34,9 @@ module.exports = class PresenceDispatcher extends Dispatcher {
      * @param member
      */
     checkPrecense(member) {
-        if (member.user.bot) {
+        if (member.user.bot
+            || (config.has(`guilds.${member.guild.id}.ignoreAutoAssignmentRole`)
+                && member.roles.has(config.get(`guilds.${member.guild.id}.ignoreAutoAssignmentRole`)))) {
             return;
         }
 
