@@ -43,6 +43,7 @@ module.exports = class PresenceDispatcher extends Dispatcher {
         if (roles) {
             const log = `Automatically assigned, playing: ${member.presence.game.name}`;
 
+            // TODO: Make a queue that handles this
             roles instanceof Array ? member.addRoles(roles, log) : member.addRole(roles, log);
         }
     }
@@ -53,12 +54,12 @@ module.exports = class PresenceDispatcher extends Dispatcher {
      * @return {undefined|*}
      */
     getRoles(guild, presence) {
-        if (presence.game && config.has(`guilds.${guild.id}.roleAssignment`)) {
-            const key = Object.keys(config.get(`guilds.${guild.id}.roleAssignment`))
+        if (presence.game && config.has(`guilds.${guild.id}.autoRoleAssignment`)) {
+            const key = Object.keys(config.get(`guilds.${guild.id}.autoRoleAssignment`))
                 .find(k => presence.game.name.toUpperCase().includes(k.toUpperCase()));
 
             if (key) {
-                return config.get(`guilds.${guild.id}.roleAssignment.${key}`);
+                return config.get(`guilds.${guild.id}.autoRoleAssignment.${key}`);
             }
         }
 
