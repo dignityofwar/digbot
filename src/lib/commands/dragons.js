@@ -1,13 +1,11 @@
 const config = require('config');
 const Command = require('./foundation/command');
 
-/* eslint consistent-return: 0 */
 module.exports = class DragonsCommand extends Command {
     constructor() {
         super();
 
         this.name = 'dragons';
-        this.onlyHelpFull = true;
     }
 
     /**
@@ -15,10 +13,11 @@ module.exports = class DragonsCommand extends Command {
      * @return {Promise<void>}
      */
     async execute(request) {
-        // TODO: Maybe use the reasons parameter?
-        if (request.guild === config.get('general.server')) { return; } // TODO: This needs to be removed
+        if (!config.has(`guilds.${request.guild.id}.dragonRole`)) {
+            return request.respond('This server doesn\'t have this role.');
+        }
 
-        const dragonRole = config.get('general.herebedragonsRoleID');
+        const dragonRole = config.get(`guilds.${request.guild.id}.dragonRole`);
 
         if (request.member.roles.has(dragonRole)) {
             await request.member.removeRole(dragonRole);
@@ -28,11 +27,7 @@ module.exports = class DragonsCommand extends Command {
             );
         }
 
-        await request.member.addRole(dragonRole);
-
-        return request.guild.channels.get(config.get('channels.mappings.herebedragons'))
-            .send(`${request.member.displayName} has been granted access here. Note, this channel is lawless.`
-                + ' If you get triggered, the community staff cannot help you.');
+        return request.member.addRole(dragonRole);
     }
 
     /**

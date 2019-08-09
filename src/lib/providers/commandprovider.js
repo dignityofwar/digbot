@@ -23,6 +23,7 @@ module.exports = class QueueProvider extends ServiceProvider {
             'commandsChannel',
             'commandsDragons',
             'commandsHelp',
+            'commandsIgnore',
             'commandsLmgtfy',
             'commandsMentions',
             'commandsPing',

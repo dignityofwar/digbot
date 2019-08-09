@@ -10,7 +10,6 @@ module.exports = class ChannelCommand extends Command {
         super();
 
         this.name = 'channel';
-        this.onlyHelpFull = true;
     }
 
     /**
@@ -70,7 +69,6 @@ module.exports = class ChannelCommand extends Command {
     }
 
     /**
-     * @param {boolean} full
      * @return {string}
      */
     help() {
