@@ -7,6 +7,7 @@ module.exports = class DispatcherProvider extends ServiceProvider {
             'dispatchersDiscordconnectiondispatcher',
             'dispatchersCommanddispatcher',
             'dispatchersModeratordispatcher',
+            'dispatchersPresencedispatcher',
         ];
     }
 

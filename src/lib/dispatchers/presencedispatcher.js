@@ -34,12 +34,16 @@ module.exports = class PresenceDispatcher extends Dispatcher {
      * @param member
      */
     checkPrecense(member) {
+        if (member.user.bot) {
+            return;
+        }
+
         const roles = this.getRoles(member.guild, member.presence);
 
         if (roles) {
-            const add = roles instanceof Array ? member.addRoles : member.addRole;
+            const log = `Automatically assigned, playing: ${member.presence.game.name}`;
 
-            add(roles, `Automatically assigned, playing: ${member.presence.game.name})`);
+            roles instanceof Array ? member.addRoles(roles, log) : member.addRole(roles, log);
         }
     }
 
@@ -51,7 +55,7 @@ module.exports = class PresenceDispatcher extends Dispatcher {
     getRoles(guild, presence) {
         if (presence.game && config.has(`guilds.${guild.id}.roleAssignment`)) {
             const key = Object.keys(config.get(`guilds.${guild.id}.roleAssignment`))
-                .find(k => presence.game.name.includes(k));
+                .find(k => presence.game.name.toUpperCase().includes(k.toUpperCase()));
 
             if (key) {
                 return config.get(`guilds.${guild.id}.roleAssignment.${key}`);
