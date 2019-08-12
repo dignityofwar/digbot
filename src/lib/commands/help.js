@@ -1,3 +1,4 @@
+const { RichEmbed } = require('discord.js');
 const Command = require('./foundation/command');
 
 module.exports = class HelpCommand extends Command {
@@ -20,39 +21,18 @@ module.exports = class HelpCommand extends Command {
      * @return {Promise<void>}
      */
     async execute(request) {
-        // const commandMessage = this.wantsSomething(message.cleanContent);
-        //
-        // if (commandMessage) {
-        //     return message.channel.send(commandMessage);
-        // }
-
         return request.respond(this.createReply());
     }
-
-    // /**
-    //  * @param content
-    //  */
-    // wantsSomething(content) {
-    //     return ;
-    // }
 
     /**
      * @return {string}
      */
     createReply() {
-        return {
-            embed: {
-                title: 'Commands',
-                fields: [
-                    ...this.register.toArray()
-                        .filter(({ special }) => !special)
-                        .map(({ name, help }) => ({
-                            name: `!${name}`,
-                            value: help(),
-                        })),
-                ],
-            },
-        };
+        const embed = new RichEmbed().setTitle('Commands');
+
+        this.register.toArray().filter(({ special }) => !special).forEach(c => embed.addField(`!${c.name}`, c.help()));
+
+        return embed;
     }
 
     /**

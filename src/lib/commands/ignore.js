@@ -6,12 +6,7 @@ module.exports = class IgnoreCommand extends Command {
     constructor() {
         super();
 
-        this.name = 'cats';
-
-        this.throttle = {
-            attempts: 2,
-            decay: 5,
-        };
+        this.name = 'ignore';
     }
 
     /**
@@ -40,6 +35,6 @@ module.exports = class IgnoreCommand extends Command {
      * @return {string}
      */
     help() {
-        return 'Shows a random cat image from the interwebs. Append "gif" on the end to return a gif version.';
+        return 'Assigns the ignore role to you which prevents auto role assignments. You can still assign roles with the !pretend command.';
     }
 };
