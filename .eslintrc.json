@@ -1,42 +1,25 @@
 {
-    "extends": ["airbnb-base"],
-    "env": {
-        "node": true,
-        "mocha": true
-    },
-    "parserOptions": {
-       "sourceType": "script"
-   },
-    "rules": {
-        "indent": [
-            2,
-            4
-        ],
-        "quotes": [
-            2,
-            "single"
-        ],
-        "linebreak-style": [
-            2,
-            "unix"
-        ],
-        "semi": [
-            2,
-            "always"
-        ],
-        "radix": [
-            2,
-            "as-needed"
-        ],
-        "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
-        "no-console": 1,
-        "max-len": [
-            1,
-            120
-        ],
-        "no-use-before-define": 0,
-        "no-continue": 0,
-        "guard-for-in": 0,
-        "no-restricted-syntax": 0
-    }
+  "extends": "airbnb-base",
+  "env"    : {
+    "mocha": true
+  },
+  "rules"  : {
+    "indent"                : [
+      2,
+      4
+    ],
+    "max-len"               : [
+      1,
+      120
+    ],
+    "no-plusplus"           : "off",
+    "no-empty-function"     : "off",
+    "no-param-reassign"     : "off",
+    "no-unused-expressions" : "off",
+    "no-use-before-define"  : ["error", {"functions": false, "classes": true, "variables": true}],
+    "no-useless-constructor": "off",
+    "guard-for-in"          : "off",
+    "no-restricted-syntax"  : "off",
+    "class-methods-use-this": "off"
+  }
 }

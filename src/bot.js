@@ -1,8 +1,19 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
+const app = require('./bootstrap');
 
-'use strict';
+const kernel = app.resolve('kernel');
 
-const bot = require('./lib/discord/discordbot.js');
+kernel.run()
+    .then(() => {
+        // TODO: Better listeners for termination of the bot
+        process.on('SIGTERM', async () => {
+            await kernel.terminate();
+        });
 
-bot.init();
-// webhook.init();
+        process.on('SIGINT', async () => {
+            await kernel.terminate();
+        });
+
+        process.on('exit', async () => {
+            await kernel.terminate();
+        });
+    });

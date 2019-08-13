@@ -1,15 +1,14 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
-/* eslint no-loop-func: 0 */
+/* eslint prefer-promise-reject-errors: off */
 
 // Module to control sub bot usage, logs in bots as required
 
 const _ = require('lodash');
 const config = require('config');
-const crashHandler = require('../crash-handling.js');
 const Discord = require('discord.js');
+
+const crashHandler = require('../crash-handling.js');
 const logger = require('../logger.js');
 const server = require('../server/server.js');
 
@@ -70,7 +69,7 @@ module.exports = {
             for (const x in subBots) {
                 if (subBots[x].busy !== true && subBots[x].booted) {
                     subBots[x].busy = true;
-                    token = subBots[x].token;
+                    ({ token } = subBots[x]);
                     break;
                 }
             }
@@ -117,7 +116,7 @@ module.exports = {
             subBots[x].busy = true;
             const bot = new Discord.Client();
             bot.login(subBots[x].token)
-                .then(() => {
+                .then(() => { // eslint-disable-line no-loop-func
                     logger.debug(TAG, 'Sub bot login succesful');
                     if (server.getGuild().members.get(bot.user.id).voiceChannel) {
                         logger.info(TAG, `Identified sub bot ${bot.user.id} was in a voice channel, `

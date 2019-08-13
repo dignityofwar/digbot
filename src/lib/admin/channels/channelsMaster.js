@@ -1,7 +1,5 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // The master module for channel related actions
 
 const config = require('config');
@@ -25,18 +23,19 @@ module.exports = {
         const channels = server.getGuild().channels.array();
         // Do not allow channels of same type with identical names
         for (const x in channels) {
-            if (channels[x].type !== ch.type) { continue; }
-            if (channels[x].name !== ch.name) { continue; }
-            if (channels[x].id === ch.id) { continue; }
-            ch.delete()
-                .then(() => {
-                    logger.devAlert(TAG, `The channel ${ch.name} was deleted upon creation as it held `
-                        + 'an identical name and type to an existing channel');
-                })
-                .catch((err) => {
-                    logger.warning(TAG, `Failed to delete channel, error: ${err}`);
-                });
-            return;
+            if (channels[x].type === ch.type
+            && channels[x].name === ch.name
+            && channels[x].id !== ch.id) {
+                ch.delete()
+                    .then(() => {
+                        logger.devAlert(TAG, `The channel ${ch.name} was deleted upon creation as it held `
+                            + 'an identical name and type to an existing channel');
+                    })
+                    .catch((err) => {
+                        logger.warning(TAG, `Failed to delete channel, error: ${err}`);
+                    });
+                return;
+            }
         }
         setTimeout(this.checkPositions, 5000);
     },
@@ -65,7 +64,8 @@ module.exports = {
                     });
             }
             return false;
-        } else if (channel.type === 'text') {
+        }
+        if (channel.type === 'text') {
             if (channel.lastMessageID) {
                 channel.fetchMessage(channel.lastMessageID)
                     .then((lastMessage) => {

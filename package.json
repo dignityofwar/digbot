@@ -1,17 +1,17 @@
 {
   "name": "digbot",
-  "version": "0.1.1",
-  "description": "- Nodejs 7.x\r - npm: discord.js",
+  "version": "0.1.0",
+  "description": "- Nodejs 8.x\r - npm: discord.js",
   "main": "index.js",
   "scripts": {
     "start": "node src/bot.js",
-    "mocha": "mocha",
-    "test": "docker-compose -f docker-compose-test-local.yml up --build -d && docker-compose exec digbot npm install --only=dev && docker-compose exec digbot npm run mocha && docker-compose down",
+    "test": "mocha",
     "docker:start": "docker-compose up --build -d",
     "docker:logs": "docker-compose logs -f digbot",
     "docker:stop": "docker-compose down",
     "up": "npm run docker:start && npm run docker:logs",
-    "down": "npm run docker:stop"
+    "down": "npm run docker:stop",
+    "test-nyc": "nyc mocha"
   },
   "repository": {
     "type": "git",
@@ -24,30 +24,34 @@
   },
   "homepage": "https://github.com/JamesLongman/DIGBot#readme",
   "dependencies": {
-    "cli-color": "^1.4.0",
-    "config": "^2.0.1",
-    "discord.js": "~11.4.0",
-    "googleapis": "^16.1.0",
-    "lodash": "^4.17.11",
+    "awilix": "^4.2.0",
+    "axios": "^0.19.0",
+    "bull": "~3.10.0",
+    "config": "^3.2.2",
+    "discord.js": "~11.5.1",
+    "googleapis": "^39.2.0",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
     "opusscript": "^0.0.6",
-    "request": "^2.88.0",
-    "usage": "^0.7.0",
-    "ytdl-core": "^0.28.0"
+    "os-utils": "^0.0.14",
+    "ioredis": "^4.14.0",
+    "winston": "^3.2.1",
+    "winston-transport": "^4.3.0",
+    "ytdl-core": "^0.29.0"
   },
   "optionalDependencies": {
-    "bufferutil": "^3.0.3",
+    "bufferutil": "^4.0.1",
     "erlpack": "discordapp/erlpack",
-    "libsodium-wrappers": "^0.7.3",
-    "node-opus": "^0.2.7"
+    "libsodium-wrappers": "^0.7.5",
+    "node-opus": "^0.3.1"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.2.0",
     "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0",
-    "mocha": "^5.2.0",
-    "mock-require": "^3.0.2",
-    "sinon": "^1.17.6",
-    "sinon-stub-promise": "^4.0.0"
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.2",
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
+    "sinon": "^7.3.2"
   }
 }

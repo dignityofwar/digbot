@@ -1,20 +1,33 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
-
-'use strict';
-
-// !sort module, triggers a global position sort
-
 const config = require('config');
+const Command = require('./foundation/command');
 const positions = require('../admin/channels/positions.js');
 
-module.exports = {
-    execute() {
-        if (config.get('features.channelPositionsEnforcement') !== true) {
-            return 'Sorry but the channel position enforcement feature is currently disabled';
+module.exports = class SortCommand extends Command {
+    constructor() {
+        super();
+
+        this.name = 'sort';
+        this.special = true;
+    }
+
+    /**
+     * @param request
+     * @return {Promise<*>}
+     */
+    async execute(request) {
+        if (!config.get('features.channelPositionsEnforcement')) {
+            return request.respond('Sorry but the channel position enforcement feature is currently disabled');
         }
 
         positions.globalCheck();
 
-        return 'Sent global sort request to channels/positions.js';
-    },
+        return request.respond('Sent global sort request to channels/positions.js');
+    }
+
+    /**
+     * @return {string}
+     */
+    help() {
+        return 'Manually trigger a global sort of all channels (Should run automatically when necesary)';
+    }
 };

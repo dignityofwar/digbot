@@ -1,18 +1,16 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 /* Asset module, stores links and paths for all sfx calls
-Note: Sound Effects are intended to be short clips, please keep all files/links about 10s max
-If you're hosting local and not on youtube you better have a good reason, i.e. DMCAs*/
-
+ * Note: Sound Effects are intended to be short clips, please keep all files/links about 10s max
+ * If you're hosting local and not on youtube you better have a good reason, i.e. DMCAs
+ */
 module.exports = {
     /* Local example:
-    admin: {
+    adminabuse: {
         source: 'local',
         path: '/src/assets/sfx/mp3/admin-abuse.mp3',
-        options: { volume: 0.3 },
-        description: 'ADMIN ABUSE!',
+        options: {volume: 0.3},
+        description: 'ADMIN ABUSE!'
     },
     */
     admin: {

@@ -1,7 +1,5 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // Calculates and enforces the positions that channels should hold
 
 const config = require('config');
@@ -257,7 +255,7 @@ function indexVoiceChannels() {
 
             for (let i = voiceChannels.length - 1; i > -1; i -= 1) {
                 if (voiceChannels[i].name.indexOf(base) !== -1) {
-                    const n = parseInt(voiceChannels[i].name.substring(base.length));
+                    const n = parseInt(voiceChannels[i].name.substring(base.length), 10);
                     positions.voice[(voicePositions[x].position + n) - 1] = voiceChannels[i].id;
                     voiceChannels = removeID(voiceChannels, voiceChannels[i].id);
                 }

@@ -1,7 +1,5 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 // Handles role requests, can add and remove roles from specified members
 
 const config = require('config');

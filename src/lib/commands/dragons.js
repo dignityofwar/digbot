@@ -1,57 +1,44 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
-
-'use strict';
-
-// !dragons module
-
 const config = require('config');
-const logger = require('../logger.js');
+const Command = require('./foundation/command');
 
-const TAG = '!dragons';
+/* eslint consistent-return: 0 */
+module.exports = class DragonsCommand extends Command {
+    constructor() {
+        super();
 
-module.exports = {
-    execute(msg) {
-        const roles = msg.member.roles;
+        this.name = 'dragons';
+        this.onlyHelpFull = true;
+    }
 
-        if (roles.has(config.get('general.herebedragonsRoleID'))) {
-            logger.info(TAG, `User ${msg.member.displayName} already has herebedragons role. Removing.`);
+    /**
+     * @param request
+     * @return {Promise<void>}
+     */
+    async execute(request) {
+        // TODO: Maybe use the reasons parameter?
+        if (request.guild === config.get('general.server')) { return; } // TODO: This needs to be removed
 
-            msg.member.removeRole(config.get('general.herebedragonsRoleID'))
-                .then(() => {
-                    logger.info(TAG, `Unsubscribed ${msg.member.displayName} from herebedragons.`);
-                })
-                .catch(() => {
-                    logger.warning(TAG, `Failed to remove #herebedragons role from ${msg.member.displayName}`);
-                });
+        const dragonRole = config.get('general.herebedragonsRoleID');
 
-            msg.reply('you already had the herebedragons role. I\'ve removed it. Type **!dragons** '
-                + 'again to resubscribe.')
-                .then(() => {
-                    logger.info(TAG, `Informed ${msg.member.displayName} that they already have herebedragons.`);
-                })
-                .catch((err) => {
-                    logger.warning(TAG, `Failed to send herebedragons message, error: ${err}`);
-                });
-            return false;
+        if (request.member.roles.has(dragonRole)) {
+            await request.member.removeRole(dragonRole);
+
+            return request.reply(
+                'you already had the herebedragons role. I\'ve removed it. Type **!dragons** again to resubscribe.',
+            );
         }
-        msg.member.addRole(config.get('general.herebedragonsRoleID'))
-            .then(() => {
-                logger.info(TAG, `Added herebedragons role to ${msg.member.displayName}`);
 
-                msg.guild.channels.get(config.get('channels.mappings.herebedragons')).sendMessage(
-                    `${msg.member} has been granted access here. Please note, this channel is `
-                    + 'the wild west. If you get triggered, the community staff cannot help you.',
-                )
-                    .then(() => {
-                        logger.info(TAG, `Sent herebedragons welcome message to ${msg.member.displayName}`);
-                    })
-                    .catch((err) => {
-                        logger.warning(TAG, `Failed to send herebedragons welcome message, error: ${err}`);
-                    });
-            })
-            .catch((err) => {
-                logger.warning(TAG, `Failed to add role, error: ${err}`);
-            });
-        return true;
-    },
+        await request.member.addRole(dragonRole);
+
+        return request.guild.channels.get(config.get('channels.mappings.herebedragons'))
+            .send(`${request.member.displayName} has been granted access here. Note, this channel is lawless.`
+                + ' If you get triggered, the community staff cannot help you.');
+    }
+
+    /**
+     * @return {string}
+     */
+    help() {
+        return '#herebedragons is a private, lawless channel which you can opt into with this command.';
+    }
 };

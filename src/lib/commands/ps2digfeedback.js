@@ -1,22 +1,26 @@
-'use strict';
+const Command = require('./foundation/command');
 
-// !ps2digfeedback module
+module.exports = class Ps2digfeedbackCommand extends Command {
+    constructor() {
+        super();
 
-const logger = require('../logger.js');
-const server = require('../server/server.js');
+        this.name = 'ps2digfeedback';
+    }
 
-const TAG = '!ps2digfeedback';
+    /**
+     * @param request
+     * @return {Promise<void>}
+     */
+    async execute(request) {
+        return request.respond('@here Please post your PS2 Platoon feedback at this form: '
+            + 'http://bit.ly/DIGPLFeedback. Note, your feedback **can** be anonymous if you wish it. '
+            + 'Simply don\'t fill out your name.)');
+    }
 
-module.exports = {
-    execute() {
-        const message = '@here Please post your PS2 Platoon feedback at this form: http://bit.ly/DIGPLFeedback. '
-            + 'Note, your feedback **can** be anonymous if you wish it. Simply don\'t fill out your name.';
-        server.getChannel('ps2dig').sendMessage(message)
-            .then(() => {
-                logger.info(TAG, 'Sent feedback form');
-            })
-            .catch((err) => {
-                logger.warning(TAG, err);
-            });
-    },
+    /**
+     * @return {string}
+     */
+    help() {
+        return 'Sends back a link to the feedback form';
+    }
 };

@@ -1,7 +1,5 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 /* Handles message requests to users, note: Due to discord (not discord.js) limitations, we can
 only message users that are on our discord server */
 

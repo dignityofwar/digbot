@@ -1,38 +1,52 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
+const Command = require('./foundation/command');
 
-'use strict';
+module.exports = class AdminCommand extends Command {
+    constructor({ commandRegister }) {
+        super();
 
-// !admin module, PMs a list of admin commands
+        this.name = 'admin';
+        this.special = true;
 
-const logger = require('../logger.js');
+        this.register = commandRegister;
+    }
 
-const TAG = '!admin';
+    /**
+     * @param request
+     * @return {Promise<void>}
+     */
+    async execute(request) {
+        return Promise.all([
+            request.member.send(this.createReply()),
+            request.respond(`I'll PM you the list of admin commands ${request.member.displayName}`),
+        ]);
+    }
 
-const messages = [
-    '__Admin Commands__:',
-    '**!roles**: PM a list of all roles and their associated IDs',
-    '**!positions**: PM a list of all channels and their associated position variables',
-    '**!restart**: Restarts the bot (Please do not use unless the bot is spazzing the fuck out)',
-    '**!sort**: Manually trigger a global sort of all channels (Should run automatically when necesary)',
-];
+    /**
+     * @return {string}
+     */
+    /**
+     * @return {string}
+     */
+    createReply() {
+        return {
+            embed: {
+                title: 'Admin Commands',
+                fields: [
+                    ...this.register.toArray()
+                        .filter(({ special }) => special)
+                        .map(({ name, help }) => ({
+                            name: `!${name}`,
+                            value: help(),
+                        })),
+                ],
+            },
+        };
+    }
 
-module.exports = {
-    execute(member) {
-        let message = '';
-
-        for (let i = 0; i < messages.length; i += 1) {
-            message += `${messages[i]}\n`;
-        }
-
-        member.sendMessage(message)
-            .then(() => {
-                logger.debug(TAG, `Succesfully sent admin command list to ${member.displayName}`);
-            })
-            .catch((err) => {
-                logger.warning(TAG, `Failed to send admin command list to ${member.displayName}, `
-                    + `${err}`);
-            });
-
-        return `I'll PM you the list of admin commands ${member.displayName}`;
-    },
+    /**
+     * @return {string}
+     */
+    help() {
+        return 'Lists all admin commands';
+    }
 };

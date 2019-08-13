@@ -1,17 +1,30 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
+const Command = require('./foundation/command');
 
-'use strict';
+const antiduplicate = require('../util/antiduplicate.js');
+const catfacts = require('../../assets/catfacts.js');
 
-// !catfacts module
+module.exports = class CatfactsCommand extends Command {
+    constructor() {
+        super();
 
-const antiduplicate = require('../tools/antiduplicate.js');
-const memes = require('../../assets/memes.js');
+        this.name = 'catfacts';
+    }
 
-module.exports = {
-    execute() {
-        return antiduplicate.randomise(
+    /**
+     * @param request
+     * @return {Promise<void>}
+     */
+    async execute(request) {
+        return request.respond(antiduplicate.randomise(
             'catfacts',
-            memes.catfacts,
-        );
-    },
+            catfacts,
+        ));
+    }
+
+    /**
+     * @return {string}
+     */
+    help() {
+        return 'Will post a random cat fact, drawing from a repository of over 100 cat facts!';
+    }
 };

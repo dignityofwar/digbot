@@ -1,72 +1,65 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
-
-'use strict';
-
-// !mentions module, lets a member know how many mentions they're allowed
-
 const config = require('config');
-const logger = require('../logger.js');
+const { get } = require('lodash');
+const Command = require('./foundation/command');
 const mentionsCheck = require('../admin/antispam/mentionspam.js');
 
-const TAG = '!mentions';
+module.exports = class MentionsCommand extends Command {
+    constructor() {
+        super();
 
-module.exports = {
-    execute(msg) {
-        // Feature switch
+        this.name = 'mentions';
+    }
+
+    /**
+     * @param request
+     * @return {Promise<void>}
+     */
+    async execute(request) {
         if (config.get('features.disableMentionSpam')) {
-            msg.channel.sendMessage(`${msg.member.displayName}, the `
-                + 'mention limits are currently disabled. Please don\'t make us regret turning it off though')
-                .then(() => {
-                    logger.debug(TAG, 'Succesfully sent message');
-                })
-                .catch((err) => {
-                    logger.warning(TAG, `Failed to send message error: ${err}`);
-                });
-            return false;
+            return request.respond(`${request.member.displayName}, the mention limits are currently disabled. `
+                + 'Please don\'t make us regret turning it off though');
         }
 
         // If member is exempt from limits
-        if (mentionsCheck.exemptMember(msg)) {
-            msg.channel.sendMessage(`${msg.member.displayName}, you are `
-                + 'exempt from the mention limit')
-                .then(() => {
-                    logger.debug(TAG, 'Succesfully sent message');
-                })
-                .catch((err) => {
-                    logger.warning(TAG, `Failed to send message error: ${err}`);
-                });
-            return false;
+        if (mentionsCheck.exemptMember(request.member)) {
+            return request.respond(`${request.member.displayName}, you are exempt from the mention limit`);
         }
 
-        // Calculate mentions limit
-        const list = mentionsCheck.passList();
-        let x = config.get('memberMentionLimit');
-        let y = config.get('roleMentionLimit');
-        if (list[msg.author.id]) {
-            x -= list[msg.author.id].memberMentions;
-            y -= list[msg.author.id].roleMentions;
-        }
-        let message = `__${msg.member.displayName}'s mention allowance__:`;
-        if (x <= 0) {
-            message += '\nMember mentions remaining: 0, **do not attempt to mention members again '
-                + 'this period**';
-        } else {
-            message += `\nMember mentions remaining: ${x}`;
-        }
-        if (y <= 0) {
-            message += '\nRole mentions remaining: 0, **do not attempt to mention roles again '
-                + 'this period**';
-        } else {
-            message += `\nRole mentions remaining: ${y}`;
-        }
-        message += '\n(*Note: mention limits reset at 4AM*)';
-        msg.channel.sendMessage(message)
-            .then(() => {
-                logger.debug(TAG, 'Succesfully sent message');
-            })
-            .catch((err) => {
-                logger.warning(TAG, `Failed to send message, error: ${err}`);
-            });
-        return true;
-    },
+        const memberMentions = config.get('memberMentionLimit')
+            - get(mentionsCheck.passList(), `[${request.author.id}].memberMentions`, 0);
+        const roleMentions = config.get('roleMentionLimit')
+            - get(mentionsCheck.passList(), `[${request.author.id}].roleMentions`, 0);
+
+        return request.respond(this.createReply(request.member.displayName, memberMentions, roleMentions));
+    }
+
+    /**
+     * @param name
+     * @param memberMentions
+     * @param roleMentions
+     * @return {string}
+     */
+    createReply(name, memberMentions, roleMentions) {
+        let reply = `__${name}'s mention allowance__:`;
+
+        reply += memberMentions <= 0
+            ? '\nMember mentions remaining: 0, **do not attempt to mention members again this period**'
+            : `\nMember mentions remaining: ${memberMentions}`;
+
+        reply += roleMentions <= 0
+            ? '\nRole mentions remaining: 0, **do not attempt to mention roles again this period**'
+            : `\nRole mentions remaining: ${roleMentions}`;
+
+        reply += '\n(*Note: mention limits reset at 4AM*)';
+
+        return reply;
+    }
+
+    /**
+     * @return {string}
+     */
+    help() {
+        return 'Check the number of mentions you have remaining of your daily mentions allowance. This resets every '
+            + '24 hour period. Be sure that you check if you\'re not sure to avoid getting in trouble for spamming';
+    }
 };

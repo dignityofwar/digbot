@@ -1,27 +1,35 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
-
-'use strict';
-
-// !sfx module, plays short audio clips in the user's channel
-
 const config = require('config');
+const { google } = require('googleapis');
+const yt = require('ytdl-core');
+
+const Command = require('./foundation/command');
 const crashHandler = require('../crash-handling.js');
-const google = require('googleapis');
 const logger = require('../logger.js');
 const server = require('../server/server.js');
 const sfx = require('../../assets/sfx/sfx-assets.js');
-const yt = require('ytdl-core');
+
+const youtube = google.youtube({
+    version: 'v3',
+    auth: config.get('youtubeKey'),
+}); // create youtube API client
 
 const TAG = '!sfx';
-const youtubeKey = config.get('youtubeKey'); // youtube API key
-const youtube = google.youtube('v3'); // create youtube API client
+
+
 let busy = false;
 let failing = false;
+
 const queue = [];
 const verification = {};
 
-module.exports = {
-    execute(msg) {
+module.exports = class SfxCommand extends Command {
+    constructor() {
+        super();
+
+        this.name = 'sfx';
+    }
+
+    async execute({ message: msg }) {
         if (!config.get('features.sfx')) {
             sendMessageToChannel(msg.channel, 'Sorry this feature has been disabled');
             return false;
@@ -56,8 +64,11 @@ module.exports = {
                 });
             return true;
         }
-        sendMessageToChannel(msg.channel, `Playing effect: *${msg.content.substring(5)}* for `
-            + `${msg.member.displayName}`, true)
+        sendMessageToChannel(
+            msg.channel,
+            `Playing effect: *${msg.content.substring(5)}* for ${msg.member.displayName}`,
+            true,
+        )
             .then((botMessage) => {
                 queueAdd(msg, botMessage);
                 play();
@@ -67,19 +78,26 @@ module.exports = {
                 sendMessageToChannel(msg.channel, 'Sorry, the sfx encountered an error, please try again.');
             });
         return true;
-    },
+    }
 
     // Called on ready and then every 24 hours, verifies all sfx on file are good links
-    ready() {
-        if (!config.get('features.sfx')) { return false; }
+    static ready() {
+        if (!config.get('features.sfx')) { return; }
         for (const x in sfx) {
             if (sfx[x].source === 'youtube') {
                 verify(sfx[x].link, x);
             }
         }
-        return true;
-    },
+    }
+
+    /**
+     * @return {string}
+     */
+    help() {
+        return 'Play a sound effect in your voice channel';
+    }
 };
+
 
 // Send the user a list of all available sound effects
 function list(msg) {
@@ -97,8 +115,10 @@ function list(msg) {
             });
         return `I'll PM you the full list of sound effects ${msg.member.displayName}`;
     }
-    logger.warning(TAG, 'You fools, you damned fools, !sfx list message is over 2k in characters '
-        + 'and needs to be refactored');
+    logger.warning(
+        TAG,
+        'You fools, you damned fools, !sfx list message is over 2k in characters and needs to be refactored',
+    );
     return 'Sorry this command is temporarily broken we\'ve got top men working on it right now.';
 }
 
@@ -114,12 +134,12 @@ function play() {
         return false;
     }
     if (queue.length > 1) {
-        logger.info(TAG, `Play called, ${(queue.length - 1)} more in queue`);
+        logger.info(TAG, `Play called, ${queue.length - 1} more in queue`);
     }
     busy = true;
     const failSafe = setTimeout(release, 30000); // Reset busy status after 30 seconds
-    logger.info(TAG, `${queue[0].user} called the ${queue[0].effect} effect for the channel `
-        + `${queue[0].channelName} with ${queue[0].channelSize} occupants`);
+    logger.info(TAG, `${queue[0].user} called the ${queue[0].effect} effect for `
+        + `the channel ${queue[0].channelName} with ${queue[0].channelSize} occupants`);
 
     // If sfx is local file
     if (sfx[queue[0].effect].source === 'local') {
@@ -131,7 +151,7 @@ function play() {
                 logger.debug(TAG, `Connected to channel: ${queue[0].channelName}`);
                 connection.on('disconnect', () => {
                     crashHandler.logEvent(TAG, 'Bot Disconnected from channel');
-                    logger.debug(TAG, `Disconected from channel: ${queue[0].channelName}`);
+                    logger.debug(TAG, `Disconected from channel: '${queue[0].channelName}`);
                     queue[0].botMessage.delete()
                         .then(() => {
                             logger.info(TAG, 'Succesfully finished playing and deleted message');
@@ -139,7 +159,9 @@ function play() {
                         .catch((err) => {
                             logger.warning(TAG, `Failed to delete message after playing, ${err}`);
                         });
-                    if (failSafe) { clearTimeout(failSafe); }
+                    if (failSafe) {
+                        clearTimeout(failSafe);
+                    }
                     failing = false;
                     playEnd(true);
                 });
@@ -173,12 +195,12 @@ function play() {
                         .then(() => {
                             logger.debug(TAG, 'Succesfully sent message');
                         })
-                        .catch((error) => {
-                            logger.warning(TAG, `Failed to send message error: ${error}`);
+                        .catch((errr) => {
+                            logger.warning(TAG, `Failed to send message error: ${errr}`);
                         });
                     failing = 0;
                 }
-                failing += 1;
+                failing++;
                 logger.warning(TAG, `voiceChannel.join promise rejected, error: ${err}`);
                 queue[0].voiceChannel.leave();
                 playEnd(false);
@@ -188,12 +210,13 @@ function play() {
 
     // If sfx is youtube link
     if (sfx[queue[0].effect].source === 'youtube') {
-        const { link, options } = sfx[queue[0].effect];
+        const source = sfx[queue[0].effect].link;
 
         // Verify source is good
         if (verification[queue[0].effect] !== true) {
-            queue[0].textChannel.sendMessage(`The SFX *${queue[0].effect}* is currently `
-                + 'unavailable, please try a different SFX')
+            queue[0].textChannel.sendMessage(
+                `The SFX *${queue[0].effect}* is currently unavailable, please try a different SFX`,
+            )
                 .then(() => {
                     logger.debug(TAG, 'Succesfully sent message regarding source');
                 })
@@ -204,7 +227,8 @@ function play() {
             return false;
         }
 
-        const stream = yt(link, { audioonly: true });
+        const stream = yt(source, { audioonly: true });
+        const { options } = sfx[queue[0].effect];
         queue[0].voiceChannel.join()
             .then((connection) => {
                 crashHandler.logEvent(TAG, `Bot joined channel: ${queue[0].channelName}`);
@@ -217,7 +241,9 @@ function play() {
                         .catch((err) => {
                             logger.warning(TAG, `Failed to delete message after playing, ${err}`);
                         });
-                    if (failSafe) { clearTimeout(failSafe); }
+                    if (failSafe) {
+                        clearTimeout(failSafe);
+                    }
                     failing = false;
                     playEnd(true);
                 });
@@ -227,8 +253,8 @@ function play() {
                         .then(() => {
                             logger.debug(TAG, 'Succesfully sent message');
                         })
-                        .catch((error) => {
-                            logger.warning(TAG, `Failed to send message error: ${error}`);
+                        .catch((errr) => {
+                            logger.warning(TAG, `Failed to send message error: ${errr}`);
                         });
                     logger.warning(TAG, `Error from connection: ${err}`);
                 });
@@ -238,18 +264,18 @@ function play() {
                     crashHandler.logEvent(TAG, `Bot left channel: ${queue[0].channelName}`);
                 });
                 dispatcher.on('start', () => {
-                    crashHandler.logEvent(TAG, `Bot started playing: ${queue[0].effect} in `
-                    + `${queue[0].channelName}`);
+                    crashHandler.logEvent(TAG,
+                        `Bot started playing: ${queue[0].effect} in ${queue[0].channelName}`);
                 });
                 dispatcher.on('error', (err) => {
-                    crashHandler.logEvent(TAG, `Bot playback error: ${err} in `
-                        + `${queue[0].channelName} effect: ${queue[0].effect}`);
+                    crashHandler.logEvent(TAG,
+                        `Bot playback error: ${queue[0].effect} in ${queue[0].channelName} effect: ${err}`);
                     queue[0].textChannel.sendMessage('Error during playback, please try again')
                         .then(() => {
                             logger.debug(TAG, 'Succesfully sent message');
                         })
-                        .catch((error) => {
-                            logger.warning(TAG, `Failed to send message error: ${error}`);
+                        .catch((errr) => {
+                            logger.warning(TAG, `Failed to send message error: ${errr}`);
                         });
                 });
             })
@@ -260,19 +286,18 @@ function play() {
                         .then(() => {
                             logger.debug(TAG, 'Succesfully sent message');
                         })
-                        .catch((error) => {
-                            logger.warning(TAG, `Failed to send message error: ${error}`);
+                        .catch((errr) => {
+                            logger.warning(TAG, `Failed to send message error: ${errr}`);
                         });
                     failing = 0;
                 }
-                failing += 1;
+                failing++;
                 logger.warning(TAG, `voiceChannel.join promise rejected, error: ${err}`);
                 queue[0].voiceChannel.leave();
                 playEnd(false);
             });
         return true;
     }
-
     return false;
 }
 
@@ -313,14 +338,13 @@ function sendMessageToChannel(channel, message, promise) {
                 });
         });
     }
-    channel.sendMessage(message)
+    return channel.sendMessage(message)
         .then(() => {
             logger.debug(TAG, `Succesfully sent message: ${message}`);
         })
         .catch((err) => {
             logger.warning(TAG, `Failed to send message to channel, ${err}`);
         });
-    return false;
 }
 
 // Construct the object to store in the queue
@@ -345,23 +369,23 @@ function queueAdd(msg, botMessage) {
 }
 
 function verify(source, name) {
-    let verifySource = source;
     if (source.indexOf('?v=') !== -1) {
-        verifySource = verifySource.substring((verifySource.indexOf('?v=') + 3));
+        source = source.substring((source.indexOf('?v=') + 3)); // eslint-disable-line no-param-reassign
     }
     const params = {
-        key: youtubeKey,
         part: 'snippet',
-        id: verifySource,
+        id: source,
     };
-    youtube.videos.list(params, (err, response) => {
-        if (err) {
+    youtube.videos.list(params)
+        .then((response) => {
+            if (response.data.pageInfo.totalResults === 0) {
+                logger.warning(TAG, `Verification process indicates sfx asset: *${name}* is bad`);
+                verification[name] = false;
+            } else {
+                verification[name] = true;
+            }
+        })
+        .catch(() => {
             verification[name] = false;
-        } else if (response.pageInfo.totalResults === 0) {
-            logger.warning(TAG, `Verification process indicates sfx asset: *${name}* is bad`);
-            verification[name] = false;
-        } else {
-            verification[name] = true;
-        }
-    });
+        });
 }

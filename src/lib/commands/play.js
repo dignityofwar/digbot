@@ -1,32 +1,47 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
-
-'use strict';
-
-// !play module, plays playlists and audio streams of video links in member's channel
-
-const antiDuplicate = require('../tools/antiduplicate.js');
 const config = require('config');
+const { google } = require('googleapis');
+const ytdl = require('ytdl-core');
+
+const Command = require('./foundation/command');
+
+const antiDuplicate = require('../util/antiduplicate.js');
 const crashHandler = require('../crash-handling.js');
-const google = require('googleapis');
 const logger = require('../logger.js');
 const playAssets = require('../../assets/music/play-assets.js');
 const server = require('../server/server.js');
 const subBots = require('../sub-bots/sub-bots.js');
-const yt = require('ytdl-core');
 
 const TAG = '!play';
+
+const youtube = google.youtube({
+    version: 'v3',
+    auth: config.get('youtubeKey'),
+}); // create youtube API client
+
 const root = 'https://www.youtube.com/watch?v=';
-const youtubeKey = config.get('youtubeKey'); // youtube API key
-const youtube = google.youtube('v3'); // create youtube API client
+
+
 const playing = {};
 const verified = {
     external: {},
     local: {},
 };
+
 let failing = false;
 
-module.exports = {
-    execute(msg) {
+module.exports = class PlayCommand extends Command {
+    constructor() {
+        super();
+
+        this.name = 'play';
+
+        this.throttle = {
+            attempts: 8,
+            decay: 2,
+        };
+    }
+
+    async execute({ message: msg }) { // eslint-disable-line consistent-return
         failing = false;
         if (!config.get('features.play')) {
             sendMessageToChannel(msg.channel, 'Sorry this feature has been disabled');
@@ -52,59 +67,77 @@ module.exports = {
         if (msg.content.substring(6).startsWith('video')) {
             /* This bit will help dramatically cut down on grief not only from different kinds of youtube
             links but also from people trying to link sound clouds and such */
-            if (msg.content.substring(12).indexOf('http:') !== -1
+            if (
+                msg.content.substring(12).indexOf('http:') !== -1
                 || msg.content.substring(12).indexOf('www.') !== -1
                 || msg.content.substring(12).indexOf('youtube') !== -1
                 || msg.content.substring(12).indexOf('playlist') !== -1
-                || msg.content.substring(12).indexOf('time') !== -1) {
+                || msg.content.substring(12).indexOf('time') !== -1
+            ) {
                 logger.info(TAG, 'Recieved a bad request for a video');
                 sendMessageToChannel(msg.channel, `Sorry ${msg.member.displayName}, but I `
                     + 'can only accept requests by youtube video ID, (the ID after watch?v= in the url)');
                 return false;
             }
+
             const source = root + msg.content.substring(12);
             const requester = msg.member.displayName;
             if (!playing[msg.member.voiceChannel.id]) {
-                setup(msg, 'video', { source, requester });
+                setup(msg, 'video', {
+                    source,
+                    requester,
+                });
             } else {
-                playing[msg.member.voiceChannel.id].videoQueue.push(
-                    { source, requester },
+                playing[msg.member.voiceChannel.id].videoQueue.push({
+                    source,
+                    requester,
+                });
+                logger.info(TAG, `${msg.member.displayName} added ${msg.content.substring(12)} 'to the queue`);
+                sendMessageToChannel(
+                    msg.channel,
+                    `Your video has been added to the queue ${msg.member.displayName}, Queue length: `
+                    + `${playing[msg.member.voiceChannel.id].videoQueue.length}`,
                 );
-                logger.info(TAG, `${msg.member.displayName} added ${msg.content.substring(12)} to `
-                    + 'the queue');
-                sendMessageToChannel(msg.channel, 'Your video has been added to the queue '
-                    + `${msg.member.displayName}, Queue length: `
-                    + `${playing[msg.member.voiceChannel.id].videoQueue.length}`);
+
+                return true;
             }
-            return true;
         } else if (msg.content.substring(6).startsWith('playlist')) {
             if (!playAssets.pass[msg.content.substring(15)]) {
-                if (msg.content.substring(15).indexOf('http:') !== -1
+                if (
+                    msg.content.substring(15).indexOf('http:') !== -1
                     || msg.content.substring(15).indexOf('www.') !== -1
                     || msg.content.substring(15).indexOf('youtube') !== -1
                     || msg.content.substring(15).indexOf('playlist') !== -1
                     || msg.content.substring(15).indexOf('time') !== -1
                     || msg.content.substring(15).indexOf('/') !== -1
-                    || msg.content.substring(15).indexOf('video') !== -1) {
-                    logger.info(TAG, 'Recieved a bad request for a playlist');
-                    sendMessageToChannel(msg.channel, `Sorry ${msg.member.displayName}, but I can`
-                        + 'only accept requests by youtube playlist ID, (the ID after playlist?list= in the url)');
+                    || msg.content.substring(15).indexOf('video') !== -1
+                ) {
+                    logger.info(TAG, 'Received a bad request for a playlist');
+                    sendMessageToChannel(
+                        msg.channel, `Sorry ${msg.member.displayName}, but I `
+                        + 'can only accept requests by youtube playlist ID, (the ID after playlist?list= in the url)',
+                    );
                     return false;
                 }
                 searchForPlaylist(msg);
                 return true;
             }
-            sendMessageToChannel(msg.channel, `Now playing *${msg.content.substring(15)}* `
-                + `playlist in ${msg.member.voiceChannel.name}, use "!play stop" to stop playback`);
+            sendMessageToChannel(
+                msg.channel,
+                `Now playing *${msg.content.substring(15)}* `
+                + `playlist in ${msg.member.voiceChannel.name}, use "!play stop" to stop playback`,
+            );
             setup(msg, 'playlist', msg.content.substring(15));
             return true;
-        } else if (msg.content.substring(6).startsWith('stop')) {
-            if (playing[msg.member.voiceChannel.id]
-                && playing[msg.member.voiceChannel.id].connection) {
+        } else if (msg.content.substring(6)
+            .startsWith('stop')) {
+            if (
+                playing[msg.member.voiceChannel.id]
+                && playing[msg.member.voiceChannel.id].connection
+            ) {
                 logger.info(TAG, `Ending playback in channel: ${msg.member.voiceChannel.name} on `
                     + `request by ${msg.member.displayName}`);
-                sendMessageToChannel(msg.channel, 'Stopping playback in '
-                    + `${msg.member.voiceChannel.name}`);
+                sendMessageToChannel(msg.channel, `Stopping playback in ${msg.member.voiceChannel.name}`);
                 playEnd(msg.member.voiceChannel.id);
                 return true;
             }
@@ -113,13 +146,15 @@ module.exports = {
             sendMessageToChannel(msg.channel, `Sorry ${msg.member.displayName} there `
                 + 'don\'t appear to be any songs playing in your channel');
             return false;
-        } else if (msg.content.substring(6).startsWith('skip')) {
-            if (playing[msg.member.voiceChannel.id] &&
-                playing[msg.member.voiceChannel.id].connection) {
+        } else if (msg.content.substring(6)
+            .startsWith('skip')) {
+            if (
+                playing[msg.member.voiceChannel.id]
+                && playing[msg.member.voiceChannel.id].connection
+            ) {
                 logger.info(TAG, `Skipping to next song in channel: ${msg.member.voiceChannel.name} `
                     + `on request by ${msg.member.displayName}`);
-                sendMessageToChannel(msg.channel, 'Skipping to next song in '
-                    + `${msg.member.voiceChannel.name}`);
+                sendMessageToChannel(msg.channel, `Skipping to next song in ${msg.member.voiceChannel.name}`);
                 skip(msg.member.voiceChannel.id);
                 return true;
             }
@@ -137,22 +172,28 @@ module.exports = {
             } else {
                 logger.info(TAG, `Recieved request to change volume in ${msg.member.voiceChannel.name} `
                     + `by ${msg.member.displayName}, but specification not recognised`);
-                sendMessageToChannel(msg.channel, `Sorry ${msg.member.displayName} but I don\t `
+                sendMessageToChannel(msg.channel, `Sorry ${msg.member.displayName} but I don't `
                     + 'recognise that specification, please use "up" or "down" to specify a change in volume');
                 return false;
             }
-            if (playing[msg.member.voiceChannel.id] &&
-                playing[msg.member.voiceChannel.id].connection) {
+            if (
+                playing[msg.member.voiceChannel.id]
+                && playing[msg.member.voiceChannel.id].connection
+            ) {
                 if (specification === 'up') {
                     logger.info(TAG, `Recieved request from ${msg.member.displayName} to raise `
                         + `volume in ${msg.member.voiceChannel.name}`);
-                    sendMessageToChannel(msg.channel, 'Raising playback volume in '
-                        + `${msg.member.voiceChannel.name}`);
+                    sendMessageToChannel(
+                        msg.channel,
+                        `Raising playback volume in ${msg.member.voiceChannel.name}`,
+                    );
                 } else {
                     logger.info(TAG, `Recieved request from ${msg.member.displayName} to lower `
                         + `volume in ${msg.member.voiceChannel.name}`);
-                    sendMessageToChannel(msg.channel, 'Lowering playback volume in '
-                        + `${msg.member.voiceChannel.name}`);
+                    sendMessageToChannel(
+                        msg.channel,
+                        `Lowering playback volume in ${msg.member.voiceChannel.name}`,
+                    );
                 }
                 volume(msg.member.voiceChannel.id, specification);
                 return true;
@@ -162,17 +203,24 @@ module.exports = {
             sendMessageToChannel(msg.channel, `Sorry ${msg.member.displayName} there `
                 + 'don\'t appear to be any songs playing in your channel');
             return false;
-        }
-        sendMessageToChannel(msg.channel, 'Sorry I didn\'t recognise that command, please '
-            + 'use "!help play" for a more detailed explanation of the command if you\'re confused');
-        return false;
-    },
-
-    // Passess an explanation of the command
-    passList() {
-        if (!config.get('features.play')) {
+        } else {
+            sendMessageToChannel(msg.channel, 'Sorry I didn\'t recognise that command, please '
+                + 'use "!help play" for a more detailed explanation of the command if you\'re confused');
             return false;
         }
+    }
+
+    /**
+     * @return {string}
+     */
+    help() {
+        return 'Controls playing of music'; // TODO: Better help stuff
+    }
+
+    // Passess an explanation of the command
+    static passList() {
+        if (!config.get('features.play')) { return false; }
+
         let message = '__**Play Command:**__'
             + '\nAll commands are of the form !play command specification'
             + '\n**Commands**:'
@@ -186,9 +234,11 @@ module.exports = {
             + 'accepted specifications are *up* and *down*'
             + '\n'
             + '\n**Playlists:**';
-        for (const x in playAssets.pass) {
-            message += `\n${playAssets.pass[x].description}`;
+
+        for (const description of playAssets.pass) {
+            message += `\n${description}`;
         }
+
         message += '\n'
             + '\n**Examples:**'
             + '\n*!play video dQw4w9WgXcQ*'
@@ -197,16 +247,16 @@ module.exports = {
             + '\n*!play stop*'
             + '\n*!play skip*'
             + '\n*!play volume down*';
+
         return message;
-    },
+    }
 
     // Called on bot start then every 24 hours
-    ready() {
-        if (!config.get('features.play')) { return false; }
+    static ready() {
+        if (!config.get('features.play')) { return; }
         verified.external = {}; // Wipe cached external verified commands
         verifyLocal();
-        return true;
-    },
+    }
 };
 
 // Terminates the current connection and stream dispatcher if there is one for a channel
@@ -242,19 +292,20 @@ function play() {
             logger.debug(TAG, 'Calling play again');
             play();
         }, 10000);
-        return true;
+        return false;
     }
     logger.info(TAG, 'Play function called');
     crashHandler.logEvent(TAG, 'play');
 
     for (const x in playing) {
         if (playing[x].bot && playing[x].connection && !playing[x].busy) {
-            continue;
+            continue; // eslint-disable-line no-continue
         }
         playing[x].busy = true;
 
         // Join channel and begin playback by calling playNext()
-        playing[x].bot.channels.get(x).join()
+        playing[x].bot.channels.get(x)
+            .join()
             .then((connection) => {
                 playing[x].busy = false;
                 playing[x].connection = connection;
@@ -282,7 +333,8 @@ function play() {
             .catch((err) => {
                 playing[x].busy = false;
                 logger.warning(TAG, `voiceChannel.join promise rejected, error: ${err}`);
-                playing[x].bot.channels.get(x).leave();
+                playing[x].bot.channels.get(x)
+                    .leave();
                 kill(x);
                 setTimeout(() => {
                     crashHandler.logEvent(TAG, 'catch setTimeout in play()');
@@ -302,8 +354,7 @@ function playEnd(x) {
     kill(x, true);
 }
 
-/* Plays the next song in the channel x, this function runs when there is a connection and
-controls continuous playback */
+// Plays the next song in the channel x, this function runs when there is a connection and controls continuous playback
 function playNext(x) {
     if (!playing[x] || playing[x].ending) {
         return false;
@@ -315,8 +366,8 @@ function playNext(x) {
         }, 3000);
         return false;
     }
-    logger.debug(TAG, `Play next called for channel: ${server.getGuild().channels.get(x).name} `
-        + `with bot ${playing[x].bot.user.id}`);
+    logger.debug(TAG,
+        `Play next called for channel: ${server.getGuild().channels.get(x).name} with bot ${playing[x].bot.user.id}`);
     if (!playing[x].bot) {
         logger.error(TAG, 'playNext() called but no sub bot was provided');
     }
@@ -335,8 +386,10 @@ function playNext(x) {
                 playNext(x);
                 return false;
             }
-            const playVolume = playAssets.pass[playing[x].playlist].playlist[y].volume * playing[x].volume;
-            options = { passess: 2, playVolume };
+            options = {
+                passess: 2,
+                volume: playAssets.pass[playing[x].playlist].playlist[y].volume * playing[x].volume,
+            };
             playing[x].playingStatus = `${playAssets.pass[playing[x].playlist].playlist[y].name}`
                 + ` - ${playing[x].playlist} playlist`;
         } else if (playing[x].playlist && playing[x].playlist === 'youtube') {
@@ -355,14 +408,17 @@ function playNext(x) {
                 return false;
             }
             source = root + y;
-            options = { passess: 2, volume: 0.025 };
+            options = {
+                passess: 2,
+                volume: 0.025,
+            };
             playing[x].playingStatus = `${playing[x].youtubePlaylistRequester}'s youtube playlist`;
         } else {
             playEnd(x);
             return false;
         }
     } else {
-        source = playing[x].videoQueue[0].source;
+        source = playing[x].videoQueue[0].source; // eslint-disable-line prefer-destructuring
         if (!verifyCheck(source, 'external')) {
             if (failing) {
                 logger.warning(TAG, `Detected failure in channel ${x}, could not verify ${y}`);
@@ -376,12 +432,15 @@ function playNext(x) {
             }, 3000);
             return false;
         }
-        options = { passess: 2, volume: 0.025 };
+        options = {
+            passess: 2,
+            volume: 0.025,
+        };
         playing[x].playingStatus = `${playing[x].videoQueue[0].requester}'s song request`;
         playing[x].videoQueue.splice(0, 1);
     }
 
-    const stream = yt(source, { audioonly: true });
+    const stream = ytdl(source, { audioonly: true });
     const dispatcher = playing[x].connection.playStream(stream, options);
     playing[x].dispatcher = dispatcher;
 
@@ -411,8 +470,7 @@ function playNext(x) {
             logger.debug(TAG, `Dispatcher error event for sub bot: ${playing[x].bot.user.id}`);
             playing[x].dispatcher = false;
             playNext(x);
-            logger.warning(TAG, `Error while playing song in ${server.getGuild().channels.get(x).name}`
-            + `, ${err}`);
+            logger.warning(TAG, `Error while playing song in ${server.getGuild().channels.get(x).name}, ${err}`);
         }
     });
 
@@ -424,33 +482,31 @@ a playlist ID */
 function searchForPlaylist(msg) {
     const params = {
         fields: 'items/snippet/resourceId/videoId',
-        key: youtubeKey,
         maxResults: 50,
         part: 'snippet',
         playlistId: msg.content.substring(15),
     };
 
-    youtube.playlistItems.list(params, (err, response) => {
-        if (err) {
-            // If failed cos playlist ID was bad
-            if (String(err).indexOf('cannot be found') !== -1) {
-                sendMessageToChannel(msg.channel, `Sorry ${msg.member.displayName}, it doesn't `
-                    + 'look like you\'ve provided a local playlist nor a valid youtube playlist ID. Please '
-                    + 'check your specified playlist and try again');
+    youtube.playlistItems.list(params)
+        .then((response) => {
+            const youtubePlaylist = [];
+            for (const { snippet } of response.data.items) {
+                youtubePlaylist.push(snippet.resourceId.videoId);
+            }
+            setup(msg, 'playlist', 'youtube', youtubePlaylist);
+        })
+        .catch((err) => {
+            if (String(err)
+                .indexOf('cannot be found') !== -1) {
+                sendMessageToChannel(msg.channel, `Sorry ${msg.member.displayName}, it `
+                    + 'doesn\'t look like you\'ve provided a local playlist nor a valid youtube playlist ID. '
+                    + 'please check your specified playlist and try again');
             } else {
                 sendMessageToChannel(msg.channel, `Sorry ${msg.member.displayName}, your `
                     + 'playlist request encountered an unexpected error, please try again');
                 logger.warning(TAG, `Failed to retrieve youtube playlist: ${err}`);
             }
-        } else {
-            // Success, create array of video IDs
-            const youtubePlaylist = [];
-            for (const x in response.items) {
-                youtubePlaylist.push(response.items[x].snippet.resourceId.videoId);
-            }
-            setup(msg, 'playlist', 'youtube', youtubePlaylist);
-        }
-    });
+        });
 }
 
 // Function to send messages to channels, optional promise functionality to get the new message back
@@ -468,14 +524,14 @@ function sendMessageToChannel(channel, message, promise) {
                 });
         });
     }
-    channel.sendMessage(message)
+
+    return channel.sendMessage(message)
         .then(() => {
             logger.debug(TAG, `Succesfully sent message: ${message}`);
         })
         .catch((err) => {
             logger.warning(TAG, `Failed to send message to channel, ${err}`);
         });
-    return false;
 }
 
 // Configures playing object for playback
@@ -489,7 +545,11 @@ function setup(msg, command, target, youtubePlaylist) {
         return;
     }
     if (!playing[channel]) {
-        playing[channel] = { busy: true, volume: 1, videoQueue: [] };
+        playing[channel] = {
+            busy: true,
+            volume: 1,
+            videoQueue: [],
+        };
     } else {
         playing[channel].busy = true;
     }
@@ -508,8 +568,13 @@ function setup(msg, command, target, youtubePlaylist) {
             .then((bot) => {
                 playing[channel].bot = bot;
                 playing[channel].busy = false;
-                if (server.getGuild().members.get(bot.user.id).voiceChannel) {
-                    bot.channels.get(server.getGuild().members.get(bot.user.id).voiceChannel.id).leave();
+                if (server.getGuild()
+                    .members
+                    .get(bot.user.id).voiceChannel) {
+                    bot.channels.get(server.getGuild()
+                        .members
+                        .get(bot.user.id).voiceChannel.id)
+                        .leave();
                     kill(channel);
                     setTimeout(() => {
                         crashHandler.logEvent(TAG, 'if bot already in channel setTimeout in setup()');
@@ -522,8 +587,10 @@ function setup(msg, command, target, youtubePlaylist) {
             .catch((err) => {
                 /* If the bot encounters errors they'll be thrown from the sub bot module and ride up here
                 so we need to account for different types of errors */
-                if (err.toString().indexOf('ReferenceError') === -1
-                    && err.toString().indexOf('TypeError') === -1) {
+                if (
+                    err.toString().indexOf('ReferenceError') === -1
+                    && err.toString().indexOf('TypeError') === -1
+                ) {
                     logger.info(TAG, `Sub bot request rejected, retrying... Error: ${err}`);
                     playing[channel].busy = false;
                     setTimeout(() => {
@@ -555,8 +622,8 @@ function track(source) {
     for (const x in playAssets.pass) {
         for (const y in playAssets.pass[x].playlist) {
             if (playAssets.pass[x].playlist[y].link.indexOf(source) !== -1) {
-                logger.warning(TAG, `Bad link detected for local playlist: ${x}, track: ${y}, song: `
-                    + `${playAssets.pass[x].playlist[y].name}`);
+                logger.warning(TAG, `Bad link detected for local playlist: ${x} track: `
+                    + `${y} song: ${playAssets.pass[x].playlist[y].name}`);
             }
         }
     }
@@ -574,65 +641,62 @@ function volume(x, specification) {
     playing[x].volume += change;
     if (playing[x].dispatcher) {
         const newVolume = (playing[x].dispatcher.volume / current) * playing[x].volume;
-        logger.debug(TAG, `Calculated new playback volume to be: ${newVolume}. Requesting change`);
+        logger.debug(TAG, `Calculated new palyback volume to be: ${newVolume} requesting change`);
         playing[x].dispatcher.setVolume(newVolume);
     }
 }
 
 // Verify if a video is streamable
 function verify(location, source) {
-    let verifySource = source;
-    if (verifySource.indexOf('?v=') !== -1) {
-        verifySource = verifySource.substring((verifySource.indexOf('?v=') + 3));
+    if (source.indexOf('?v=') !== -1) {
+        source = source.substring((source.indexOf('?v=') + 3)); // eslint-disable-line no-param-reassign
     }
     // No need to verify pre-verified external sources
-    if (location === 'external' && verified.external[verifySource]) { return; }
+    if (location === 'external' && verified.external[source]) { return; }
     const params = {
-        key: youtubeKey,
         part: 'snippet',
-        id: verifySource,
+        id: source,
     };
-    youtube.videos.list(params, (err, response) => {
-        if (err) {
-            verified[location][verifySource] = false;
-        } else if (response.pageInfo.totalResults === 0) {
-            if (location === 'local') { track(verifySource); }
-            verified[location][verifySource] = false;
-        } else {
-            verified[location][verifySource] = true;
-        }
-    });
+    youtube.videos.list(params)
+        .then((response) => {
+            if (response.data.pageInfo.totalResults === 0) {
+                if (location === 'local') {
+                    track(source);
+                }
+                verified[location][source] = false;
+            } else {
+                verified[location][source] = true;
+            }
+        })
+        .catch(() => {
+            verified[location][source] = false;
+        });
 }
 
 // Confirms all non locally called videos that are slated to be streamed in a channel are streamable
 function verifyChannel(channel) {
     if (playing[channel].playlist === 'youtube') {
-        for (const x in playing[channel].youtubePlaylist) {
-            verify('external', playing[channel].youtubePlaylist[x]);
+        for (const playlist of playing[channel].youtubePlaylist) {
+            verify('external', playlist);
         }
     }
     if (playing[channel].videoQueue.length !== 0) {
-        for (const x in playing[channel].videoQueue) {
-            verify('external', playing[channel].videoQueue[x].source);
+        for (const { source } of playing[channel].videoQueue) {
+            verify('external', source);
         }
     }
 }
 
 // Checks if a source provided is verified, returns true/false
 function verifyCheck(source, location) {
-    let verifySource = source;
-    if (verifySource.indexOf('?v=') !== -1) {
-        verifySource = verifySource.substring((verifySource.indexOf('?v=') + 3));
+    if (source.indexOf('?v=') !== -1) {
+        source = source.substring((source.indexOf('?v=') + 3)); // eslint-disable-line no-param-reassign
     }
     if (location) {
-        if (verified[location][verifySource]) {
-            return true;
-        }
-        return false;
-    } else if (!verified.local[verifySource] && !verified.external[verifySource]) {
-        return false;
+        return !!verified[location][source];
     }
-    return true;
+
+    return verified.local[source] || verified.external[source];
 }
 
 // Calls for checks on all locally stored youtube sources to confirm links are good

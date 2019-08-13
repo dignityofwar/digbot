@@ -1,7 +1,5 @@
 //  Copyright © 2018 DIG Development team. All rights reserved.
 
-'use strict';
-
 /* Asset module for play.js, stores youtube links, if you add a playlist try to include 50+ items to
 mitigate repitition, remember newer videos/songs tend to be louder cos of loudness war */
 
@@ -10,7 +8,7 @@ const test = {
     1: {
         name: 'Gotta catch \'em all',
         link: 'https://www.youtube.com/watch?v=JuYeHPFR3f0',
-        volume: 0.02
+        volume: 0.02,
     }
 }; */
 
@@ -68,7 +66,7 @@ const fun = {
     // 11: {
     //     name: 'Danger zone',
     //     link: 'https://www.youtube.com/watch?v=siwpn14IE7E',
-    //     volume: 0.04
+    //     volume: 0.04,
     // },
     12: {
         name: 'Push it to the limit',
@@ -451,7 +449,7 @@ const nightcore = {
     // 44: {
     //     name: 'Does your mother know',
     //     link: 'https://www.youtube.com/watch?v=WkL7Fkigfn8',
-    //     volume: 0.025
+    //     volume: 0.025,
     // },
     45: {
         name: 'Blackout',
@@ -1266,7 +1264,7 @@ const tennies = {
     //     name: 'We don\'t talk any more',
     //     link: 'https://www.youtube.com/watch?v=2FuHbch1dFI',
     //     volume: 0.02,
-    // },
+    // }
 };
 
 module.exports = {

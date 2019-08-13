@@ -1,6 +1,6 @@
 # Copyright © 2018 DIG Development team. All rights reserved.
 
-FROM node:10.13-alpine
+FROM node:10-alpine
 
 # Install the ffmpeg binaries
 RUN apk add --no-cache ffmpeg

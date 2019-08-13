@@ -1,41 +1,46 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
+const { duration } = require('moment');
+const Command = require('./foundation/command');
 
-'use strict';
+module.exports = class StartedCommand extends Command {
+    constructor() {
+        super();
 
-// !started module
+        this.name = 'started';
+        this.special = true;
+    }
 
-module.exports = {
-    // Calculates runtime and returns formated message
-    duration(started) {
-        const timenow = new Date();
-        let x = timenow.getTime() - started.getTime();
-        x /= 1000;
-        let seconds = x % 60;
-        x /= 60;
-        let minutes = x % 60;
-        x /= 60;
-        let hours = x % 24;
-        x /= 24;
-        let days = x;
-        seconds = Math.floor(seconds);
-        minutes = Math.floor(minutes);
-        hours = Math.floor(hours);
-        days = Math.floor(days);
+    /**
+     * @param request
+     * @return {Promise<*>}
+     */
+    async execute(request) {
+        return request.respond(this.createReply());
+    }
 
-        /* This section decides what to feed up to bot.js based on how long the
-        bots been running. Plural and singular is an issue here, may have to
-        come up with a better solution. */
-        if (days >= 1) {
-            return `I've been running for: ${days} days, ${hours} hours, ${minutes} minutes, `
-                + `${seconds} seconds. Give a bot a break.`;
-        } else if (hours >= 1) {
-            return `I've been running for: ${hours} hours, ${minutes} minutes, ${seconds} seconds. `
-                + 'Starting to get tired.';
-        } else if (minutes >= 1) {
-            return `I've been running for: ${minutes} minutes, ${seconds} seconds. `
-                + 'One of these days I\'ll make it to an hour without some fool restarting me.';
+    /**
+     * @return {String}
+     */
+    createReply() {
+        const uptime = duration(process.uptime(), 'seconds');
+
+        if (uptime.asDays() >= 1) {
+            return `I've been running for ${uptime.humanize()}. Give a bot a break.`;
         }
-        return `I've been running for: ${seconds} seconds. I haven't even been here a minute `
-            + 'why are you asking?';
-    },
+        if (uptime.asHours() >= 1) {
+            return `I've been running for ${uptime.humanize()}. Starting to get tired.`;
+        }
+        if (uptime.asMinutes() >= 1) {
+            return `I've been running for ${uptime.humanize()}. One of these days I'll make it to an hour `
+                + 'without some fool restarting me.';
+        }
+
+        return `I've been running for ${uptime.humanize()}. I haven't even been here a minute why are you asking?`;
+    }
+
+    /**
+     * @return {string}
+     */
+    help() {
+        return 'See how long the bot has been running for.';
+    }
 };

@@ -1,57 +1,60 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
+const { words } = require('lodash');
+const Command = require('./foundation/command');
 
-'use strict';
+module.exports = class CatsCommand extends Command {
+    constructor({ apisThecatapi }) {
+        super();
 
-// Module for !cats command
+        this.name = 'cats';
 
-const logger = require('../logger.js');
-const request = require('request');
+        this.throttle = {
+            attempts: 2,
+            decay: 5,
+        };
 
-const root = 'http://thecatapi.com/api/images/get';
-const TAG = '!cats';
+        this.api = apisThecatapi;
+    }
 
-module.exports = {
-    // Grabs a random cat gif from TheCatAPI, returns link
-    gif() {
-        return new Promise((resolve) => {
-            const r = request
-                .get(`${root}?format=src&type=gif`, () => {
-                    logger.debug(TAG, `API response: ${r.uri.href}`);
-                    const cat = r.uri.href;
-                    if (cat.endsWith('gif')) {
-                        resolve(cat);
-                    } else {
-                        logger.warning(TAG, 'Triggered img function, did not grab gif');
-                        resolve('http://i.imgur.com/fxorJTQ.jpg');
-                    }
-                })
-                .on('response', (response) => {
-                    logger.debug(TAG, response.statusCode); // 200
-                    logger.debug(TAG, response.headers['content-type']); // 'image/gif'
-                    if (response.statusCode !== 200) { resolve('http://i.imgur.com/fxorJTQ.jpg'); }
-                });
-        });
-    },
+    /**
+     * @param request
+     * @return {Promise<void>}
+     */
+    async execute(request) {
+        const img = await this.getCat(this.wantsGif(request.content));
 
-    // Grabs a random cat image from TheCatAPI, returns link
-    img() {
-        return new Promise((resolve) => {
-            const r = request
-                .get(`${root}?format=src&type=jpg`, () => {
-                    logger.debug(TAG, `API response: ${r.uri.href}`);
-                    const cat = r.uri.href;
-                    if (cat.endsWith('jpg')) {
-                        resolve(cat);
-                    } else {
-                        logger.warning(TAG, 'Triggered img function, did not grab jpg');
-                        resolve('http://i.imgur.com/fxorJTQ.jpg');
-                    }
-                })
-                .on('response', (response) => {
-                    logger.debug(TAG, response.statusCode); // 200
-                    logger.debug(TAG, response.headers['content-type']); // 'image/png'
-                    if (response.statusCode !== 200) { resolve('http://i.imgur.com/fxorJTQ.jpg'); }
-                });
-        });
-    },
+        return request.respond({ embed: { image: { url: img } } });
+    }
+
+    /**
+     * @param content
+     * @return {boolean}
+     */
+    wantsGif(content) {
+        return (words(content).find((e, i) => i > 0 && e) || '').toUpperCase() === 'GIF';
+    }
+
+    /**
+     * @param gif
+     * @return {Promise<String>}
+     */
+    async getCat(gif) {
+        try {
+            return gif
+                ? this.api.getGif()
+                : this.api.getImg();
+        } catch (e) {
+            return 'http://i.imgur.com/fxorJTQ.jpg';
+        }
+    }
+
+    /**
+     * @return {string}
+     */
+    help() {
+        return 'Shows a random cat image from the interwebs. Append "gif" on the end to return a gif version.';
+    }
+
+    throttled() {
+        return 'I\'ve decided to severely limit the amount of cats I\'m afraid.';
+    }
 };

@@ -8,6 +8,22 @@
   "token"                   : "",
   "youtubeKey"              : "",
 
+  "services"                : {
+    "queue": {
+      "redis_url": "redis://redis:6379"
+    }
+  },
+
+  "logger"                  : {
+    "level"     : "info",
+
+    "transports": []
+  },
+
+  "commandChannels"         : [],
+
+  "guilds"                  : {},
+
   "general"                 : {
     "adminsRoleID"           : "",
     "devRoleID"              : "",

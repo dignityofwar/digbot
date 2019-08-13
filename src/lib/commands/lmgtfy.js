@@ -1,14 +1,32 @@
-//  Copyright © 2018 DIG Development team. All rights reserved.
+const Command = require('./foundation/command');
 
-'use strict';
+module.exports = class LmgtfyCommand extends Command {
+    constructor() {
+        super();
 
-// !lmgtfy command, generates lmgtfy link based on input args
+        this.name = 'lmgtfy';
+    }
 
-module.exports = {
-    execute(msg) {
-        const args = msg.cleanContent.toString().split(' ');
+    /**
+     * @param request
+     * @return {Promise<void>}
+     */
+    async execute(request) {
+        // TODO: Maybe incorporate some of the standard modules of node like querystring
+        const args = request.content.split(' ');
         args.shift();
-        if (args.length === 0) { return 'You still need to ask a question, I can\'t do that myself.'; }
-        return `There you go! http://lmgtfy.com/?q=${encodeURI(args.join('+'))}`;
-    },
+
+        return request.respond(
+            args.length
+                ? `There you go! http://lmgtfy.com/?q=${encodeURI(args.join('+'))}`
+                : 'You still need to ask a question, I can\'t do that myself.',
+        );
+    }
+
+    /**
+     * @return {string}
+     */
+    help() {
+        return 'Someone being lazy and not using Google? Generate them a link to use!';
+    }
 };
