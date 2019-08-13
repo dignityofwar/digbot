@@ -27,7 +27,9 @@ module.exports = class DragonsCommand extends Command {
             );
         }
 
-        return request.member.addRole(dragonRole);
+        await request.member.addRole(dragonRole);
+
+        return request.message.react('🐉');
     }
 
     /**
