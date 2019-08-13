@@ -1,13 +1,11 @@
 const Dispatcher = require('../foundation/dispatcher');
 
-const channels = require('../admin/channels/channelsMaster');
 const detectPlaying = require('../admin/roles/detectplaying');
 const forcedPTTCheck = require('../admin/roles/forcedpttcheck');
 const mentionSpam = require('../admin/antispam/mentionspam');
 const modularChannelSystem = require('../admin/channels/modularchannels');
 const nameCheck = require('../welcomepack/namecheck');
 const server = require('../server/server');
-// const streamSpam = require('../admin/antispam/streamspam');
 const welcome = require('../welcomepack/welcomepack');
 
 // TODO: This is a temporary dispatcher
@@ -29,10 +27,7 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
      */
     async start() {
         this.registerListenersTo(this.client, {
-            // channelCreate: this.channelCreate.bind(this),
-            // channelUpdate: this.channelUpdate.bind(this),
             guildMemberAdd: this.guildMemberAdd.bind(this),
-            // guildMemberRemove: this.guildMemberRemove.bind(this),
             guildMemberUpdate: this.guildMemberUpdate.bind(this),
             message: this.message.bind(this),
             messageUpdate: this.messsageUpdate.bind(this),
@@ -46,25 +41,6 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
      */
     async stop() {
         this.unregisterListenersFromAll();
-    }
-
-    /**
-     * @param channel
-     */
-    channelCreate(channel) {
-        // TODO: Disabled for now
-        if (channel.type === 'dm' || channel.type === 'group' || !channel || !channel.guild) { return; }
-        channels.checkCreation(channel);
-    }
-
-    /**
-     * @param oldChannel
-     * @param newChannel
-     */
-    channelUpdate(oldChannel, newChannel) {
-        // TODO: Disabled for now
-        if (newChannel.type === 'dm' || newChannel.type === 'group' || !newChannel || !newChannel.guild) { return; }
-        channels.checkPositions(); // TODO: Should be disabled?
     }
 
     /**
@@ -87,15 +63,7 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
         nameCheck.execute(member);
         mentionSpam.joinCheck(member);
         detectPlaying.check(member);
-        // presence.execute();
     }
-
-    /**
-     * @param member
-     */
-    // guildMemberRemove(member) {
-    //     // presence.execute();
-    // }
 
     /**
      * @param oldMember
@@ -123,7 +91,6 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
     messsageUpdate(oldMessage, newMessage) {
         if (newMessage.channel.type === 'dm' || newMessage.channel.type === 'group') { return; }
 
-        // streamSpam.execute(newMessage);
         mentionSpam.edits(oldMessage, newMessage);
     }
 
@@ -133,7 +100,6 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
      */
     presenceUpdate(oldMember, newMember) {
         detectPlaying.check(oldMember, newMember);
-        // presence.execute();
     }
 
     /**

@@ -26,9 +26,7 @@
 
   "general"                 : {
     "adminsRoleID"           : "",
-    "devRoleID"              : "",
     "forcedPTTRoleID"        : "",
-    "herebedragonsRoleID"    : "",
     "server"                 : "",
     "staffRoleID"            : "",
     "superMuteRoleID"        : "",
@@ -57,29 +55,14 @@
 
   "channels"                : {
     "mappings" : {
-      "chitChatVoice": "",
       "developers"   : "",
       "digbot"       : "",
-      "digBotLog"    : "",
-      "events"       : "",
       "general"      : "",
-      "herebedragons": "",
-      "staff"        : "",
-      "streams"      : "",
-      "ps2dig"       : ""
-    },
-    "positions": {
-      "text" : {},
-      "voice": {
-        "afk": {
-          "id"      : "",
-          "name"    : "💤 AFK",
-          "position": null,
-          "comment" : "Afk Voice channel is always required"
-        }
-      }
+      "staff"        : ""
     }
   },
+
+
 
   "communityGames"          : {},
 

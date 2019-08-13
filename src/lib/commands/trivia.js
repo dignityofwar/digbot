@@ -1,15 +1,16 @@
+const { RESOLVER } = require('awilix');
 const Command = require('./foundation/command');
 
-const revealDuration = 30; // TODO: Should be inside the class
-
 module.exports = class TriviaCommand extends Command {
-    constructor({ apisJservice, queuesDiscordmessagequeue }) {
+    constructor({ apisJservice, queuesDiscordmessagequeue, opts }) {
         super();
 
         this.name = 'trivia';
 
         this.jservice = apisJservice;
         this.queue = queuesDiscordmessagequeue;
+
+        this.revealDelay = opts.revealDelay;
     }
 
     /**
@@ -32,7 +33,7 @@ module.exports = class TriviaCommand extends Command {
             },
         };
 
-        await this.queue.updateMessage(content, reply.channel.id, reply.id, { delay: revealDuration * 1000 });
+        await this.queue.updateMessage(content, reply.channel.id, reply.id, { delay: this.revealDelay * 1000 });
 
         content.embed.description = 'I will show the answer shortly.';
 
@@ -43,7 +44,15 @@ module.exports = class TriviaCommand extends Command {
      * @return {string}
      */
     help() {
-        return `It will give you a random trivia question, and after ${revealDuration} seconds `
+        return `It will give you a random trivia question, and after ${this.revealDelay} seconds `
             + 'the answer will be revealed.';
     }
+};
+
+module.exports[RESOLVER] = {
+    injector: () => ({
+        opts: {
+            revealDelay: 30,
+        },
+    }),
 };
