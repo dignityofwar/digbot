@@ -27,12 +27,12 @@ You need a file at config/local.json, this should be git Ignored. You will need 
 -   Comply with the .jscsrc file, you may use a linter in your IDE to assist you in this however how this is accomplished will depend on your IDE. Style is automatically reviewed in PRs through our CI process.
 -   Leave a summary comment at the top of each module explaining its purpose
 -   Sort functions alphabetically unless using getter and setter functions, example:
-```
-getSomething()
-setSomething()
+```js
+getSomething();
+setSomething();
 
-getSomethingElse()
-setSomethingElse()
+getSomethingElse();
+setSomethingElse();
 ```
 -   If the purpose of a function is not immediately apparent leave a short comment. Please keep in mind our comments are intended to be read by recreational developers, not professsionals.
 -   Ensure promise resolutions/rejections are always handled
