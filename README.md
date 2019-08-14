@@ -71,10 +71,10 @@ Used to vote in !poll surveys
 
 #### Anti Spam
 DIGBot has anti spam admin mechanics. It is capable of recognising and taking steps to prevent spam in several situations, such as:
-- When users attempt to spam command requests to the bot
-- If a user attempts to use commands outside of designated channels
-- When users make use of mentions to liberally, especially when they are sending notifications to group tags and not individuals
-- When a user is posting links to a twitch stream outside of a designated channel
+-   When users attempt to spam command requests to the bot
+-   If a user attempts to use commands outside of designated channels
+-   When users make use of mentions to liberally, especially when they are sending notifications to group tags and not individuals
+-   When a user is posting links to a twitch stream outside of a designated channel
 
 ### Automated functions
 

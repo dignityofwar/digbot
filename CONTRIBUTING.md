@@ -3,12 +3,12 @@ If you need help ask in the dev channel in the DIG discord.
 
 ## Setup procedure
 To give a basic setup procedure:
-- Clone the repo
-- Create a personal discord server for testing the bot
-- Create a personal bot here: (you will need multiple for sub-bots) <https://discordapp.com/developers/applications/>
-- Update your config files with the parameters you have created with your bots and servers
-- Install and run docker
-- Run the project using `npm run up`
+-   Clone the repo
+-   Create a personal discord server for testing the bot
+-   Create a personal bot here: (you will need multiple for sub-bots) <https://discordapp.com/developers/applications/>
+-   Update your config files with the parameters you have created with your bots and servers
+-   Install and run docker
+-   Run the project using `npm run up`
 
 ## Installing Docker
 
@@ -24,9 +24,9 @@ You need a file at config/local.json, this should be git Ignored. You will need 
 
 ## Code style Guide
 
-- Comply with the .jscsrc file, you may use a linter in your IDE to assist you in this however how this is accomplished will depend on your IDE. Style is automatically reviewed in PRs through our CI process.
-- Leave a summary comment at the top of each module explaining its purpose
-- Sort functions alphabetically unless using getter and setter functions, example:
+-   Comply with the .jscsrc file, you may use a linter in your IDE to assist you in this however how this is accomplished will depend on your IDE. Style is automatically reviewed in PRs through our CI process.
+-   Leave a summary comment at the top of each module explaining its purpose
+-   Sort functions alphabetically unless using getter and setter functions, example:
 ```
 getSomething()
 setSomething()
@@ -34,10 +34,10 @@ setSomething()
 getSomethingElse()
 setSomethingElse()
 ```
-- If the purpose of a function is not immediately apparent leave a short comment. Please keep in mind our comments are intended to be read by recreational developers, not professsionals.
-- Ensure promise resolutions/rejections are always handled
-- Please keep in mind due to API ping a lot of our code must be designed with asynchronicity in mind
-- Where possible guard against common errors and handle them through our logger (src/lib.logger.js)
+-   If the purpose of a function is not immediately apparent leave a short comment. Please keep in mind our comments are intended to be read by recreational developers, not professsionals.
+-   Ensure promise resolutions/rejections are always handled
+-   Please keep in mind due to API ping a lot of our code must be designed with asynchronicity in mind
+-   Where possible guard against common errors and handle them through our logger (src/lib.logger.js)
 
 ### Module testing
 
@@ -153,9 +153,6 @@ There are 3 types of environments used in this project:
 
 The project utilises 4 types of branches:
 1. Feature Branches (names will vary) - These are the branches you will use when working on issues. Once you are happy you have completed your issue you can PR it into the project development branch.
-
 2. Project Development Branch (named: develop) - This branch is for testing new versions of the project locally, it may host many different changes at once. Major changes such as features and refactors should be PR'd to this branch, however hotfixes on these features may be directly pushed into the develop branch.
-
 3. Project Staging Branch (named: staging) - This branch will be used to run versions of the project on our project's test server. Once a new version of the project is completed on the project development branch it will be PR'd to this branch. Direct commits to this branch are permitted however it should only be for hotfixes that need to be pushed to production
-
 4. Project Production Branch (named: master) - This is the live branch that will be ran on our live discord server, any changes should be PR'd from staging. All major changes should go through the development process. Direct pushes are not permitted to this branch, however if hotfixes are required they can be pushed directly to staging then PR'd in.

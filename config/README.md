@@ -1,5 +1,5 @@
 # Configuration
--
+
 Any configuration can be overwritten using a local.json. An example file is included as local.json.example.
 
 ## showPerfStats (boolean)
@@ -23,8 +23,6 @@ Token to connect to the Discord API. Can be overwritten by the environment varia
 
 ## youtubeKey (string)
 Key to connect to the YouTube Data API. Can be overwritten by the environment variable YOUTUBE\_DATA\_API\_KEY.
-
--
 
 ## general (object)
 Has the following properties:
@@ -65,8 +63,6 @@ Which port should be used by the bot. Can be overwritten by the environment vari
 ## root (integer)
 Root of the project(please do not use this). Can be overwritten by the environment variable DIGBOT\_ROOT.
 
--
-
 ## features (object)
 Has the following properties:
 
@@ -90,8 +86,6 @@ If !sfx can be used.
 
 ## play (boolean)
 If !play can be used.
-
--
 
 ## antispamCommandTick (integer)
 Interval when to reset the amount of commands allowed in miliseconds.
@@ -126,8 +120,6 @@ Limit for the amount of mentions by a user to roles.
 ## textInactive (integer)
 Threshold for when a channels is considered inactive in miliseconds.
 
--
-
 ## testing (boolean)
 Don't use this. Intead use `config.util.getEnv("NODE_ENV") === "testing"`.
 
@@ -137,53 +129,49 @@ Discord user id for tester(?).
 ## testerChannel (string)
 Discord channel id for tester(?).
 
--
-
 ## channels (object)
 
 ## mappings (object)
 Maps a key to a Discord channel id(string).
 
-- chitCharVoice
-- developers
-- digbot
-- digBotLog
-- events
-- general
-- herebedragons
-- staff
-- streams
-- ps2dig
+-   chitCharVoice
+-   developers
+-   digbot
+-   digBotLog
+-   events
+-   general
+-   herebedragons
+-   staff
+-   streams
+-   ps2dig
 
 ## positions.text (object)
 Mapping Discord text channels to enforce position.
 
-- id (string): Discord channel id
-- name (string): Name given to the channel
-- position (integer): Position of the channel
+-   id (string): Discord channel id
+-   name (string): Name given to the channel
+-   position (integer): Position of the channel
 
 ## positions.voice (object)
 Mapping Discord voice channels to enforce position.
 
-- id (string): Discord channel id
-- name (string): Name given to the channel
-- position (integer): Position of the channel
+-   id (string): Discord channel id
+-   name (string): Name given to the channel
+-   position (integer): Position of the channel
 
 Note: Always define a voice channel with the key "afk".
-
--
 
 ## communityGames (object)
 Contains object with the following properties
 
-- name (string): Name of the game
-- roleids (array<string>): Array of Discord role ids
-- officers (array<string>): Array of Discord role ids
-- primaryChannel (string): Discord channel id
+-   name (string): Name of the game
+-   roleids (array<string>): Array of Discord role ids
+-   officers (array<string>): Array of Discord role ids
+-   primaryChannel (string): Discord channel id
 
 ## recreationalGames (object)
 Contains object with the following properties
 
-- name (string): Name of the game
-- roleids (array<string>): Array of Discord role ids
-- primaryChannel (string): Discord channel id
+-   name (string): Name of the game
+-   roleids (array<string>): Array of Discord role ids
+-   primaryChannel (string): Discord channel id
