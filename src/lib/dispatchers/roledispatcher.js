@@ -67,14 +67,14 @@ module.exports = class RoleDispatcher extends Dispatcher {
      */
     executeAction(action, role, member) {
         switch (action.type) {
-            case 'message':
-                this.client.channels.get(action.channel).send(template(action.content)({
-                    role,
-                    member,
-                }));
-                break;
-            default:
-                throw new Error(`Action type unkown: ${action.type}`);
+        case 'message':
+            this.client.channels.get(action.channel).send(template(action.content)({
+                role,
+                member,
+            }));
+            break;
+        default:
+            throw new Error(`Action type unkown: ${action.type}`);
         }
     }
 };
