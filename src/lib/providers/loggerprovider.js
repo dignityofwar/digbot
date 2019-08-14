@@ -1,4 +1,4 @@
-const { isEmpty, capitalize } = require('lodash');
+const { isEmpty } = require('lodash');
 const { asFunction, asValue } = require('awilix');
 const { createLogger, format, transports: { Console: ConsoleTransport } } = require('winston');
 const config = require('config');

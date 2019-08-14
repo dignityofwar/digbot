@@ -35,6 +35,7 @@ module.exports = class IgnoreCommand extends Command {
      * @return {string}
      */
     help() {
-        return 'Assigns the ignore role to you which prevents auto role assignments. You can still assign roles with the !pretend command.';
+        return 'Assigns the ignore role to you which prevents auto role assignments. You can still assign roles '
+            + 'with the !pretend command.';
     }
 };
