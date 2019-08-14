@@ -14,7 +14,7 @@ To give a basic setup procedure:
 
 DIGBot is ran via docker containers. See the [Docker readme](docker/README.md) file for setting up your local development environment.
 
-# Using local installs of Node
+## Using local installs of Node
 
 We **HIGHLY** recommend the use of Docker in order to run DIGBot. This will ensure that we **all** have the correct versions of Node and will ensure environments are identical from various development environments all the way to production.
 
@@ -69,7 +69,7 @@ methods by checking the availability and execution results.
 Try to test all possible situations the module may encounter. And break up these situations into
 several different tests.
 
-```
+```js
 // File path: test/src/commands/commands.js (mirror the project directory, test folder = project folder)
 // Example module to test commands.js
 

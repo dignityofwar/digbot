@@ -8,7 +8,7 @@ If set to `true` it will console log cpu and memory statistics at a given interv
 ## botUserID (string)
 The user id of Discord.
 
-#### subBotLimit (integer)
+## subBotLimit (integer)
 The maximum number of subbots that can be used simultanious. Can be overwritten by the environment variable SUBBOTS\_LIMIT.
 
 ## subBots (object)
