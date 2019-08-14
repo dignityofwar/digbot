@@ -102,7 +102,7 @@ Some channels the community would prefer to always have a free version of. This 
 
 ### Requirements
 
-The bot uses docker 1.13.0+. Installation instructions can be found here: https://docs.docker.com/install/
+The bot uses docker 1.13.0+. Installation instructions can be found here: <https://docs.docker.com/install/>
 
 ### Deployment via Docker Hub
 

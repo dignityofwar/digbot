@@ -4,7 +4,7 @@ If you need help ask in the dev channel in the DIG discord.
 To give a basic setup procedure:
 - Clone the repo
 - Create a personal discord server for testing the bot
-- Create a personal bot here: (you will need multiple for sub-bots) https://discordapp.com/developers/applications/
+- Create a personal bot here: (you will need multiple for sub-bots) <https://discordapp.com/developers/applications/>
 - Update your config files with the parameters you have created with your bots and servers
 - Install and run docker
 - Run the project using `npm run up`
@@ -38,7 +38,7 @@ setSomethingElse()
 - Please keep in mind due to API ping a lot of our code must be designed with asynchronicity in mind
 - Where possible guard against common errors and handle them through our logger (src/lib.logger.js)
 
-### Module testing
+## Module testing
 
 If it can be tested it should be tested, test coverage should be as high as possible. Tests are conducted automatically on all PRs by Travis.
 
@@ -60,7 +60,7 @@ defined in `bot.js`.
 `bot.js` is also the only file creating dummy messages for testing. Other
 modules should not test by means of creating discord calls.
 
-#### Test structures
+### Test structures
 
 The following example illustrates what a testing module may look like, and validates
 methods by checking the availability and execution results.
@@ -136,9 +136,9 @@ describe('commands/commands.js', function() {
 
 ```
 
-### Resources on JS conventions
+## Resources on JS conventions
 
-http://javascript.crockford.com/code.html
+<http://javascript.crockford.com/code.html>
 
 # Development flow
 
