@@ -80,6 +80,7 @@ module.exports = class PretendCommand extends Command {
      * @return {string}
      */
     help() {
-        return 'With this command you can pretend to play some game and get those sweet sweet roles. Use !pretend list to see what is available.';
+        return 'With this command you can pretend to play some game and get those sweet sweet roles. Use !pretend '
+            + 'list to see what is available.';
     }
 };
