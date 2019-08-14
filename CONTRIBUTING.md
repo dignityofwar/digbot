@@ -1,6 +1,7 @@
+# Contributing
 If you need help ask in the dev channel in the DIG discord.
 
-# Setup procedure
+## Setup procedure
 To give a basic setup procedure:
 - Clone the repo
 - Create a personal discord server for testing the bot
@@ -9,7 +10,7 @@ To give a basic setup procedure:
 - Install and run docker
 - Run the project using `npm run up`
 
-# Installing Docker
+## Installing Docker
 
 DIGBot is ran via docker containers. See the [Docker readme](docker/README.md) file for setting up your local development environment.
 
@@ -17,11 +18,11 @@ DIGBot is ran via docker containers. See the [Docker readme](docker/README.md) f
 
 We **HIGHLY** recommend the use of Docker in order to run DIGBot. This will ensure that we **all** have the correct versions of Node and will ensure environments are identical from various development environments all the way to production.
 
-# Your local config files
+## Your local config files
 
 You need a file at config/local.json, this should be git Ignored. You will need to change all parameters in the config/local.json file to ensure they match your personal development discord server and bot API keys and such, to accomplish this you may use config.local.json.example as a guide. It is **CRITICAL** that you keep these files out of the commit history by use of a command such as `git update-index --assume-unchanged config/local.json` if necessary to keep private keys secure.
 
-# Code style Guide
+## Code style Guide
 
 - Comply with the .jscsrc file, you may use a linter in your IDE to assist you in this however how this is accomplished will depend on your IDE. Style is automatically reviewed in PRs through our CI process.
 - Leave a summary comment at the top of each module explaining its purpose
@@ -38,7 +39,7 @@ setSomethingElse()
 - Please keep in mind due to API ping a lot of our code must be designed with asynchronicity in mind
 - Where possible guard against common errors and handle them through our logger (src/lib.logger.js)
 
-## Module testing
+### Module testing
 
 If it can be tested it should be tested, test coverage should be as high as possible. Tests are conducted automatically on all PRs by Travis.
 
@@ -60,7 +61,7 @@ defined in `bot.js`.
 `bot.js` is also the only file creating dummy messages for testing. Other
 modules should not test by means of creating discord calls.
 
-### Test structures
+#### Test structures
 
 The following example illustrates what a testing module may look like, and validates
 methods by checking the availability and execution results.
@@ -133,23 +134,22 @@ describe('commands/commands.js', function() {
         );
     });
 });
-
 ```
 
-## Resources on JS conventions
+### Resources on JS conventions
 
 <http://javascript.crockford.com/code.html>
 
-# Development flow
+## Development flow
 
-## Environments
+### Environments
 
 There are 3 types of environments used in this project:
 1. Development - This is your local environment, it will run on your personal discord test server.
 2. Staging - This is the project's test environment, all changes to live will flow through this branch. This branch will be run by the project server on a test discord server.
 3. Production - This is the live environment. It is ran by the project server on our live discord server.
 
-## Branches
+### Branches
 
 The project utilises 4 types of branches:
 1. Feature Branches (names will vary) - These are the branches you will use when working on issues. Once you are happy you have completed your issue you can PR it into the project development branch.

@@ -2,146 +2,146 @@
 -
 Any configuration can be overwritten using a local.json. An example file is included as local.json.example.
 
-#### showPerfStats (boolean)
+## showPerfStats (boolean)
 If set to `true` it will console log cpu and memory statistics at a given interval.
 
-#### botUserID (string)
+## botUserID (string)
 The user id of Discord.
 
 #### subBotLimit (integer)
 The maximum number of subbots that can be used simultanious. Can be overwritten by the environment variable SUBBOTS\_LIMIT.
 
-#### subBots (object)
+## subBots (object)
 Object containing objects with the configuration for subbots.
-##### - id (string)(subobject subbot)
+## id (string)(subobject subbot)
 The user id of Discord.
-##### - token (string)(config subbot)
+## token (string)(config subbot)
 Token to connect to the Discord API.
 
-#### token (string)
+## token (string)
 Token to connect to the Discord API. Can be overwritten by the environment variable DISCORD\_API\_TOKEN.
 
-#### youtubeKey (string)
+## youtubeKey (string)
 Key to connect to the YouTube Data API. Can be overwritten by the environment variable YOUTUBE\_DATA\_API\_KEY.
 
 -
 
-#### general (object)
+## general (object)
 Has the following properties:
 
-##### - adminsRoleID (string)
+## adminsRoleID (string)
 Discord role id for the admins.
 
-##### - devRoleID (string)
+## devRoleID (string)
 Discord role id for the developers.
 
-##### - forcedPTTRoleID (string)
+## forcedPTTRoleID (string)
 Discord role id for users where push-to-talk is enforced.
 
-##### - herebedragonsRoleID (string)
+## herebedragonsRoleID (string)
 Discord role id for herebedragons channel.
 
-##### - server (string)
+## server (string)
 Discord guild/server id of where the bot is assigned to.
 
-##### - staffRoleID (string)
+## staffRoleID (string)
 Discord role id for the staff.
 
-##### - superMuteRoleID (string)
+## superMuteRoleID (string)
 Discord role id for users which are muted due to mentioning to often.
 
-##### - leaderRoles (array<string>)
+## leaderRoles (array<string>)
 Array of Discord roles ids with leader positions.
 
-##### - cpuNotificationLimit (integer)
+## cpuNotificationLimit (integer)
 Treshold for when to show a cpu notification in %.
 
-##### - memoryNotificationLimit (integer)
+## memoryNotificationLimit (integer)
 Treshold for when to show a memory notification in MB.
 
-##### - port (integer)
+## port (integer)
 Which port should be used by the bot. Can be overwritten by the environment variable DIGBOT\_PORT.
 
-##### - root (integer)
+## root (integer)
 Root of the project(please do not use this). Can be overwritten by the environment variable DIGBOT\_ROOT.
 
 -
 
-#### features (object)
+## features (object)
 Has the following properties:
 
-##### - automaticRoleAssignment (boolean)
+## automaticRoleAssignment (boolean)
 Assigns roles for games based on the status of an user(done with the communityGames and recreationalGames config)
 
-##### - channelPositionsEnforcement (boolean)
+## channelPositionsEnforcement (boolean)
 Enforce the position of channels(done with the channels.positions config). Broken do not use.
 
-##### - disableCommandSpam (boolean)
+## disableCommandSpam (boolean)
 If true disables the spam protection of commands.
 
-##### - disableMentionSpam (boolean)
+## disableMentionSpam (boolean)
 If true disables the spam protection of mentions.
 
-##### - modularChannelSystem (boolean)
+## modularChannelSystem (boolean)
 System to add and remove channels based on their use.
 
-##### - sfx (boolean)
+## sfx (boolean)
 If !sfx can be used.
 
-##### - play (boolean)
+## play (boolean)
 If !play can be used.
 
 -
 
-#### antispamCommandTick (integer)
+## antispamCommandTick (integer)
 Interval when to reset the amount of commands allowed in miliseconds.
 
-#### antispamCommandLimitCats (integer)
+## antispamCommandLimitCats (integer)
 Limit for the !cats command.
 
-#### antispamUserTick (integer)
+## antispamUserTick (integer)
 Interval when to reset the amount of messages are allowed by a user in miliseconds.
 
-#### antispamUserLimit (integer)
+## antispamUserLimit (integer)
 Limit for the amount of messages by a user.
 
-#### autoDeleteChannels (integer)
+## autoDeleteChannels (integer)
 Interval when to check for deletable channels in miliseconds.
 
-#### eventProtection (integer)
+## eventProtection (integer)
 Time a channel cannot be deleted after an event.
 
-#### inactivityLimit (integer)
+## inactivityLimit (integer)
 Minimum number of days before an inactive member is pruned.
 
-#### memberMentionLimit (integer)
+## memberMentionLimit (integer)
 Limit for the amount of mentions by a user to other users.
 
-#### mentionsMuteTime (integer)
+## mentionsMuteTime (integer)
 Time before a supermute is removed from an user.
 
-#### roleMentionsLimit (integer)
+## roleMentionsLimit (integer)
 Limit for the amount of mentions by a user to roles.
 
-#### textInactive (integer)
+## textInactive (integer)
 Threshold for when a channels is considered inactive in miliseconds.
 
 -
 
-#### testing (boolean)
+## testing (boolean)
 Don't use this. Intead use `config.util.getEnv("NODE_ENV") === "testing"`.
 
-#### tester (string)
+## tester (string)
 Discord user id for tester(?).
 
-#### testerChannel (string)
+## testerChannel (string)
 Discord channel id for tester(?).
 
 -
 
-#### channels (object)
+## channels (object)
 
-##### - mappings (object)
+## mappings (object)
 Maps a key to a Discord channel id(string).
 
 - chitCharVoice
@@ -155,37 +155,35 @@ Maps a key to a Discord channel id(string).
 - streams
 - ps2dig
 
-##### - positions.text (object)
+## positions.text (object)
 Mapping Discord text channels to enforce position.
 
-- id (string) - Discord channel id
-- name (string) - Name given to the channel
-- position (integer) - Position of the channel
+- id (string): Discord channel id
+- name (string): Name given to the channel
+- position (integer): Position of the channel
 
-##### - positions.voice (object)
+## positions.voice (object)
 Mapping Discord voice channels to enforce position.
 
-- id (string) - Discord channel id
-- name (string) - Name given to the channel
-- position (integer) - Position of the channel
+- id (string): Discord channel id
+- name (string): Name given to the channel
+- position (integer): Position of the channel
 
 Note: Always define a voice channel with the key "afk".
 
 -
 
-#### communityGames (object)
+## communityGames (object)
 Contains object with the following properties
 
-- name (string) - Name of the game
-- roleids (array<string>) - Array of Discord role ids
-- officers (array<string>) - Array of Discord role ids
-- primaryChannel (string) - Discord channel id
+- name (string): Name of the game
+- roleids (array<string>): Array of Discord role ids
+- officers (array<string>): Array of Discord role ids
+- primaryChannel (string): Discord channel id
 
-#### recreationalGames (object)
+## recreationalGames (object)
 Contains object with the following properties
 
-- name (string) - Name of the game
-- roleids (array<string>) - Array of Discord role ids
-- primaryChannel (string) - Discord channel id
-
-
+- name (string): Name of the game
+- roleids (array<string>): Array of Discord role ids
+- primaryChannel (string): Discord channel id

@@ -1,11 +1,7 @@
-<div align="center">
-    <h1>DIGBot</h1>
-    <h4>DIG community's custom discord bot</h4>
-    <p>
-     <a href="https://travis-ci.org/JamesLongman/DIGBot"><img src="https://travis-ci.org/JamesLongman/DIGBot.svg?branch=master"/></a>
-     <a class="badge-align" href="https://www.codacy.com/app/JamesLongman/DIGBot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JamesLongman/DIGBot&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/c0c02795174c43ce9f3bfddce5c50e6f"/></a>
-  </p>
-</div>
+# DIGBot
+
+[![Travis CI Badge](https://travis-ci.org/dignityofwar/DIGBot.svg?branch=master)](https://travis-ci.org/dignityofwar/DIGBot)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bfed4f3b6b4a47639200d5a26c319d75)](https://www.codacy.com/app/dignityofwar/DIGBot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dignityofwar/DIGBot&amp;utm_campaign=Badge_Grade)
 
 ## About
 
@@ -96,7 +92,6 @@ DIGBot is capable of reacting when events are scheduled to remind people of thei
 
 #### Modular Channel System (MCS)
 Some channels the community would prefer to always have a free version of. This is the case for channels such as dedicated voice channels for certain games, for example if a member joins a voice channel for a game such as planetside DIGBot will react by creating a second voice channel for that game so there is still a free channel. Every-time a modular channel become populated or empty, DIGBot will respond by creating or deleting a channel as needed
-
 
 ## Usage
 
