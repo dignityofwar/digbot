@@ -410,7 +410,7 @@ function playNext(x) {
             source = root + y;
             options = {
                 passess: 2,
-                volume: 0.025,
+                volume: 1,
             };
             playing[x].playingStatus = `${playing[x].youtubePlaylistRequester}'s youtube playlist`;
         } else {
@@ -434,7 +434,7 @@ function playNext(x) {
         }
         options = {
             passess: 2,
-            volume: 0.025,
+            volume: 1,
         };
         playing[x].playingStatus = `${playing[x].videoQueue[0].requester}'s song request`;
         playing[x].videoQueue.splice(0, 1);
