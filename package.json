@@ -24,20 +24,20 @@
   },
   "homepage": "https://github.com/JamesLongman/DIGBot#readme",
   "dependencies": {
-    "awilix": "^4.2.0",
+    "awilix": "^4.2.2",
     "axios": "^0.19.0",
     "bull": "~3.10.0",
     "config": "^3.2.2",
     "discord.js": "~11.5.1",
     "googleapis": "^42.0.0",
+    "ioredis": "^4.14.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "opusscript": "^0.0.7",
     "os-utils": "^0.0.14",
-    "ioredis": "^4.14.0",
     "winston": "^3.2.1",
     "winston-transport": "^4.3.0",
-    "ytdl-core": "^0.29.0"
+    "ytdl-core": "^0.29.5"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.1",
@@ -52,6 +52,6 @@
     "eslint-plugin-import": "^2.18.2",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
-    "sinon": "^7.3.2"
+    "sinon": "^7.4.1"
   }
 }
