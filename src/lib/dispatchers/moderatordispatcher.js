@@ -1,6 +1,5 @@
 const Dispatcher = require('../foundation/dispatcher');
 
-const detectPlaying = require('../admin/roles/detectplaying');
 const forcedPTTCheck = require('../admin/roles/forcedpttcheck');
 const mentionSpam = require('../admin/antispam/mentionspam');
 const modularChannelSystem = require('../admin/channels/modularchannels');
@@ -31,7 +30,6 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
             guildMemberUpdate: this.guildMemberUpdate.bind(this),
             message: this.message.bind(this),
             messageUpdate: this.messsageUpdate.bind(this),
-            presenceUpdate: this.presenceUpdate.bind(this),
             voiceStateUpdate: this.voiceStateUpdate.bind(this),
         });
     }
@@ -62,7 +60,6 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
 
         nameCheck.execute(member);
         mentionSpam.joinCheck(member);
-        detectPlaying.check(member);
     }
 
     /**
@@ -92,14 +89,6 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
         if (newMessage.channel.type === 'dm' || newMessage.channel.type === 'group') { return; }
 
         mentionSpam.edits(oldMessage, newMessage);
-    }
-
-    /**
-     * @param oldMember
-     * @param newMember
-     */
-    presenceUpdate(oldMember, newMember) {
-        detectPlaying.check(oldMember, newMember);
     }
 
     /**
