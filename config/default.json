@@ -33,7 +33,6 @@
     "leaderRoles"            : [],
     "cpuNotificationLimit"   : 100,
     "memoryNotificationLimit": 200,
-    "port"                   : 1337,
     "root"                   : ""
   },
 
@@ -49,10 +48,6 @@
   "roleMentionLimit"        : 5,
   "textInactive"            : 7200000,
 
-  "testing"                 : false,
-  "tester"                  : "",
-  "testerChannel"           : "",
-
   "channels"                : {
     "mappings" : {
       "developers"   : "",
@@ -62,19 +57,10 @@
     }
   },
 
-
-
-  "communityGames"          : {},
-
   "features"                : {
-    "automaticRoleAssignment"    : true,
-    "channelPositionsEnforcement": false,
-    "disableCommandSpam"         : false,
     "disableMentionSpam"         : false,
     "modularChannelSystem"       : false,
     "sfx"                        : true,
     "play"                       : true
-  },
-
-  "recreationalGames"       : {}
+  }
 }
