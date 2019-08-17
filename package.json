@@ -1,7 +1,7 @@
 {
   "name": "digbot",
-  "version": "0.1.0",
-  "description": "- Nodejs 8.x\r - npm: discord.js",
+  "version": "1.1.0",
+  "description": "DIGBot is a custom made discord bot for the DIG gaming community",
   "main": "index.js",
   "scripts": {
     "start": "node src/bot.js",
