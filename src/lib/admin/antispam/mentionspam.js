@@ -62,7 +62,7 @@ module.exports = {
     execute(message) {
         if (config.get('features.disableMentionSpam')) { return; } // Feature switch
         if (message.guild.id !== server.getGuild().id) { return; }
-        if (this.exemptMember(message.member)) { return; }
+        if (message.member && this.exemptMember(message.member)) { return; }
         countMentions(message);
         if (checkUser(message)) {
             list[message.author.id].check = false;
