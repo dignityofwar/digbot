@@ -24,7 +24,7 @@ module.exports = class DiscordTransport extends Transport {
     log(info, callback) {
         setImmediate(() => this.emit('logged', info));
 
-        this.queue.sendMessage(info[MESSAGE], this.channel);
+        this.queue.send(info[MESSAGE], this.channel);
 
         callback();
     }

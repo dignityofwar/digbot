@@ -25,7 +25,7 @@ module.exports = {
         }
         users.push(mem.user.id);
         logger.debug(TAG, `New user count: ${users.length}`);
-        mem.sendFile('src/assets/pictures/welcome-banner.png')
+        mem.send({ files: [{ attachment: 'src/assets/pictures/welcome-banner.png' }] })
             .then(() => {
                 logger.debug(TAG, 'Message succesfully sent');
                 sendLot(mem);
@@ -83,7 +83,7 @@ function duplicationCheck(mem) {
 
 function sendLot(mem) {
     crashHandler.logEvent(TAG, 'sendLot');
-    mem.sendMessage(module.exports.message)
+    mem.send(module.exports.message)
         .then(() => {
             logger.info(TAG, `Sent welcome message to: ${mem.displayName}, ID: ${mem.user.id}`);
         })

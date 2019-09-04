@@ -28,7 +28,7 @@ module.exports = class ChannelCommand extends Command {
         if (action === 'create') {
             name = nameCheckCreate(name, type);
             if (name === false) {
-                await msg.channel.sendMessage(
+                await msg.channel.send(
                     'Sorry I can\'t make that channel, channel names have to be alphanumeric.',
                 )
                     .then(message => logger.info(TAG, `Sent message: ${message.content}`))
@@ -36,7 +36,7 @@ module.exports = class ChannelCommand extends Command {
                 return;
             }
             if (name.length < 2 || name.length > 100) {
-                await msg.channel.sendMessage('Sorry I can\'t make that channel, channel names have to be '
+                await msg.channel.send('Sorry I can\'t make that channel, channel names have to be '
                     + 'between 2 and 100 characters in length.')
                     .then(message => logger.info(TAG, `Sent message: ${message.content}`))
                     .catch(err => logger.warning(TAG, `Failed to send message, error: ${err}`));
@@ -55,7 +55,7 @@ module.exports = class ChannelCommand extends Command {
                     .then(() => logger.debug(TAG, 'Succesfully created voice channel'))
                     .catch(err => logger.warning(TAG, `Failed to create voice channel, error: ${err}`));
             }
-            await msg.channel.sendMessage(`The ${type} channel ${name} has been created`)
+            await msg.channel.send(`The ${type} channel ${name} has been created`)
                 .then(message => logger.info(TAG, `Sent message: ${message.content}`))
                 .catch(err => logger.warning(TAG, `Failed to send message ${err}`));
             return;
@@ -86,7 +86,7 @@ Messages form: '!channel action type name' Ex: '!channel create text Planetside2
 function duplicationCheck(name, type, msg) {
     for (const ch of msg.guild.channels) {
         if (name === ch[1].name && type === ch[1].type) {
-            msg.channel.sendMessage('Sorry I can\'t make that channel, we already have a temporary '
+            msg.channel.send('Sorry I can\'t make that channel, we already have a temporary '
                 + 'channel by that name')
                 .then(message => logger.info(TAG, `Sent message: ${message.content}`))
                 .catch(err => logger.warning(TAG, `Failed to send message, error: ${err}`));
@@ -99,7 +99,7 @@ function duplicationCheck(name, type, msg) {
 // Identifies and returns the action contained in the command
 function filterAction(msg) {
     if (msg.content.length < 9) {
-        msg.channel.sendMessage(help.detailsPass('channel'))
+        msg.channel.send(help.detailsPass('channel'))
             .then(message => logger.info(TAG, `Sent message: ${message.content}`))
             .catch(err => logger.warning(TAG, `Failed to send message, error: ${err}`));
         return false;
@@ -110,7 +110,7 @@ function filterAction(msg) {
     if (msg.content.substring(9).startsWith('delete')) {
         return 'delete';
     }
-    msg.channel.sendMessage('Sorry I don\'t understand that action, the action must be '
+    msg.channel.send('Sorry I don\'t understand that action, the action must be '
         + 'either *"create"* or *"delete"* in: *"!channel action type name"*. Example: '
         + '*"!channel create voice EVE Online"*')
         .then(message => logger.info(TAG, `Sent message: ${message.content}`))
@@ -137,7 +137,7 @@ function filterType(msg) {
     if (msg.content.substring(16).startsWith('voice')) {
         return 'voice';
     }
-    msg.channel.sendMessage('Sorry I don\'t understand that type, the type must be either '
+    msg.channel.send('Sorry I don\'t understand that type, the type must be either '
         + '*"create"* or *"delete"* in: "!channel action type name". Example: "!channel create voice EVE Online"')
         .then(message => logger.info(TAG, `Sent message: ${message.content}`))
         .catch(err => logger.warning(TAG, `Failed to send message, error: ${err}`));
@@ -154,7 +154,7 @@ function manDelete(msg, type, name) {
             }
         }
     }
-    msg.channel.sendMessage('Sorry I couldn\'t find a deletable channel by that name to delete, '
+    msg.channel.send('Sorry I couldn\'t find a deletable channel by that name to delete, '
         + 'be sure you spelt the channel\'s name correctly and you\'re specifying the right '
         + 'type of channel. Temp channels are deleted every 2 hours.')
         .then(message => logger.info(TAG, `Sent message: ${message.content}`))

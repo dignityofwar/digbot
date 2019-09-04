@@ -34,7 +34,7 @@ module.exports = {
             let relay = `Message from: ${msg.author.username}`;
             relay += `\nContent: ${msg.content.substring(7)}`;
             if (server.getChannel('staff') !== null && config.util.getEnv('NODE_ENV') !== 'testing') {
-                server.getChannel('staff').sendMessage(relay)
+                server.getChannel('staff').send(relay)
                     .then(() => logger.debug(TAG, 'Succesfully sent message to staff'))
                     .catch(err => logger.warning(TAG, `Failed to send message to staff, error: ${err}`));
             }
@@ -55,7 +55,7 @@ module.exports = {
             relay += `\nContent: ${msg.content.substring(12)}`;
 
             if (server.getChannel('developers') !== null && config.util.getEnv('NODE_ENV') !== 'testing') {
-                server.getChannel('developers').sendMessage(relay)
+                server.getChannel('developers').send(relay)
                     .then(() => logger.debug(TAG, 'Succesfully sent message to developers'))
                     .catch(err => logger.warning(TAG, `Failed to send message to developers, error: ${err}`));
             }

@@ -513,7 +513,7 @@ function searchForPlaylist(msg) {
 function sendMessageToChannel(channel, message, promise) {
     if (promise === true) {
         return new Promise((resolve, reject) => {
-            channel.sendMessage(message)
+            channel.send(message)
                 .then((botMessage) => {
                     logger.debug(TAG, `Succesfully sent message: ${message}`);
                     resolve(botMessage);
@@ -525,7 +525,7 @@ function sendMessageToChannel(channel, message, promise) {
         });
     }
 
-    return channel.sendMessage(message)
+    return channel.send(message)
         .then(() => {
             logger.debug(TAG, `Succesfully sent message: ${message}`);
         })

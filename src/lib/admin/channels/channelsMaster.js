@@ -45,7 +45,7 @@ module.exports = {
                 return true;
             }
             if (msg !== undefined) {
-                msg.channel.sendMessage('Sorry I can\'t delete a temporary channel when '
+                msg.channel.send('Sorry I can\'t delete a temporary channel when '
                     + 'people are still in it that would be quite rude.')
                     .then((message) => {
                         logger.info(TAG, `Sent message: ${message.content}`);
@@ -85,7 +85,7 @@ module.exports = {
     deleteChannel(channel, msg) {
         logger.info(TAG, `Deleted channel: ${channel.name}`);
         if (msg !== undefined) {
-            msg.channel.sendMessage(`The ${channel.type} channel ${channel.name} was `
+            msg.channel.send(`The ${channel.type} channel ${channel.name} was `
                 + 'succesfully deleted')
                 .then((message) => {
                     logger.info(TAG, `Sent message: ${message.content}`);
@@ -101,7 +101,7 @@ module.exports = {
 // In case the channel can't be deleted let the requester know and refuse the deletion
 function rejectCase(msg) {
     if (msg !== undefined) {
-        msg.channel.sendMessage('Sorry I can\'t delete that channel as it\'s not '
+        msg.channel.send('Sorry I can\'t delete that channel as it\'s not '
             + 'inactive, I only delete text channels where the last message was sent '
             + 'over 2 hours ago. They\'ll be automatically deleted after then.')
             .then((message) => {
