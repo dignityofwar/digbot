@@ -74,6 +74,8 @@ module.exports = class LoggerProvider extends ServiceProvider {
     errorHandler(error) {
         this.container.resolve('logger')
             .log('error', error instanceof Error ? error.stack : error.toString());
+
+        process.exit(1);
     }
 
     createTransport(transportConfig) {
