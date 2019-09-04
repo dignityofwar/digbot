@@ -1,7 +1,6 @@
 const config = require('config');
 const { asFunction } = require('awilix');
 const { Client } = require('discord.js');
-const { version } = require('../../../package');
 const ServiceProvider = require('../foundation/serviceprovider');
 
 const subBots = require('../sub-bots/sub-bots');
