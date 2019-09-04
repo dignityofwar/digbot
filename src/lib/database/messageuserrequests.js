@@ -18,7 +18,7 @@ module.exports = {
             /* FAIL RESPONSE NEEDED */
             return;
         }
-        member.sendMessage(received.content, { split: true })
+        member.send(received.content, { split: true })
             .then(() => {
                 logger.debug(TAG, `Succesfully sent message to ${member.displayName}`);
                 /* SUCCESS RESPONSE NEEDED */

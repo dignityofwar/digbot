@@ -17,7 +17,7 @@ module.exports = {
             /* FAIL RESPONSE NEEDED */
             return;
         }
-        channel.sendMessage(received.content, { split: true })
+        channel.send(received.content, { split: true })
             .then(() => {
                 logger.debug(TAG, `Succesfully sent message to ${channel.name}`);
                 /* SUCCESS RESPONSE NEEDED */

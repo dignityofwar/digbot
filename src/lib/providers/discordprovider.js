@@ -1,11 +1,9 @@
 const config = require('config');
 const { asFunction } = require('awilix');
 const { Client } = require('discord.js');
-const { version } = require('../../../package');
 const ServiceProvider = require('../foundation/serviceprovider');
 
 const subBots = require('../sub-bots/sub-bots');
-const server = require('../server/server');
 
 module.exports = class DiscordProvider extends ServiceProvider {
     /**
@@ -71,17 +69,8 @@ module.exports = class DiscordProvider extends ServiceProvider {
      *
      * @return {Promise<void>}
      */
-    async boot({ discordjsClient, logger }) {
+    async boot({ discordjsClient }) {
         await discordjsClient.login(config.get('token'));
-
-        if (server.getChannel('developers')) {
-            server.getChannel('developers')
-                .sendMessage(
-                    `DIGBot, reporting for duty! Environment: ${config.util.getEnv('NODE_ENV')}, Version: ${version}`,
-                )
-                .then(() => logger.log('info', 'Succesfully sent message'))
-                .catch(err => logger.log('error', `Failed to send message error: ${err}`));
-        }
 
         // TODO: Can be moved to ModeratorDispatcher or CommandDispatcher, we should probably introduce some throttle
         //   to replace this which retains memory when the bot crashes

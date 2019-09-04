@@ -27,7 +27,7 @@ module.exports = {
     execute(oldMember, newMember) {
         if (!newMember.roles.has(config.get('general.forcedPTTRoleID'))) { return false; }
         if (oldMember.roles.has(config.get('general.forcedPTTRoleID'))) { return false; }
-        newMember.sendMessage(`Hey ${newMember.displayName} ${message}`)
+        newMember.send(`Hey ${newMember.displayName} ${message}`)
             .then(() => {
                 logger.info(TAG, 'Detected member was muted and informed them why');
             })

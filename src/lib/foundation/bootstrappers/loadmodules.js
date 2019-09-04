@@ -1,4 +1,3 @@
-const { asClass } = require('awilix');
 const { capitalize } = require('lodash');
 const { join, relative } = require('path');
 
@@ -17,9 +16,6 @@ module.exports = class LoadModules {
             this.locations.map(glob => join(this.root, glob)),
             {
                 formatName: this.format.bind(this),
-                resolverOptions: {
-                    register: asClass,
-                },
             },
         );
     }
@@ -47,7 +43,6 @@ module.exports = class LoadModules {
      * @return {String}
      */
     format(name, { path }) {
-        // TODO: Probably want to change this more in line with the namespaces from php
         const splat = relative(join(process.cwd(), this.root), path)
             .split('/');
 

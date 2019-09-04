@@ -1,6 +1,7 @@
 const config = require('config');
 const { RESOLVER } = require('awilix');
 const Queue = require('bull');
+const { RichEmbed } = require('discord.js');
 
 const [SEND_JOB, UPDATE_JOB] = ['send', 'update'];
 
@@ -42,6 +43,10 @@ module.exports = class DiscordMessageQueue extends Queue {
      * @return {Promise}
      */
     workerSend({ data: { content, channel } }) {
+        if (content instanceof Object) {
+            content = new RichEmbed(content);
+        }
+
         return this.discordclient.channels.get(channel).send(content).then(({ id }) => id);
     }
 
@@ -54,6 +59,10 @@ module.exports = class DiscordMessageQueue extends Queue {
      * @return {Promise<string>}
      */
     async workerUpdate({ data: { content, channel, message } }) {
+        if (content instanceof Object) {
+            content = new RichEmbed(content);
+        }
+
         return (await this.discordclient.channels.get(channel).fetchMessage(message)).edit(content)
             .then(({ id }) => id);
     }

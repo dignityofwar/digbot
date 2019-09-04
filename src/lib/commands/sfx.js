@@ -106,7 +106,7 @@ function list(msg) {
         message += `\n!sfx ${effect} - ${sfx[effect].description}`;
     }
     if (message.length < 2000) {
-        msg.author.sendMessage(message)
+        msg.author.send(message)
             .then(() => {
                 logger.debug(TAG, 'Succesfully sent message');
             })
@@ -184,14 +184,14 @@ function play() {
                     logger.info(TAG, `Started playing: ${queue[0].effect} in ${queue[0].channelName}`);
                 });
                 dispatcher.on('error', (err) => {
-                    queue[0].textChannel.sendMessage('Error during playback, please try again');
+                    queue[0].textChannel.send('Error during playback, please try again');
                     logger.debug(TAG, `Error while playing ${queue[0].effect} effect: ${err}`);
                 });
             })
             .catch((err) => {
                 if (failing === false) {
                     crashHandler.logEvent(TAG, 'Bot unable to connect to channel');
-                    queue[0].textChannel.sendMessage('Error establishing connection, re-trying...')
+                    queue[0].textChannel.send('Error establishing connection, re-trying...')
                         .then(() => {
                             logger.debug(TAG, 'Succesfully sent message');
                         })
@@ -214,7 +214,7 @@ function play() {
 
         // Verify source is good
         if (verification[queue[0].effect] !== true) {
-            queue[0].textChannel.sendMessage(
+            queue[0].textChannel.send(
                 `The SFX *${queue[0].effect}* is currently unavailable, please try a different SFX`,
             )
                 .then(() => {
@@ -249,7 +249,7 @@ function play() {
                 });
                 connection.on('error', (err) => {
                     crashHandler.logEvent(TAG, `Bot connection error to channel: ${queue[0].channelName}`);
-                    queue[0].textChannel.sendMessage('Error with connection, please try again')
+                    queue[0].textChannel.send('Error with connection, please try again')
                         .then(() => {
                             logger.debug(TAG, 'Succesfully sent message');
                         })
@@ -270,7 +270,7 @@ function play() {
                 dispatcher.on('error', (err) => {
                     crashHandler.logEvent(TAG,
                         `Bot playback error: ${queue[0].effect} in ${queue[0].channelName} effect: ${err}`);
-                    queue[0].textChannel.sendMessage('Error during playback, please try again')
+                    queue[0].textChannel.send('Error during playback, please try again')
                         .then(() => {
                             logger.debug(TAG, 'Succesfully sent message');
                         })
@@ -282,7 +282,7 @@ function play() {
             .catch((err) => {
                 crashHandler.logEvent(TAG, 'Bot unable to connect to channel');
                 if (failing === false) {
-                    queue[0].textChannel.sendMessage('Error establishing connection, re-trying...')
+                    queue[0].textChannel.send('Error establishing connection, re-trying...')
                         .then(() => {
                             logger.debug(TAG, 'Succesfully sent message');
                         })
@@ -327,7 +327,7 @@ function release() {
 function sendMessageToChannel(channel, message, promise) {
     if (promise === true) {
         return new Promise((resolve, reject) => {
-            channel.sendMessage(message)
+            channel.send(message)
                 .then((botMessage) => {
                     logger.debug(TAG, `Succesfully sent message: ${message}`);
                     resolve(botMessage);
@@ -338,7 +338,7 @@ function sendMessageToChannel(channel, message, promise) {
                 });
         });
     }
-    return channel.sendMessage(message)
+    return channel.send(message)
         .then(() => {
             logger.debug(TAG, `Succesfully sent message: ${message}`);
         })

@@ -105,7 +105,11 @@ module.exports = {
         if (subBots === null) {
             subBots = _.mapValues(
                 config.get('subBots'),
-                subBot => Object.assign({}, { booted: false, busy: false }, subBot),
+                subBot => ({
+                    booted: false,
+                    busy: false,
+                    ...subBot,
+                }),
             );
         }
 
@@ -157,7 +161,7 @@ module.exports = {
             bot.on('ready', () => {
                 if (config.util.getEnv('NODE_ENV') !== 'production') {
                     bot.channels.get(config.get('channels.mappings.digbot'))
-                        .sendMessage('Sub bot reporting for duty')
+                        .send('Sub bot reporting for duty')
                         .then(() => {
                             logger.debug(TAG, 'Sub bot succesfully sent message');
                         })

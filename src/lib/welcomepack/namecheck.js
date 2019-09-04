@@ -50,7 +50,7 @@ module.exports = {
                     logger.warning(TAG, 'Failed attempt to change nickname of '
                         + `"${mem.displayName}" to "${name}", error: ${err}`);
                 });
-            mem.sendMessage(madLad)
+            mem.send(madLad)
                 .then(() => {
                     logger.debug(TAG, 'Successfully sent message to member');
                 })
@@ -63,14 +63,14 @@ module.exports = {
         if (/[^\w!'"£%^&()-=+_<>?\[\]{}$#~@`]/.test(name.substring(0, 3))) { // eslint-disable-line no-useless-escape
             logger.info(TAG, `${mem.displayName} was emplored to change their name`);
             // Emplore but do not force more sensible name
-            mem.sendMessage(emplore)
+            mem.send(emplore)
                 .then(() => {
                     logger.debug(TAG, 'Successfully sent message part 1 to member');
                 })
                 .catch((err) => {
                     logger.warning(TAG, `Failed to send message part 1, error: ${err}`);
                 });
-            mem.sendMessage(emplore2)
+            mem.send(emplore2)
                 .then(() => {
                     logger.debug(TAG, 'Successfully sent message part 2 to member');
                 })
