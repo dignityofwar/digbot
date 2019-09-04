@@ -2,8 +2,11 @@ const { isEmpty } = require('lodash');
 const { asFunction, asValue } = require('awilix');
 const { createLogger, format, transports: { Console: ConsoleTransport } } = require('winston');
 const config = require('config');
+
 const ServiceProvider = require('../foundation/serviceprovider');
-const DiscordTransport = require('../logger/discordtransport');
+
+const DiscordTransport = require('../logger/transports/discordtransport');
+const discordRichEmbed = require('../logger/utils/discordrichembedformat');
 
 module.exports = class LoggerProvider extends ServiceProvider {
     /**
@@ -14,7 +17,7 @@ module.exports = class LoggerProvider extends ServiceProvider {
             format.timestamp({
                 format: 'YYYY-MM-DD HH:mm:ss',
             }),
-            format.printf(info => `${info.timestamp} [${info.label || 'general'}] ${info.level}: ${info.message}`),
+            format.printf((info) => `${info.timestamp} [${info.label || 'general'}] ${info.level}: ${info.message}`),
         ]));
 
         this.container.register('loggerConsoleTransportFactory',
@@ -38,6 +41,7 @@ module.exports = class LoggerProvider extends ServiceProvider {
                 const opts = {
                     format: format.combine(
                         ...this.container.resolve('loggerDefaultFormat'),
+                        discordRichEmbed(),
                     ),
                     channelID,
                 };
@@ -84,7 +88,7 @@ module.exports = class LoggerProvider extends ServiceProvider {
             return this.container.resolve('loggerDiscordTransportFactory')(transportConfig.channelID,
                 transportConfig.level);
         default:
-            throw new Error(`Unkown log transport: ${transportConfig.transport}`);
+            throw new Error(`Unknown log transport: ${transportConfig.transport}`);
         }
     }
 };

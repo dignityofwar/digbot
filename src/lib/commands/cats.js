@@ -24,7 +24,7 @@ module.exports = class CatsCommand extends Command {
 
         const response = await request.respond({ embed: { image: { url: img } } });
 
-        return response.react('❤️');
+        return response.react('❤');
     }
 
     /**
