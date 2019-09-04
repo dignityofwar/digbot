@@ -22,7 +22,9 @@ module.exports = class CatsCommand extends Command {
     async execute(request) {
         const img = await this.getCat(this.wantsGif(request.content));
 
-        return request.respond({ embed: { image: { url: img } } });
+        const response = await request.respond({ embed: { image: { url: img } } });
+
+        return response.react('❤️');
     }
 
     /**
