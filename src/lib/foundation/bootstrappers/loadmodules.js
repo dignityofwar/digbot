@@ -13,7 +13,7 @@ module.exports = class LoadModules {
      */
     bootstrap({ app }) {
         app.loadModules(
-            this.locations.map((glob) => join(this.root, glob)),
+            this.locations.map(glob => join(this.root, glob)),
             {
                 formatName: this.format.bind(this),
             },

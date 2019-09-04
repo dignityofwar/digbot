@@ -17,7 +17,7 @@ module.exports = class LoggerProvider extends ServiceProvider {
             format.timestamp({
                 format: 'YYYY-MM-DD HH:mm:ss',
             }),
-            format.printf((info) => `${info.timestamp} [${info.label || 'general'}] ${info.level}: ${info.message}`),
+            format.printf(info => `${info.timestamp} [${info.label || 'general'}] ${info.level}: ${info.message}`),
         ]));
 
         this.container.register('loggerConsoleTransportFactory',

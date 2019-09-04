@@ -47,4 +47,4 @@ class DiscordRichEmbed {
     }
 }
 
-module.exports = (opts) => new DiscordRichEmbed({ opts });
+module.exports = opts => new DiscordRichEmbed({ opts });

@@ -20,6 +20,7 @@
     "no-useless-constructor": "off",
     "guard-for-in"          : "off",
     "no-restricted-syntax"  : "off",
-    "class-methods-use-this": "off"
+    "class-methods-use-this": "off",
+    "arrow-parens"          : ["error", "as-needed", {"requireForBlockBody": true}]
   }
 }
