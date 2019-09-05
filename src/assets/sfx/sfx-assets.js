@@ -57,7 +57,7 @@ module.exports = {
     },
     damn: {
         source: 'youtube',
-        link: 'https://www.youtube.com/watch?v=-nqM9s8Wxhk',
+        link: 'https://www.youtube.com/watch?v=zqy8sIPc1ug',
         options: { volume: 0.2 },
         description: 'Damn son where\'d you find this',
     },
@@ -75,7 +75,7 @@ module.exports = {
     },
     drums: {
         source: 'youtube',
-        link: 'https://www.youtube.com/watch?v=itAOGRiYRLI',
+        link: 'https://www.youtube.com/watch?v=VqaQDiqzNW0',
         options: { volume: 0.1 },
         description: 'drum roll',
     },
@@ -159,7 +159,7 @@ module.exports = {
     },
     shots: {
         source: 'youtube',
-        link: 'https://www.youtube.com/watch?v=c4E164juhMY',
+        link: 'https://www.youtube.com/watch?v=U76-3RQAHPg',
         options: { volume: 0.2 },
         description: 'Shots fired',
     },
@@ -181,12 +181,12 @@ module.exports = {
         options: { volume: 0.8 },
         description: 'Rick and Morty: Pull the trigger!',
     },
-    // triggering: {
-    //     source: 'youtube',
-    //     link: 'https://www.youtube.com/watch?v=7HoCKlNsolc',
-    //     options: {volume: 0.25},
-    //     description: 'H3H3 triggering effect, sounds hiddious'
-    // },
+    triggering: {
+        source: 'youtube',
+        link: 'https://www.youtube.com/watch?v=kZpwTDvRE7g',
+        options: { volume: 0.25 },
+        description: 'H3H3 triggering effect, sounds hiddious',
+    },
     triple: {
         source: 'youtube',
         link: 'https://www.youtube.com/watch?v=XlLbsTP0C_U',
