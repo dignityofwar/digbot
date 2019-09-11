@@ -9,7 +9,7 @@ module.exports = class QueueProvider extends ServiceProvider {
      */
     register() {
         this.container.register('redisClient',
-            asFunction(() => new Redis(config.get('services.queue.redis_url')))
+            asFunction(() => new Redis(config.get('database.redis.url')))
                 .singleton()
                 .disposer(redis => redis.disconnect()));
     }

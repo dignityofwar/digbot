@@ -1,7 +1,7 @@
 {
-  "showPerfStats": false,
+  "debug" : true,
 
-  "logger"       : {
+  "logger": {
     "level": "debug"
   }
 }
