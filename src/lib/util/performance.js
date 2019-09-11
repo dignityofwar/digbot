@@ -1,13 +1,11 @@
 const config = require('config');
 const { cpuUsage } = require('os-utils');
-const crashHandler = require('../crash-handling.js');
 const logger = require('../logger.js');
 
 const TAG = 'Performance';
 
 module.exports = {
     execute() {
-        crashHandler.logEvent(TAG, 'execute');
         Promise.all([
             this.getCpu(),
             this.getMemory(),

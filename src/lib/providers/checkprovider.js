@@ -2,19 +2,15 @@ const config = require('config');
 const ServiceProvider = require('../foundation/serviceprovider');
 
 const autodelete = require('../admin/channels/autodelete.js');
-const crashHandler = require('../crash-handling.js');
 const mentionSpam = require('../admin/antispam/mentionspam.js');
 const play = require('../commands/play.js');
 const sfx = require('../commands/sfx.js');
 const server = require('../server/server.js');
 
-const TAG = 'admin';
-
 module.exports = class CheckProvider extends ServiceProvider {
     async boot() {
         // Interval call auto delete to get rid of inactive temp channels
         setInterval(() => {
-            crashHandler.logEvent(TAG, 'autodelete check');
             if (server.getGuild(config.get('general.server')) === null) { return; }
             autodelete.execute(server.getGuild(config.get('general.server')));
         }, config.get('autoDeleteChannels'));
@@ -22,7 +18,6 @@ module.exports = class CheckProvider extends ServiceProvider {
         // Call 5 min admin checks
         // Note: DO NOT CHANGE INTERVAL LENGTH without also changing the events.check function
         setInterval(() => {
-            crashHandler.logEvent(TAG, 'fiveMinCheck');
             // events.check();
             // poll.check();
             mentionSpam.release();
@@ -30,7 +25,6 @@ module.exports = class CheckProvider extends ServiceProvider {
 
         // Call daily admin check
         setInterval(() => {
-            crashHandler.logEvent(TAG, 'dailycheck');
             if (server.getGuild(config.get('general.server')) === null) { return; } // Check server has been stored
             // prune();
             sfx.ready();

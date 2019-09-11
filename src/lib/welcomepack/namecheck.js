@@ -2,8 +2,7 @@
 
 // Check new members/updated members names and let them know if their name is not acceptable
 
-const crashHandler = require('../crash-handling.js');
-const logger = require('../logger.js');
+const logger = require('../logger');
 
 const TAG = 'namecheck';
 
@@ -31,7 +30,7 @@ const emplore2 = 'You can change your nickname by right-clicking on your usernam
 module.exports = {
     // Recieves guild member, check nickname if they have one else username
     execute(mem) {
-        crashHandler.logEvent(TAG, 'execute');
+        logger.event(TAG, 'execute');
         let name = mem.displayName;
         // Check if the first character of a members name is an "@" if so change their nickname for them
         if (/[@]/.test(name.substring(0, 1))) {

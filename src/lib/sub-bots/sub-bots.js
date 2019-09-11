@@ -8,8 +8,7 @@ const _ = require('lodash');
 const config = require('config');
 const Discord = require('discord.js');
 
-const crashHandler = require('../crash-handling.js');
-const logger = require('../logger.js');
+const logger = require('../logger');
 const server = require('../server/server.js');
 
 const TAG = 'subBots';
@@ -21,7 +20,7 @@ let retrying = false;
 module.exports = {
     // Logs out a sub bot, after it is no longer needed
     logout(bot) {
-        crashHandler.logEvent(TAG, 'logout');
+        logger.event(TAG, 'logout');
         currentBots -= 1;
         bot.destroy()
             .then(() => {
@@ -36,7 +35,7 @@ module.exports = {
                 logger.warning(TAG, `Sub bot ${bot.user.id}failed to log out, marking as busy for `
                     + '25 hours');
                 setTimeout(() => {
-                    crashHandler.logEvent(TAG, 'release setTimeout in logout()');
+                    logger.event(TAG, 'release setTimeout in logout()');
                     for (const x in subBots) {
                         if (subBots[x].id === bot.user.id) {
                             subBots[x].busy = false;
@@ -50,7 +49,7 @@ module.exports = {
 
     // Logs in a sub bot that isn't currently busy and passes it back
     passBot() {
-        crashHandler.logEvent(TAG, 'passBot');
+        logger.event(TAG, 'passBot');
         return new Promise((resolve, reject) => {
             if (currentBots >= config.get('subBotLimit')) {
                 logger.info(TAG, 'SubBot requested but maximum number logged on');
@@ -96,7 +95,7 @@ module.exports = {
 
     // Logs in all bots, should be done on ready and every 24 hours to keep them active
     ready() {
-        crashHandler.logEvent(TAG, 'ready');
+        logger.event(TAG, 'ready');
         if (!Object.keys(config.get('subBots')).length) {
             logger.info(TAG, 'SubBots feature disabled or no subBots on file');
             return false;
@@ -127,7 +126,7 @@ module.exports = {
                             + 'attempting to leave');
                         bot.channels.get(server.getGuild().members.get(bot.user.id).voiceChannel.id).leave();
                         setTimeout(() => {
-                            crashHandler.logEvent(TAG, '.then setTimeout in ready()');
+                            logger.event(TAG, '.then setTimeout in ready()');
                             bot.destroy()
                                 .then(() => {
                                     logger.debug(TAG, `Successfully logged out sub bot: ${subBots[x].id}`);
@@ -177,12 +176,12 @@ module.exports = {
 
 // If a bot fails to log in and out on ready, try to succesfully cycle the bots again
 function retryReady() {
-    crashHandler.logEvent(TAG, 'retryReady');
+    logger.event(TAG, 'retryReady');
     if (retrying) { return false; }
     retrying = true;
     logger.info(TAG, 'Ready function failed, retrying...');
     setTimeout(() => {
-        crashHandler.logEvent(TAG, 'setTimeout in retryReady()');
+        logger.event(TAG, 'setTimeout in retryReady()');
         retrying = false;
         module.exports.ready();
     }, 300000);

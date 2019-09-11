@@ -2,8 +2,7 @@
 
 // Module to control welcomepack sent to new users joining the server
 
-const crashHandler = require('../crash-handling.js');
-const logger = require('../logger.js');
+const logger = require('../logger');
 
 const TAG = 'welcomepack';
 
@@ -13,7 +12,7 @@ const users = [];
 module.exports = {
     // Checks if the user should recieve a welcome message, if so send one
     check(mem) {
-        crashHandler.logEvent(TAG, 'check');
+        logger.event(TAG, 'check');
         if (users.indexOf(mem.user.id) !== -1) {
             logger.info(TAG, `User: ${mem.user.id} re-joined server but they are already logged as a member`);
             return false;
@@ -82,7 +81,7 @@ function duplicationCheck(mem) {
 }
 
 function sendLot(mem) {
-    crashHandler.logEvent(TAG, 'sendLot');
+    logger.event(TAG, 'sendLot');
     mem.send(module.exports.message)
         .then(() => {
             logger.info(TAG, `Sent welcome message to: ${mem.displayName}, ID: ${mem.user.id}`);
