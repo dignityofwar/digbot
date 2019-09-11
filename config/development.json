@@ -2,6 +2,6 @@
   "showPerfStats": false,
 
   "logger"       : {
-    "level"     : "debug",
+    "level": "debug"
   }
 }
