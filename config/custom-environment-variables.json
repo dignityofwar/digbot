@@ -8,7 +8,9 @@
     "redis": {
       "url": "REDIS_URL"
     },
-    "mongo": "MONGO_URL"
+    "mongo": {
+      "url": "MONGO_URL"
+    }
   },
 
   "subBots"    : {
