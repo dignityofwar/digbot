@@ -16,9 +16,6 @@ module.exports = class DatabaseProvider extends ServiceProvider {
      * @return {Promise<void>}
      */
     async boot() {
-        await mongoose.connect(config.get('database.mongo.url', { useNewUrlParser: true }))
-            .catch(e => console.log('Fail', e));
-
-        console.log('Online');
+        await mongoose.connect(config.get('database.mongo.url', { useNewUrlParser: true }));
     }
 };
