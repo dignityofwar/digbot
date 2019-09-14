@@ -15,7 +15,15 @@ module.exports = class DatabaseProvider extends ServiceProvider {
     /**
      * @return {Promise<void>}
      */
-    async boot() {
-        await mongoose.connect(config.get('database.mongo.url', { useNewUrlParser: true }));
+    async boot({ logger }) {
+        await mongoose.connect(config.get('database.mongo.url'));
+
+        mongoose.connection.on('error', message => logger.error({
+            message,
+            label: 'mongoose',
+        }));
+
+        mongoose.connection.on('disconnected',
+            () => mongoose.connect(config.get('database.mongo.url')));
     }
 };

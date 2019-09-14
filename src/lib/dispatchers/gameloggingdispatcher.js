@@ -53,7 +53,7 @@ module.exports = class GameLoggingDispatcher extends Dispatcher {
      */
     async started(member) {
         if (member.presence.game) {
-            await GamePresence.update({
+            await GamePresence.updateOne({
                 guild: member.guild.id,
                 member: member.id,
                 game: member.presence.game.name,
@@ -72,7 +72,7 @@ module.exports = class GameLoggingDispatcher extends Dispatcher {
             let now = moment();
             now = now.isAfter(member.presence.game.timestamps.start) ? now : member.presence.game.timestamps.start;
 
-            await GamePresence.update({
+            await GamePresence.updateOne({
                 guild: member.guild.id,
                 member: member.id,
                 game: member.presence.game.name,
