@@ -142,7 +142,7 @@ function play() {
 
     // If sfx is local file
     if (sfx[queue[0].effect].source === 'local') {
-        const file = config.get('general.root') + sfx[queue[0].effect].path;
+        const file = `../../../${sfx[queue[0].effect].path}`;
         const { options } = sfx[queue[0].effect];
         queue[0].voiceChannel.join()
             .then((connection) => {

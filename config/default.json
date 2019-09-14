@@ -11,6 +11,9 @@
   "database"                : {
     "redis": {
       "url": "redis://127.0.0.1:6379"
+    },
+    "mongo": {
+      "url": "mongodb://127.0.0.1:27017/digbot"
     }
   },
 
@@ -30,10 +33,7 @@
     "server"                 : "",
     "staffRoleID"            : "",
     "superMuteRoleID"        : "",
-    "leaderRoles"            : [],
-    "cpuNotificationLimit"   : 100,
-    "memoryNotificationLimit": 200,
-    "root"                   : ""
+    "leaderRoles"            : []
   },
 
   "antispamCommandTick"     : 300000,

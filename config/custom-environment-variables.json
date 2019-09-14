@@ -7,16 +7,12 @@
   "database"   : {
     "redis": {
       "url": "REDIS_URL"
-    }
+    },
+    "mongo": "MONGO_URL"
   },
 
   "subBots"    : {
     "__name"  : "SUBBOTS_CONFIG",
     "__format": "json"
-  },
-
-  "general"    : {
-    "port": "DIGBOT_PORT",
-    "root": "DIGBOT_ROOT"
   }
 }

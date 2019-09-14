@@ -35,61 +35,14 @@
     "leaderRoles"        : [
       ""
     ],
-    "root"               : ""
   },
 
   "channels"         : {
     "mappings" : {
-      "chitChatVoice": "",
       "developers"   : "",
       "digbot"       : "",
-      "digBotLog"    : "",
-      "events"       : "",
       "general"      : "",
-      "herebedragons": "",
-      "staff"        : "",
-      "streams"      : "",
-      "ps2dig"       : ""
-    },
-    "positions": {
-      "text" : {
-        "stellaris": {
-          "id"      : "",
-          "name"    : "stellaris",
-          "position": 1
-        }
-      },
-      "voice": {
-        "afk": {
-          "id"      : "",
-          "name"    : "💤 AFK",
-          "position": 100,
-          "comment": "Afk Voice channel is always required"
-        }
-      }
-    }
-  },
-
-  "communityGames"   : {
-    "PS2": {
-      "name"          : "Planetside 2",
-      "roleids"       : [
-        ""
-      ],
-      "officers"      : [
-        ""
-      ],
-      "primaryChannel": ""
-    }
-  },
-
-  "recreationalGames": {
-    "Stellaris": {
-      "name"          : "Stellaris",
-      "roleids"       : [
-        ""
-      ],
-      "primaryChannel": ""
+      "staff"        : ""
     }
   }
 }
