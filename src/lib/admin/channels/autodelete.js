@@ -2,7 +2,6 @@
 
 const logger = require('../../logger.js');
 const channels = require('./channelsMaster.js');
-const hardcode = require('./hardcodeevents.js');
 
 const TAG = 'Ch Auto Delete';
 
@@ -15,14 +14,6 @@ module.exports = {
             if (ch[1].name.endsWith('-t-')) {
                 count++;
                 if ((Date.now() - Date.parse(ch[1].createdAt)) > 300000) {
-                    if (channels.deleteInactive(ch[1])) {
-                        deleted++;
-                    }
-                }
-            }
-            if (ch[1].name.endsWith('-e-')) {
-                count++;
-                if ((Date.now() - Date.parse(ch[1].createdAt)) > hardcode.length(ch[1])) {
                     if (channels.deleteInactive(ch[1])) {
                         deleted++;
                     }

@@ -1,4 +1,5 @@
 const { RESOLVER } = require('awilix');
+const { RichEmbed } = require('discord.js');
 const Command = require('./foundation/command');
 
 module.exports = class TriviaCommand extends Command {
@@ -23,19 +24,15 @@ module.exports = class TriviaCommand extends Command {
             this.jservice.random(),
         ]);
 
-        const content = {
-            embed: {
-                title: trivia.question,
-                description: trivia.answer,
-                footer: {
-                    text: `${trivia.id} | ${trivia.category.title}`,
-                },
-            },
-        };
+        const content = new RichEmbed()
+            .setColor(4650701)
+            .setTitle(trivia.question)
+            .setDescription(`||${trivia.answer}||`)
+            .setFooter(`${trivia.id} | ${trivia.category.title}`);
 
         await this.queue.updateMessage(content, reply.channel.id, reply.id, { delay: this.revealDelay * 1000 });
 
-        content.embed.description = 'I will show the answer shortly.';
+        content.setDescription('I will show the answer shortly.');
 
         return request.respond(content);
     }

@@ -9,7 +9,7 @@ global.app = app;
 
 kernel.run()
     .then(() => {
-        app.resolve('logger').log('info', {
+        app.resolve('logger').info({
             message: `DigBot started. NODE_ENV=${config.util.getEnv('NODE_ENV')}, VERSION=${version}`,
             label: 'kernel',
         });

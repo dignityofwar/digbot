@@ -1,16 +1,20 @@
 {
-  "token"     : "DISCORD_API_TOKEN",
-  "youtubeKey": "YOUTUBE_DATA_API_KEY",
+  "token"      : "DISCORD_API_TOKEN",
+  "youtubeKey" : "YOUTUBE_DATA_API_KEY",
 
-  "subBotLimit" : "SUBBOTS_LIMIT",
+  "subBotLimit": "SUBBOTS_LIMIT",
 
-  "subBots"   : {
-    "__name"  : "SUBBOTS_CONFIG",
-    "__format": "json"
+  "database"   : {
+    "redis": {
+      "url": "REDIS_URL"
+    },
+    "mongo": {
+      "url": "MONGO_URL"
+    }
   },
 
-  "general"   : {
-    "port": "DIGBOT_PORT",
-    "root": "DIGBOT_ROOT"
+  "subBots"    : {
+    "__name"  : "SUBBOTS_CONFIG",
+    "__format": "json"
   }
 }

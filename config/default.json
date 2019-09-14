@@ -1,5 +1,5 @@
 {
-  "showPerfStats"           : false,
+  "debug"                   : false,
 
   "botUserID"               : "",
   "subBotLimit"             : 5,
@@ -8,9 +8,12 @@
   "token"                   : "",
   "youtubeKey"              : "",
 
-  "services"                : {
-    "queue": {
-      "redis_url": "redis://redis:6379"
+  "database"                : {
+    "redis": {
+      "url": "redis://127.0.0.1:6379"
+    },
+    "mongo": {
+      "url": "mongodb://127.0.0.1:27017/digbot"
     }
   },
 
@@ -30,10 +33,7 @@
     "server"                 : "",
     "staffRoleID"            : "",
     "superMuteRoleID"        : "",
-    "leaderRoles"            : [],
-    "cpuNotificationLimit"   : 100,
-    "memoryNotificationLimit": 200,
-    "root"                   : ""
+    "leaderRoles"            : []
   },
 
   "antispamCommandTick"     : 300000,
@@ -49,18 +49,18 @@
   "textInactive"            : 7200000,
 
   "channels"                : {
-    "mappings" : {
-      "developers"   : "",
-      "digbot"       : "",
-      "general"      : "",
-      "staff"        : ""
+    "mappings": {
+      "developers": "",
+      "digbot"    : "",
+      "general"   : "",
+      "staff"     : ""
     }
   },
 
   "features"                : {
-    "disableMentionSpam"         : false,
-    "modularChannelSystem"       : false,
-    "sfx"                        : true,
-    "play"                       : true
+    "disableMentionSpam"  : false,
+    "modularChannelSystem": false,
+    "sfx"                 : true,
+    "play"                : true
   }
 }

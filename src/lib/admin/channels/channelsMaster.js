@@ -76,7 +76,7 @@ module.exports = {
                 rejectCase(msg);
             }
         } else {
-            logger.error(TAG, `Channel.type neither text nor voice, type: ${channel.type}`);
+            throw new Error(`${TAG}: Channel.type neither text nor voice, type: ${channel.type}`);
         }
         return false;
     },

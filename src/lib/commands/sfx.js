@@ -3,8 +3,7 @@ const { google } = require('googleapis');
 const yt = require('ytdl-core');
 
 const Command = require('./foundation/command');
-const crashHandler = require('../crash-handling.js');
-const logger = require('../logger.js');
+const logger = require('../logger');
 const server = require('../server/server.js');
 const sfx = require('../../assets/sfx/sfx-assets.js');
 
@@ -59,7 +58,7 @@ module.exports = class SfxCommand extends Command {
                     queueAdd(msg, botMessage);
                 })
                 .catch(() => {
-                    crashHandler.logEvent(TAG, 'Queue failed to add due to failed promise (busy)');
+                    logger.event(TAG, 'Queue failed to add due to failed promise (busy)');
                     sendMessageToChannel(msg.channel, 'Sorry, the sfx encountered an error, please try again.');
                 });
             return true;
@@ -74,7 +73,7 @@ module.exports = class SfxCommand extends Command {
                 play();
             })
             .catch(() => {
-                crashHandler.logEvent(TAG, 'Queue failed to add due to failed promise');
+                logger.event(TAG, 'Queue failed to add due to failed promise');
                 sendMessageToChannel(msg.channel, 'Sorry, the sfx encountered an error, please try again.');
             });
         return true;
@@ -124,7 +123,7 @@ function list(msg) {
 
 // Called when there is a verified sfx to be played, all info required is passed via the queue
 function play() {
-    crashHandler.logEvent(TAG, 'play');
+    logger.event(TAG, 'play');
     if (server.getReady() === false) {
         logger.debug(TAG, 'Server not ready, setting play on timeout');
         setTimeout(() => {
@@ -143,14 +142,14 @@ function play() {
 
     // If sfx is local file
     if (sfx[queue[0].effect].source === 'local') {
-        const file = config.get('general.root') + sfx[queue[0].effect].path;
+        const file = `../../../${sfx[queue[0].effect].path}`;
         const { options } = sfx[queue[0].effect];
         queue[0].voiceChannel.join()
             .then((connection) => {
-                crashHandler.logEvent(TAG, 'Bot Connected to channel');
+                logger.event(TAG, 'Bot Connected to channel');
                 logger.debug(TAG, `Connected to channel: ${queue[0].channelName}`);
                 connection.on('disconnect', () => {
-                    crashHandler.logEvent(TAG, 'Bot Disconnected from channel');
+                    logger.event(TAG, 'Bot Disconnected from channel');
                     logger.debug(TAG, `Disconected from channel: '${queue[0].channelName}`);
                     queue[0].botMessage.delete()
                         .then(() => {
@@ -180,7 +179,7 @@ function play() {
                         });
                 });
                 dispatcher.on('start', () => {
-                    crashHandler.logEvent(TAG, 'Bot started playing');
+                    logger.event(TAG, 'Bot started playing');
                     logger.info(TAG, `Started playing: ${queue[0].effect} in ${queue[0].channelName}`);
                 });
                 dispatcher.on('error', (err) => {
@@ -190,7 +189,7 @@ function play() {
             })
             .catch((err) => {
                 if (failing === false) {
-                    crashHandler.logEvent(TAG, 'Bot unable to connect to channel');
+                    logger.event(TAG, 'Bot unable to connect to channel');
                     queue[0].textChannel.send('Error establishing connection, re-trying...')
                         .then(() => {
                             logger.debug(TAG, 'Succesfully sent message');
@@ -231,9 +230,9 @@ function play() {
         const { options } = sfx[queue[0].effect];
         queue[0].voiceChannel.join()
             .then((connection) => {
-                crashHandler.logEvent(TAG, `Bot joined channel: ${queue[0].channelName}`);
+                logger.event(TAG, `Bot joined channel: ${queue[0].channelName}`);
                 connection.on('disconnect', () => {
-                    crashHandler.logEvent(TAG, `Bot disconnected from channel: ${queue[0].channelName}`);
+                    logger.event(TAG, `Bot disconnected from channel: ${queue[0].channelName}`);
                     queue[0].botMessage.delete()
                         .then(() => {
                             logger.info(TAG, 'Succesfully finished playing and deleted message');
@@ -248,7 +247,7 @@ function play() {
                     playEnd(true);
                 });
                 connection.on('error', (err) => {
-                    crashHandler.logEvent(TAG, `Bot connection error to channel: ${queue[0].channelName}`);
+                    logger.event(TAG, `Bot connection error to channel: ${queue[0].channelName}`);
                     queue[0].textChannel.send('Error with connection, please try again')
                         .then(() => {
                             logger.debug(TAG, 'Succesfully sent message');
@@ -261,14 +260,14 @@ function play() {
                 const dispatcher = connection.playStream(stream, options);
                 dispatcher.on('end', () => {
                     queue[0].voiceChannel.leave();
-                    crashHandler.logEvent(TAG, `Bot left channel: ${queue[0].channelName}`);
+                    logger.event(TAG, `Bot left channel: ${queue[0].channelName}`);
                 });
                 dispatcher.on('start', () => {
-                    crashHandler.logEvent(TAG,
+                    logger.event(TAG,
                         `Bot started playing: ${queue[0].effect} in ${queue[0].channelName}`);
                 });
                 dispatcher.on('error', (err) => {
-                    crashHandler.logEvent(TAG,
+                    logger.event(TAG,
                         `Bot playback error: ${queue[0].effect} in ${queue[0].channelName} effect: ${err}`);
                     queue[0].textChannel.send('Error during playback, please try again')
                         .then(() => {
@@ -280,7 +279,7 @@ function play() {
                 });
             })
             .catch((err) => {
-                crashHandler.logEvent(TAG, 'Bot unable to connect to channel');
+                logger.event(TAG, 'Bot unable to connect to channel');
                 if (failing === false) {
                     queue[0].textChannel.send('Error establishing connection, re-trying...')
                         .then(() => {
@@ -312,13 +311,13 @@ function playEnd(success) {
         busy = false;
     }
     if (failing > 3) {
-        logger.error(TAG, 'Fail cascade detected, restarting...');
+        throw new Error(`${TAG}: Fail cascade detected, restarting...`);
     }
 }
 
 // Failsafe function called after 30s timeout, reset busy status and leave channel to play next in queue
 function release() {
-    crashHandler.logEvent(TAG, 'release');
+    logger.event(TAG, 'release');
     queue[0].voiceChannel.leave();
     logger.warning(TAG, 'SFX play timed out');
 }

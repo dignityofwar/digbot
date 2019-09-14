@@ -5,8 +5,7 @@ const ytdl = require('ytdl-core');
 const Command = require('./foundation/command');
 
 const antiDuplicate = require('../util/antiduplicate.js');
-const crashHandler = require('../crash-handling.js');
-const logger = require('../logger.js');
+const logger = require('../logger');
 const playAssets = require('../../assets/music/play-assets.js');
 const server = require('../server/server.js');
 const subBots = require('../sub-bots/sub-bots.js');
@@ -288,14 +287,14 @@ function play() {
     if (server.getReady() === false) {
         logger.debug(TAG, 'Server not ready, setting play on timeout');
         setTimeout(() => {
-            crashHandler.logEvent(TAG, 'server not ready setTimeout in play()');
+            logger.event(TAG, 'server not ready setTimeout in play()');
             logger.debug(TAG, 'Calling play again');
             play();
         }, 10000);
         return false;
     }
     logger.info(TAG, 'Play function called');
-    crashHandler.logEvent(TAG, 'play');
+    logger.event(TAG, 'play');
 
     for (const x in playing) {
         if (playing[x].bot && playing[x].connection && !playing[x].busy) {
@@ -322,7 +321,7 @@ function play() {
                 connection.on('error', (err) => {
                     kill(x);
                     setTimeout(() => {
-                        crashHandler.logEvent(TAG, 'error setTimeout in play()');
+                        logger.event(TAG, 'error setTimeout in play()');
                         play();
                     }, 15000);
                     logger.warning(TAG, `Error from connection: ${err}`);
@@ -337,7 +336,7 @@ function play() {
                     .leave();
                 kill(x);
                 setTimeout(() => {
-                    crashHandler.logEvent(TAG, 'catch setTimeout in play()');
+                    logger.event(TAG, 'catch setTimeout in play()');
                     play();
                 }, 15000);
             });
@@ -361,7 +360,7 @@ function playNext(x) {
     }
     if (server.getReady() === false) {
         setTimeout(() => {
-            crashHandler.logEvent(TAG, 'server not ready setTimeout in playNext()');
+            logger.event(TAG, 'server not ready setTimeout in playNext()');
             playNext(x);
         }, 3000);
         return false;
@@ -369,10 +368,10 @@ function playNext(x) {
     logger.debug(TAG,
         `Play next called for channel: ${server.getGuild().channels.get(x).name} with bot ${playing[x].bot.user.id}`);
     if (!playing[x].bot) {
-        logger.error(TAG, 'playNext() called but no sub bot was provided');
+        throw new Error(`${TAG}: playNext() called but no sub bot was provided`);
     }
     if (!playing[x].connection) {
-        logger.error(TAG, 'playNext() called but no connection was provided');
+        throw new Error(`${TAG}: playNext() called but no connection was provided`);
     }
 
     let source = '';
@@ -539,7 +538,7 @@ function setup(msg, command, target, youtubePlaylist) {
     const channel = msg.member.voiceChannel.id;
     if (playing[channel] && playing[channel].busy) {
         setTimeout(() => {
-            crashHandler.logEvent(TAG, 'channel object busy setTimeout in setup()');
+            logger.event(TAG, 'channel object busy setTimeout in setup()');
             setup(msg, command, target);
         }, 2000);
         return;
@@ -577,7 +576,7 @@ function setup(msg, command, target, youtubePlaylist) {
                         .leave();
                     kill(channel);
                     setTimeout(() => {
-                        crashHandler.logEvent(TAG, 'if bot already in channel setTimeout in setup()');
+                        logger.event(TAG, 'if bot already in channel setTimeout in setup()');
                         play();
                     }, 3000);
                 } else {
@@ -594,11 +593,11 @@ function setup(msg, command, target, youtubePlaylist) {
                     logger.info(TAG, `Sub bot request rejected, retrying... Error: ${err}`);
                     playing[channel].busy = false;
                     setTimeout(() => {
-                        crashHandler.logEvent(TAG, 'catch setTimeout in setup()');
+                        logger.event(TAG, 'catch setTimeout in setup()');
                         setup(msg, command, target);
                     }, 5000);
                 } else {
-                    logger.error(TAG, `Sub bot encountered an error, ${err}`);
+                    throw new Error(`${TAG}: Sub bot encountered an error, ${err}`);
                 }
             });
     } else {

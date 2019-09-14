@@ -50,7 +50,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
 
         // Handle DMs
         // if (message.channel.type === 'dm' || message.channel.type === 'group') {
-        //     crashHandler.logEvent(TAG, 'directMessage');
+        //     logger.event(TAG, 'directMessage');
         //     directMessage.handle(message);
         //     return;
         // }
