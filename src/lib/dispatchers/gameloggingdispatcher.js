@@ -53,12 +53,13 @@ module.exports = class GameLoggingDispatcher extends Dispatcher {
      */
     async started(member) {
         if (member.presence.game) {
-            await GamePresence.updateOne({
+            await GamePresence.create({
                 guild: member.guild.id,
                 member: member.id,
                 game: member.presence.game.name,
-                start: member.presence.game.timestamps.start,
-            }, { end: null }, { upsert: true });
+                start: Date.now(),
+                end: null,
+            });
         }
     }
 
@@ -69,15 +70,12 @@ module.exports = class GameLoggingDispatcher extends Dispatcher {
      */
     async ended(member) {
         if (member.presence.game) {
-            let now = moment();
-            now = now.isAfter(member.presence.game.timestamps.start) ? now : member.presence.game.timestamps.start;
-
             await GamePresence.updateOne({
                 guild: member.guild.id,
                 member: member.id,
                 game: member.presence.game.name,
-                start: member.presence.game.timestamps.start,
-            }, { end: now }, { upsert: true });
+                end: null,
+            }, { end: Date.now() });
         }
     }
 };
