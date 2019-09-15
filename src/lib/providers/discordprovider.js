@@ -13,50 +13,23 @@ module.exports = class DiscordProvider extends ServiceProvider {
         this.container.register('discordjsClient', asFunction(({ logger }) => {
             const client = new Client();
 
-            client.on('ready', () => {
-                logger.log('info', {
-                    message: 'Connected to Discord',
-                    label: 'discordjsClient',
-                });
+            const log = message => ({
+                message,
+                label: 'discordjsClient',
             });
 
-            client.on('reconnecting', () => {
-                // Log level is warn so it will be logged to discord
-                logger.log('warn', {
-                    message: 'Reconnected to Discord',
-                    label: 'discordjsClient',
-                });
-            });
+            client.on('ready', () => logger.info(log('Connected to Discord')));
 
-            client.on('disconnect', (event) => {
-                // Log level is warn so it will be logged to discord
-                // TODO: Log level should depend on event.code
-                logger.log('warn', {
-                    message: `Disconnected from Discord(code ${event.code}): ${event.reason}`,
-                    label: 'discordjsClient',
-                });
-            });
+            client.on('reconnecting', () => logger.info(log('Reconnected to Discord')));
 
-            client.on('debug', (info) => {
-                logger.log('debug', {
-                    message: info,
-                    label: 'discordjsClient',
-                });
-            });
+            client.on('disconnect',
+                event => logger.warn(log(`Disconnected from Discord(code ${event.code}): ${event.reason}`)));
 
-            client.on('warn', (warning) => {
-                logger.log('warn', {
-                    message: warning,
-                    label: 'discordjsClient',
-                });
-            });
+            client.on('debug', message => logger.debug(log(message)));
 
-            client.on('error', (error) => {
-                logger.log('error', {
-                    message: error.message,
-                    label: 'discordjsClient',
-                });
-            });
+            client.on('warn', message => logger.warn(log(message)));
+
+            client.on('error', ({ message }) => logger.error(log(message)));
 
             return client;
         })
@@ -72,8 +45,6 @@ module.exports = class DiscordProvider extends ServiceProvider {
     async boot({ discordjsClient }) {
         await discordjsClient.login(config.get('token'));
 
-        // TODO: Can be moved to ModeratorDispatcher or CommandDispatcher, we should probably introduce some throttle
-        //   to replace this which retains memory when the bot crashes
-        subBots.ready();
+        setImmediate(subBots.ready);
     }
 };

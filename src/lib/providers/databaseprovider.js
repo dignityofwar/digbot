@@ -17,7 +17,7 @@ module.exports = class DatabaseProvider extends ServiceProvider {
      *
      * @return {Promise<void>}
      */
-    async boot({ logger }) {
+    async boot({ kernel, logger }) {
         await mongoose.connect(config.get('database.mongo.url'));
 
         mongoose.connection.on('error', message => logger.error({
@@ -31,7 +31,7 @@ module.exports = class DatabaseProvider extends ServiceProvider {
                 label: 'mongoose',
             });
 
-            process.exit(-1);
+            kernel.terminate(1);
         });
     }
 };

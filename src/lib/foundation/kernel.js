@@ -4,6 +4,13 @@ const LoadModules = require('./bootstrappers/loadmodules');
 const RegisterProviders = require('./bootstrappers/registerproviders');
 const BootProviders = require('./bootstrappers/bootproviders');
 
+const states = {
+    STATE_OFFLINE: 0,
+    STATE_STARTING: 1,
+    STATE_RUNNING: 2,
+    STATE_TERMINATING: 3,
+};
+
 module.exports = class Kernel extends EventEmitter {
     /**
      * @param app
@@ -13,6 +20,7 @@ module.exports = class Kernel extends EventEmitter {
 
         this.app = app;
 
+        this.state = states.STATE_OFFLINE;
         this.dispatchers = [];
     }
 
@@ -20,18 +28,19 @@ module.exports = class Kernel extends EventEmitter {
      * Bootstraps and starts the bot
      */
     async run() {
+        this.state = states.STATE_STARTING;
+
         try {
             await this.bootstrap();
 
             await this.startDispatchers();
         } catch (e) {
-            // TODO: Errors are not printed to the console, probably because the logger is not initialised
             console.log(e instanceof Error ? e.stack : e.toString()); // eslint-disable-line no-console
 
-            await this.terminate();
-
-            throw e;
+            await this.terminate(1);
         }
+
+        this.state = states.STATE_RUNNING;
 
         return this;
     }
@@ -87,16 +96,22 @@ module.exports = class Kernel extends EventEmitter {
     /**
      * Safely terminates the bot
      */
-    async terminate() {
-        this.app.resolve('logger')
-            .log('info', {
-                message: 'Terminating',
-                label: 'kernel',
-            });
+    async terminate(code) {
+        if (this.state !== states.STATE_TERMINATING) {
+            this.state = states.STATE_TERMINATING;
 
-        await this.stopDispatchers();
+            this.app.resolve('logger')
+                .log('info', {
+                    message: 'Terminating',
+                    label: 'kernel',
+                });
 
-        await this.app.dispose();
+            await this.stopDispatchers();
+
+            await this.app.dispose();
+
+            process.exit(code || 0);
+        }
     }
 
     /**

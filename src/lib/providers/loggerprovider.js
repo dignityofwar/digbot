@@ -66,20 +66,20 @@ module.exports = class LoggerProvider extends ServiceProvider {
             .singleton());
     }
 
-    async boot({ logger }) {
+    async boot({ kernel, logger }) {
         for (const transportConfig of config.get('logger.transports')) {
             logger.add(this.createTransport(transportConfig));
         }
 
-        process.prependListener('uncaughtException', this.errorHandler.bind(this));
-        process.prependListener('unhandledRejection', this.errorHandler.bind(this));
+        process.prependListener('uncaughtException', this.errorHandler.bind(this, kernel));
+        process.prependListener('unhandledRejection', this.errorHandler.bind(this, kernel));
     }
 
-    errorHandler(error) {
+    errorHandler(kernel, error) {
         this.container.resolve('logger')
             .log('error', error instanceof Error ? error.stack : error.toString());
 
-        process.exit(1);
+        kernel.terminate(1);
     }
 
     createTransport(transportConfig) {

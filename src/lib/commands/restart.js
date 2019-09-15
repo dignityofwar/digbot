@@ -4,12 +4,13 @@ module.exports = class RestartCommand extends Command {
     /**
      * @param logger
      */
-    constructor({ logger }) {
+    constructor({ kernel, logger }) {
         super();
 
         this.name = 'restart';
         this.special = true;
 
+        this.kernel = kernel;
         this.logger = logger;
     }
 
@@ -18,18 +19,14 @@ module.exports = class RestartCommand extends Command {
      * @return {Promise<void>}
      */
     async execute(request) {
-        // TODO: Add guard that only admins or owners can restart the bot
-
         this.logger.log('info', {
             message: `Restarting the bot requested by ${request.message.author.name}`,
             label: '!restart',
         });
 
-        request.respond('See you in a bit.');
+        await request.respond('See you in a bit.');
 
-        setTimeout(() => {
-            process.exit(0);
-        }, 2000);
+        this.kernel.terminate(0);
     }
 
     /**

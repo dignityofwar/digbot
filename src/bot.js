@@ -15,14 +15,14 @@ kernel.run()
         });
 
         process.on('SIGTERM', async () => {
-            await kernel.terminate();
+            await kernel.terminate(1);
         });
 
         process.on('SIGINT', async () => {
-            await kernel.terminate();
+            await kernel.terminate(1);
         });
 
         process.on('exit', async () => {
-            await kernel.terminate();
+            await kernel.terminate(0);
         });
     });
