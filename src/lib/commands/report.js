@@ -70,6 +70,8 @@ module.exports = class ReportCommand extends Command {
             (acc, { game, memberCount }) => `${acc}\n${game}: ${memberCount}`,
             `Report\n${start.format('ll')}-${end.format('ll')}\n`,
         ));
+
+        await request.respond('I send you a PM');
     }
 
     /**
@@ -84,6 +86,6 @@ module.exports = class ReportCommand extends Command {
      * @return {string}
      */
     help() {
-        return 'Restarts the bot (Please do not use unless the bot is spazzing the fuck out)';
+        return 'Generates a report and send it as a PM(last month). !report week give a report for last week.';
     }
 };
