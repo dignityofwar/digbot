@@ -16,7 +16,7 @@ module.exports = class ReportCommand extends Command {
 
         this.throttle = {
             attempts: 2,
-            decay: 15,
+            decay: 5,
             peruser: false,
         };
     }
