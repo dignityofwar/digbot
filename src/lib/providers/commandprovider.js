@@ -31,6 +31,7 @@ module.exports = class QueueProvider extends ServiceProvider {
             'commandsPlay',
             'commandsPretend',
             'commandsPs2dig',
+            'commandsReport',
             'commandsRestart',
             'commandsSfx',
             'commandsStarted',
