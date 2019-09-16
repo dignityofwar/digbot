@@ -1,4 +1,3 @@
-const moment = require('moment');
 const Dispatcher = require('../foundation/dispatcher');
 
 const GamePresence = require('../database/gamepresence');

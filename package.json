@@ -1,6 +1,6 @@
 {
   "name": "digbot",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "DIGBot is a custom made discord bot for the DIG gaming community",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,8 @@
     "docker:stop": "docker-compose down",
     "up": "npm run docker:start && npm run docker:logs",
     "down": "npm run docker:stop",
-    "test-nyc": "nyc mocha"
+    "test-nyc": "nyc mocha",
+    "eslint": "npx eslint . --ext .js --ignore-pattern node_modules/"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,7 @@
     "bull": "~3.10.0",
     "config": "^3.2.2",
     "discord.js": "~11.5.1",
-    "googleapis": "^42.0.0",
+    "googleapis": "^43.0.0",
     "ioredis": "^4.14.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
