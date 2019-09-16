@@ -48,13 +48,6 @@ module.exports = class CommandDispatcher extends Dispatcher {
 
         if (message.author.bot || message.system) { return; }
 
-        // Handle DMs
-        // if (message.channel.type === 'dm' || message.channel.type === 'group') {
-        //     logger.event(TAG, 'directMessage');
-        //     directMessage.handle(message);
-        //     return;
-        // }
-
         if (!config.get('commandChannels')
             .includes(message.channel.id)) { return; }
 
@@ -65,14 +58,10 @@ module.exports = class CommandDispatcher extends Dispatcher {
         if (command) {
             const request = new Request(command, message);
 
-            if (
-                command.special
-                && message.member.id !== message.guild.ownerID
-                && !intersection(message.member.roles,
-                    config.has(`guilds.${message.guild.id}.adminRoles`)
-                        ? config.get(`guilds.${message.guild.id}.adminRoles`)
-                        : []).length
-            ) { return; }
+            if (!this.canExecuteCommand(command, request)) {
+                request.react('🔒');
+                return;
+            }
 
             const throttleKey = get(command, 'throttle.peruser', true)
                 ? `${command.name}:${message.guild.id}:${message.author.id}`
@@ -128,5 +117,41 @@ module.exports = class CommandDispatcher extends Dispatcher {
      */
     sortOfParser(content) {
         return content.match(/[^\s]+/)[0].slice(1);
+    }
+
+    /**
+     * Checks if the current request can be executed
+     *
+     * @param command
+     * @param guild
+     * @param member
+     * @return {boolean}
+     */
+    canExecuteCommand(command, { message: { guild, member } }) {
+        return !command.special
+            || member.id === guild.ownerID
+            || this.hasAdminRole(member);
+    }
+
+    /**
+     * Returns the admin roles of the server
+     *
+     * @param guild
+     * @return {Array}
+     */
+    getAdminRoles(guild) {
+        return config.has(`guilds.${guild.id}.adminRoles`)
+            ? config.get(`guilds.${guild.id}.adminRoles`)
+            : [];
+    }
+
+    /**
+     * Check if the member has a admin role
+     *
+     * @param member
+     * @return {boolean}
+     */
+    hasAdminRole(member) {
+        return this.getAdminRoles(member.guild).find(role => member.roles.has(role)) !== undefined;
     }
 };
