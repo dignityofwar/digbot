@@ -71,7 +71,7 @@ module.exports = class ReportCommand extends Command {
             `Report\n${start.format('ll')}-${end.format('ll')}\n`,
         ));
 
-        await request.respond('I send you a PM');
+        await request.reply('I have send you a PM with the report.');
     }
 
     /**
