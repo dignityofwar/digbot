@@ -1,5 +1,5 @@
 const config = require('config');
-const { get, intersection } = require('lodash');
+const { get } = require('lodash');
 const Dispatcher = require('../foundation/dispatcher');
 const Request = require('../commands/foundation/request');
 
