@@ -51,7 +51,7 @@ module.exports = class GameLoggingDispatcher extends Dispatcher {
      * @param member
      */
     async started(member) {
-        if (member.presence.game) {
+        if (member.presence.game && member.presence.game.type === 0) {
             await GamePresence.create({
                 guild: member.guild.id,
                 member: member.id,
@@ -68,7 +68,7 @@ module.exports = class GameLoggingDispatcher extends Dispatcher {
      * @param member
      */
     async ended(member) {
-        if (member.presence.game) {
+        if (member.presence.game && member.presence.game.type === 0) {
             await GamePresence.updateOne({
                 guild: member.guild.id,
                 member: member.id,
