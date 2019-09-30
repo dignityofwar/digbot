@@ -1,5 +1,8 @@
 const { words } = require('lodash');
 const moment = require('moment');
+const fs = require('fs');
+const { Attachment } = require('discord.js');
+const stringify = require('csv-stringify');
 const Command = require('./foundation/command');
 
 const GamePresence = require('../database/gamepresence');
@@ -41,35 +44,45 @@ module.exports = class ReportCommand extends Command {
                         { end: null },
                     ],
                 },
-            },
-            {
+            }, {
                 $group: {
                     _id: '$game',
                     members: { $addToSet: '$member' },
                 },
-            },
-            {
+            }, {
                 $unwind: '$members',
-            },
-            {
+            }, {
                 $group: {
                     _id: '$_id',
                     memberCount: { $sum: 1 },
                 },
-            },
-            {
+            }, {
                 $project: {
                     _id: 0,
                     game: '$_id',
                     memberCount: 1,
                 },
+            }, {
+                $match: {
+                    memberCount: { $gte: 3 },
+                },
+            }, {
+                $sort: {
+                    memberCount: -1,
+                },
             },
         ]);
 
-        await request.member.send(result.reduce(
-            (acc, { game, memberCount }) => `${acc}\n${game}: ${memberCount}`,
-            `Report\n${start.format('ll')}-${end.format('ll')}\n`,
-        ));
+        const file = `report_${request.guild.id}_${start.format('DDMMMYY')}_${end.format('DDMMMYY')}.csv`;
+
+        await new Promise((resolve, reject) => {
+            stringify(result, { header: true }, (error, output) => {
+                if (error) reject(error);
+                fs.writeFile(`/tmp/${file}`, output, (err) => { err ? reject(error) : resolve(); });
+            });
+        });
+
+        await request.member.send(new Attachment(`/tmp/${file}`, file));
 
         await request.reply('I have send you a PM with the report.');
     }

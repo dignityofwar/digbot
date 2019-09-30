@@ -58,7 +58,6 @@ module.exports = class ChannelCommand extends Command {
             await msg.channel.send(`The ${type} channel ${name} has been created`)
                 .then(message => logger.info(TAG, `Sent message: ${message.content}`))
                 .catch(err => logger.warning(TAG, `Failed to send message ${err}`));
-            return;
         }
 
         // If user is attempting to delete channel

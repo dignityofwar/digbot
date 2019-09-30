@@ -27,8 +27,9 @@
   "dependencies": {
     "awilix": "^4.2.2",
     "axios": "^0.19.0",
-    "bull": "~3.10.0",
+    "bull": "~3.11.0",
     "config": "^3.2.2",
+    "csv-stringify": "^5.3.3",
     "discord.js": "~11.5.1",
     "googleapis": "^43.0.0",
     "ioredis": "^4.14.0",
