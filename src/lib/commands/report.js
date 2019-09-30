@@ -1,5 +1,6 @@
 const { words } = require('lodash');
 const moment = require('moment');
+
 const Command = require('./foundation/command');
 
 const GamePresence = require('../database/gamepresence');
@@ -41,27 +42,31 @@ module.exports = class ReportCommand extends Command {
                         { end: null },
                     ],
                 },
-            },
-            {
+            }, {
                 $group: {
                     _id: '$game',
                     members: { $addToSet: '$member' },
                 },
-            },
-            {
+            }, {
                 $unwind: '$members',
-            },
-            {
+            }, {
                 $group: {
                     _id: '$_id',
                     memberCount: { $sum: 1 },
                 },
-            },
-            {
+            }, {
                 $project: {
                     _id: 0,
                     game: '$_id',
                     memberCount: 1,
+                },
+            }, {
+                $match: {
+                    memberCount: { $gte: 3 },
+                },
+            }, {
+                $sort: {
+                    memberCount: -1,
                 },
             },
         ]);
