@@ -1,20 +1,2 @@
 {
-  "token"      : "DISCORD_API_TOKEN",
-  "youtubeKey" : "YOUTUBE_DATA_API_KEY",
-
-  "subBotLimit": "SUBBOTS_LIMIT",
-
-  "database"   : {
-    "redis": {
-      "url": "REDIS_URL"
-    },
-    "mongo": {
-      "url": "MONGO_URL"
-    }
-  },
-
-  "subBots"    : {
-    "__name"  : "SUBBOTS_CONFIG",
-    "__format": "json"
-  }
 }
