@@ -1,6 +1,10 @@
+/*
+ * Setup for Inversify and the use of .env file in the root directory
+ */
 import 'reflect-metadata';
 import { config } from 'dotenv';
 config();
+/**/
 
 import { Container } from 'inversify';
 import Kernel from './foundation/kernel';

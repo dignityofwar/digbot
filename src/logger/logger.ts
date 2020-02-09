@@ -1,5 +1,8 @@
 import { createLogger, transports, format, Logger } from 'winston';
 
+/**
+ * A default instance of the logger
+ */
 const logger = createLogger({
     level: 'info',
     format: format.combine(
@@ -14,6 +17,11 @@ const logger = createLogger({
 
 export default logger;
 
+/**
+ * Creates a logger for a module
+ *
+ * @param label the name of the module
+ */
 export function childLogger(label: string): Logger {
     return logger.child({label});
 }

@@ -1,6 +1,9 @@
 import axios, { AxiosInstance } from 'axios';
 import { injectable } from 'inversify';
 
+/**
+ * A module to make request to the Cat Api
+ */
 @injectable()
 export default class TheCatsApi {
     /**
