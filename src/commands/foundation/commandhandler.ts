@@ -7,9 +7,13 @@ import { childLogger } from '../../logger/logger';
 import CatsCommand from '../catscommand';
 import Request from './request';
 
+/**
+ * Handles incoming commands
+ */
 @injectable()
 export default class CommandHandler extends Handler {
     private static logger: Logger = childLogger('command-handler');
+
     /**
      * A map that maps events names to a method that handles it
      */
@@ -17,10 +21,21 @@ export default class CommandHandler extends Handler {
         ['message', this.onMessage.bind(this)],
     ]);
 
+    /**
+     * The prefix that is used before a command
+     */
     private readonly prefix: string = '!';
 
-    private catsCommand: CatsCommand;
+    /**
+     *
+     */
+    private readonly catsCommand: CatsCommand;
 
+    /**
+     * Constructor for the CommandHandler
+     *
+     * @param catsCommand
+     */
     constructor(catsCommand: CatsCommand) {
         super();
 
@@ -28,11 +43,13 @@ export default class CommandHandler extends Handler {
     }
 
     /**
-     * @param message
+     * Runs a command whenever a user sends one
+     *
+     * @param message the message the user send
      */
     public onMessage(message: Message): void {
         if (message.cleanContent.startsWith(this.prefix)) {
-            if (message.cleanContent.startsWith(this.catsCommand.name, 1)) {
+            if (message.cleanContent.startsWith(this.catsCommand.name, this.prefix.length)) {
                 const request: Request = new Request(this.catsCommand, message);
 
                 this.catsCommand.execute(request).catch((e: Error) => CommandHandler.logger.error(e.stack || e.message));
