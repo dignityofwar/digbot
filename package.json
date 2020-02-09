@@ -1,60 +1,48 @@
 {
   "name": "digbot",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "DIGBot is a custom made discord bot for the DIG gaming community",
-  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
-    "start": "node src/bot.js",
-    "test": "mocha",
-    "docker:start": "docker-compose up --build -d",
-    "docker:logs": "docker-compose logs -f digbot",
-    "docker:stop": "docker-compose down",
-    "up": "npm run docker:start && npm run docker:logs",
-    "down": "npm run docker:stop",
-    "test-nyc": "nyc mocha",
-    "eslint": "npx eslint . --ext .js --ignore-pattern node_modules/"
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://JamesLongman@github.com/JamesLongman/DIGBot.git"
+    "url": "git+https://github.com/dignityofwar/DIGBot.git"
   },
-  "author": "",
+  "keywords": [
+    "discord",
+    "bot",
+    "node",
+    "typescript"
+  ],
+  "author": "Dignity of War",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JamesLongman/DIGBot/issues"
+    "url": "https://github.com/dignityofwar/DIGBot/issues"
   },
-  "homepage": "https://github.com/JamesLongman/DIGBot#readme",
+  "homepage": "https://github.com/dignityofwar/DIGBot#readme",
   "dependencies": {
-    "awilix": "^4.2.2",
-    "axios": "^0.19.0",
-    "bull": "~3.11.0",
-    "config": "^3.2.2",
-    "csv-stringify": "^5.3.3",
-    "discord.js": "~11.5.1",
-    "googleapis": "^43.0.0",
-    "ioredis": "^4.14.0",
+    "axios": "^0.19.2",
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.2.0",
+    "inversify": "^5.0.1",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0",
-    "mongoose": "^5.7.0",
-    "opusscript": "^0.0.7",
-    "os-utils": "^0.0.14",
-    "winston": "^3.2.1",
-    "winston-transport": "^4.3.0",
-    "ytdl-core": "^0.29.5"
-  },
-  "optionalDependencies": {
-    "bufferutil": "^4.0.1",
-    "erlpack": "discordapp/erlpack",
-    "libsodium-wrappers": "^0.7.5",
-    "node-opus": "^0.3.1"
+    "reflect-metadata": "^0.1.13",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "eslint": "^6.2.2",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.18.2",
-    "mocha": "^6.2.0",
-    "nyc": "^14.1.1",
-    "sinon": "^7.4.1"
+    "@types/dotenv": "^8.2.0",
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^13.7.0",
+    "@typescript-eslint/eslint-plugin": "^2.18.0",
+    "@typescript-eslint/parser": "^2.18.0",
+    "eslint": "^6.8.0",
+    "typescript": "^3.7.5"
   }
 }

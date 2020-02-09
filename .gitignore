@@ -6,3 +6,5 @@ vagrant/ubuntu*
 docker/db
 !docker/db/.gitkeep
 config/local.json
+/dist
+.env
