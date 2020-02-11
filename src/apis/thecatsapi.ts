@@ -8,6 +8,8 @@ import { injectable } from 'inversify';
 export default class TheCatsApi {
     /**
      * An Axios instance with the base configuration for the Cat Api
+     *
+     * @type {AxiosInstance} The Axios instance
      */
     private axios: AxiosInstance = axios.create({
         baseURL: 'https://api.thecatapi.com/v1',
@@ -15,6 +17,8 @@ export default class TheCatsApi {
 
     /**
      * Retrieves the url of a random static cat image
+     *
+     * @return {Promise<string>}
      */
     public async getImg(): Promise<string> {
         return this.axios.get('images/search', {
@@ -27,6 +31,8 @@ export default class TheCatsApi {
 
     /**
      * Retrieves the url of a random gif cat image
+     *
+     * @return {Promise<string>}
      */
     public async getGif(): Promise<string> {
         return this.axios.get('images/search', {

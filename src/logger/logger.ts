@@ -20,7 +20,7 @@ export default logger;
 /**
  * Creates a logger for a module
  *
- * @param label the name of the module
+ * @param {string} label The name of the module
  */
 export function childLogger(label: string): Logger {
     return logger.child({label});

@@ -22,7 +22,7 @@ export default class CatsCommand extends Command {
     /**
      * Constructor for the CatsCommand
      *
-     * @param api the api that should be used
+     * @param {TheCatsApi} api the api that should be used
      */
     public constructor(api: TheCatsApi) {
         super();
@@ -33,7 +33,8 @@ export default class CatsCommand extends Command {
     /**
      * Retrieves a cat images based on the request, and sends it to the channel with a heart emoji as a reaction
      *
-     * @param request the request that triggered the command
+     * @param {Request} request the request that triggered the command
+     * @return {Promise<void>} promise which returns nothing when the command executed
      */
     public async execute(request: Request): Promise<void> {
         const img = await this.getCat(request.argv.includes('-g') || request.argv.includes('--gif'));
@@ -46,7 +47,8 @@ export default class CatsCommand extends Command {
     /**
      * Retrieves a cat image from the api
      *
-     * @param gif true if the user wants a gif, false for a static image
+     * @param {boolean} gif true if the user wants a gif, false for a static image
+     * @return {Promise<string>} a url to a image(guaranteed)
      */
     private async getCat(gif: boolean): Promise<string> {
         try {

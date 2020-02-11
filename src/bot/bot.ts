@@ -27,8 +27,8 @@ export default class Bot {
     /**
      * Constructor for the Bot
      *
-     * @param config
-     * @param handlers
+     * @param {Config} config The configuration the bot should use
+     * @param {Handler[]} handlers The handlers that will be registered
      */
     public constructor(config: Config, @multiInject(Handler) handlers: Handler[]) {
         this.config = config;
@@ -38,6 +38,8 @@ export default class Bot {
 
     /**
      * Starts the bot
+     *
+     * @return {Promise<void>}
      */
     public async start(): Promise<void> {
         await this.client.login(this.config.discordToken);
@@ -45,6 +47,8 @@ export default class Bot {
 
     /**
      * Stops the bot
+     *
+     * @return {Promise<void>}
      */
     public async stop(): Promise<void> {
         await this.client.destroy();
@@ -54,6 +58,7 @@ export default class Bot {
      * Register a handler
      *
      * @param handler
+     * @return {void}
      */
     public registerHandler(handler: Handler): void {
         if (this.handlers.has(handler)) return;
@@ -66,6 +71,7 @@ export default class Bot {
      * Remove a handler
      *
      * @param handler
+     * @return {boolean}
      */
     public removeHandler(handler: Handler): boolean {
         if (this.handlers.has(handler)) {

@@ -14,6 +14,9 @@ import {
     User,
 } from 'discord.js';
 
+/**
+ * Types for the various event send from Discord
+ */
 export type onChannelCreate = (channel: Channel) => void;
 export type onChannelDelete = (channel: Channel) => void;
 export type onChannelPinsUpdate = (channel: Channel, time: Date) => void;

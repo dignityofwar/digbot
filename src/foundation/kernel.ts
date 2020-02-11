@@ -23,8 +23,8 @@ export default class Kernel {
     /**
      * Constructor for the Kernel
      *
-     * @param container the IoC container
-     * @param bot
+     * @param {Container} container the IoC container
+     * @param {Bot} bot
      */
     public constructor(container: Container, bot: Bot) {
         this.container = container;
@@ -32,7 +32,9 @@ export default class Kernel {
     }
 
     /**
-     * Starts running our app
+     * Starts running the app
+     *
+     * @return {Promise<void>}
      */
     public async run(): Promise<void> {
         Kernel.logger.info('Starting');
@@ -40,7 +42,10 @@ export default class Kernel {
     }
 
     /**
-     * Terminates our app
+     * Terminates the app
+     *
+     * @param {number} code
+     * @return {Promise<void>}
      */
     public async terminate(code?: number): Promise<void> {
         Kernel.logger.info('Terminating');
