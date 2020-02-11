@@ -28,7 +28,7 @@ export default class CommandHandler extends Handler {
     /**
      * Constructor for the CommandHandler
      *
-     * @param commander
+     * @param {Commander} commander the commander that is used to run commands
      */
     public constructor(commander: Commander) {
         super();
@@ -37,9 +37,9 @@ export default class CommandHandler extends Handler {
     }
 
     /**
-     * Runs a command whenever a user sends one
+     * Tries to run a command whenever a user sends one
      *
-     * @param message the message the user send
+     * @param {Message} message the message the user send
      */
     public onMessage(message: Message): void {
         this.commander.execute(message)

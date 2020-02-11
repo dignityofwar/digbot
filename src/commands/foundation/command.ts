@@ -11,7 +11,8 @@ export default abstract class Command {
     /**
      * Run the command given the request
      *
-     * @param request the request that triggered the command
+     * @param {Request} request the request that triggered the command
+     * @return {Promise<void>} promise which returns nothing when the command executed
      */
     public abstract async execute(request: Request): Promise<void>;
 }

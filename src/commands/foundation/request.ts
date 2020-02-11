@@ -31,6 +31,9 @@ export default class Request {
      */
     public readonly message: Message;
 
+    /**
+     * The arguments given in the message
+     */
     public readonly argv: string[];
 
     /**
@@ -41,9 +44,9 @@ export default class Request {
     /**
      * Constructor for the Request
      *
-     * @param command The command the request triggers
-     * @param message The message that triggered the request
-     * @param argv
+     * @param {Command} command The command the request triggers
+     * @param {Message} message The message that triggered the request
+     * @param {string[]} argv The arguments specified in the message
      */
     public constructor(command: Command, message: Message, argv: string[]) {
         this.command = command;
@@ -54,8 +57,9 @@ export default class Request {
     /**
      * Responds to the users request
      *
-     * @param content the message that should be send to the user
-     * @param options that apply to the message
+     * @param {StringResolvable} content The message that should be send to the user
+     * @param {MessageOptions | RichEmbed} options that apply to the message
+     * @return {Promise<Message>} A promise which returns the message send
      */
     public async respond(content: StringResolvable, options?: MessageOptions | RichEmbed): Promise<Message> {
         if (this.response) {
@@ -71,8 +75,9 @@ export default class Request {
     /**
      * Responds to the users request starting with a mention to the user
      *
-     * @param content the message that should be send to the user
-     * @param options that apply to the message
+     * @param {StringResolvable} content The message that should be send to the user
+     * @param {MessageOptions | RichEmbed} options that apply to the message
+     * @return {Promise<Message>} A promise which returns the message send
      */
     public async reply(content: StringResolvable, options?: MessageOptions | RichEmbed): Promise<Message> {
         if (!options && typeof content === 'object' && !(content instanceof Array)) {
@@ -86,9 +91,15 @@ export default class Request {
     }
 
     /**
+     *
+     *
+     * @param emoji
+     */
+    /**
      * Send a reaction to the user message in emoji form
      *
-     * @param emoji the reaction
+     * @param {string | Emoji | ReactionEmoji} emoji The reaction
+     * @return {Promise<MessageReaction>} A promise which returns the reaction send
      */
     public async react(emoji: string | Emoji | ReactionEmoji): Promise<MessageReaction> {
         return await this.message.react(emoji);
@@ -96,6 +107,8 @@ export default class Request {
 
     /**
      * The content of the request send by the user
+     *
+     * @return {string} the content of the message
      */
     public get content(): string {
         return this.message.cleanContent;
@@ -103,6 +116,8 @@ export default class Request {
 
     /**
      * The guild member who send the request
+     *
+     * @return {GuildMember} the member
      */
     public get member(): GuildMember {
         return this.message.member;
@@ -110,6 +125,8 @@ export default class Request {
 
     /**
      * The user who send the request
+     *
+     * @return {User} the user
      */
     public get author(): User {
         return this.message.author;
@@ -117,6 +134,8 @@ export default class Request {
 
     /**
      * The guild associated with the request
+     *
+     * @return {Guild} the guild
      */
     public get guild(): Guild {
         return this.message.guild;
@@ -124,6 +143,8 @@ export default class Request {
 
     /**
      * The channel associated with the request
+     *
+     * @return {TextChannel | GroupDMChannel | DMChannel} the channel
      */
     public get channel(): TextChannel | GroupDMChannel | DMChannel {
         return this.message.channel;

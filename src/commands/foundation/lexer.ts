@@ -1,8 +1,18 @@
 import { injectable } from 'inversify';
 
+/**
+ * Lexer to split a string into arguments(like a terminal)
+ *
+ * TODO: Investigate performance
+ */
 @injectable()
 export default class CommandLexer {
-
+    /**
+     * Tokenize a string
+     *
+     * @param {string} text the text to be turned into arguments
+     * @return {string[]} the arguments
+     */
     public tokenize(text: string): string[] {
         const result: string[] = [];
         let q: string | null = null;
