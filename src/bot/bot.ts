@@ -30,7 +30,7 @@ export default class Bot {
      * @param config
      * @param handlers
      */
-    constructor(config: Config, @multiInject(Handler) handlers: Handler[]) {
+    public constructor(config: Config, @multiInject(Handler) handlers: Handler[]) {
         this.config = config;
 
         handlers.forEach((handler: Handler) => this.registerHandler(handler));

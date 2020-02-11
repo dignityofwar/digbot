@@ -31,6 +31,8 @@ export default class Request {
      */
     public readonly message: Message;
 
+    public readonly argv: string[];
+
     /**
      * A response the bot sends to the user
      */
@@ -41,10 +43,12 @@ export default class Request {
      *
      * @param command The command the request triggers
      * @param message The message that triggered the request
+     * @param argv
      */
-    constructor(command: Command, message: Message) {
+    public constructor(command: Command, message: Message, argv: string[]) {
         this.command = command;
         this.message = message;
+        this.argv = argv;
     }
 
     /**

@@ -8,6 +8,7 @@
     "sourceType" : "module"
   },
   "rules"        : {
-    "@typescript-eslint/quotes": ["error", "single"]
+    "@typescript-eslint/quotes": ["error", "single"],
+    "@typescript-eslint/explicit-member-accessibility": ["error"]
   }
 }

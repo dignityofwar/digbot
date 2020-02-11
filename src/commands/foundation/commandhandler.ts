@@ -4,8 +4,7 @@ import { Message } from 'discord.js';
 import { injectable } from 'inversify';
 import { Logger } from 'winston';
 import { childLogger } from '../../logger/logger';
-import CatsCommand from '../catscommand';
-import Request from './request';
+import Commander from './commander';
 
 /**
  * Handles incoming commands
@@ -22,24 +21,19 @@ export default class CommandHandler extends Handler {
     ]);
 
     /**
-     * The prefix that is used before a command
-     */
-    private readonly prefix: string = '!';
-
-    /**
      *
      */
-    private readonly catsCommand: CatsCommand;
+    private readonly commander: Commander;
 
     /**
      * Constructor for the CommandHandler
      *
-     * @param catsCommand
+     * @param commander
      */
-    constructor(catsCommand: CatsCommand) {
+    public constructor(commander: Commander) {
         super();
 
-        this.catsCommand = catsCommand;
+        this.commander = commander;
     }
 
     /**
@@ -48,12 +42,7 @@ export default class CommandHandler extends Handler {
      * @param message the message the user send
      */
     public onMessage(message: Message): void {
-        if (message.cleanContent.startsWith(this.prefix)) {
-            if (message.cleanContent.startsWith(this.catsCommand.name, this.prefix.length)) {
-                const request: Request = new Request(this.catsCommand, message);
-
-                this.catsCommand.execute(request).catch((e: Error) => CommandHandler.logger.error(e.stack || e.message));
-            }
-        }
+        this.commander.execute(message)
+            .catch((e: Error) => CommandHandler.logger.error(e.stack || e.message));
     }
 }

@@ -12,7 +12,7 @@ export default class CatsCommand extends Command {
     /**
      * The name of the command(without spaces)
      */
-    public readonly name: string = 'cats';
+    public readonly name: string = '!cats';
 
     /**
      * The api that should be used by the command
@@ -24,7 +24,7 @@ export default class CatsCommand extends Command {
      *
      * @param api the api that should be used
      */
-    constructor(api: TheCatsApi) {
+    public constructor(api: TheCatsApi) {
         super();
 
         this.api = api;
@@ -36,20 +36,11 @@ export default class CatsCommand extends Command {
      * @param request the request that triggered the command
      */
     public async execute(request: Request): Promise<void> {
-        const img = await this.getCat(this.wantsGif(request.content));
+        const img = await this.getCat(request.argv.includes('-g') || request.argv.includes('--gif'));
 
         const response = await request.respond(new RichEmbed().setImage(img));
 
         await response.react('❤');
-    }
-
-    /**
-     * Tests if the user wanted a gif
-     *
-     * @param content the message the user send
-     */
-    private wantsGif(content: string): boolean {
-        return /^\Scats\s+gif/i.test(content);
     }
 
     /**

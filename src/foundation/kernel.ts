@@ -26,7 +26,7 @@ export default class Kernel {
      * @param container the IoC container
      * @param bot
      */
-    constructor(container: Container, bot: Bot) {
+    public constructor(container: Container, bot: Bot) {
         this.container = container;
         this.bot = bot;
     }
