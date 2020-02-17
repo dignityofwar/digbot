@@ -9,6 +9,7 @@
   },
   "rules"        : {
     "@typescript-eslint/quotes": ["error", "single"],
-    "@typescript-eslint/explicit-member-accessibility": ["error"]
+    "@typescript-eslint/explicit-member-accessibility": ["error"],
+    "@typescript-eslint/camelcase": ["off"]
   }
 }

@@ -24,11 +24,11 @@ export default class CommandRepository {
     /**
      * Checks if the command is in the repository
      *
-     * @param {string} commamdName the name of the command to be checked for
+     * @param {string} commandName the name of the command to be checked for
      * @return {boolean} true if the command exists, false otherwise
      */
-    public has(commamdName: string): boolean {
-        return this.commands.has(commamdName.toUpperCase());
+    public has(commandName: string): boolean {
+        return this.commands.has(commandName.toUpperCase());
     }
 
     /**

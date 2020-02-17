@@ -2,7 +2,7 @@ import { injectable, multiInject } from 'inversify';
 import { Client, Guild, RateLimitInfo } from 'discord.js';
 import Handler from './handler';
 import { discordEvent } from './events';
-import Index from '../config';
+import Config from '../config';
 import { childLogger } from '../logger/logger';
 
 /**
@@ -20,7 +20,7 @@ export default class Bot {
     /**
      * The configuration
      */
-    private readonly config: Index;
+    private readonly config: Config;
 
     /**
      * An array of handlers that are used to handle incoming events
@@ -30,10 +30,10 @@ export default class Bot {
     /**
      * Constructor for the Bot
      *
-     * @param {Index} config The configuration the bot should use
+     * @param {Config} config The configuration the bot should use
      * @param {Handler[]} handlers The handlers that will be registered
      */
-    public constructor(config: Index, @multiInject(Handler) handlers: Handler[]) {
+    public constructor(config: Config, @multiInject(Handler) handlers: Handler[]) {
         this.config = config;
 
         this.setupClientLogging();
