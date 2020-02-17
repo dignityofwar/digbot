@@ -1,6 +1,5 @@
 import { createLogger, transports, format, Logger } from 'winston';
 import { config } from '../config';
-import DiscordTransport from './discordtransport';
 
 /**
  * A default instance of the logger
