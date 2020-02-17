@@ -65,4 +65,50 @@ export type onVoiceStateUpdate = (oldMember: GuildMember, newMember: GuildMember
 export type onWarn = (info: string) => void;
 export type onWebhookUpdate = (channel: TextChannel) => void;
 
-export type discordEvent = (onChannelCreate | onChannelDelete | onChannelPinsUpdate | onChannelUpdate | onClientUserGuildSettingsUpdate | onClientUserSettingsUpdate | onDebug | onDisconnect | onEmojiCreate | onEmojiDelete | onEmojiUpdate | onError | onGuildBanAdd | onGuildBanRemove | onGuildCreate | onGuildDelete | onGuildIntegrationsUpdate | onGuildMemberAdd | onGuildMemberAvailable | onGuildMemberRemove | onGuildMembersChunk | onGuildMemberSpeaking | onGuildMemberUpdate | onGuildUnavailable | onGuildUpdate | onMessage | onMessageDelete | onMessageDeleteBulk | onMessageReactionAdd | onMessageReactionRemove | onMessageReactionRemoveAll | onMessageUpdate | onPresenceUpdate | onRateLimit | onReady | onReconnecting | onResume | onRoleCreate | onRoleDelete | onRoleUpdate | onTypingStart | onTypingStop | onUserNoteUpdate | onUserUpdate | onVoiceStateUpdate | onWarn | onWebhookUpdate);
+export type discordEvent = onChannelCreate
+    | onChannelDelete
+    | onChannelPinsUpdate
+    | onChannelUpdate
+    | onClientUserGuildSettingsUpdate
+    | onClientUserSettingsUpdate
+    | onDebug
+    | onDisconnect
+    | onEmojiCreate
+    | onEmojiDelete
+    | onEmojiUpdate
+    | onError
+    | onGuildBanAdd
+    | onGuildBanRemove
+    | onGuildCreate
+    | onGuildDelete
+    | onGuildIntegrationsUpdate
+    | onGuildMemberAdd
+    | onGuildMemberAvailable
+    | onGuildMemberRemove
+    | onGuildMembersChunk
+    | onGuildMemberSpeaking
+    | onGuildMemberUpdate
+    | onGuildUnavailable
+    | onGuildUpdate
+    | onMessage
+    | onMessageDelete
+    | onMessageDeleteBulk
+    | onMessageReactionAdd
+    | onMessageReactionRemove
+    | onMessageReactionRemoveAll
+    | onMessageUpdate
+    | onPresenceUpdate
+    | onRateLimit
+    | onReady
+    | onReconnecting
+    | onResume
+    | onRoleCreate
+    | onRoleDelete
+    | onRoleUpdate
+    | onTypingStart
+    | onTypingStop
+    | onUserNoteUpdate
+    | onUserUpdate
+    | onVoiceStateUpdate
+    | onWarn
+    | onWebhookUpdate;

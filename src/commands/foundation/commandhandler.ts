@@ -4,7 +4,7 @@ import { Message } from 'discord.js';
 import { injectable } from 'inversify';
 import { Logger } from 'winston';
 import { childLogger } from '../../logger/logger';
-import Commander from './commander';
+import Executor from './executor';
 
 /**
  * Handles incoming commands
@@ -23,17 +23,17 @@ export default class CommandHandler extends Handler {
     /**
      *
      */
-    private readonly commander: Commander;
+    private readonly executor: Executor;
 
     /**
      * Constructor for the CommandHandler
      *
-     * @param {Commander} commander the commander that is used to run commands
+     * @param {Executor} executor the executor that is used to run commands
      */
-    public constructor(commander: Commander) {
+    public constructor(executor: Executor) {
         super();
 
-        this.commander = commander;
+        this.executor = executor;
     }
 
     /**
@@ -42,7 +42,7 @@ export default class CommandHandler extends Handler {
      * @param {Message} message the message the user send
      */
     public onMessage(message: Message): void {
-        this.commander.execute(message)
-            .catch((e: Error) => CommandHandler.logger.error(e.stack || e.message));
+            this.executor.execute(message.cleanContent, message)
+                .catch((e: Error) => CommandHandler.logger.error(e.stack || e.message));
     }
 }

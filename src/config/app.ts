@@ -1,10 +1,4 @@
-import { injectable } from 'inversify';
-
-/**
- * Holds the main configuration of the application
- */
-@injectable()
-export default class Config {
+export default class App {
     /**
      * @type {boolean} Set to true when developing the application, this will provide more information for debugging
      */

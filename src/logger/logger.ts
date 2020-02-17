@@ -1,10 +1,12 @@
 import { createLogger, transports, format, Logger } from 'winston';
+import { config } from '../config';
+import DiscordTransport from './discordtransport';
 
 /**
  * A default instance of the logger
  */
 const logger = createLogger({
-    level: 'info',
+    level: config.logging.level,
     format: format.combine(
         format.colorize(),
         format.timestamp(),

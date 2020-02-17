@@ -1,6 +1,9 @@
 import Request from './request';
 import { injectable } from 'inversify';
 
+/**
+ * Base class for a Command
+ */
 @injectable()
 export default abstract class Command {
     /**

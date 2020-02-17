@@ -1,4 +1,3 @@
-import Command from './command';
 import {
     DMChannel,
     Emoji,
@@ -14,18 +13,11 @@ import {
     TextChannel,
     User,
 } from 'discord.js';
-import { injectable } from 'inversify';
 
 /**
  * A request object which encapsulates all info of a command that got triggered
  */
-@injectable()
 export default class Request {
-    /**
-     * The command the request triggers
-     */
-    public readonly command: Command;
-
     /**
      * The message that triggered the request
      */
@@ -44,12 +36,10 @@ export default class Request {
     /**
      * Constructor for the Request
      *
-     * @param {Command} command The command the request triggers
      * @param {Message} message The message that triggered the request
      * @param {string[]} argv The arguments specified in the message
      */
-    public constructor(command: Command, message: Message, argv: string[]) {
-        this.command = command;
+    public constructor(message: Message, argv: string[]) {
         this.message = message;
         this.argv = argv;
     }

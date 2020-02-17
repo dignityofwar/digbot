@@ -2,12 +2,13 @@ import { injectable, Container } from 'inversify';
 import Bot from '../bot/bot';
 import { Logger } from 'winston';
 import { childLogger } from '../logger/logger';
+import KernelContract from './contracts/kernelcontract';
 
 /**
  * The Kernel is the root of the app and will be the entry point to run it
  */
 @injectable()
-export default class Kernel {
+export default class Kernel implements KernelContract {
     private static logger: Logger = childLogger('kernel');
 
     /**
