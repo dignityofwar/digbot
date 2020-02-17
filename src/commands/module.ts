@@ -5,10 +5,12 @@ import CommandHandler from './foundation/commandhandler';
 import Command from './foundation/command';
 import CatsCommand from './catscommand';
 import Executor from './foundation/executor';
+import TriviaCommand from './triviacommand';
 
 export default new ContainerModule((bind: Bind) => {
     bind<Executor>(Executor).toSelf().inSingletonScope();
     bind<Handler>(Handler).to(CommandHandler);
 
     bind<Command>(Command).to(CatsCommand);
+    bind<Command>(Command).to(TriviaCommand);
 });
