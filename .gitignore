@@ -1,10 +1,7 @@
 .nyc_output
 node_modules
 npm-debug.log
-vagrant/.vagrant
-vagrant/ubuntu*
-docker/db
-!docker/db/.gitkeep
-config/local.json
 /dist
 .env
+tmp/
+temp/
