@@ -14,10 +14,10 @@ export default class JService {
 
     public async random(): Promise<JServiceTrivia> {
         return this.axios.get('random')
-            .then(({data: [trivia]}) => this.normalizeTrivia(trivia));
+            .then(({data: [trivia]}) => this.convertToJServiceTrivia(trivia));
     }
 
-    private normalizeTrivia(trivia: any): JServiceTrivia {
+    private convertToJServiceTrivia(trivia: any): JServiceTrivia {
         trivia.airdate = new Date(trivia.airdate);
         trivia.created_at = new Date(trivia.created_at);
         trivia.updated_at = new Date(trivia.updated_at);

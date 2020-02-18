@@ -19,7 +19,7 @@ export default class TriviaCommand extends Command {
     public async execute(request: Request): Promise<void> {
         const {id, question, answer, category: {title}} = await this.api.random();
 
-        request.respond(
+        await request.respond(
             new RichEmbed()
                 .setColor(4650701)
                 .setTitle(question)

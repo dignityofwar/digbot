@@ -4,12 +4,13 @@ import Handler from './handler';
 import { discordEvent } from './events';
 import Config from '../config';
 import { childLogger } from '../logger/logger';
+import Runnable from '../foundation/runnable';
 
 /**
  * The Bot which will have all the logic to handle incoming events from Discord
  */
 @injectable()
-export default class Bot {
+export default class Bot extends Runnable {
     /**
      * The Discord client the bot will listen on
      */
@@ -34,6 +35,8 @@ export default class Bot {
      * @param {Handler[]} handlers The handlers that will be registered
      */
     public constructor(config: Config, @multiInject(Handler) handlers: Handler[]) {
+        super();
+
         this.config = config;
 
         this.setupClientLogging();
@@ -73,7 +76,7 @@ export default class Bot {
      *
      * @return {Promise<void>}
      */
-    public async stop(): Promise<void> {
+    public async terminate(): Promise<void> {
         await this.client.destroy();
     }
 
