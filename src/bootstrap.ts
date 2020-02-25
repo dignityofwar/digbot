@@ -1,27 +1,28 @@
-/*
- * Setup for Inversify and the use of .env file in the root directory
- */
 import 'reflect-metadata';
+import { config as envConfig } from 'dotenv';
 
-require('dotenv').config();
-/**/
+envConfig();
 
 import { Container } from 'inversify';
 import Kernel from './foundation/kernel';
-import Config, { config } from './config';
+import { configModule } from './config';
 
-import botModule from './bot';
-import commandsModule from './commands';
+import { botModule } from './bot';
+import { commandModule } from './commands';
+import { statsModule } from './stats';
+import { databaseModule } from './database';
 
 const app = new Container({autoBindInjectable: true, skipBaseClassChecks: true});
 
 app.bind<Container>(Container).toConstantValue(app);
-app.bind<Config>(Config).toConstantValue(config);
 app.bind<Kernel>(Kernel).toSelf().inSingletonScope();
 
 app.load(
+    configModule,
     botModule,
-    commandsModule,
+    databaseModule,
+    commandModule,
+    statsModule,
 );
 
 export default app;

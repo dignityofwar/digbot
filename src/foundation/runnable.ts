@@ -1,10 +1,9 @@
-import { injectable } from 'inversify';
+export default interface Runnable {
+    boot?(): Promise<void>;
 
-@injectable()
-export default abstract class Runnable {
-    public boot?(): Promise<void>;
+    start?(): Promise<void>;
 
-    public start?(): Promise<void>;
-
-    public terminate?(): Promise<void>;
+    terminate?(): Promise<void>;
 }
+
+export const RUNNABLE = Symbol.for('FOUNDATION.RUNNABLE');

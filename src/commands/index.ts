@@ -7,7 +7,7 @@ import CatsCommand from './catscommand';
 import Executor from './foundation/executor';
 import TriviaCommand from './triviacommand';
 
-export default new ContainerModule((bind: Bind) => {
+export const commandModule =  new ContainerModule((bind: Bind) => {
     bind<Executor>(Executor).toSelf().inSingletonScope();
     bind<Handler>(Handler).to(CommandHandler);
 

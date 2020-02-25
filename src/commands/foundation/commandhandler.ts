@@ -16,9 +16,9 @@ export default class CommandHandler extends Handler {
     /**
      * A map that maps events names to a method that handles it
      */
-    public readonly listeners: Map<string, discordEvent> = new Map<string, discordEvent>([
-        ['message', this.onMessage.bind(this)],
-    ]);
+    public readonly listeners: Map<string, discordEvent> = new Map<string, discordEvent>(Object.entries({
+        message: this.onMessage,
+    }));
 
     /**
      *
@@ -42,7 +42,7 @@ export default class CommandHandler extends Handler {
      * @param {Message} message the message the user send
      */
     public onMessage(message: Message): void {
-            this.executor.execute(message.cleanContent, message)
-                .catch((e: Error) => CommandHandler.logger.error(e.stack || e.message));
+        this.executor.execute(message.cleanContent, message)
+            .catch((e: Error) => CommandHandler.logger.error(e.stack || e.message));
     }
 }

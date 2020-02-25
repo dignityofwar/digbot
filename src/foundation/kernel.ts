@@ -2,7 +2,7 @@ import { injectable, Container, multiInject } from 'inversify';
 import { Logger } from 'winston';
 import { childLogger } from '../logger/logger';
 import KernelContract from './contracts/kernelcontract';
-import Runnable from './runnable';
+import Runnable, { RUNNABLE } from './runnable';
 
 enum KernelState {
     Idle,
@@ -36,7 +36,7 @@ export default class Kernel implements KernelContract {
      * @param {Container} container the IoC container
      * @param {Runnable} runnables
      */
-    public constructor(container: Container, @multiInject(Runnable) runnables: Runnable[]) {
+    public constructor(container: Container, @multiInject(RUNNABLE) runnables: Runnable[]) {
         this.container = container;
         this.runnables = runnables;
     }

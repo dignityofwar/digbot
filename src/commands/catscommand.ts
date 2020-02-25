@@ -37,7 +37,7 @@ export default class CatsCommand extends Command {
      * @return {Promise<void>} promise which returns nothing when the command executed
      */
     public async execute(request: Request): Promise<void> {
-        const img = await this.getCat(request.argv.includes('-g') || request.argv.includes('--gif'));
+        const img = await this.getCat(/^gif$/i.test(request.argv[0]));
 
         const response = await request.respond(new RichEmbed().setImage(img));
 

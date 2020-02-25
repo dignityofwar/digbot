@@ -17,7 +17,7 @@ export default class CommandLexer {
     /**
      * The current position
      */
-    private pos!: number;
+    private pos: number;
 
     /**
      * Constructor for CommandLexer
