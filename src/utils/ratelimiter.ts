@@ -38,7 +38,7 @@ export default class RateLimiter {
      * @param {String} key
      */
     public async attempts(key: string): Promise<number> {
-        return parseInt(await this.redis.get(`ratelimiter:${key}`) || '');
+        return parseInt(await this.redis.get(`ratelimiter:${key}`) ?? '');
     }
 
     /**

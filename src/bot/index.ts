@@ -15,8 +15,7 @@ export const botModule = new ContainerModule((bind: Bind) => {
         });
         const logger = childLogger('discord-client');
 
-        // clientUserGuildSettingsUpdate
-        // clientUserSettingsUpdate
+        // TODO: implement clientUserGuildSettingsUpdate and clientUserSettingsUpdate maybe
         client.on('debug', (info: string) => logger.silly(info));
         client.on('disconnect', (event: CloseEvent) => logger.info(`Client disconnected: ${event.reason}(${event.code})`));
         client.on('error', (error: Error) => logger.error(error.message));

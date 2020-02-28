@@ -77,7 +77,7 @@ export default class Request {
             options = {};
         }
 
-        return this.respond(content, Object.assign(options, {reply: this.member || this.author}));
+        return this.respond(content, Object.assign(options, {reply: this.member ?? this.author}));
     }
 
     /**

@@ -1,28 +1,20 @@
-import 'reflect-metadata';
-import { config as envConfig } from 'dotenv';
+import { configModule } from './config';
 
-envConfig();
+require('reflect-metadata');
+require('dotenv').config();
 
 import { Container } from 'inversify';
 import Kernel from './foundation/kernel';
-import { configModule } from './config';
-
-import { botModule } from './bot';
-import { commandModule } from './commands';
-import { statsModule } from './stats';
-import { databaseModule } from './database';
+import ConfigContract, { CONFIGCONTRACT } from './config/contracts/configcontract';
 
 const app = new Container({autoBindInjectable: true, skipBaseClassChecks: true});
 
 app.bind<Container>(Container).toConstantValue(app);
 app.bind<Kernel>(Kernel).toSelf().inSingletonScope();
+app.load(configModule);
 
-app.load(
-    configModule,
-    botModule,
-    databaseModule,
-    commandModule,
-    statsModule,
-);
+const config = app.get<ConfigContract>(CONFIGCONTRACT);
+
+app.load(...config.app.modules);
 
 export default app;

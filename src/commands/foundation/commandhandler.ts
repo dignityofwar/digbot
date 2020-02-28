@@ -43,6 +43,6 @@ export default class CommandHandler extends Handler {
      */
     public onMessage(message: Message): void {
         this.executor.execute(message.cleanContent, message)
-            .catch((e: Error) => CommandHandler.logger.error(e.stack || e.message));
+            .catch((e: Error) => CommandHandler.logger.error(e.stack ?? e.message));
     }
 }

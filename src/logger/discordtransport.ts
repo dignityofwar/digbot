@@ -17,7 +17,7 @@ export default class DiscordTransport extends Transport {
         this.avatarUrl = opts.avatarUrl;
 
         this.axios = axios.create({
-            proxy: opts.proxy || undefined,
+            proxy: opts.proxy ?? undefined,
         });
     }
 

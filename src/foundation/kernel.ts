@@ -50,9 +50,10 @@ export default class Kernel implements KernelContract {
         if (this.status != KernelState.Idle) return;
         this.status = KernelState.Starting;
 
-        Kernel.logger.info('Starting');
+        Kernel.logger.info('Booting');
         await Promise.all(this.runnables.map((runnable) => runnable.boot?.apply(runnable)));
 
+        Kernel.logger.info('Starting');
         await Promise.all(this.runnables.map(runnable => runnable.start?.apply(runnable)));
 
         this.status = KernelState.Running;
@@ -71,6 +72,7 @@ export default class Kernel implements KernelContract {
         Kernel.logger.info('Terminating');
         await Promise.all(this.runnables.map(runnable => runnable.terminate?.apply(runnable)));
 
+        Kernel.logger.info('Goodbye :)');
         process.exit(code);
     }
 }
