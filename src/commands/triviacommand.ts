@@ -2,7 +2,7 @@ import Command from './foundation/command';
 import { injectable } from 'inversify';
 import JService from '../apis/jservice';
 import Request from './foundation/request';
-import { RichEmbed } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 
 @injectable()
 export default class TriviaCommand extends Command {
@@ -20,7 +20,7 @@ export default class TriviaCommand extends Command {
         const {id, question, answer, category: {title}} = await this.api.random();
 
         await request.respond(
-            new RichEmbed()
+            new MessageEmbed()
                 .setColor(4650701)
                 .setTitle(question)
                 .setDescription(`||${answer}||`)

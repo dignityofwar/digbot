@@ -2,7 +2,7 @@ import Command from './foundation/command';
 import { injectable } from 'inversify';
 import TheCatsApi from '../apis/thecatsapi';
 import Request from './foundation/request';
-import { RichEmbed } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 
 /**
  * A command that retrieves cat pictures from the Cat Api.
@@ -39,7 +39,7 @@ export default class CatsCommand extends Command {
     public async execute(request: Request): Promise<void> {
         const img = await this.getCat(/^gif$/i.test(request.argv[0]));
 
-        const response = await request.respond(new RichEmbed().setImage(img));
+        const response = await request.respond(new MessageEmbed().setImage(img));
 
         await response.react('❤');
     }

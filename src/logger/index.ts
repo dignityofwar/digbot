@@ -4,7 +4,7 @@ import { loggingConfig } from '../config/logging';
 /**
  * A default instance of the index
  */
-const logger = createLogger({
+const defaultLogger = createLogger({
     level: loggingConfig.level,
     format: format.combine(
         format.colorize(),
@@ -22,8 +22,8 @@ const logger = createLogger({
  * @param {string} label The name of the module
  */
 export function getLogger(label: string): Logger {
-    return logger.child({label});
+    return defaultLogger.child({label});
 }
 
-export default logger;
+export default defaultLogger;
 

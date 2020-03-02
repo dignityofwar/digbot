@@ -1,14 +1,12 @@
 import {
     DMChannel,
-    Emoji,
-    GroupDMChannel,
+    EmojiResolvable,
     Guild,
     GuildMember,
-    Message,
+    Message, MessageEditOptions,
+    MessageEmbed,
     MessageOptions,
     MessageReaction,
-    ReactionEmoji,
-    RichEmbed,
     StringResolvable,
     TextChannel,
     User,
@@ -51,13 +49,13 @@ export default class Request {
      * @param {MessageOptions | RichEmbed} options that apply to the message
      * @return {Promise<Message>} A promise which returns the message send
      */
-    public async respond(content: StringResolvable, options?: MessageOptions | RichEmbed): Promise<Message> {
+    public async respond(content: StringResolvable, options?: MessageEditOptions | MessageEmbed): Promise<Message> {
         if (this.response) {
             return this.response.edit(content, options);
         }
 
-        const response = await this.channel.send(content, options);
-        this.response = response instanceof Array ? response[0] : response;
+        const response = await this.channel.send(content);
+        this.response = response instanceof Message ? response : response[0];
 
         return this.response;
     }
@@ -66,10 +64,10 @@ export default class Request {
      * Responds to the users request starting with a mention to the user
      *
      * @param {StringResolvable} content The message that should be send to the user
-     * @param {MessageOptions | RichEmbed} options that apply to the message
+     * @param {MessageOptions | MessageEmbed} options that apply to the message
      * @return {Promise<Message>} A promise which returns the message send
      */
-    public async reply(content: StringResolvable, options?: MessageOptions | RichEmbed): Promise<Message> {
+    public async reply(content: StringResolvable, options?: MessageOptions | MessageEmbed): Promise<Message> {
         if (!options && typeof content === 'object' && !(content instanceof Array)) {
             options = content;
             content = '';
@@ -77,7 +75,7 @@ export default class Request {
             options = {};
         }
 
-        return this.respond(content, Object.assign(options, {reply: this.member ?? this.author}));
+        return this.respond(content);//, Object.assign(options, {reply: this.member ?? this.author}));
     }
 
     /**
@@ -88,10 +86,10 @@ export default class Request {
     /**
      * Send a reaction to the user message in emoji form
      *
-     * @param {string | Emoji | ReactionEmoji} emoji The reaction
+     * @param {EmojiResolvable} emoji The reaction
      * @return {Promise<MessageReaction>} A promise which returns the reaction send
      */
-    public async react(emoji: string | Emoji | ReactionEmoji): Promise<MessageReaction> {
+    public async react(emoji: EmojiResolvable): Promise<MessageReaction> {
         return await this.message.react(emoji);
     }
 
@@ -109,7 +107,7 @@ export default class Request {
      *
      * @return {GuildMember} the member
      */
-    public get member(): GuildMember {
+    public get member(): GuildMember | null {
         return this.message.member;
     }
 
@@ -127,16 +125,16 @@ export default class Request {
      *
      * @return {Guild} the guild
      */
-    public get guild(): Guild {
+    public get guild(): Guild | null {
         return this.message.guild;
     }
 
     /**
      * The channel associated with the request
      *
-     * @return {TextChannel | GroupDMChannel | DMChannel} the channel
+     * @return {TextChannel | DMChannel} the channel
      */
-    public get channel(): TextChannel | GroupDMChannel | DMChannel {
+    public get channel(): TextChannel | DMChannel {
         return this.message.channel;
     }
 }

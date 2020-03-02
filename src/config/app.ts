@@ -7,6 +7,8 @@ import { statsModule } from '../stats';
 
 @injectable()
 export default class App implements AppContract {
+    public readonly environment: string = process.env.NODE_ENV ?? 'development';
+
     /**
      * @type {boolean} Set to true when developing the application, this will provide more information for debugging
      */

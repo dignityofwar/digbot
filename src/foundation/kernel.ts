@@ -1,8 +1,9 @@
-import { injectable, Container, multiInject } from 'inversify';
+import { injectable, Container, multiInject, inject } from 'inversify';
 import { Logger } from 'winston';
 import { getLogger } from '../logger';
 import KernelContract from './contracts/kernelcontract';
 import Runnable, { RUNNABLE } from './runnable';
+import ConfigContract, { CONFIGCONTRACT } from '../config/contracts/configcontract';
 
 enum KernelState {
     Idle,
@@ -18,6 +19,8 @@ enum KernelState {
 export default class Kernel implements KernelContract {
     private static readonly logger: Logger = getLogger('kernel');
 
+    public static readonly version: string = '2.0-alfa';
+
     private status: KernelState = KernelState.Idle;
 
     /**
@@ -28,6 +31,7 @@ export default class Kernel implements KernelContract {
      */
     public constructor(
         private readonly container: Container,
+        @inject(CONFIGCONTRACT) private readonly config: ConfigContract,
         @multiInject(RUNNABLE) private readonly runnables: Runnable[],
     ) {
     }
@@ -41,11 +45,13 @@ export default class Kernel implements KernelContract {
         if (this.status != KernelState.Idle) return;
         this.status = KernelState.Starting;
 
+        Kernel.logger.info(`Starting {version: ${Kernel.version}, environment: ${this.config.app.environment}}`);
+
         try {
-            Kernel.logger.info('Booting');
+            Kernel.logger.info('Booting services');
             await Promise.all(this.runnables.map((runnable) => runnable.boot?.apply(runnable)));
 
-            Kernel.logger.info('Starting');
+            Kernel.logger.info('Starting services');
             await Promise.all(this.runnables.map(runnable => runnable.start?.apply(runnable)));
 
             this.status = KernelState.Running;
