@@ -24,7 +24,7 @@ export default class TriviaCommand extends Command {
                 .setColor(4650701)
                 .setTitle(question)
                 .setDescription(`||${answer}||`)
-                .setFooter(`${id} | ${title}`),
+                .setFooter(`id: ${id} | category: ${title}`),
         );
     }
 }

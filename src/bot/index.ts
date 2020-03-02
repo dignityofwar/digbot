@@ -5,6 +5,7 @@ import Bot from './bot';
 import { Client, Guild, RateLimitInfo } from 'discord.js';
 import Context = interfaces.Context;
 import { getLogger } from '../logger';
+import { CloseEvent } from 'ws';
 
 export const botModule = new ContainerModule((bind: Bind) => {
     bind<Runnable>(RUNNABLE).to(Bot);
