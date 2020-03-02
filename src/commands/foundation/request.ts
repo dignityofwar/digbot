@@ -1,10 +1,11 @@
 import {
+    APIMessage,
     DMChannel,
-    EmojiResolvable,
+    EmojiIdentifierResolvable,
     Guild,
     GuildMember,
-    Message, MessageEditOptions,
-    MessageEmbed,
+    Message,
+    MessageAdditions,
     MessageOptions,
     MessageReaction,
     StringResolvable,
@@ -14,22 +15,15 @@ import {
 
 /**
  * A request object which encapsulates all info of a command that got triggered
+ *
+ * TODO: Message caching disabled, due too send and edit accepting different options types
  */
 export default class Request {
     /**
-     * The message that triggered the request
+     * A response the bot sends to the user (DISABLED)
      */
-    public readonly message: Message;
 
-    /**
-     * The arguments given in the message
-     */
-    public readonly argv: string[];
-
-    /**
-     * A response the bot sends to the user
-     */
-    private response?: Message;
+    // private response?: Message;
 
     /**
      * Constructor for the Request
@@ -37,45 +31,32 @@ export default class Request {
      * @param {Message} message The message that triggered the request
      * @param {string[]} argv The arguments specified in the message
      */
-    public constructor(message: Message, argv: string[]) {
-        this.message = message;
-        this.argv = argv;
+    public constructor(
+        private readonly message: Message,
+        private readonly argv: string[],
+    ) {
     }
 
     /**
      * Responds to the users request
      *
      * @param {StringResolvable} content The message that should be send to the user
-     * @param {MessageOptions | RichEmbed} options that apply to the message
+     * @param {MessageOptions | MessageAdditions} options that apply to the message
      * @return {Promise<Message>} A promise which returns the message send
      */
-    public async respond(content: StringResolvable, options?: MessageEditOptions | MessageEmbed): Promise<Message> {
-        if (this.response) {
-            return this.response.edit(content, options);
-        }
-
-        const response = await this.channel.send(content);
-        this.response = response instanceof Message ? response : response[0];
-
-        return this.response;
+    public async respond(content: StringResolvable | APIMessage, options?: MessageOptions | MessageAdditions): Promise<Message> {
+        return this.channel.send(content, options);
     }
 
     /**
      * Responds to the users request starting with a mention to the user
      *
-     * @param {StringResolvable} content The message that should be send to the user
-     * @param {MessageOptions | MessageEmbed} options that apply to the message
+     * @param {StringResolvable | APIMessage} content The message that should be send to the user
+     * @param {MessageOptions | MessageAdditions} options that apply to the message
      * @return {Promise<Message>} A promise which returns the message send
      */
-    public async reply(content: StringResolvable, options?: MessageOptions | MessageEmbed): Promise<Message> {
-        if (!options && typeof content === 'object' && !(content instanceof Array)) {
-            options = content;
-            content = '';
-        } else if (!options) {
-            options = {};
-        }
-
-        return this.respond(content);//, Object.assign(options, {reply: this.member ?? this.author}));
+    public async reply(content: StringResolvable | APIMessage, options?: MessageOptions | MessageAdditions): Promise<Message> {
+        return this.message.reply(content, options);
     }
 
     /**
@@ -86,10 +67,10 @@ export default class Request {
     /**
      * Send a reaction to the user message in emoji form
      *
-     * @param {EmojiResolvable} emoji The reaction
+     * @param {EmojiIdentifierResolvable} emoji The reaction
      * @return {Promise<MessageReaction>} A promise which returns the reaction send
      */
-    public async react(emoji: EmojiResolvable): Promise<MessageReaction> {
+    public async react(emoji: EmojiIdentifierResolvable): Promise<MessageReaction> {
         return await this.message.react(emoji);
     }
 

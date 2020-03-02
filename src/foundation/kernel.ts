@@ -27,6 +27,7 @@ export default class Kernel implements KernelContract {
      * Constructor for the Kernel
      *
      * @param {Container} container the IoC container
+     * @param {ConfigContract} config
      * @param {Runnable} runnables
      */
     public constructor(

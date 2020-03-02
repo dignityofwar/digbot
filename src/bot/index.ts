@@ -15,6 +15,7 @@ export const botModule = new ContainerModule((bind: Bind) => {
         const shardLabel = (shardID: number) => `discord-shard-${shardID}`;
 
         // TODO: implement clientUserGuildSettingsUpdate, and clientUserSettingsUpdate maybe
+        // TODO: investigate the invalidated event
         client.on('debug', (info: string) => logger.silly(info));
         client.on('error', (error: Error) => logger.error(error.message));
         client.on('guildUnavailable', (guild: Guild) => logger.info(`Guild became unavailable: ${guild.name}(${guild.id})`));
