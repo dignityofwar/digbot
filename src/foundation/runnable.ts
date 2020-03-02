@@ -6,4 +6,4 @@ export default interface Runnable {
     terminate?(): Promise<void>;
 }
 
-export const RUNNABLE = Symbol.for('FOUNDATION.RUNNABLE');
+export const RUNNABLE = Symbol.for('foundation.Runnable');

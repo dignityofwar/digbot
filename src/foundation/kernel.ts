@@ -1,6 +1,6 @@
 import { injectable, Container, multiInject } from 'inversify';
 import { Logger } from 'winston';
-import { childLogger } from '../logger/logger';
+import { getLogger } from '../logger';
 import KernelContract from './contracts/kernelcontract';
 import Runnable, { RUNNABLE } from './runnable';
 
@@ -16,19 +16,9 @@ enum KernelState {
  */
 @injectable()
 export default class Kernel implements KernelContract {
-    private static logger: Logger = childLogger('kernel');
+    private static readonly logger: Logger = getLogger('kernel');
 
     private status: KernelState = KernelState.Idle;
-
-    /**
-     * The IoC container for DI
-     */
-    private container: Container;
-
-    /**
-     *
-     */
-    private readonly runnables: Runnable[];
 
     /**
      * Constructor for the Kernel
@@ -36,9 +26,10 @@ export default class Kernel implements KernelContract {
      * @param {Container} container the IoC container
      * @param {Runnable} runnables
      */
-    public constructor(container: Container, @multiInject(RUNNABLE) runnables: Runnable[]) {
-        this.container = container;
-        this.runnables = runnables;
+    public constructor(
+        private readonly container: Container,
+        @multiInject(RUNNABLE) private readonly runnables: Runnable[],
+    ) {
     }
 
     /**
@@ -50,13 +41,18 @@ export default class Kernel implements KernelContract {
         if (this.status != KernelState.Idle) return;
         this.status = KernelState.Starting;
 
-        Kernel.logger.info('Booting');
-        await Promise.all(this.runnables.map((runnable) => runnable.boot?.apply(runnable)));
+        try {
+            Kernel.logger.info('Booting');
+            await Promise.all(this.runnables.map((runnable) => runnable.boot?.apply(runnable)));
 
-        Kernel.logger.info('Starting');
-        await Promise.all(this.runnables.map(runnable => runnable.start?.apply(runnable)));
+            Kernel.logger.info('Starting');
+            await Promise.all(this.runnables.map(runnable => runnable.start?.apply(runnable)));
 
-        this.status = KernelState.Running;
+            this.status = KernelState.Running;
+        } catch (e) {
+            Kernel.logger.error(`Error on startup: ${e}`);
+            this.terminate(1);
+        }
     }
 
     /**
@@ -65,14 +61,19 @@ export default class Kernel implements KernelContract {
      * @param {number} code
      * @return {Promise<void>}
      */
-    public async terminate(code?: number): Promise<void> {
-        if (this.status != KernelState.Running) return;
+    public async terminate(code = 0): Promise<void> {
+        if (this.status == KernelState.Idle || this.status == KernelState.Terminating) return;
         this.status = KernelState.Terminating;
 
-        Kernel.logger.info('Terminating');
-        await Promise.all(this.runnables.map(runnable => runnable.terminate?.apply(runnable)));
+        Kernel.logger.info(`Terminating (code: ${code})`);
 
-        Kernel.logger.info('Goodbye :)');
-        process.exit(code);
+        try {
+            await Promise.all(this.runnables.map(runnable => runnable.terminate?.apply(runnable)));
+        } catch (e) {
+            Kernel.logger.error(`Error on termination: ${e}`);
+        } finally {
+            Kernel.logger.info('Goodbye :)');
+            process.exit(code);
+        }
     }
 }

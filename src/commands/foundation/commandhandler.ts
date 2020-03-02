@@ -1,9 +1,9 @@
+import { injectable } from 'inversify';
+import { Logger } from 'winston';
+import { getLogger } from '../../logger';
 import Handler from '../../bot/handler';
 import { discordEvent } from '../../bot/events';
 import { Message } from 'discord.js';
-import { injectable } from 'inversify';
-import { Logger } from 'winston';
-import { childLogger } from '../../logger/logger';
 import Executor from './executor';
 
 /**
@@ -11,7 +11,7 @@ import Executor from './executor';
  */
 @injectable()
 export default class CommandHandler extends Handler {
-    private static logger: Logger = childLogger('command-handler');
+    private static readonly logger: Logger = getLogger('command-handler');
 
     /**
      * A map that maps events names to a method that handles it
@@ -21,19 +21,12 @@ export default class CommandHandler extends Handler {
     }));
 
     /**
-     *
-     */
-    private readonly executor: Executor;
-
-    /**
      * Constructor for the CommandHandler
      *
      * @param {Executor} executor the executor that is used to run commands
      */
-    public constructor(executor: Executor) {
+    public constructor(private readonly executor: Executor) {
         super();
-
-        this.executor = executor;
     }
 
     /**

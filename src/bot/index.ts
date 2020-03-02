@@ -4,7 +4,7 @@ import Runnable, { RUNNABLE } from '../foundation/runnable';
 import Bot from './bot';
 import { Client, Guild, RateLimitInfo } from 'discord.js';
 import Context = interfaces.Context;
-import { childLogger } from '../logger/logger';
+import { getLogger } from '../logger';
 
 export const botModule = new ContainerModule((bind: Bind) => {
     bind<Runnable>(RUNNABLE).to(Bot);
@@ -13,7 +13,7 @@ export const botModule = new ContainerModule((bind: Bind) => {
         const client = new Client({
             disabledEvents: ['TYPING_START'],
         });
-        const logger = childLogger('discord-client');
+        const logger = getLogger('discord-client');
 
         // TODO: implement clientUserGuildSettingsUpdate and clientUserSettingsUpdate maybe
         client.on('debug', (info: string) => logger.silly(info));

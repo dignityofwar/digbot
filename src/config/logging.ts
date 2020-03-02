@@ -1,5 +1,7 @@
 import LoggingContract from './contracts/loggingcontract';
+import { injectable } from 'inversify';
 
+@injectable()
 export default class Logging implements LoggingContract {
     public readonly level: string = process.env.LOG_LEVEL ?? 'info';
 
@@ -9,3 +11,5 @@ export default class Logging implements LoggingContract {
 
     };
 }
+
+export const loggingConfig = new Logging();

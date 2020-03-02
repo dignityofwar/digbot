@@ -1,11 +1,11 @@
 import { createLogger, transports, format, Logger } from 'winston';
-import { config } from '../config';
+import { loggingConfig } from '../config/logging';
 
 /**
- * A default instance of the logger
+ * A default instance of the index
  */
 const logger = createLogger({
-    level: config.logging.level,
+    level: loggingConfig.level,
     format: format.combine(
         format.colorize(),
         format.timestamp(),
@@ -16,13 +16,14 @@ const logger = createLogger({
     ],
 });
 
-export default logger;
-
 /**
- * Creates a logger for a module
+ * Creates a index for a module
  *
  * @param {string} label The name of the module
  */
-export function childLogger(label: string): Logger {
+export function getLogger(label: string): Logger {
     return logger.child({label});
 }
+
+export default logger;
+

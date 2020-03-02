@@ -1,11 +1,10 @@
-import { configModule } from './config';
-
 require('reflect-metadata');
 require('dotenv').config();
 
 import { Container } from 'inversify';
 import Kernel from './foundation/kernel';
 import ConfigContract, { CONFIGCONTRACT } from './config/contracts/configcontract';
+import { configModule } from './config';
 
 const app = new Container({autoBindInjectable: true, skipBaseClassChecks: true});
 

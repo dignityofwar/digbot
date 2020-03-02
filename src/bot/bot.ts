@@ -11,16 +11,6 @@ import ConfigContract, { CONFIGCONTRACT } from '../config/contracts/configcontra
 @injectable()
 export default class Bot implements Runnable {
     /**
-     * The Discord client the bot will listen on
-     */
-    private readonly client: Client;
-
-    /**
-     * The configuration
-     */
-    private readonly config: ConfigContract;
-
-    /**
      * An array of handlers that are used to handle incoming events
      */
     private readonly handlers: Set<Handler> = new Set<Handler>();
@@ -32,11 +22,12 @@ export default class Bot implements Runnable {
      * @param {Client} client
      * @param {Handler[]} handlers The handlers that will be registered
      */
-    public constructor(@inject(CONFIGCONTRACT) config: ConfigContract, client: Client, @multiInject(Handler) handlers: Handler[]) {
-        this.config = config;
-        this.client = client;
-
-        handlers.forEach((handler: Handler) => this.registerHandler(handler));
+    public constructor(
+        @inject(CONFIGCONTRACT) private readonly config: ConfigContract,
+        private readonly client: Client,
+        @multiInject(Handler) handlers?: Handler[],
+    ) {
+        handlers?.forEach((handler: Handler) => this.registerHandler(handler));
     }
 
     /**

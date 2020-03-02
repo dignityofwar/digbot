@@ -1,6 +1,8 @@
 import DatabaseContract, { DatabaseDriverOptions, DatabaseEntity } from './contracts/databasecontract';
 import GamePresence from '../models/gamepresence';
+import { injectable } from 'inversify';
 
+@injectable()
 export default class Database implements DatabaseContract {
     public readonly entities: DatabaseEntity[] = [
         GamePresence,
@@ -24,7 +26,6 @@ export default class Database implements DatabaseContract {
             entities: this.entities,
         },
     ];
-
-
 }
 
+export const databaseConfig = new Database();
