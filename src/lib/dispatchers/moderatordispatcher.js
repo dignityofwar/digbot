@@ -47,7 +47,7 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
     guildMemberAdd(member) {
         if (welcome.check(member) && server.getChannel('general')) {
             server.getChannel('general')
-                .send(`Welcome to DIG, ** ${member.displayName} **!`)
+                .send(`Welcome to DIG, **${member.displayName}**!`)
                 .then(() => this.logger.log('info', {
                     message: 'Sent #general message',
                     label: 'ModeratorDispatcher',
