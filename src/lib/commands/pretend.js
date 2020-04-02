@@ -21,7 +21,7 @@ module.exports = class PretendCommand extends Command {
 
         const name = this.getArgument(request);
 
-        if (name.startsWith('list')) {
+        if (name == null || name.startsWith('list')) {
             return request.respond(this.listMessage(request.guild));
         }
 
@@ -41,10 +41,17 @@ module.exports = class PretendCommand extends Command {
     /**
      *
      * @param content
-     * @return {string}
+     * @return {string|null}
      */
     getArgument({ content }) {
-        return (/^[^\s]+\s+(.*)\s*$/).exec(content)[1];
+        const i = content.indexOf(' ');
+
+        if (i === -1) {
+            return null;
+        }
+
+        return content.substring(i)
+            .trim();
     }
 
     /**
@@ -55,7 +62,8 @@ module.exports = class PretendCommand extends Command {
     getRoles(guild, name) {
         if (config.has(`guilds.${guild.id}.autoRoleAssignment`)) {
             const key = Object.keys(config.get(`guilds.${guild.id}.autoRoleAssignment`))
-                .find(k => name.toUpperCase().includes(k.toUpperCase()));
+                .find(k => name.toUpperCase()
+                    .includes(k.toUpperCase()));
 
             if (key) {
                 return config.get(`guilds.${guild.id}.autoRoleAssignment.${key}`);
@@ -72,7 +80,8 @@ module.exports = class PretendCommand extends Command {
      */
     listMessage(guild) {
         return new RichEmbed().setDescription(
-            Object.keys(config.get(`guilds.${guild.id}.autoRoleAssignment`)).join('\n'),
+            Object.keys(config.get(`guilds.${guild.id}.autoRoleAssignment`))
+                .join('\n'),
         );
     }
 
