@@ -1,8 +1,4 @@
-import DiscordContract from './contracts/discordcontract';
-import { injectable } from 'inversify';
-
-@injectable()
-export default class Discord implements DiscordContract {
+export default class Discord {
     /**
      * @type {string} The Discord token used to connect to Discord
      */

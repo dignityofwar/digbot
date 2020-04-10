@@ -4,7 +4,7 @@ import {
     DMChannel,
     Guild,
     GuildChannel,
-    GuildEmoji,
+    Emoji,
     GuildMember,
     Message,
     MessageReaction,
@@ -27,9 +27,9 @@ export type onChannelDelete = (channel: DMChannel | GuildChannel) => void;
 export type onChannelPinsUpdate = (channel: DMChannel | GuildChannel, time: Date) => void;
 export type onChannelUpdate = (oldChannel: DMChannel | GuildChannel, newChannel: DMChannel | GuildChannel) => void;
 export type onDebug = (info: string) => void;
-export type onEmojiCreate = (emoji: GuildEmoji) => void;
-export type onEmojiDelete = (emoji: GuildEmoji) => void;
-export type onEmojiUpdate = (oldEmoji: GuildEmoji, newEmoji: GuildEmoji) => void;
+export type onEmojiCreate = (emoji: Emoji) => void;
+export type onEmojiDelete = (emoji: Emoji) => void;
+export type onEmojiUpdate = (oldEmoji: Emoji, newEmoji: Emoji) => void;
 export type onError = (error: Error) => void;
 export type onGuildBanAdd = (guild: Guild, user: User) => void;
 export type onGuildBanRemove = (guild: Guild, user: User) => void;

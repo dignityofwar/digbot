@@ -7,7 +7,7 @@ import {
     Message,
     MessageAdditions,
     MessageOptions,
-    MessageReaction,
+    MessageReaction, NewsChannel,
     StringResolvable,
     TextChannel,
     User,
@@ -32,8 +32,8 @@ export default class Request {
      * @param {string[]} argv The arguments specified in the message
      */
     public constructor(
-        private readonly message: Message,
-        private readonly argv: string[],
+        public readonly message: Message,
+        public readonly argv: string[],
     ) {
     }
 
@@ -115,7 +115,7 @@ export default class Request {
      *
      * @return {TextChannel | DMChannel} the channel
      */
-    public get channel(): TextChannel | DMChannel {
+    public get channel(): any {
         return this.message.channel;
     }
 }

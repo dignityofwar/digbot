@@ -1,6 +1,6 @@
 import Command from './foundation/command';
 import { injectable } from 'inversify';
-import JService from '../apis/jservice';
+import JService from '../services/jservice';
 import Request from './foundation/request';
 import { MessageEmbed } from 'discord.js';
 

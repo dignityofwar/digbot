@@ -1,12 +1,10 @@
-import AppContract from './contracts/appcontract';
-import { ContainerModule, injectable } from 'inversify';
+import { ContainerModule } from 'inversify';
 import { botModule } from '../bot';
 import { databaseModule } from '../database';
 import { commandModule } from '../commands';
-import { statsModule } from '../stats';
+// import { statsModule } from '../stats';
 
-@injectable()
-export default class App implements AppContract {
+export default class App {
     public readonly environment: string = process.env.NODE_ENV ?? 'development';
 
     /**
@@ -18,7 +16,7 @@ export default class App implements AppContract {
         databaseModule,
         botModule,
         commandModule,
-        statsModule,
+        // statsModule,
     ];
 }
 

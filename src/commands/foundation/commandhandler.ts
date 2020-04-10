@@ -2,8 +2,7 @@ import { injectable } from 'inversify';
 import { Logger } from 'winston';
 import { getLogger } from '../../logger';
 import Handler from '../../bot/handler';
-import { discordEvent } from '../../bot/events';
-import { Message } from 'discord.js';
+import { Client, Message } from 'discord.js';
 import Executor from './executor';
 
 /**
@@ -14,19 +13,19 @@ export default class CommandHandler extends Handler {
     private static readonly logger: Logger = getLogger('command-handler');
 
     /**
-     * A map that maps events names to a method that handles it
-     */
-    public readonly listeners: Map<string, discordEvent> = new Map<string, discordEvent>(Object.entries({
-        message: this.onMessage,
-    }));
-
-    /**
      * Constructor for the CommandHandler
      *
      * @param {Executor} executor the executor that is used to run commands
      */
     public constructor(private readonly executor: Executor) {
         super();
+    }
+
+    /**
+     * @param {Client} client
+     */
+    public up(client: Client): void {
+        client.on('message', this.onMessage.bind(this));
     }
 
     /**

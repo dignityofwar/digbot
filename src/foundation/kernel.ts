@@ -3,7 +3,7 @@ import { Logger } from 'winston';
 import { getLogger } from '../logger';
 import KernelContract from './contracts/kernelcontract';
 import Runnable, { RUNNABLE } from './runnable';
-import ConfigContract, { CONFIGCONTRACT } from '../config/contracts/configcontract';
+import { config } from '../config';
 
 enum KernelState {
     Idle,
@@ -27,12 +27,10 @@ export default class Kernel implements KernelContract {
      * Constructor for the Kernel
      *
      * @param {Container} container the IoC container
-     * @param {ConfigContract} config
      * @param {Runnable} runnables
      */
     public constructor(
         private readonly container: Container,
-        @inject(CONFIGCONTRACT) private readonly config: ConfigContract,
         @multiInject(RUNNABLE) private readonly runnables: Runnable[],
     ) {
     }
@@ -46,7 +44,7 @@ export default class Kernel implements KernelContract {
         if (this.status != KernelState.Idle) return;
         this.status = KernelState.Starting;
 
-        Kernel.logger.info(`Starting {version: ${Kernel.version}, environment: ${this.config.app.environment}}`);
+        Kernel.logger.info(`Starting {version: ${Kernel.version}, environment: ${config.app.environment}}`);
 
         try {
             Kernel.logger.info('Booting services');

@@ -1,11 +1,13 @@
-import DatabaseContract, { DatabaseDriverOptions, DatabaseEntity } from './contracts/databasecontract';
-import GamePresence from '../models/gamepresence';
-import { injectable } from 'inversify';
+import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
+import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
+import { EntitySchema } from 'typeorm/entity-schema/EntitySchema';
 
-@injectable()
-export default class Database implements DatabaseContract {
+// import GamePresence from '../entities/gamepresence';
+
+
+export default class Database {
     public readonly entities: DatabaseEntity[] = [
-        GamePresence,
+        // GamePresence,
     ];
 
     public readonly driver: string = process.env.DATABASE_DRIVER ?? 'sqlite';
@@ -27,5 +29,8 @@ export default class Database implements DatabaseContract {
         },
     ];
 }
+
+export declare type DatabaseDriverOptions = MysqlConnectionOptions | SqliteConnectionOptions;
+export declare type DatabaseEntity = (Function | string | EntitySchema);
 
 export const databaseConfig = new Database();
