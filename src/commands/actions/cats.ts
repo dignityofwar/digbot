@@ -1,33 +1,26 @@
-import Command from './foundation/command';
+import Action from '../foundation/action';
 import { injectable } from 'inversify';
-import TheCatsApi from '../services/thecatsapi';
-import Request from './foundation/request';
+import TheCatsApi from '../../services/thecatsapi';
+import Request from '../foundation/request';
 import { MessageEmbed } from 'discord.js';
 
 /**
  * A command that retrieves cat pictures from the Cat Api.
  */
 @injectable()
-export default class CatsCommand extends Command {
+export default class Cats extends Action {
     /**
-     * The name of the command(without spaces)
+     * The name of the action
      */
-    public readonly name: string = '!cats';
+    public readonly name: string = 'cats';
 
     /**
-     * The api that should be used by the command
-     */
-    private api: TheCatsApi;
-
-    /**
-     * Constructor for the CatsCommand
+     * Constructor for the Cats
      *
      * @param {TheCatsApi} api the api that should be used
      */
-    public constructor(api: TheCatsApi) {
+    public constructor(private readonly api: TheCatsApi) {
         super();
-
-        this.api = api;
     }
 
     /**

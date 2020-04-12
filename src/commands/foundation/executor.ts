@@ -1,8 +1,8 @@
 import { injectable } from 'inversify';
-import CommandRepository from './commandrepository';
 import CommandLexer from './lexer';
 import Request from './request';
 import { Message } from 'discord.js';
+import Action from './action';
 
 /**
  * Executor for running commands on Discord messages
@@ -10,17 +10,11 @@ import { Message } from 'discord.js';
 @injectable()
 export default class Executor {
     /**
-     * The repository which holds all the commands
-     */
-    private readonly repository: CommandRepository;
-
-    /**
      * Constructor for the Executor class
      *
-     * @param {CommandRepository} repository the repository with all the commands
+     * @param {Map} repository the repository with all the commands
      */
-    public constructor(repository: CommandRepository) {
-        this.repository = repository;
+    public constructor(private readonly repository: Map<string, Action>) {
     }
 
     /**
@@ -37,7 +31,8 @@ export default class Executor {
         if (this.repository.has(name)) {
             const request: Request = new Request(message, lexer.remaining());
 
-            await this.repository.get(name).execute(request);
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            await this.repository.get(name)!.execute(request);
         }
     }
 }

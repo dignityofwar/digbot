@@ -2,10 +2,10 @@ import Request from './request';
 import { injectable } from 'inversify';
 
 /**
- * Base class for a Command
+ * Base class for a Action
  */
 @injectable()
-export default abstract class Command {
+export default abstract class Action {
     /**
      * The name of the command(without spaces)
      */
