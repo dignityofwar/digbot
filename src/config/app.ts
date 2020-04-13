@@ -3,9 +3,11 @@ import { botModule } from '../bot';
 import { databaseModule } from '../database';
 import { commandModule } from '../commands';
 import { getBool } from '../utils/env';
-// import { statsModule } from '../stats';
 
 export default class App {
+    /**
+     * @type {string} The current environment the bot is running in
+     */
     public readonly environment: string = process.env.NODE_ENV ?? 'development';
 
     /**

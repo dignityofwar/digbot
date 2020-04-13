@@ -17,7 +17,7 @@ enum KernelState {
  */
 @injectable()
 export default class Kernel implements KernelContract {
-    private static readonly logger: Logger = getLogger('kernel');
+    private readonly logger: Logger = getLogger('kernel');
 
     public static readonly version: string = '2.0-alfa';
 
@@ -44,18 +44,18 @@ export default class Kernel implements KernelContract {
         if (this.status != KernelState.Idle) return;
         this.status = KernelState.Starting;
 
-        Kernel.logger.info(`Starting {version: ${Kernel.version}, environment: ${config.app().environment}}`);
+        this.logger.info(`Starting {version: ${Kernel.version}, environment: ${config.app().environment}}`);
 
         try {
-            Kernel.logger.info('Booting services');
+            this.logger.info('Booting services');
             await Promise.all(this.runnables.map((runnable) => runnable.boot?.apply(runnable)));
 
-            Kernel.logger.info('Starting services');
+            this.logger.info('Starting services');
             await Promise.all(this.runnables.map(runnable => runnable.start?.apply(runnable)));
 
             this.status = KernelState.Running;
         } catch (e) {
-            Kernel.logger.error(`Error on startup: ${e}`);
+            this.logger.error(`Error on startup: ${e}`);
             this.terminate(1);
         }
     }
@@ -70,14 +70,14 @@ export default class Kernel implements KernelContract {
         if (this.status == KernelState.Idle || this.status == KernelState.Terminating) return;
         this.status = KernelState.Terminating;
 
-        Kernel.logger.info(`Terminating (code: ${code})`);
+        this.logger.info(`Terminating (code: ${code})`);
 
         try {
             await Promise.all(this.runnables.map(runnable => runnable.terminate?.apply(runnable)));
         } catch (e) {
-            Kernel.logger.error(`Error on termination: ${e}`);
+            this.logger.error(`Error on termination: ${e}`);
         } finally {
-            Kernel.logger.info('Goodbye :)');
+            this.logger.info('Goodbye :)');
             process.exit(code);
         }
     }
