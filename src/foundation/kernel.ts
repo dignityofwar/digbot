@@ -3,7 +3,7 @@ import { Logger } from 'winston';
 import { getLogger } from '../logger';
 import KernelContract from './contracts/kernelcontract';
 import Runnable, { RUNNABLE } from './runnable';
-import { config } from '../config';
+import config from '../config';
 
 enum KernelState {
     Idle,
@@ -44,7 +44,7 @@ export default class Kernel implements KernelContract {
         if (this.status != KernelState.Idle) return;
         this.status = KernelState.Starting;
 
-        Kernel.logger.info(`Starting {version: ${Kernel.version}, environment: ${config.app.environment}}`);
+        Kernel.logger.info(`Starting {version: ${Kernel.version}, environment: ${config.app().environment}}`);
 
         try {
             Kernel.logger.info('Booting services');

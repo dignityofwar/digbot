@@ -1,36 +1,46 @@
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 import { EntitySchema } from 'typeorm/entity-schema/EntitySchema';
+import { get, getBool, getInt } from '../utils/env';
 
-// import GamePresence from '../entities/gamepresence';
-
+import Command from '../models/command';
+import Filter from '../models/filter';
+import List from '../models/list';
+import Snowflake from '../models/snowflake';
+import Throttle from '../models/throttle';
 
 export default class Database {
     public readonly entities: DatabaseEntity[] = [
-        // GamePresence,
+        Command,
+        Filter,
+        List,
+        Snowflake,
+        Throttle,
     ];
 
-    public readonly driver: string = process.env.DATABASE_DRIVER ?? 'sqlite';
+    public readonly driver: string = get('DATABASE_DRIVER', 'sqlite');
 
-    public readonly drivers: DatabaseDriverOptions[] = [
-        {
+    public readonly drivers: Drivers = {
+        'mysql': {
             type: 'mysql',
-            host: process.env.DATABASE_HOST ?? 'localhost',
-            port: process.env.DATABASE_PORT ? parseInt(process.env.DATABASE_PORT) : 3306,
-            username: process.env.DATABASE_USERNAME ?? '',
-            password: process.env.DATABASE_PASSWORD ?? '',
-            database: process.env.DATABASE_DATABASE ?? 'digbot',
-            ssl: /^true$/i.test(process.env.DATABASE_SSL?.trim() ?? ''),
-            entities: this.entities,
-        }, {
-            type: 'sqlite',
-            database: process.env.DATABASE_PATH ?? 'storage/database.sqlite',
+            host: get('DATABASE_HOST', 'localhost'),
+            port: getInt('DATABASE_PORT', 3306),
+            username: get('DATABASE_USERNAME'),
+            password: get('DATABASE_PASSWORD', ''),
+            database: get('DATABASE_DATABASE', 'digbot'),
+            ssl: getBool('DATABASE_SSL'),
             entities: this.entities,
         },
-    ];
+        'sqlite': {
+            type: 'sqlite',
+            database: get('DATABASE_PATH', 'storage/database.sqlite'),
+            entities: this.entities,
+        },
+    };
 }
 
 export declare type DatabaseDriverOptions = MysqlConnectionOptions | SqliteConnectionOptions;
 export declare type DatabaseEntity = (Function | string | EntitySchema);
-
-export const databaseConfig = new Database();
+export declare type Drivers = {
+    [K in string]: DatabaseDriverOptions;
+}

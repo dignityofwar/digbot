@@ -6,10 +6,8 @@ import { injectable } from 'inversify';
  */
 @injectable()
 export default abstract class Action {
-    /**
-     * The name of the command(without spaces)
-     */
-    public abstract readonly name: string;
+    public constructor(public readonly name: string) {
+    }
 
     /**
      * Run the command given the request

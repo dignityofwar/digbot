@@ -1,11 +1,11 @@
 import { createLogger, transports, format, Logger } from 'winston';
-import { loggingConfig } from '../config/logging';
+import config from '../config';
 
 /**
  * A default instance of the index
  */
 const defaultLogger = createLogger({
-    level: loggingConfig.level,
+    level: config.logging().level,
     format: format.combine(
         format.colorize(),
         format.timestamp(),

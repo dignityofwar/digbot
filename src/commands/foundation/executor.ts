@@ -28,11 +28,9 @@ export default class Executor {
         const lexer = new CommandLexer(command);
         const name = lexer.next();
 
-        if (this.repository.has(name)) {
-            const request: Request = new Request(message, lexer.remaining());
 
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            await this.repository.get(name)!.execute(request);
-        }
+        const request: Request = new Request(message, lexer.remaining());
+
+        await this.repository.get(name)?.execute(request);
     }
 }

@@ -6,12 +6,17 @@ import { MessageEmbed } from 'discord.js';
 
 @injectable()
 export default class Trivia extends Action {
-    public readonly name: string = 'trivia';
-
+    /**
+     * @param {JService} api
+     */
     public constructor(private readonly api: JService) {
-        super();
+        super('trivia');
     }
 
+    /**
+     * @param {Request} request
+     * @return {Promise<void>}
+     */
     public async execute(request: Request): Promise<void> {
         const {id, question, answer, category: {title}} = await this.api.random();
 

@@ -1,5 +1,13 @@
 import List from './list';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 
 export enum FilterType {
     BLACKLIST,
@@ -7,7 +15,7 @@ export enum FilterType {
 }
 
 @Entity()
-export default class Filter {
+export default class Filter extends BaseEntity{
     @PrimaryGeneratedColumn()
     public ID: number;
 

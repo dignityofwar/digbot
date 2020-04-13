@@ -9,10 +9,6 @@ import { MessageEmbed } from 'discord.js';
  */
 @injectable()
 export default class Cats extends Action {
-    /**
-     * The name of the action
-     */
-    public readonly name: string = 'cats';
 
     /**
      * Constructor for the Cats
@@ -20,7 +16,7 @@ export default class Cats extends Action {
      * @param {TheCatsApi} api the api that should be used
      */
     public constructor(private readonly api: TheCatsApi) {
-        super();
+        super('cats');
     }
 
     /**

@@ -5,13 +5,12 @@ import Bot from './bot';
 import { Client, Guild } from 'discord.js';
 import defaultLogger, { getLogger } from '../logger';
 import { CloseEvent } from 'ws';
-
-import { discordConfig } from '../config/discord';
+import config from '../config';
 
 export const botModule = new ContainerModule((bind: Bind) => {
     bind<Runnable>(RUNNABLE).to(Bot);
 
-    bind<string>('discordToken').toConstantValue(discordConfig.token).whenInjectedInto(Bot);
+    bind<string>('discordToken').toConstantValue(config.discord().token).whenInjectedInto(Bot);
 
     bind<Client>(Client).toDynamicValue((): Client => {
         const client = new Client();

@@ -5,5 +5,3 @@ export default class Logging {
 
     public readonly drivers: any = {};
 }
-
-export const loggingConfig = new Logging();

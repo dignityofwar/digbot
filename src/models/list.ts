@@ -1,8 +1,16 @@
 import Snowflake, { SnowflakeType } from './snowflake';
-import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
-export default class List {
+export default class List extends BaseEntity{
     @PrimaryGeneratedColumn()
     public ID: number;
 

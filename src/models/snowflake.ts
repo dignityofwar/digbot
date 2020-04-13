@@ -1,4 +1,4 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum SnowflakeType {
     ROLE = 'role',
@@ -6,7 +6,7 @@ export enum SnowflakeType {
 }
 
 @Entity()
-export default class Snowflake {
+export default class Snowflake extends BaseEntity{
     @PrimaryGeneratedColumn()
     public ID: number;
 
