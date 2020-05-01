@@ -1,6 +1,5 @@
 import { inject, injectable, multiInject } from 'inversify';
 import Handler from './handler';
-import { discordEvent } from './events';
 import Runnable from '../foundation/runnable';
 import { Client } from 'discord.js';
 

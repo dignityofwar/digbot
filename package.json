@@ -34,29 +34,29 @@
   "homepage": "https://github.com/dignityofwar/DIGBot#readme",
   "dependencies": {
     "axios": "^0.19.2",
-    "discord.js": "^12.1.1",
+    "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "inversify": "^5.0.1",
-    "ioredis": "^4.16.1",
+    "ioredis": "^4.16.3",
     "lodash": "^4.17.15",
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.1.13",
-    "sqlite3": "^4.1.1",
+    "sqlite3": "^4.2.0",
     "typeorm": "^0.2.24",
     "winston": "^3.2.1",
     "winston-transport": "^4.3.0",
-    "ws": "^7.2.3"
+    "ws": "^7.2.5"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
-    "@types/ioredis": "^4.14.9",
-    "@types/lodash": "^4.14.149",
-    "@types/node": "^13.11.0",
-    "@types/ws": "^7.2.3",
-    "@typescript-eslint/eslint-plugin": "^2.27.0",
-    "@typescript-eslint/parser": "^2.27.0",
+    "@types/ioredis": "^4.16.0",
+    "@types/lodash": "^4.14.150",
+    "@types/node": "^13.13.4",
+    "@types/ws": "^7.2.4",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
     "eslint": "^6.8.0",
-    "mocha": "^7.1.1",
+    "mocha": "^7.1.2",
     "typescript": "^3.8.3"
   }
 }
