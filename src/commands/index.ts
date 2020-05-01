@@ -8,8 +8,10 @@ import Executor from './foundation/executor';
 import Trivia from './actions/trivia';
 import Context = interfaces.Context;
 import CaseInsensitiveMap from '../utils/caseinsensitivemap';
+import RateLimiter, { RATELIMITER } from '../utils/ratelimiter/ratelimiter';
+import RedisRateLimiter from '../utils/ratelimiter/redisratelimiter';
 
-type ABCAction = [string, Action];
+// type ABCAction = [string, Action];
 
 export const commandModule = new ContainerModule((bind: Bind) => {
     bind<Executor>(Executor).toSelf().inSingletonScope();
@@ -23,6 +25,8 @@ export const commandModule = new ContainerModule((bind: Bind) => {
 
         return repository;
     }).whenInjectedInto(Executor);
+
+    bind<RateLimiter>(RATELIMITER).to(RedisRateLimiter);
 
     bind<Action>(Action).to(Cats);
     bind<Action>(Action).to(Trivia);

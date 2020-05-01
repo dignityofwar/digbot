@@ -20,6 +20,5 @@ export default class App {
         databaseModule,
         botModule,
         commandModule,
-        // statsModule,
     ]);
 }

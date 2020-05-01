@@ -1,4 +1,4 @@
-import { Redis } from 'ioredis';
+import { RedisClient } from 'redis';
 import RateLimiter from './ratelimiter';
 
 export type RedisRateLimiterOptions = {
@@ -9,10 +9,10 @@ export default class RedisRateLimiter extends RateLimiter {
     private readonly keyPrefix: string;
 
     /**
-     * @param {Redis} redis
+     * @param {RedisClient} redis
      * @param {RedisRateLimiterOptions} options
      */
-    public constructor(private readonly redis: Redis, options?: RedisRateLimiterOptions) {
+    public constructor(private readonly redis: RedisClient, options?: RedisRateLimiterOptions) {
         super();
 
         this.keyPrefix = options?.keyPrefix ?? 'ratelimiter';
@@ -34,23 +34,30 @@ export default class RedisRateLimiter extends RateLimiter {
      * @param {Number} times
      * @return {Promise<Number>}
      */
-    public async hit(key: string, decay: number, times = 1): Promise<number> {
-        const hits = await this.attempts(key);
+    public hit(key: string, decay: number, times = 1): Promise<number> {
+        return new Promise<number>(async (resolve, reject) => {
+            key = this.key(key);
+            const hits = await this.attempts(key);
 
-        const pipeline = this.redis.pipeline().incrby(`${this.keyPrefix}:${key}`, times);
+            const pipeline = this.redis.multi();
 
-        if (!hits) {
-            pipeline.expire(`${this.keyPrefix}:${key}`, decay);
-        }
+            pipeline.incrby(key, times);
 
-        return pipeline.exec().then(([[, h]]) => h);
+            if (!hits)
+                pipeline.expire(key, decay);
+
+            pipeline.exec((e, [, h]) => e ? reject(e) : resolve(h));
+        });
     }
 
     /**
      * @param {String} key
      */
     public async attempts(key: string): Promise<number> {
-        return parseInt(await this.redis.get(`${this.keyPrefix}:${key}`) ?? '');
+        return new Promise(async (resolve, reject) => {
+            key = this.key(key);
+            this.redis.get(key, (e, n) => e ? reject(e) : resolve(parseInt(n)));
+        });
     }
 
     /**
@@ -58,7 +65,10 @@ export default class RedisRateLimiter extends RateLimiter {
      * @return {Promise<boolean>}
      */
     public async resetAttempts(key: string): Promise<boolean> {
-        return this.redis.del(`${this.keyPrefix}:${key}`).then((r: any) => !!r);
+        return new Promise((resolve, reject) => {
+            key = this.key(key);
+            this.redis.del(key, (e,n) => e ? reject(e) : resolve(n > 0));
+        });
     }
 
     /**
@@ -68,5 +78,13 @@ export default class RedisRateLimiter extends RateLimiter {
      */
     public async retriesLeft(key: string, maxAttempts: number): Promise<number> {
         return maxAttempts - await this.attempts(key);
+    }
+
+    /**
+     * @param {string} key
+     * @return {string}
+     */
+    private key(key: string): string {
+        return `${this.keyPrefix}:${key}`;
     }
 }
