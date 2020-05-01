@@ -1,3 +1,4 @@
+import { inject, injectable, optional } from 'inversify';
 import { RedisClient } from 'redis';
 import RateLimiter from './ratelimiter';
 
@@ -5,6 +6,7 @@ export type RedisRateLimiterOptions = {
     keyPrefix?: string;
 };
 
+@injectable()
 export default class RedisRateLimiter extends RateLimiter {
     private readonly keyPrefix: string;
 
@@ -12,7 +14,10 @@ export default class RedisRateLimiter extends RateLimiter {
      * @param {RedisClient} redis
      * @param {RedisRateLimiterOptions} options
      */
-    public constructor(private readonly redis: RedisClient, options?: RedisRateLimiterOptions) {
+    public constructor(
+        private readonly redis: RedisClient,
+        @inject('options') @optional() options?: RedisRateLimiterOptions,
+    ) {
         super();
 
         this.keyPrefix = options?.keyPrefix ?? 'ratelimiter';
@@ -67,7 +72,7 @@ export default class RedisRateLimiter extends RateLimiter {
     public async resetAttempts(key: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
             key = this.key(key);
-            this.redis.del(key, (e,n) => e ? reject(e) : resolve(n > 0));
+            this.redis.del(key, (e, n) => e ? reject(e) : resolve(n > 0));
         });
     }
 

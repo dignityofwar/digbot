@@ -6,6 +6,7 @@ import config from '../config';
 import { Connection, ConnectionManager } from 'typeorm';
 import { createClient, RedisClient } from 'redis';
 import { getLogger } from '../logger';
+import Kernel from '../foundation/kernel';
 
 export const databaseModule = new ContainerModule((bind: Bind) => {
     bind<Runnable>(RUNNABLE).to(Connector);
@@ -20,10 +21,13 @@ export const databaseModule = new ContainerModule((bind: Bind) => {
         .inSingletonScope();
 
     bind<RedisClient>(RedisClient)
-        .toDynamicValue(() => {
-            const client = createClient(6379, 'redis');
+        .toDynamicValue(({container}) => {
+            const client = createClient(6379, 'localhost');
             const logger = getLogger('redis');
-            client.on('error', logger.error);
+            client.on('error', e => {
+                logger.error(e.toString());
+                container.get(Kernel).terminate(1);
+            });
 
             return client;
         })

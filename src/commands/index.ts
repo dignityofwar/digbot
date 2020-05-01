@@ -1,17 +1,16 @@
 import { ContainerModule, interfaces } from 'inversify';
-import Bind = interfaces.Bind;
 import Handler from '../bot/handler';
 import CommandHandler from './foundation/commandhandler';
 import Action from './foundation/action';
 import Cats from './actions/cats';
 import Executor from './foundation/executor';
 import Trivia from './actions/trivia';
-import Context = interfaces.Context;
 import CaseInsensitiveMap from '../utils/caseinsensitivemap';
 import RateLimiter, { RATELIMITER } from '../utils/ratelimiter/ratelimiter';
 import RedisRateLimiter from '../utils/ratelimiter/redisratelimiter';
-
-// type ABCAction = [string, Action];
+import Throttle, { ThrottleType } from '../models/throttle';
+import Bind = interfaces.Bind;
+import Context = interfaces.Context;
 
 export const commandModule = new ContainerModule((bind: Bind) => {
     bind<Executor>(Executor).toSelf().inSingletonScope();
@@ -27,6 +26,15 @@ export const commandModule = new ContainerModule((bind: Bind) => {
     }).whenInjectedInto(Executor);
 
     bind<RateLimiter>(RATELIMITER).to(RedisRateLimiter);
+
+    bind<Throttle>(Throttle).toDynamicValue(() => {
+        const throttle = new Throttle();
+        throttle.decay = 5;
+        throttle.max = 5;
+        throttle.type = ThrottleType.CHANNEL;
+
+        return throttle;
+    }).whenInjectedInto(Executor);
 
     bind<Action>(Action).to(Cats);
     bind<Action>(Action).to(Trivia);
