@@ -11,7 +11,7 @@ export default class Throttle extends BaseEntity {
     @PrimaryGeneratedColumn()
     public ID: number;
 
-    @Column({type: 'enum', enum: ThrottleType})
+    @Column({type: 'simple-enum', enum: ThrottleType})
     public type: ThrottleType;
 
     @Column()

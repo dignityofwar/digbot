@@ -10,7 +10,7 @@ import Executor from './executor';
  */
 @injectable()
 export default class CommandHandler extends Handler {
-    private readonly logger: Logger = getLogger('command-handler');
+    private static readonly logger: Logger = getLogger('command-handler');
 
     /**
      * Constructor for the CommandHandler
@@ -34,7 +34,7 @@ export default class CommandHandler extends Handler {
      * @param {Message} message the message the user send
      */
     public onMessage(message: Message): void {
-        this.executor.execute(message.cleanContent, message)
-            .catch((e: Error) => this.logger.error(e.stack ?? e.message));
+        this.executor.execute(message)
+            .catch((e: Error) => CommandHandler.logger.error(e.stack ?? e.message));
     }
 }

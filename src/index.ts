@@ -5,15 +5,13 @@ import Kernel from './foundation/kernel';
 const kernel = app.get<Kernel>(Kernel);
 
 kernel.run().then(() => {
-    process.on('exit', () => {
+    process.on('unhandledRejection', (e) => {
+        kernel.terminateError(e);
+    }).on('exit', () => {
         kernel.terminate();
-    });
-
-    process.on('SIGTERM', () => {
+    }).on('SIGTERM', () => {
         kernel.terminate();
-    });
-
-    process.on('SIGINT', () => {
+    }).on('SIGINT', () => {
         kernel.terminate();
     });
 });

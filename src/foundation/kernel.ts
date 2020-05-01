@@ -1,4 +1,4 @@
-import { injectable, Container, multiInject, inject } from 'inversify';
+import { injectable, Container, multiInject } from 'inversify';
 import { Logger } from 'winston';
 import { getLogger } from '../logger';
 import KernelContract from './contracts/kernelcontract';
@@ -17,9 +17,9 @@ enum KernelState {
  */
 @injectable()
 export default class Kernel implements KernelContract {
-    private readonly logger: Logger = getLogger('kernel');
+    private static readonly logger: Logger = getLogger('kernel');
 
-    public static readonly version: string = '2.0-alfa';
+    public static readonly version: string = '2.0.0-alfa';
 
     private status: KernelState = KernelState.Idle;
 
@@ -44,19 +44,19 @@ export default class Kernel implements KernelContract {
         if (this.status != KernelState.Idle) return;
         this.status = KernelState.Starting;
 
-        this.logger.info(`Starting {version: ${Kernel.version}, environment: ${config.app().environment}}`);
+        Kernel.logger.info(`Starting {version: ${Kernel.version}, environment: ${config.app.environment}}`);
 
         try {
-            this.logger.info('Booting services');
+            Kernel.logger.info('Booting services');
             await Promise.all(this.runnables.map((runnable) => runnable.boot?.apply(runnable)));
 
-            this.logger.info('Starting services');
+            Kernel.logger.info('Starting services');
             await Promise.all(this.runnables.map(runnable => runnable.start?.apply(runnable)));
 
             this.status = KernelState.Running;
         } catch (e) {
-            this.logger.error(`Error on startup: ${e}`);
-            this.terminate(1);
+            Kernel.logger.error(`Error on startup: ${e}`);
+            await this.terminate(1);
         }
     }
 
@@ -70,15 +70,26 @@ export default class Kernel implements KernelContract {
         if (this.status == KernelState.Idle || this.status == KernelState.Terminating) return;
         this.status = KernelState.Terminating;
 
-        this.logger.info(`Terminating (code: ${code})`);
+        Kernel.logger.info(`Terminating (code: ${code})`);
 
         try {
             await Promise.all(this.runnables.map(runnable => runnable.terminate?.apply(runnable)));
         } catch (e) {
-            this.logger.error(`Error on termination: ${e}`);
+            Kernel.logger.error(`Error on termination: ${e}`);
         } finally {
-            this.logger.info('Goodbye :)');
+            Kernel.logger.info('Goodbye :)');
             process.exit(code);
         }
+    }
+
+    /**
+     * @param err
+     * @param {number} code
+     * @return {Promise<void>}
+     */
+    public async terminateError(err: any, code = 1): Promise<void> {
+        Kernel.logger.error(err.stack ?? err.message ?? err.toString());
+
+        await this.terminate(code);
     }
 }

@@ -15,14 +15,17 @@ export default class Command extends BaseEntity {
     @PrimaryGeneratedColumn()
     public ID: number;
 
-    @ManyToOne(() => Filter, {eager: true})
+    @ManyToOne(() => Filter)
     public roleFilter: Filter;
 
-    @ManyToOne(() => Filter, {eager: true})
+    @ManyToOne(() => Filter)
     public channelFilter: Filter;
 
-    @ManyToOne(() => Throttle, {eager: true, })
+    @ManyToOne(() => Throttle)
     public throttle: Throttle;
+
+    @Column()
+    public name: string;
 
     @Column()
     public action: string;

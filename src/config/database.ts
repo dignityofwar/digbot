@@ -10,7 +10,7 @@ import Snowflake from '../models/snowflake';
 import Throttle from '../models/throttle';
 
 export default class Database {
-    public readonly entities: DatabaseEntity[] = [
+    public readonly entities: (Function | string | EntitySchema)[] = [
         Command,
         Filter,
         List,
@@ -30,6 +30,7 @@ export default class Database {
             database: get('DATABASE_DATABASE', 'digbot'),
             ssl: getBool('DATABASE_SSL'),
             entities: this.entities,
+            synchronize: getBool('DATABASE_SYNCHRONIZE', true),
         },
         'sqlite': {
             type: 'sqlite',
@@ -40,7 +41,6 @@ export default class Database {
 }
 
 export declare type DatabaseDriverOptions = MysqlConnectionOptions | SqliteConnectionOptions;
-export declare type DatabaseEntity = (Function | string | EntitySchema);
 export declare type Drivers = {
     [K in string]: DatabaseDriverOptions;
 }

@@ -3,10 +3,11 @@ import Bind = interfaces.Bind;
 import Runnable, { RUNNABLE } from '../foundation/runnable';
 import Connector from './connector';
 import config from '../config';
-import { DatabaseDriverOptions } from '../config/database';
+import { Connection, ConnectionManager } from 'typeorm';
 
 export const databaseModule = new ContainerModule((bind: Bind) => {
     bind<Runnable>(RUNNABLE).to(Connector);
 
-    bind<DatabaseDriverOptions>('driverConfig').toConstantValue(config.database().drivers[config.database().driver]).whenInjectedInto(Connector);
+    bind<ConnectionManager>(ConnectionManager).toDynamicValue(() => new ConnectionManager()).inSingletonScope();
+    bind<Connection>(Connection).toDynamicValue((context) => context.container.get(ConnectionManager).create(config.database.drivers[config.database.driver])).inSingletonScope();
 });

@@ -10,7 +10,7 @@ import config from '../config';
 export const botModule = new ContainerModule((bind: Bind) => {
     bind<Runnable>(RUNNABLE).to(Bot);
 
-    bind<string>('discordToken').toConstantValue(config.discord().token).whenInjectedInto(Bot);
+    bind<string>('discordToken').toConstantValue(config.discord.token).whenInjectedInto(Bot);
 
     bind<Client>(Client).toDynamicValue((): Client => {
         const client = new Client();

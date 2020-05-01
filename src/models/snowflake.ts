@@ -10,7 +10,7 @@ export default class Snowflake extends BaseEntity{
     @PrimaryGeneratedColumn()
     public ID: number;
 
-    @Column({type: 'enum', enum: SnowflakeType})
+    @Column({type: 'simple-enum', enum: SnowflakeType})
     public type: SnowflakeType;
 
     @Column()

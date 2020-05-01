@@ -15,11 +15,11 @@ export enum FilterType {
 }
 
 @Entity()
-export default class Filter extends BaseEntity{
+export default class Filter extends BaseEntity {
     @PrimaryGeneratedColumn()
     public ID: number;
 
-    @Column({type: 'enum', enum: FilterType})
+    @Column({type: 'simple-enum', enum: FilterType})
     public type: FilterType;
 
     @Column()
@@ -28,7 +28,7 @@ export default class Filter extends BaseEntity{
     @Column()
     public name: string;
 
-    @ManyToOne(() => List, {eager: true})
+    @ManyToOne(() => List)
     public list: List;
 
     @CreateDateColumn()

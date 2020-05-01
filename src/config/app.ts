@@ -1,8 +1,9 @@
 import { ContainerModule } from 'inversify';
+import { getBool } from '../utils/env';
+
 import { botModule } from '../bot';
 import { databaseModule } from '../database';
 import { commandModule } from '../commands';
-import { getBool } from '../utils/env';
 
 export default class App {
     /**
@@ -15,10 +16,10 @@ export default class App {
      */
     public readonly debug: boolean = getBool('DEBUG');
 
-    public readonly modules: ContainerModule[] = [
+    public readonly modules = (): ContainerModule[] => ([
         databaseModule,
         botModule,
         commandModule,
         // statsModule,
-    ];
+    ]);
 }

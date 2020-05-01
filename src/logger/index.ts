@@ -5,7 +5,7 @@ import config from '../config';
  * A default instance of the index
  */
 const defaultLogger = createLogger({
-    level: config.logging().level,
+    level: config.logging.level,
     format: format.combine(
         format.colorize(),
         format.timestamp(),

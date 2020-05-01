@@ -1,11 +1,23 @@
 import { Redis } from 'ioredis';
+import RateLimiter from './ratelimiter';
 
-export default class RateLimiter {
-    private readonly redis: Redis;
+export type RedisRateLimiterOptions = {
+    keyPrefix?: string;
+};
 
-    public constructor(redis: Redis) {
-        this.redis = redis;
+export default class RedisRateLimiter extends RateLimiter {
+    private readonly keyPrefix: string;
+
+    /**
+     * @param {Redis} redis
+     * @param {RedisRateLimiterOptions} options
+     */
+    public constructor(private readonly redis: Redis, options?: RedisRateLimiterOptions) {
+        super();
+
+        this.keyPrefix = options?.keyPrefix ?? 'ratelimiter';
     }
+
 
     /**
      * @param {String} key
@@ -25,10 +37,10 @@ export default class RateLimiter {
     public async hit(key: string, decay: number, times = 1): Promise<number> {
         const hits = await this.attempts(key);
 
-        const pipeline = this.redis.pipeline().incrby(`ratelimiter:${key}`, times);
+        const pipeline = this.redis.pipeline().incrby(`${this.keyPrefix}:${key}`, times);
 
         if (!hits) {
-            pipeline.expire(`ratelimiter:${key}`, decay);
+            pipeline.expire(`${this.keyPrefix}:${key}`, decay);
         }
 
         return pipeline.exec().then(([[, h]]) => h);
@@ -38,7 +50,7 @@ export default class RateLimiter {
      * @param {String} key
      */
     public async attempts(key: string): Promise<number> {
-        return parseInt(await this.redis.get(`ratelimiter:${key}`) ?? '');
+        return parseInt(await this.redis.get(`${this.keyPrefix}:${key}`) ?? '');
     }
 
     /**
@@ -46,7 +58,7 @@ export default class RateLimiter {
      * @return {Promise<boolean>}
      */
     public async resetAttempts(key: string): Promise<boolean> {
-        return this.redis.del(`ratelimiter:${key}`).then((r: any) => !!r);
+        return this.redis.del(`${this.keyPrefix}:${key}`).then((r: any) => !!r);
     }
 
     /**
@@ -57,8 +69,4 @@ export default class RateLimiter {
     public async retriesLeft(key: string, maxAttempts: number): Promise<number> {
         return maxAttempts - await this.attempts(key);
     }
-
-    // async availableIn(key) {
-    //     return
-    // }
 }

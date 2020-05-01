@@ -10,11 +10,11 @@ import {
 } from 'typeorm';
 
 @Entity()
-export default class List extends BaseEntity{
+export default class List extends BaseEntity {
     @PrimaryGeneratedColumn()
     public ID: number;
 
-    @Column({type: 'enum', enum: SnowflakeType})
+    @Column({type: 'simple-enum', enum: SnowflakeType})
     public type: SnowflakeType;
 
     @Column()
@@ -23,7 +23,7 @@ export default class List extends BaseEntity{
     @Column()
     public name: string;
 
-    @ManyToMany(() => Snowflake, {eager: true})
+    @ManyToMany(() => Snowflake)
     public snowflakes: Snowflake[];
 
     @CreateDateColumn()
