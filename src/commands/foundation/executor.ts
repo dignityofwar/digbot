@@ -7,6 +7,7 @@ import Command from '../../models/command';
 import { FilterType } from '../../models/filter';
 import Throttle, { ThrottleType } from '../../models/throttle';
 import RateLimiter, { RATELIMITER } from '../../utils/ratelimiter/ratelimiter';
+import { EntityManager } from 'typeorm';
 
 /**
  * Executor for running commands on Discord messages
@@ -14,11 +15,13 @@ import RateLimiter, { RATELIMITER } from '../../utils/ratelimiter/ratelimiter';
 @injectable()
 export default class Executor {
     /**
+     * @param {EntityManager} manager
      * @param {Map<string, Action>} repository
      * @param {RateLimiter} rateLimiter
      * @param {Throttle} defaultThrottle
      */
     public constructor(
+        private readonly manager: EntityManager,
         private readonly repository: Map<string, Action>,
         @inject(RATELIMITER) private readonly rateLimiter: RateLimiter,
         private readonly defaultThrottle: Throttle,
@@ -35,7 +38,7 @@ export default class Executor {
         const lexer = new CommandLexer(message.cleanContent);
         const name = lexer.next().toLowerCase();
 
-        const command = await Command.findOne({where: {name}});
+        const command = await this.manager.findOne(Command, {where: {name}});
 
         if (command) {
 

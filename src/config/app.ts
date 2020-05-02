@@ -16,6 +16,9 @@ export default class App {
      */
     public readonly debug: boolean = getBool('DEBUG');
 
+    /**
+     * @return {ContainerModule[]} Modules used by the app
+     */
     public readonly modules = (): ContainerModule[] => ([
         _('../database'),
         _('../bot'),

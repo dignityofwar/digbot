@@ -1,6 +1,5 @@
 import Snowflake, { SnowflakeType } from './snowflake';
 import {
-    BaseEntity,
     Column,
     CreateDateColumn,
     Entity,
@@ -10,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export default class List extends BaseEntity {
+export default class List {
     @PrimaryGeneratedColumn()
     public ID: number;
 

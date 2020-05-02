@@ -1,4 +1,4 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 export enum ThrottleType {
     GUILD = 'guild',
@@ -7,7 +7,7 @@ export enum ThrottleType {
 }
 
 @Entity()
-export default class Throttle extends BaseEntity {
+export default class Throttle {
     @PrimaryGeneratedColumn()
     public ID: number;
 

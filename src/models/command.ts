@@ -1,7 +1,6 @@
 import Filter from './filter';
 import Throttle from './throttle';
 import {
-    BaseEntity,
     Column,
     CreateDateColumn,
     Entity,
@@ -11,7 +10,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export default class Command extends BaseEntity {
+export default class Command {
     @PrimaryGeneratedColumn()
     public ID: number;
 

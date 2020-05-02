@@ -1,6 +1,5 @@
 import List from './list';
 import {
-    BaseEntity,
     Column,
     CreateDateColumn,
     Entity,
@@ -15,7 +14,7 @@ export enum FilterType {
 }
 
 @Entity()
-export default class Filter extends BaseEntity {
+export default class Filter {
     @PrimaryGeneratedColumn()
     public ID: number;
 
