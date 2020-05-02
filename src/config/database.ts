@@ -36,6 +36,7 @@ export default class Database {
             type: 'sqlite',
             database: get('DATABASE_PATH', 'storage/database.sqlite'),
             entities: this.entities,
+            synchronize: getBool('DATABASE_SYNCHRONIZE', true),
         },
     };
 }
