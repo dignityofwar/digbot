@@ -2,20 +2,20 @@ import { ContainerModule, interfaces } from 'inversify';
 import Handler from '../bot/handler';
 import CommandHandler from './foundation/commandhandler';
 import Action from './foundation/action';
-import Cats from './actions/cats';
 import Executor from './foundation/executor';
-import Trivia from './actions/trivia';
 import CaseInsensitiveMap from '../utils/caseinsensitivemap';
-import RateLimiter, { RATELIMITER } from '../utils/ratelimiter/ratelimiter';
-import RedisRateLimiter from '../utils/ratelimiter/redisratelimiter';
 import Throttle, { ThrottleType } from '../models/throttle';
 import Bind = interfaces.Bind;
 import Context = interfaces.Context;
 
-export const commandModule = new ContainerModule((bind: Bind) => {
+import Cats from './actions/cats';
+import Trivia from './actions/trivia';
+
+export default new ContainerModule((bind: Bind) => {
     bind<Executor>(Executor).toSelf().inSingletonScope();
     bind<Handler>(Handler).to(CommandHandler);
 
+    /** Registers a map with all the actions for the executor */
     bind<Map<string, Action>>(Map).toDynamicValue((context: Context) => {
         const repository = new CaseInsensitiveMap<Action>();
 
@@ -25,8 +25,7 @@ export const commandModule = new ContainerModule((bind: Bind) => {
         return repository;
     }).whenInjectedInto(Executor);
 
-    bind<RateLimiter>(RATELIMITER).to(RedisRateLimiter);
-
+    /** Registers the default throttle used by the executor */
     bind<Throttle>(Throttle).toDynamicValue(() => {
         const throttle = new Throttle();
         throttle.decay = 5;
@@ -36,6 +35,7 @@ export const commandModule = new ContainerModule((bind: Bind) => {
         return throttle;
     }).whenInjectedInto(Executor);
 
+    /** Command actions that will be injected into the action map of the executor */
     bind<Action>(Action).to(Cats);
     bind<Action>(Action).to(Trivia);
 });

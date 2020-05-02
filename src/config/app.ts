@@ -1,9 +1,9 @@
 import { ContainerModule } from 'inversify';
 import { getBool } from '../utils/env';
 
-import { botModule } from '../bot';
-import { databaseModule } from '../database';
-import { commandModule } from '../commands';
+function _(id: string): ContainerModule {
+    return require(id).default;
+}
 
 export default class App {
     /**
@@ -17,8 +17,8 @@ export default class App {
     public readonly debug: boolean = getBool('DEBUG');
 
     public readonly modules = (): ContainerModule[] => ([
-        databaseModule,
-        botModule,
-        commandModule,
+        _('../database'),
+        _('../bot'),
+        _('../commands'),
     ]);
 }

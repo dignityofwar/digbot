@@ -7,7 +7,7 @@ import defaultLogger, { getLogger } from '../logger';
 import { CloseEvent } from 'ws';
 import config from '../config';
 
-export const botModule = new ContainerModule((bind: Bind) => {
+export default new ContainerModule((bind: Bind) => {
     bind<Runnable>(RUNNABLE).to(Bot);
 
     bind<string>('discordToken').toConstantValue(config.discord.token).whenInjectedInto(Bot);
