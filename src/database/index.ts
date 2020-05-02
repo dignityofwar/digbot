@@ -30,7 +30,7 @@ export default new ContainerModule((bind: Bind) => {
     /** Redis */
     bind<RedisClient>(RedisClient)
         .toDynamicValue(({container}) => {
-            const client = createClient(6379, 'localhost');
+            const client = createClient(config.redis.port, config.redis.host, config.redis.options);
             const logger = getLogger('redis');
             client.on('error', e => {
                 logger.error(e.toString());

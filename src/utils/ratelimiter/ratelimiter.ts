@@ -10,4 +10,4 @@ export default abstract class RateLimiter {
     public abstract async retriesLeft(key: string, maxAttempts: number): Promise<number>;
 }
 
-export const RATELIMITER = Symbol.for('utils/ratelimiter');
+export const RATELIMITER = Symbol.for('utils.RateLimiter');
