@@ -86,9 +86,9 @@ export default class Executor {
     public throttleKey(command: Command, message: Message, throttle: Throttle): string {
         switch (throttle.type) {
             case ThrottleType.CHANNEL:
-                return `${command.name}:${message.channel.id}`;
+                return `command:${command.name}:${message.channel.id}`;
             case ThrottleType.MEMBER:
-                return `${command.name}:${message.member!.id}`;
+                return `command:${command.name}:${message.author.id}`;
             default:
                 throw new Error(`Command uses unknown throttle type: ${throttle.type}`);
         }

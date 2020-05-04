@@ -1,4 +1,3 @@
-import List from './list';
 import {
     Column,
     CreateDateColumn,
@@ -7,6 +6,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import List from './list';
 
 export enum FilterType {
     BLACKLIST,

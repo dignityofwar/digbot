@@ -1,5 +1,3 @@
-import Filter from './filter';
-import Throttle from './throttle';
 import {
     Column,
     CreateDateColumn,
@@ -8,6 +6,8 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import Filter from './filter';
+import Throttle from './throttle';
 
 @Entity()
 export default class Command {
@@ -24,7 +24,13 @@ export default class Command {
     public throttle: Throttle;
 
     @Column()
+    public guild: string;
+
+    @Column()
     public name: string;
+
+    @Column({type: 'text'})
+    public help: string;
 
     @Column()
     public action: string;

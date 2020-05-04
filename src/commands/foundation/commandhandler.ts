@@ -34,6 +34,9 @@ export default class CommandHandler extends Handler {
      * @param {Message} message the message the user send
      */
     public onMessage(message: Message): void {
+        if (message.author.bot || message.channel.type !== 'text')
+            return;
+
         this.executor.execute(message)
             .catch((e: Error) => CommandHandler.logger.error(e.stack ?? e.message));
     }

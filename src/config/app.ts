@@ -23,5 +23,6 @@ export default class App {
         _('../database'),
         _('../bot'),
         _('../commands'),
+        _('../moderators'),
     ]);
 }

@@ -1,4 +1,3 @@
-import Snowflake, { SnowflakeType } from './snowflake';
 import {
     Column,
     CreateDateColumn,
@@ -7,6 +6,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import Snowflake, { SnowflakeType } from './snowflake';
 
 @Entity()
 export default class List {

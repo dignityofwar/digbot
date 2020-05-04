@@ -10,7 +10,7 @@
     "start:dev": "ts-node src/index.ts",
     "build": "tsc",
     "build:watch": "tsc -w",
-    "clear": "rm -rf dist",
+    "clean": "rm -rf dist",
     "test": "mocha"
   },
   "bin": {
