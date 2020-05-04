@@ -3,12 +3,16 @@ const { get } = require('lodash');
 const Command = require('./foundation/command');
 
 module.exports = class Ps2digCommand extends Command {
-    constructor({ apisPs2 }) {
+    constructor({ checkerPs2outfitcheck }) {
         super();
 
         this.name = 'ps2dig';
 
-        this.ps2api = apisPs2;
+        this.checker = checkerPs2outfitcheck;
+
+        this.checker.characterNotFound(this.characterNotFound);
+        this.checker.inOutfit(this.inOutfit);
+        this.checker.notInOutfit(this.notInOutfit);
     }
 
     /**
@@ -20,39 +24,35 @@ module.exports = class Ps2digCommand extends Command {
             return request.reply('You already have this role. Don\'t be greedy now.');
         }
 
-        const characterName = this.getCharacterName(request.content);
-
-        if (!characterName) {
-            return request.reply('A bot needs a name.');
-        }
-
-        const character = await this.ps2api.getCharacterByName(characterName);
-
-        if (character) {
-            if (get(character, 'outfit.outfit_id') === '37509488620604883') {
-                await request.member.addRole(config.get(`guilds.${request.guild.id}.digRole`));
-
-                return request.reply(`Welcome to the outfit ${get(character, 'name.first')}`);
-            }
-
-            return request.reply('I asked command and they have never heard of you private. *suspicion intensifies*');
-        }
-
-        return request.reply('I couldn\'t find your character.');
-    }
-
-    /**
-     * @param content
-     * @return {String}
-     */
-    getCharacterName(content) {
-        return content.match(/[^\s]+/g)[1];
+        return this.checker.check(request.member.nickname, '37509488620604883', request);
     }
 
     /**
      * @return {string}
      */
     help() {
-        return 'Assign the dig-ps2 role to yourself by providing your ps2 charactername';
+        return 'Checks whether you are in the outfit and assigns you the appropriate role. '
+            + 'Make sure your nickname for this server is the same as your ign.';
+    }
+
+    /**
+     * @param name
+     * @param outfit
+     * @param request
+     * @return {*}
+     */
+    characterNotFound(name, outfit, request) {
+        return request.reply('I couldn\'t find your character, '
+            + 'please check that your nickname is the same as your ign name.');
+    }
+
+    async inOutfit(character, request) {
+        await request.member.addRole(config.get(`guilds.${request.guild.id}.digRole`));
+
+        return request.reply(`Welcome to the outfit ${get(character, 'name.first')}`);
+    }
+
+    notInOutfit(character, request) {
+        return request.reply('I asked command and they have never heard of you private. *suspicion intensifies*');
     }
 };
