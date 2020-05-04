@@ -3,12 +3,12 @@ const { get } = require('lodash');
 const Command = require('./foundation/command');
 
 module.exports = class Ps2digCommand extends Command {
-    constructor({ checkerPs2outfitcheck }) {
+    constructor({ checkersPs2outfit }) {
         super();
 
         this.name = 'ps2dig';
 
-        this.checker = checkerPs2outfitcheck;
+        this.checker = checkersPs2outfit;
 
         this.checker.characterNotFound(this.characterNotFound);
         this.checker.inOutfit(this.inOutfit);
@@ -20,11 +20,17 @@ module.exports = class Ps2digCommand extends Command {
      * @return {Promise<void>}
      */
     async execute(request) {
-        if (request.member.roles.has(config.get(`guilds.${request.guild.id}.digRole`))) {
+        if (!config.has(`guilds.${request}.outfitChecker`)) {
+            return request.reply('This feature is not enabled on this server');
+        }
+
+        const checker = config.get(`guilds.${request}.outfitChecker`);
+
+        if (request.member.roles.has(checker.role)) {
             return request.reply('You already have this role. Don\'t be greedy now.');
         }
 
-        return this.checker.check(request.member.nickname, '37509488620604883', request);
+        return this.checker.check(request.member.nickname, checker.outfit, request, checker);
     }
 
     /**
@@ -42,14 +48,21 @@ module.exports = class Ps2digCommand extends Command {
      * @return {*}
      */
     characterNotFound(name, outfit, request) {
-        return request.reply('I couldn\'t find your character, '
-            + 'please check that your nickname is the same as your ign name.');
+        return request.reply('That\'s impossible. Perhaps the archives are incomplete, '
+            + 'make sure you nickname on this server and your ign are the same.');
     }
 
-    async inOutfit(character, request) {
-        await request.member.addRole(config.get(`guilds.${request.guild.id}.digRole`));
+    async inOutfit(character, request, checker) {
+        const name = get(character, 'name.first');
 
-        return request.reply(`Welcome to the outfit ${get(character, 'name.first')}`);
+        if (checker.filter.includes(get(character, 'outfit_member.rank'))) {
+            return request.reply(`Hmmmm, impressive rank you got there ${name}, `
+                + 'however I cannot give you that role without seeing some papers first.');
+        }
+
+        await request.member.addRole(checker.role);
+
+        return request.reply(`Welcome to the outfit ${name}`);
     }
 
     notInOutfit(character, request) {

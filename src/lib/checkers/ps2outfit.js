@@ -1,6 +1,6 @@
 const { get } = require('lodash');
 
-module.exports = class PS2OutfitCheck {
+module.exports = class PS2Outfit {
     constructor({ apisPs2 }) {
         this.api = apisPs2;
 
