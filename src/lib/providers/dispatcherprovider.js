@@ -10,6 +10,7 @@ module.exports = class DispatcherProvider extends ServiceProvider {
             'dispatchersPresencedispatcher',
             'dispatchersRoledispatcher',
             'dispatchersGameloggingdispatcher',
+            'dispatchersOutfitdispatcher',
         ];
     }
 
