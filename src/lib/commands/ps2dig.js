@@ -3,17 +3,19 @@ const { get } = require('lodash');
 const Command = require('./foundation/command');
 const { extractPs2Name } = require('../util/extractors');
 
+const HasClaim = require('../moderators/exceptions/hasclaim');
+const CharacterNotFound = require('../moderators/exceptions/playernotfound');
+const NotInOutfit = require('../moderators/exceptions/notinoutfit');
+const ProtectedRank = require('../moderators/exceptions/protectedrank');
+const Claimed = require('../moderators/exceptions/claimed');
+
 module.exports = class Ps2digCommand extends Command {
-    constructor({ checkersPs2outfit }) {
+    constructor({ moderatorsOutfitmoderator }) {
         super();
 
         this.name = 'ps2dig';
 
-        this.checker = checkersPs2outfit;
-
-        this.checker.characterNotFound(this.characterNotFound);
-        this.checker.inOutfit(this.inOutfit);
-        this.checker.notInOutfit(this.notInOutfit);
+        this.moderator = moderatorsOutfitmoderator;
     }
 
     /**
@@ -21,35 +23,63 @@ module.exports = class Ps2digCommand extends Command {
      * @return {Promise<void>}
      */
     async execute(request) {
-        if (!config.has(`guilds.${request.guild.id}.outfitChecker`)) {
+        if (!config.has(`guilds.${request.guild.id}.ps2CharacterClaimer`)) {
             return request.reply('This feature is not enabled on this server');
         }
 
-        const checker = config.get(`guilds.${request.guild.id}.outfitChecker`);
+        const cnfg = config.get(`guilds.${request.guild.id}.outfitChecker`);
+        const rev = cnfg.useName && cnfg.automatic;
 
-        if (
-            checker.excludedRoles instanceof Array
-            && checker.excludedRoles.some(r => request.member.roles.has(r))
-        ) {
+        if (Array.isArray(cnfg.exclude) && cnfg.exclude.some(r => request.member.roles.has(r))) {
             return request.react('🔒');
         }
 
-        if (request.member.roles.has(checker.role)) {
-            return request.reply('You already have this role. Don\'t be greedy now.');
-        }
+        try {
+            const claim = rev
+                ? await this.moderator.revalidateClaim(request.member, extractPs2Name(request.member))
+                : await this.moderator.makeClaim(request.member, this.getFirstArgument(request));
 
-        return this.checker.check(this.getCharacterName(request, checker), checker.outfit, request, checker);
+
+            await request.member.addRole(cnfg.role);
+
+            return request.reply(`Welcome to the outfit ${claim.name}!`);
+        } catch (e) {
+            if (e instanceof HasClaim) {
+                return request.reply('It seems you have already claimed a character.');
+            }
+            if (e instanceof CharacterNotFound) {
+                if (rev && request.member.roles.has(cnfg.role)) {
+                    await request.member.removeRole(cnfg.role);
+
+                    return request.reply(
+                        'I couldn\'t find you character, I removed your role as you need a valid claim.');
+                }
+
+                return request.reply('I couldn\'t find your character');
+            }
+            if (e instanceof NotInOutfit) {
+                return request.reply(
+                    'I asked command and they have never heard of you private. *suspicion intensifies*');
+            }
+            if (e instanceof ProtectedRank) {
+                return request.reply(`Hmmmm, impressive rank you got there ${e.character.name.first}, `
+                    + 'however I cannot give you that role without seeing some papers first.');
+            }
+            if (e instanceof Claimed) {
+                return request.reply(`The character '${e.character.name.first}' you are trying to claim, seems to be `
+                    + 'claimed already by another. If think this is incorrect, please contact an moderator.');
+            }
+
+            throw e;
+        }
     }
 
     /**
      * @param request
-     * @param checker
-     * @return {*}
+     * @return {String}
      */
-    getCharacterName(request, checker) {
-        return checker.useName
-            ? extractPs2Name(request.member)
-            : request.content.match(/[^\s]+/g)[1];
+    getFirstArgument(request) {
+        return request.content.match(/[^\s]+/g)[1];
     }
 
     /**
@@ -58,44 +88,5 @@ module.exports = class Ps2digCommand extends Command {
     help() {
         return 'Checks whether you are in the outfit and assigns you the appropriate role. '
             + 'Make sure your nickname for this server is the same as your ign.';
-    }
-
-    /**
-     * @param name
-     * @param outfit
-     * @param request
-     * @return {*}
-     */
-    characterNotFound(name, outfit, request) {
-        return request.reply('That\'s impossible. Perhaps the archives are incomplete, '
-            + 'make sure you nickname on this server and your ign are the same.');
-    }
-
-    /**
-     * @param character
-     * @param request
-     * @param checker
-     * @return {Promise<*>}
-     */
-    async inOutfit(character, request, checker) {
-        const name = get(character, 'name.first');
-
-        if (checker.filter.includes(get(character, 'outfit_member.rank'))) {
-            return request.reply(`Hmmmm, impressive rank you got there ${name}, `
-                + 'however I cannot give you that role without seeing some papers first.');
-        }
-
-        await request.member.addRole(checker.role, `Assigned using !ps2dig, character name ${name}`);
-
-        return request.reply(`Welcome to the outfit ${name}`);
-    }
-
-    /**
-     * @param character
-     * @param request
-     * @return {*}
-     */
-    notInOutfit(character, request) {
-        return request.reply('I asked command and they have never heard of you private. *suspicion intensifies*');
     }
 };

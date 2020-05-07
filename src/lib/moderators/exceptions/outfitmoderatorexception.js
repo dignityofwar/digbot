@@ -1,9 +1,8 @@
 module.exports = class OutfitModeratorException extends Error {
-    constructor(member, name, checker) {
+    constructor(member, character) {
         super();
 
         this.member = member;
-        this.name = name;
-        this.checker = checker;
+        this.character = character;
     }
 };

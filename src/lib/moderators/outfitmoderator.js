@@ -51,16 +51,35 @@ module.exports = class OutfitModerator extends EventEmitter {
 
     /**
      * @param member
+     * @param name
+     * @return {Promise<void>}
+     */
+    async forceClaim(member, name) {
+        // TODO: write some codes
+    }
+
+    /**
+     * @param member
+     * @return {Promise<void>}
+     */
+    async unClaim(member) {
+
+    }
+
+    /**
+     * @param member
      * @param character
      */
     filter(member, character) {
-        if (get(character, 'outfit_member.outfit_id')
-            !== config.get(`guilds.${member.guild.id}.outfitChecker.outfit`)) {
+        if (config.has(`guilds.${member.guild.id}.ps2CharacterClaimer.outfit`)
+            && get(character, 'outfit_member.outfit_id')
+            !== config.get(`guilds.${member.guild.id}.ps2CharacterClaimer.outfit`)) {
             throw new NotInOutfit(member, character);
         }
 
-        if (config.get(`guilds.${member.guild.id}.outfitChecker.filterRank`)
-            .includes(get(character, 'outfit_member.rank'))) {
+        if (config.get(`guilds.${member.guild.id}.ps2CharacterClaimer.filterRank`) &&
+            config.get(`guilds.${member.guild.id}.ps2CharacterClaimer.filterRank`)
+                .includes(get(character, 'outfit_member.rank'))) {
             throw new ProtectedRank(member, character);
         }
     }
