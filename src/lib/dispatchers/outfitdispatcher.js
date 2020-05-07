@@ -1,6 +1,4 @@
 const config = require('config');
-const { get } = require('lodash');
-const server = require('../server/server');
 const Dispatcher = require('../foundation/dispatcher');
 const { extractPs2Name } = require('../util/extractors');
 
@@ -9,15 +7,11 @@ module.exports = class OutfitDispatcher extends Dispatcher {
      * @param discordjsClient
      * @param checkersPs2outfit
      */
-    constructor({ discordjsClient, checkersPs2outfit }) {
+    constructor({ discordjsClient, moderatorsOutfitmoderator }) {
         super();
 
         this.client = discordjsClient;
-        this.checker = checkersPs2outfit;
-
-        this.checker.characterNotFound(this.characterNotFound);
-        this.checker.inOutfit(this.inOutfit);
-        this.checker.notInOutfit(this.notInOutfit);
+        this.moderator = moderatorsOutfitmoderator;
     }
 
     /**
@@ -43,72 +37,30 @@ module.exports = class OutfitDispatcher extends Dispatcher {
         this.unregisterListenersFromAll();
     }
 
-
     /**
      * @param member
      */
     async check(member) {
-        if (!config.has(`guilds.${member.guild.id}.outfitChecker`)) {
+        if (!config.has(`guilds.${member.guild.id}.ps2CharacterClaimer`)) {
             return;
         }
 
-        const checker = config.get(`guilds.${member.guild.id}.outfitChecker`);
+        const cnfg = config.get(`guilds.${member.guild.id}.ps2CharacterClaimer`);
 
-        // Feature switch
-        if (!checker.useName || !checker.automatic) {
+        if (!cnfg.useName || !cnfg.automatic) {
             return;
         }
 
-        // Revalidation switch
-        if (member.roles.has(checker.role) && !checker.revalidate) {
+        if (Array.isArray(cnfg.exclude) && cnfg.exclude.some(r => member.roles.has(r))) {
             return;
         }
 
-        await this.checker(extractPs2Name(member), member, checker);
-    }
+        try {
+            await this.moderator.revalidateClaim(member, extractPs2Name(member));
 
-    /**
-     * @param name
-     * @param outfit
-     * @param member
-     * @param checker
-     */
-    characterNotFound(name, outfit, member, checker) {
-        return member.removeRole(checker.role, `Revalidated name, character ${name} not found`);
-    }
+            await member.addRole(cnfg.role);
+        } catch (e) {
 
-    /**
-     * @param character
-     * @param member
-     * @param checker
-     * @return {Promise<*>}
-     */
-    async inOutfit(character, member, checker) {
-        const name = get(character, 'name.first');
-
-        if (checker.filter.includes(get(character, 'outfit_member.rank'))) {
-            if (checker.warnRank) {
-                server.getChannel('staff')
-                    .send(`${member} renamed him/herself to `);
-            }
-            return;
         }
-
-        // Assign role
-
-        if (member.roles.has(checker.role)) {
-            server.getChannel('staff').send(`${member} changed their username. `);
-        }
-
-        await member.addRole(checker.role, `Assigned automatically, character name ${name}`);
-    }
-
-    /**
-     * @param character
-     * @param member
-     * @param checker
-     */
-    notInOutfit(character, member, checker) {
-        return member.removeRole(checker.role, `Revalidated name, character ${name} not found`);
     }
 };

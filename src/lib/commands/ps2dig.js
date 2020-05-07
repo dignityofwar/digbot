@@ -27,7 +27,7 @@ module.exports = class Ps2digCommand extends Command {
             return request.reply('This feature is not enabled on this server');
         }
 
-        const cnfg = config.get(`guilds.${request.guild.id}.outfitChecker`);
+        const cnfg = config.get(`guilds.${request.guild.id}.ps2CharacterClaimer`);
         const rev = cnfg.useName && cnfg.automatic;
 
         if (Array.isArray(cnfg.exclude) && cnfg.exclude.some(r => request.member.roles.has(r))) {

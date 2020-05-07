@@ -40,7 +40,7 @@ module.exports.query.claim = (member, character) => this.findOneAndUpdate({
     },
 }, {
     new: true,
-});
+}).exec();
 
 module.exports.query.unclaim = (guild, character) => this.findOneAndUpdate({
     guild: guild.id,
@@ -48,4 +48,4 @@ module.exports.query.unclaim = (guild, character) => this.findOneAndUpdate({
 }, {
     character: null,
     name: null,
-});
+}).exec();

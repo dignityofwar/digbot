@@ -37,6 +37,8 @@ module.exports = class OutfitModerator extends EventEmitter {
         const character = await this.api.getCharacterByName(name, { resolve: 'outfit_member' });
 
         if (!character) {
+            await this.unClaim(member);
+
             throw new CharacterNotFound(member, name);
         }
 
@@ -60,10 +62,10 @@ module.exports = class OutfitModerator extends EventEmitter {
 
     /**
      * @param member
-     * @return {Promise<void>}
+     * @return {*}
      */
-    async unClaim(member) {
-
+    unClaim(member) {
+        return CharacterClaim.unClaim(member);
     }
 
     /**
