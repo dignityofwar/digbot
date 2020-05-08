@@ -24,6 +24,10 @@ module.exports = class TheCatApi {
             .then(({ data: { character_list: [character = false] } }) => character);
     }
 
+    /**
+     * @param resolve
+     * @return {*|string}
+     */
     convertResolve(resolve) {
         if (resolve instanceof Array) {
             return resolve.reduce((a, v) => `${a},${v}`);

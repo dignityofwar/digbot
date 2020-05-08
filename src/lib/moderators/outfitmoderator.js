@@ -56,9 +56,22 @@ module.exports = class OutfitModerator extends EventEmitter {
      * @param name
      * @return {Promise<void>}
      */
-    // async forceClaim(member, name) {
-    //     // TODO: write some codes
-    // }
+    async forceClaim(member, name) {
+        const character = await this.api.getCharacterByName(name, { resolve: 'outfit_member' });
+
+        if (!character) {
+            await this.unClaim(member);
+
+            throw new CharacterNotFound(member, name);
+        }
+
+        this.filter(member, character);
+
+        return {
+            unclaimed: await this.unClaim(member.guild, character),
+            claimed: await this.claim(member, character),
+        };
+    }
 
     /**
      * @param member

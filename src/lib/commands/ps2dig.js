@@ -37,7 +37,8 @@ module.exports = class Ps2digCommand extends Command {
         try {
             const claim = rev
                 ? await this.moderator.revalidateClaim(request.member, extractPs2Name(request.member))
-                : await this.moderator.makeClaim(request.member, this.getFirstArgument(request));
+                : await this.moderator.makeClaim(request.member,
+                    cnfg.useName ? extractPs2Name(request.member) : this.getFirstArgument(request));
 
             await request.member.addRole(cnfg.role);
 
@@ -54,7 +55,10 @@ module.exports = class Ps2digCommand extends Command {
                         'I couldn\'t find you character, I removed your role as you need a valid claim.');
                 }
 
-                return request.reply('I couldn\'t find your character');
+                return request.reply(
+                    'I couldn\'t find your character, please ensure your Discord nickname in this guild matches your '
+                    + 'in-game name **exactly**.',
+                );
             }
             if (e instanceof NotInOutfit) {
                 return request.reply(
@@ -71,7 +75,7 @@ module.exports = class Ps2digCommand extends Command {
                 }
 
                 return request.reply(`The character '${e.character.name.first}' you are trying to claim, seems to be `
-                    + 'claimed already by another. If think this is incorrect, please contact an moderator.');
+                    + 'claimed already by another. If think this is incorrect, please contact @Staff.');
             }
 
             throw e;
@@ -91,6 +95,6 @@ module.exports = class Ps2digCommand extends Command {
      */
     help() {
         return 'Checks whether you are in the outfit and assigns you the appropriate role. '
-            + 'Make sure your nickname for this server is the same as your ign.';
+            + 'Make sure your nickname for this server is the same as your in-game name.';
     }
 };

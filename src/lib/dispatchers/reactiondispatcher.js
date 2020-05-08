@@ -4,6 +4,7 @@ const Dispatcher = require('../foundation/dispatcher');
 module.exports = class ReactionDispatcher extends Dispatcher {
     /**
      * @param discordjsClient
+     * @param logger
      */
     constructor({ discordjsClient, logger }) {
         super();
@@ -24,7 +25,6 @@ module.exports = class ReactionDispatcher extends Dispatcher {
     }
 
     /**
-     *
      * @return {Promise<void>}
      */
     async stop() {
