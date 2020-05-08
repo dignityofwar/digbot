@@ -94,7 +94,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
             command.execute(request)
                 .catch((error) => {
                     this.logger.log('error', {
-                        message: error.toString(),
+                        message: error.stack ? error.stack : error.toString(),
                         label: 'commandDispatcher',
                     });
 
@@ -152,6 +152,7 @@ module.exports = class CommandDispatcher extends Dispatcher {
      * @return {boolean}
      */
     hasAdminRole(member) {
-        return this.getAdminRoles(member.guild).find(role => member.roles.has(role)) !== undefined;
+        return this.getAdminRoles(member.guild)
+            .find(role => member.roles.has(role)) !== undefined;
     }
 };

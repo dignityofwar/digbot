@@ -21,7 +21,7 @@ module.exports = class OutfitModerator extends EventEmitter {
      * @return {Promise<*>}
      */
     async makeClaim(member, name) {
-        if (await CharacterClaim.hasClaim(member)) {
+        if (await this.hasClaim(member)) {
             throw new HasClaim(member);
         }
 
@@ -44,11 +44,11 @@ module.exports = class OutfitModerator extends EventEmitter {
 
         this.filter(member, character);
 
-        if (await CharacterClaim.isClaimed(member.guild, character)) {
-            throw new Claimed(member, character);
+        if (await this.isClaimed(member.guild, character)) {
+            throw new Claimed(member, character, await this.getClaim(member.guild, character));
         }
 
-        return CharacterClaim.claim(member, character);
+        return this.claim(member, character);
     }
 
     /**
@@ -56,33 +56,106 @@ module.exports = class OutfitModerator extends EventEmitter {
      * @param name
      * @return {Promise<void>}
      */
-    async forceClaim(member, name) {
-        // TODO: write some codes
-    }
-
-    /**
-     * @param member
-     * @return {*}
-     */
-    unClaim(member) {
-        return CharacterClaim.unClaim(member);
-    }
+    // async forceClaim(member, name) {
+    //     // TODO: write some codes
+    // }
 
     /**
      * @param member
      * @param character
      */
     filter(member, character) {
-        if (config.has(`guilds.${member.guild.id}.ps2CharacterClaimer.outfit`)
+        if (
+            config.has(`guilds.${member.guild.id}.ps2CharacterClaimer.outfit`)
             && get(character, 'outfit_member.outfit_id')
-            !== config.get(`guilds.${member.guild.id}.ps2CharacterClaimer.outfit`)) {
+            !== config.get(`guilds.${member.guild.id}.ps2CharacterClaimer.outfit`)
+        ) {
             throw new NotInOutfit(member, character);
         }
 
-        if (config.get(`guilds.${member.guild.id}.ps2CharacterClaimer.filterRank`) &&
+        if (
             config.get(`guilds.${member.guild.id}.ps2CharacterClaimer.filterRank`)
-                .includes(get(character, 'outfit_member.rank'))) {
+            && config.get(`guilds.${member.guild.id}.ps2CharacterClaimer.filterRank`)
+                .includes(get(character, 'outfit_member.rank'))
+        ) {
             throw new ProtectedRank(member, character);
         }
+    }
+
+    /**
+     * @param guild
+     * @param character
+     * @return {*}
+     */
+    isClaimed(guild, character) {
+        return CharacterClaim.exists({
+            guild: guild.id,
+            character: character.character_id,
+        });
+    }
+
+    /**
+     * @param guild
+     * @param character
+     */
+    getClaim(guild, character) {
+        return CharacterClaim.findOne({
+            guild: guild.id,
+            character: character.character_id,
+        });
+    }
+
+    /**
+     * @param member
+     * @return {*}
+     */
+    hasClaim(member) {
+        return CharacterClaim.exists({
+            guild: member.guild.id,
+            member: member.id,
+            character: { $ne: null },
+        });
+    }
+
+    /**
+     * @param member
+     * @param character
+     * @return {Promise}
+     */
+    claim(member, character) {
+        return CharacterClaim.findOneAndUpdate({
+            guild: member.guild.id,
+            member: member.id,
+        }, {
+            character: character.character_id,
+            name: character.name.first,
+            claims: {
+                $push: {
+                    character: character.character_id,
+                    name: character.name.first,
+                    at: Date.now(),
+                },
+            },
+        }, {
+            new: true,
+            upsert: true,
+        })
+            .exec();
+    }
+
+    /**
+     * @param guild
+     * @param character
+     * @return {Promise}
+     */
+    unClaim(guild, character) {
+        return CharacterClaim.findOneAndUpdate({
+            guild: guild.id,
+            character: character.character_id,
+        }, {
+            character: null,
+            name: null,
+        })
+            .exec();
     }
 };

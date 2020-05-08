@@ -6,11 +6,11 @@ services:
     volumes:
       - /data
     ports:
-      - 6379
+      - 6379:6379
   mongo:
     image: mongo
     ports:
-      - 27017
+      - 27017:27017
   digbot:
     build: .
     volumes:

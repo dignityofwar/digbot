@@ -39,7 +39,6 @@ module.exports = class Ps2digCommand extends Command {
                 ? await this.moderator.revalidateClaim(request.member, extractPs2Name(request.member))
                 : await this.moderator.makeClaim(request.member, this.getFirstArgument(request));
 
-
             await request.member.addRole(cnfg.role);
 
             return request.reply(`Welcome to the outfit ${claim.name}!`);
@@ -66,6 +65,11 @@ module.exports = class Ps2digCommand extends Command {
                     + 'however I cannot give you that role without seeing some papers first.');
             }
             if (e instanceof Claimed) {
+                if (e.claim.member === request.member.id) {
+                    return request.reply(
+                        `The character '${e.character.name.first}' you are trying to claim is already yours.`);
+                }
+
                 return request.reply(`The character '${e.character.name.first}' you are trying to claim, seems to be `
                     + 'claimed already by another. If think this is incorrect, please contact an moderator.');
             }
