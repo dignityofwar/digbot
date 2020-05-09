@@ -29,7 +29,7 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
             guildMemberAdd: this.guildMemberAdd.bind(this),
             guildMemberUpdate: this.guildMemberUpdate.bind(this),
             message: this.message.bind(this),
-            messageUpdate: this.messsageUpdate.bind(this),
+            messageUpdate: this.messageUpdate.bind(this),
             voiceStateUpdate: this.voiceStateUpdate.bind(this),
         });
     }
@@ -85,7 +85,7 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
      * @param oldMessage
      * @param newMessage
      */
-    messsageUpdate(oldMessage, newMessage) {
+    messageUpdate(oldMessage, newMessage) {
         if (newMessage.channel.type === 'dm' || newMessage.channel.type === 'group') { return; }
 
         mentionSpam.edits(oldMessage, newMessage);

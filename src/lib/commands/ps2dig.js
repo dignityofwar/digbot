@@ -1,14 +1,21 @@
 const config = require('config');
 const { get } = require('lodash');
 const Command = require('./foundation/command');
+const { extractPs2Name } = require('../util/extractors');
+
+const HasClaim = require('../moderators/exceptions/hasclaim');
+const CharacterNotFound = require('../moderators/exceptions/playernotfound');
+const NotInOutfit = require('../moderators/exceptions/notinoutfit');
+const ProtectedRank = require('../moderators/exceptions/protectedrank');
+const Claimed = require('../moderators/exceptions/claimed');
 
 module.exports = class Ps2digCommand extends Command {
-    constructor({ apisPs2 }) {
+    constructor({ moderatorsOutfitmoderator }) {
         super();
 
         this.name = 'ps2dig';
 
-        this.ps2api = apisPs2;
+        this.moderator = moderatorsOutfitmoderator;
     }
 
     /**
@@ -16,43 +23,78 @@ module.exports = class Ps2digCommand extends Command {
      * @return {Promise<void>}
      */
     async execute(request) {
-        if (request.member.roles.has(config.get(`guilds.${request.guild.id}.digRole`))) {
-            return request.reply('You already have this role. Don\'t be greedy now.');
+        if (!config.has(`guilds.${request.guild.id}.ps2CharacterClaimer`)) {
+            return request.reply('This feature is not enabled on this server');
         }
 
-        const characterName = this.getCharacterName(request.content);
+        const cnfg = config.get(`guilds.${request.guild.id}.ps2CharacterClaimer`);
+        const rev = cnfg.useName && cnfg.automatic;
 
-        if (!characterName) {
-            return request.reply('A bot needs a name.');
+        if (Array.isArray(cnfg.exclude) && cnfg.exclude.some(r => request.member.roles.has(r))) {
+            return request.react('🔒');
         }
 
-        const character = await this.ps2api.getCharacterByName(characterName);
+        try {
+            const claim = rev
+                ? await this.moderator.revalidateClaim(request.member, extractPs2Name(request.member))
+                : await this.moderator.makeClaim(request.member,
+                    cnfg.useName ? extractPs2Name(request.member) : this.getFirstArgument(request));
 
-        if (character) {
-            if (get(character, 'outfit.outfit_id') === '37509488620604883') {
-                await request.member.addRole(config.get(`guilds.${request.guild.id}.digRole`));
+            await request.member.addRole(cnfg.role);
 
-                return request.reply(`Welcome to the outfit ${get(character, 'name.first')}`);
+            return request.reply(`Welcome to the outfit ${claim.name}!`);
+        } catch (e) {
+            if (e instanceof HasClaim) {
+                return request.reply('It seems you have already claimed a character.');
+            }
+            if (e instanceof CharacterNotFound) {
+                if (rev && request.member.roles.has(cnfg.role)) {
+                    await request.member.removeRole(cnfg.role);
+
+                    return request.reply(
+                        'I couldn\'t find you character, I removed your role as you need a valid claim.');
+                }
+
+                return request.reply(
+                    'I couldn\'t find your character, please ensure your Discord nickname in this guild matches your '
+                    + 'in-game name **exactly**.',
+                );
+            }
+            if (e instanceof NotInOutfit) {
+                return request.reply(
+                    'I asked command and they have never heard of you private. *suspicion intensifies*');
+            }
+            if (e instanceof ProtectedRank) {
+                return request.reply(`Hmmmm, impressive rank you got there ${e.character.name.first}, `
+                    + 'however I cannot give you that role without seeing some papers first.');
+            }
+            if (e instanceof Claimed) {
+                if (e.claim.member === request.member.id) {
+                    return request.reply(
+                        `The character '${e.character.name.first}' you are trying to claim is already yours.`);
+                }
+
+                return request.reply(`The character '${e.character.name.first}' you are trying to claim, seems to be `
+                    + 'claimed already by another. If think this is incorrect, please contact @Staff.');
             }
 
-            return request.reply('I asked command and they have never heard of you private. *suspicion intensifies*');
+            throw e;
         }
-
-        return request.reply('I couldn\'t find your character.');
     }
 
     /**
-     * @param content
+     * @param request
      * @return {String}
      */
-    getCharacterName(content) {
-        return content.match(/[^\s]+/g)[1];
+    getFirstArgument(request) {
+        return request.content.match(/[^\s]+/g)[1];
     }
 
     /**
      * @return {string}
      */
     help() {
-        return 'Assign the dig-ps2 role to yourself by providing your ps2 charactername';
+        return 'Checks whether you are in the outfit and assigns you the appropriate role. '
+            + 'Make sure your nickname for this server is the same as your in-game name.';
     }
 };

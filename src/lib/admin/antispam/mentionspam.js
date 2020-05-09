@@ -6,6 +6,8 @@ const TAG = 'Mention Antispam';
 
 const list = {}; // Object to store mention counts for members, indexed by user ID
 
+let lastReset = (new Date()).getDate();
+
 module.exports = {
     // Check members aren't trying to sneak mentions in by editing messages
     edits(oldMessage, newMessage) {
@@ -97,8 +99,9 @@ module.exports = {
                     logger.debug(TAG, 'Succesfully added mute role'),
                 )
                 .catch(err => logger.warning(TAG, `Failed to add mute role to member, error: ${err}`));
-            server.getChannel('staff').send(`${member.displayName} attempted to `
-                + 'evade supermute by rejoining the server to reset their roles. But I\'m smarter than that.')
+            server.getChannel('staff')
+                .send(`${member.displayName} attempted to `
+                    + 'evade supermute by rejoining the server to reset their roles. But I\'m smarter than that.')
                 .then(() => logger.info(TAG, 'informed staff of mute evasion attempt'))
                 .catch(err => logger.warning(TAG, err));
             member.send('Attempting to evade a supermute is a serious offence, if you continue '
@@ -116,8 +119,9 @@ module.exports = {
         if (newMember.roles.has(config.get('general.superMuteRoleID'))) { return; }
         // Override point
         // Inform staff that override was succesfull
-        server.getChannel('staff').send(`Staff member override confirmed for ${newMember.displayName}, `
-            + 'mentions allowance reset')
+        server.getChannel('staff')
+            .send(`Staff member override confirmed for ${newMember.displayName}, `
+                + 'mentions allowance reset')
             .then(() => logger.info(TAG, 'Informed staff of mute override'))
             .catch(err => logger.warning(TAG, `Failed to send message to staff, error: ${err}`));
         // Inform member the mute has been overwritten
@@ -187,24 +191,24 @@ module.exports = {
                 .catch(err => logger.warning(TAG, `Failed to send message to member, error: ${err}`));
         }
 
+        const resetTime = new Date();
+        resetTime.setHours(4, 0, 0, 0);
         // If time for 4am reset
-        if (now.getHours() === 3 || now.getHours() === 4) {
-            const m = (now.getHours() * 60) + now.getMinutes();
-            if (m >= 240 && m <= 245) {
-                logger.debug(TAG, 'Daily mentionSpam reset');
-                for (const x in list) {
-                    if (!list[x].muted) {
-                        delete list[x];
-                    } else {
-                        list[x].memberMentions = 0;
-                        list[x].memberWarnings = 0;
-                        list[x].roleMentions = 0;
-                        list[x].roleWarnings = 0;
-                        continue; // eslint-disable-line no-continue
-                    }
+        if (resetTime < Date.now() && lastReset !== resetTime.getDate()) {
+            lastReset = resetTime.getDate();
+            logger.debug(TAG, 'Daily mentionSpam reset');
+            for (const x in list) {
+                if (!list[x].muted) {
+                    delete list[x];
+                } else {
+                    list[x].memberMentions = 0;
+                    list[x].memberWarnings = 0;
+                    list[x].roleMentions = 0;
+                    list[x].roleWarnings = 0;
+                    continue; // eslint-disable-line no-continue
                 }
-                logger.info(TAG, 'Mention limits reset!');
             }
+            logger.info(TAG, 'Mention limits reset!');
         }
     },
 };
@@ -216,8 +220,12 @@ function checkStaff(message) {
     if (message.mentions.roles.array().length > 0) {
         for (const x in message.mentions.roles) {
             if (
-                message.mentions.roles.array()[x] === server.getGuild().roles.get(config.get('general.staffRoleID'))
-                || message.mentions.roles.array()[x] === server.getGuild().roles.get(config.get('general.adminsRoleID'))
+                message.mentions.roles.array()[x] === server.getGuild()
+                    .roles
+                    .get(config.get('general.staffRoleID'))
+                || message.mentions.roles.array()[x] === server.getGuild()
+                    .roles
+                    .get(config.get('general.adminsRoleID'))
             ) {
                 message.author.send(`Hey ${message.member.displayName} thanks for `
                     + 'contacting the DIG community staff, someone will get back to you soon™. Please '
@@ -357,8 +365,9 @@ function countMentions(message) {
 
 // Message staff channel about mute
 function informStaff(message) {
-    server.getChannel('staff').send(`${message.member.displayName} was muted for `
-        + `${config.get('mentionsMuteTime') / 3600000} hours for ignoring multiple warnings of mention spam`)
+    server.getChannel('staff')
+        .send(`${message.member.displayName} was muted for `
+            + `${config.get('mentionsMuteTime') / 3600000} hours for ignoring multiple warnings of mention spam`)
         .then(() => logger.info(TAG, 'Informed staff of mute'))
         .catch(err => logger.warning(TAG, err));
 }

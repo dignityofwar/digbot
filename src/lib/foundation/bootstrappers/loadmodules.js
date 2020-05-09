@@ -28,6 +28,7 @@ module.exports = class LoadModules {
     get locations() {
         return [
             'apis/*.js',
+            'checkers/*.js',
             'commands/*.js',
             'commands/!(foundation)/**.js',
             'dispatchers/*.js',

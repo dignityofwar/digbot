@@ -18,6 +18,7 @@
     "no-unused-expressions" : "off",
     "no-use-before-define"  : ["error", {"functions": false, "classes": true, "variables": true}],
     "no-useless-constructor": "off",
+    "no-underscore-dangle"  : "off",
     "guard-for-in"          : "off",
     "no-restricted-syntax"  : "off",
     "class-methods-use-this": "off",

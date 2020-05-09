@@ -10,16 +10,29 @@ module.exports = class TheCatApi {
     }
 
     /**
-     * @param {String} name
-     * @return {PromiseLike<Object>}
+     * @param name
+     * @param opts
+     * @return {Promise|{}|PromiseLike<any>|Promise<any>}
      */
-    getCharacterByName(name = '') {
+    getCharacterByName(name, opts = { resolve: [] }) {
         return this.axios.get('character', {
             params: {
                 'name.first_lower': name.toLowerCase(),
-                'c:resolve': 'outfit',
+                'c:resolve': this.convertResolve(opts.resolve),
             },
         })
             .then(({ data: { character_list: [character = false] } }) => character);
+    }
+
+    /**
+     * @param resolve
+     * @return {*|string}
+     */
+    convertResolve(resolve) {
+        if (resolve instanceof Array) {
+            return resolve.reduce((a, v) => `${a},${v}`);
+        }
+
+        return resolve;
     }
 };

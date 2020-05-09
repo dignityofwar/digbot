@@ -1,30 +1,64 @@
 {
-  "showPerfStats"    : true,
+  "showPerfStats"           : true,
 
-  "botUserID"        : "",
-  "subBots"          : {
+  "botUserID"               : "",
+  "subBots"                 : {
     "bot2": {
       "id"   : "",
       "token": ""
     }
   },
 
-  "token"            : "",
-  "youtubeKey"       : "",
+  "token"                   : "",
+  "youtubeKey"              : "",
 
-  "commandChannels": [
+  "commandChannels"         : [
     "YOUR COMMAND CHANNEL ID"
   ],
 
-  "guilds": {
-    "YOUR GUILD ID": {
-      "adminRoles": [
+  "guilds"                  : {
+    "YOUR GUILD ID"           : {
+      "adminRoles"            : [
         "YOUR ADMIN ROLE ID"
+      ],
+      "modularChannelCategory": "",
+      "ps2CharacterClaimer"   : {
+        "outfit"       : "37509488620604883 <- ID for DIG",
+        "filterRank"   : [
+          "Leader"
+        ],
+        "role"         : "",
+        "excludedRoles": [
+          ""
+        ],
+        "useName"      : true,
+        "automatic"    : true
+      }
+    },
+    "supermuteRole"           : "",
+    "dragonRole"              : "",
+    "ignoreAutoAssignmentRole": "",
+    "autoRoleAssignment"      : {
+      "Planetside 2": ""
+    },
+    "onRoleAssignment"        : {
+      "269844100168155141": [
+        {
+          "type"   : "message",
+          "channel": "",
+          "content": "${member} has been granted access here. Note, this channel is lawless. If you get triggered, the community staff cannot help you."
+        }
       ]
     }
   },
 
-  "general"          : {
+  "roleAssignmentOnReaction": {
+    "messageID": {
+      "emojiID": "roleID"
+    }
+  },
+
+  "general"                 : {
     "adminsRoleID"       : "",
     "devRoleID"          : "",
     "forcedPTTRoleID"    : "",
@@ -34,15 +68,15 @@
     "superMuteRoleID"    : "",
     "leaderRoles"        : [
       ""
-    ],
+    ]
   },
 
-  "channels"         : {
-    "mappings" : {
-      "developers"   : "",
-      "digbot"       : "",
-      "general"      : "",
-      "staff"        : ""
+  "channels"                : {
+    "mappings": {
+      "developers": "",
+      "digbot"    : "",
+      "general"   : "",
+      "staff"     : ""
     }
   }
 }
