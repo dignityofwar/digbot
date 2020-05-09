@@ -142,8 +142,8 @@ module.exports = class OutfitModerator extends EventEmitter {
         }, {
             character: character.character_id,
             name: character.name.first,
-            claims: {
-                $push: {
+            $push: {
+                claims: {
                     character: character.character_id,
                     name: character.name.first,
                     at: Date.now(),
