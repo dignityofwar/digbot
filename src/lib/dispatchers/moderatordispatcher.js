@@ -47,7 +47,7 @@ module.exports = class ModeratorDispatcher extends Dispatcher {
     guildMemberAdd(member) {
         if (welcome.check(member) && server.getChannel('general')) {
             server.getChannel('general')
-                .send(`Welcome to DIG, ${member}! Please check out #role-assignment and grant yourself roles`)
+                .send(`Welcome to DIG, ${member}! Please check out <#707928568054939700> and grant yourself roles`)
                 .then(() => this.logger.log('info', {
                     message: 'Sent #general message',
                     label: 'ModeratorDispatcher',
