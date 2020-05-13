@@ -60,7 +60,7 @@
   "features"                : {
     "disableMentionSpam"  : false,
     "modularChannelSystem": false,
-    "sfx"                 : true,
-    "play"                : true
+    "sfx"                 : false,
+    "play"                : false
   }
 }
