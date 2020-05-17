@@ -19,10 +19,12 @@ export default class App {
     /**
      * @return {ContainerModule[]} Modules used by the app
      */
-    public readonly modules = (): ContainerModule[] => ([
-        _('../database'),
-        _('../bot'),
-        _('../commands'),
-        _('../moderators'),
-    ]);
+    public get modules(): ContainerModule[] {
+        return [
+            _('../database'),
+            _('../bot'),
+            _('../commands'),
+            _('../moderators'),
+        ];
+    };
 }
