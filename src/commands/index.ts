@@ -1,8 +1,8 @@
 import { ContainerModule, interfaces } from 'inversify';
 import Handler from '../bot/handler';
-import CommandHandler from './foundation/commandhandler';
-import Action from './foundation/action';
-import Executor from './foundation/executor';
+import CommandHandler from './commandhandler';
+import Action from './action';
+import Executor from './executor';
 import CaseInsensitiveMap from '../utils/caseinsensitivemap';
 import Throttle, { ThrottleType } from '../models/throttle';
 import Bind = interfaces.Bind;

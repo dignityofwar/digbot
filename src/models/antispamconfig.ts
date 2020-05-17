@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import Guild from './guild';
 import Snowflake from './snowflake';
+import MessageActionEmbed from './actions/messageactionembed';
 
 @Entity()
 export default class AntiSpamConfig {
@@ -25,14 +26,14 @@ export default class AntiSpamConfig {
     @Column()
     public thresholdWarning?: number;
 
-    @Column({type: 'text'})
-    public warningMessage?: string;
-
-    @Column({type: 'text'})
-    public warningDM?: string;
+    @Column(() => MessageActionEmbed)
+    public warningMessage?: MessageActionEmbed;
 
     @Column()
     public thresholdMute: number;
+
+    @Column(() => MessageActionEmbed)
+    public muteMessage: MessageActionEmbed;
 
     @Column()
     public decay: number;

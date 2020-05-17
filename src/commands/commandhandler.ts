@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { Logger } from 'winston';
-import { getLogger } from '../../logger';
-import Handler from '../../bot/handler';
+import { getLogger } from '../logger';
+import Handler from '../bot/handler';
 import { Client, Message } from 'discord.js';
 import Executor from './executor';
 

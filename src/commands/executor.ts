@@ -3,10 +3,10 @@ import CommandLexer from './lexer';
 import Request from './request';
 import { Channel, GuildMember, Message } from 'discord.js';
 import Action from './action';
-import Command from '../../models/command';
-import { FilterType } from '../../models/filter';
-import Throttle, { ThrottleType } from '../../models/throttle';
-import RateLimiter, { RATELIMITER } from '../../utils/ratelimiter/ratelimiter';
+import Command from '../models/command';
+import { FilterType } from '../models/filter';
+import Throttle, { ThrottleType } from '../models/throttle';
+import RateLimiter, { RATELIMITER } from '../utils/ratelimiter/ratelimiter';
 import { EntityManager } from 'typeorm';
 
 /**
