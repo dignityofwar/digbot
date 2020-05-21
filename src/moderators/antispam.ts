@@ -1,5 +1,5 @@
 import Handler from '../bot/handler';
-import { Client, GuildMember, Message, MessageEmbed } from 'discord.js';
+import { Client, Guild, GuildMember, Message, MessageEmbed, PartialGuildMember, User } from 'discord.js';
 import RateLimiter, { RATELIMITER } from '../utils/ratelimiter/ratelimiter';
 import { inject, injectable } from 'inversify';
 import AntiSpamConfig from '../models/antispamconfig';
@@ -23,6 +23,22 @@ export default class AntiSpam extends Handler {
      */
     public up(client: Client): void {
         client.on('message', this.onMessage.bind(this));
+        client.on('guildMemberUpdate', this.onGuildMemberUpdate.bind(this));
+    }
+
+    /**
+     * @param {GuildMember | PartialGuildMember} old
+     * @param {GuildMember | PartialGuildMember} member
+     * @return {Promise<void>}
+     */
+    public async onGuildMemberUpdate(old: GuildMember | PartialGuildMember, member: GuildMember | PartialGuildMember): Promise<void> {
+        const config = await this.getConfig(old.guild);
+
+        if (!config) return;
+
+        if (old.roles.cache.has(config.muteRole) && !member.roles.cache.has(config.muteRole)) {
+            await this.rateLimiter.resetAttempts(this.throttleKey(old.guild, old));
+        }
     }
 
     /**
@@ -32,14 +48,15 @@ export default class AntiSpam extends Handler {
     public async onMessage(message: Message): Promise<void> {
         if (message.author.bot || !message.member || !message.guild) return;
 
+        if (message.member.hasPermission('ADMINISTRATOR')) return;
+
         if (!this.hasMentions(message)) return;
 
-        // TODO: cache config
-        const config = await this.manager.findOne(AntiSpamConfig, {guild: message.guild.id});
+        const config = await this.getConfig(message.guild);
 
         if (!config) return;
 
-        const key = this.throttleKey(message);
+        const key = this.throttleKey(message.guild, message.author);
         const hits = this.calcHits(message, config);
 
         if (hits === 0) return;
@@ -106,10 +123,16 @@ export default class AntiSpam extends Handler {
     /**
      * @return {string}
      */
-    private throttleKey(message: Message): string {
-        if (message.guild)
-            return `antispam:${message.guild.id}:${message.author.id}`;
+    private throttleKey(guild: Guild, user: User | GuildMember | PartialGuildMember): string {
+        return `antispam:${guild.id}:${user.id}`;
+    }
 
-        throw new TypeError(`Guild specified in the message ${message.id} is null`);
+    /**
+     * @param {Guild} guild
+     * @return {Promise<AntiSpamConfig | null>}
+     */
+    private async getConfig(guild: Guild): Promise<AntiSpamConfig | null> {
+        // TODO: cache config
+        return await this.manager.findOne(AntiSpamConfig, {guild: guild.id}) ?? null;
     }
 }
