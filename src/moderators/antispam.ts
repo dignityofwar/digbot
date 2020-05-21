@@ -65,17 +65,17 @@ export default class AntiSpam extends Handler {
 
         if (config.threshold <= totalHits) {
             if (config.threshold > totalHits - hits)
-                this.warnMember(message.member);
+                await this.warnMember(message.member);
             else
-                this.muteMember(message.member, config.muteRole);
+                await this.muteMember(message.member, config.muteRole);
         }
     }
 
     /**
      * @param {GuildMember} member
      */
-    private warnMember(member: GuildMember): void {
-        member.send(
+    private async warnMember(member: GuildMember): Promise<void> {
+        await member.send(
             new MessageEmbed()
                 .setColor('ORANGE')
                 .setTitle('Mention Spam warning')
@@ -88,15 +88,16 @@ export default class AntiSpam extends Handler {
      * @param {GuildMember} member
      * @param {string} muteRole
      */
-    private muteMember(member: GuildMember, muteRole: string): void {
-        member.send(
-            new MessageEmbed()
-                .setColor('RED')
-                .setTitle('Mention Spam limit exceed')
-                .setDescription(`You have exceeded the mention limit of ${member.guild.name} you are now muted.`),
-        );
-
-        member.roles.add(muteRole, 'Exceed mention spam limit');
+    private async muteMember(member: GuildMember, muteRole: string): Promise<void> {
+        await Promise.all([
+            member.send(
+                new MessageEmbed()
+                    .setColor('RED')
+                    .setTitle('Mention Spam limit exceed')
+                    .setDescription(`You have exceeded the mention limit of ${member.guild.name} you are now muted.`),
+            ),
+            member.roles.add(muteRole, 'Exceed mention spam limit'),
+        ]);
     }
 
     /**
