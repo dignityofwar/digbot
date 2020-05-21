@@ -1,5 +1,5 @@
 import Handler from '../bot/handler';
-import { Client, Message } from 'discord.js';
+import { Client, GuildMember, Message, MessageEmbed } from 'discord.js';
 import RateLimiter, { RATELIMITER } from '../utils/ratelimiter/ratelimiter';
 import { inject, injectable } from 'inversify';
 import AntiSpamConfig from '../models/antispamconfig';
@@ -30,23 +30,56 @@ export default class AntiSpam extends Handler {
      * @return {Promise<void>}
      */
     public async onMessage(message: Message): Promise<void> {
-        if (message.author.bot || message.channel.type !== 'text')
-            return;
+        if (message.author.bot || !message.member || !message.guild) return;
 
-        if (!this.hasMentions(message))
-            return;
+        if (!this.hasMentions(message)) return;
 
-        const config = await this.manager.findOne(AntiSpamConfig);
+        // TODO: cache config
+        const config = await this.manager.findOne(AntiSpamConfig, {guild: message.guild.id});
 
-        if (!config)
-            return;
+        if (!config) return;
 
         const key = this.throttleKey(message);
-
         const hits = this.calcHits(message, config);
-        const totalHits = await this.rateLimiter.hit(key, config.decay, );
 
-        if ()
+        if (hits === 0) return;
+
+        const totalHits = await this.rateLimiter.hit(key, config.decay, hits);
+
+        if (config.threshold <= totalHits) {
+            if (config.threshold > totalHits - hits)
+                this.warnMember(message.member);
+            else
+                this.muteMember(message.member, config.muteRole);
+        }
+    }
+
+    /**
+     * @param {GuildMember} member
+     */
+    private warnMember(member: GuildMember): void {
+        member.send(
+            new MessageEmbed()
+                .setColor('ORANGE')
+                .setTitle('Mention Spam warning')
+                .setDescription(`You have exceeded the mention limit of ${member.guild.name}.`)
+                .setFooter('Ignoring this warning will result in a mute.'),
+        );
+    }
+
+    /**
+     * @param {GuildMember} member
+     * @param {string} muteRole
+     */
+    private muteMember(member: GuildMember, muteRole: string): void {
+        member.send(
+            new MessageEmbed()
+                .setColor('RED')
+                .setTitle('Mention Spam limit exceed')
+                .setDescription(`You have exceeded the mention limit of ${member.guild.name} you are now muted.`),
+        );
+
+        member.roles.add(muteRole, 'Exceed mention spam limit');
     }
 
     /**
@@ -65,22 +98,18 @@ export default class AntiSpam extends Handler {
      * @return {number}
      */
     private calcHits({mentions}: Message, config: AntiSpamConfig): number {
-        let hits = 0;
-
-        if (mentions.everyone)
-            hits += config.everyoneWeight;
-
-        hits += mentions.users.size * config.userWeight;
-        hits += mentions.roles.size * config.roleWeight;
-
-        return hits;
-
+        return (+mentions.everyone) * config.everyoneWeight
+            + mentions.users.size * config.userWeight
+            + mentions.roles.size * config.roleWeight;
     }
 
     /**
      * @return {string}
      */
     private throttleKey(message: Message): string {
-        return `antispam:${message.guild!.id}:${message.author.id}`;
+        if (message.guild)
+            return `antispam:${message.guild.id}:${message.author.id}`;
+
+        throw new TypeError(`Guild specified in the message ${message.id} is null`);
     }
 }

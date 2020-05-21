@@ -1,18 +1,16 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import Guild from './guild';
-import Snowflake from './snowflake';
-import MessageActionEmbed from './actions/messageactionembed';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import MessageActionEmbed from './embeds/messageactionembed';
 
 @Entity()
 export default class AntiSpamConfig {
     @PrimaryGeneratedColumn()
     public ID: number;
 
-    @ManyToOne(() => Guild)
-    public guild: Guild;
+    @Column()
+    public guild: string;
 
-    @ManyToOne(() => Snowflake)
-    public muteRole: Snowflake;
+    @Column()
+    public muteRole: string;
 
     @Column()
     public everyoneWeight: number;
@@ -24,13 +22,10 @@ export default class AntiSpamConfig {
     public roleWeight: number;
 
     @Column()
-    public thresholdWarning?: number;
+    public threshold: number;
 
     @Column(() => MessageActionEmbed)
-    public warningMessage?: MessageActionEmbed;
-
-    @Column()
-    public thresholdMute: number;
+    public warningMessage: MessageActionEmbed;
 
     @Column(() => MessageActionEmbed)
     public muteMessage: MessageActionEmbed;
