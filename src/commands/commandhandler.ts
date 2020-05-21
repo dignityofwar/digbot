@@ -4,6 +4,7 @@ import { getLogger } from '../logger';
 import Handler from '../bot/handler';
 import { Client, Message } from 'discord.js';
 import Executor from './executor';
+import { catchAndLogAsync } from '../utils/logger';
 
 /**
  * Handles incoming commands
@@ -33,11 +34,10 @@ export default class CommandHandler extends Handler {
      *
      * @param {Message} message the message the user send
      */
-    public onMessage(message: Message): void {
-        if (message.author.bot || message.channel.type !== 'text')
-            return;
+    @catchAndLogAsync(CommandHandler.logger)
+    public async onMessage(message: Message): Promise<void> {
+        if (message.author.bot || message.channel.type !== 'text') return;
 
-        this.executor.execute(message)
-            .catch((e: Error) => CommandHandler.logger.error(e.stack ?? e.message));
+        await this.executor.execute(message);
     }
 }

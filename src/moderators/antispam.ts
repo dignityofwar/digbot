@@ -4,9 +4,14 @@ import RateLimiter, { RATELIMITER } from '../utils/ratelimiter/ratelimiter';
 import { inject, injectable } from 'inversify';
 import AntiSpamConfig from '../models/antispamconfig';
 import { EntityManager } from 'typeorm';
+import { catchAndLog, catchAndLogAsync } from '../utils/logger';
+import { Logger } from 'winston';
+import { getLogger } from '../logger';
 
 @injectable()
 export default class AntiSpam extends Handler {
+    private static logger: Logger = getLogger('anti-spam-moderator');
+
     /**
      * @param {EntityManager} manager
      * @param {RateLimiter} rateLimiter
@@ -31,6 +36,7 @@ export default class AntiSpam extends Handler {
      * @param {GuildMember | PartialGuildMember} member
      * @return {Promise<void>}
      */
+    @catchAndLogAsync(AntiSpam.logger)
     public async onGuildMemberUpdate(old: GuildMember | PartialGuildMember, member: GuildMember | PartialGuildMember): Promise<void> {
         const config = await this.getConfig(old.guild);
 
@@ -45,6 +51,7 @@ export default class AntiSpam extends Handler {
      * @param {Message} message
      * @return {Promise<void>}
      */
+    @catchAndLogAsync(AntiSpam.logger)
     public async onMessage(message: Message): Promise<void> {
         if (message.author.bot || !message.member || !message.guild) return;
 

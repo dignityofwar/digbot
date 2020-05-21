@@ -8,9 +8,11 @@ import Filter from '../models/filter';
 import List from '../models/list';
 import Snowflake from '../models/snowflake';
 import Throttle from '../models/throttle';
+import AntiSpamConfig from '../models/antispamconfig';
 
 export default class Database {
     public readonly entities: (Function | string | EntitySchema)[] = [
+        AntiSpamConfig,
         Command,
         Filter,
         List,
