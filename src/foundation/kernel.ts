@@ -17,7 +17,7 @@ enum KernelState {
  */
 @injectable()
 export default class Kernel implements KernelContract {
-    private static readonly logger: Logger = getLogger('kernel');
+    private static readonly logger = getLogger('kernel');
 
     public static readonly version: string = '2.0.0-alfa';
 

@@ -1,5 +1,4 @@
 import { injectable } from 'inversify';
-import { Logger } from 'winston';
 import { getLogger } from '../logger';
 import Handler from '../bot/handler';
 import { Client, Message } from 'discord.js';
@@ -11,7 +10,7 @@ import { catchAndLogAsync } from '../utils/logger';
  */
 @injectable()
 export default class CommandHandler extends Handler {
-    private static readonly logger: Logger = getLogger('command-handler');
+    private static readonly logger = getLogger('command-handler');
 
     /**
      * Constructor for the CommandHandler

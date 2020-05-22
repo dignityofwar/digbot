@@ -4,13 +4,12 @@ import RateLimiter, { RATELIMITER } from '../utils/ratelimiter/ratelimiter';
 import { inject, injectable } from 'inversify';
 import AntiSpamConfig from '../models/antispamconfig';
 import { EntityManager } from 'typeorm';
-import { catchAndLog, catchAndLogAsync } from '../utils/logger';
-import { Logger } from 'winston';
+import { catchAndLogAsync } from '../utils/logger';
 import { getLogger } from '../logger';
 
 @injectable()
 export default class AntiSpam extends Handler {
-    private static logger: Logger = getLogger('anti-spam-moderator');
+    private static readonly logger = getLogger('anti-spam-moderator');
 
     /**
      * @param {EntityManager} manager
@@ -105,6 +104,7 @@ export default class AntiSpam extends Handler {
             ),
             member.roles.add(muteRole, 'Exceed mention spam limit'),
         ]);
+        // TODO: System for releasing member and persisting mute on rejoin
     }
 
     /**
