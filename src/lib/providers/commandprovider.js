@@ -5,9 +5,6 @@ const ServiceProvider = require('../foundation/serviceprovider');
 
 const CommandRegister = require('../commands/foundation/commandregister');
 
-const play = require('../commands/play');
-const sfx = require('../commands/sfx');
-
 
 module.exports = class QueueProvider extends ServiceProvider {
     /**
@@ -28,12 +25,10 @@ module.exports = class QueueProvider extends ServiceProvider {
             'commandsLmgtfy',
             'commandsMentions',
             'commandsPing',
-            // 'commandsPlay',
             'commandsPretend',
             'commandsPs2dig',
             'commandsReport',
             'commandsRestart',
-            // 'commandsSfx',
             'commandsStarted',
             'commandsStats',
             'commandsTrivia',
@@ -61,8 +56,5 @@ module.exports = class QueueProvider extends ServiceProvider {
                 commandRegister.add(this.container.build(command));
             }
         }
-
-        play.ready();
-        sfx.ready();
     }
 };

@@ -3,7 +3,7 @@
 FROM node:10-alpine
 
 # Install the ffmpeg binaries
-RUN apk add --no-cache ffmpeg
+#RUN apk add --no-cache ffmpeg
 
 # Sets default values for env vars for the image
 ENV NODE_ENV=development
@@ -16,7 +16,7 @@ COPY package*.json ./
 
 # Install dependencies(dev-dependecies are not installed)
 RUN apk add --no-cache --virtual .build-deps make "g++" python2 git \
-    && npm install --production \
+    && npm ci --production \
     && apk del .build-deps
 
 # Copies the project into the container
