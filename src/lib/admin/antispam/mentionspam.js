@@ -6,8 +6,6 @@ const TAG = 'Mention Antispam';
 
 const list = {}; // Object to store mention counts for members, indexed by user ID
 
-let lastReset = (new Date()).getDate();
-
 module.exports = {
     // Check members aren't trying to sneak mentions in by editing messages
     edits(oldMessage, newMessage) {
@@ -153,7 +151,7 @@ module.exports = {
         /* If supermuted user isn't on record (most likely either someone wrongfully gave them the
         role or the bot restarted) */
         if (roleList.length === 0) {
-            logger.info(TAG, 'No roles were found in muteRole.members');
+            // logger.info(TAG, 'No roles were found in muteRole.members');
             return;
         }
         for (const x in roleList) {
@@ -190,26 +188,22 @@ module.exports = {
                 .then(() => logger.debug(TAG, 'Succesfully sent message to member informing of mute removal'))
                 .catch(err => logger.warning(TAG, `Failed to send message to member, error: ${err}`));
         }
+    },
 
-        const resetTime = new Date();
-        resetTime.setHours(4, 0, 0, 0);
-        // If time for 4am reset
-        if (resetTime < Date.now() && lastReset !== resetTime.getDate()) {
-            lastReset = resetTime.getDate();
-            logger.debug(TAG, 'Daily mentionSpam reset');
-            for (const x in list) {
-                if (!list[x].muted) {
-                    delete list[x];
-                } else {
-                    list[x].memberMentions = 0;
-                    list[x].memberWarnings = 0;
-                    list[x].roleMentions = 0;
-                    list[x].roleWarnings = 0;
-                    continue; // eslint-disable-line no-continue
-                }
+    dailyReset() {
+        logger.debug(TAG, 'Daily mentionSpam reset');
+        for (const x in list) {
+            if (!list[x].muted) {
+                delete list[x];
+            } else {
+                list[x].memberMentions = 0;
+                list[x].memberWarnings = 0;
+                list[x].roleMentions = 0;
+                list[x].roleWarnings = 0;
+                continue; // eslint-disable-line no-continue
             }
-            logger.info(TAG, 'Mention limits reset!');
         }
+        logger.info(TAG, 'Mention limits reset!');
     },
 };
 

@@ -3,7 +3,7 @@ const { asFunction } = require('awilix');
 const { Client } = require('discord.js');
 const ServiceProvider = require('../foundation/serviceprovider');
 
-const subBots = require('../sub-bots/sub-bots');
+// const subBots = require('../sub-bots/sub-bots');
 
 module.exports = class DiscordProvider extends ServiceProvider {
     /**
@@ -25,7 +25,7 @@ module.exports = class DiscordProvider extends ServiceProvider {
             client.on('disconnect',
                 event => logger.warn(log(`Disconnected from Discord(code ${event.code}): ${event.reason}`)));
 
-            client.on('debug', message => logger.debug(log(message)));
+            client.on('debug', message => logger.silly(log(message)));
 
             client.on('warn', message => logger.warn(log(message)));
 
@@ -45,6 +45,6 @@ module.exports = class DiscordProvider extends ServiceProvider {
     async boot({ discordjsClient }) {
         await discordjsClient.login(config.get('token'));
 
-        setImmediate(subBots.ready);
+        // setImmediate(subBots.ready);
     }
 };

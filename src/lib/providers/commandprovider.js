@@ -5,9 +5,8 @@ const ServiceProvider = require('../foundation/serviceprovider');
 
 const CommandRegister = require('../commands/foundation/commandregister');
 
-const play = require('../commands/play');
-const sfx = require('../commands/sfx');
-
+// const play = require('../commands/play');
+// const sfx = require('../commands/sfx');
 
 module.exports = class QueueProvider extends ServiceProvider {
     /**
@@ -62,7 +61,7 @@ module.exports = class QueueProvider extends ServiceProvider {
             }
         }
 
-        play.ready();
-        sfx.ready();
+        // play.ready();
+        // sfx.ready();
     }
 };
