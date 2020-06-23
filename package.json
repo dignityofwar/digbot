@@ -31,12 +31,10 @@
     "config": "^3.3.1",
     "csv-stringify": "^5.5.0",
     "discord.js": "^11.6.4",
-    "googleapis": "^48.0.0",
     "ioredis": "^4.17.3",
     "lodash": "^4.17.15",
     "moment": "^2.27.0",
     "mongoose": "^5.9.20",
-    "opusscript": "^0.0.7",
     "os-utils": "^0.0.14",
     "winston": "^3.3.2",
     "winston-transport": "^4.4.0",
@@ -44,9 +42,7 @@
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.1",
-    "erlpack": "discordapp/erlpack",
-    "libsodium-wrappers": "^0.7.5",
-    "node-opus": "^0.3.1"
+    "erlpack": "discordapp/erlpack"
   },
   "devDependencies": {
     "chai": "^4.2.0",
