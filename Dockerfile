@@ -22,7 +22,5 @@ RUN apk add --no-cache --virtual .build-deps make "g++" python2 git \
 # Copies the project into the container
 COPY . .
 
-RUN cp -r ./node_modules/m3u8stream/dist ./node_modules/m3u8stream/lib
-
 # Run the bot
 CMD ["npm", "start"]
