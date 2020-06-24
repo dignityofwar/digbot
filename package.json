@@ -37,8 +37,7 @@
     "mongoose": "^5.9.20",
     "os-utils": "^0.0.14",
     "winston": "^3.3.2",
-    "winston-transport": "^4.4.0",
-    "ytdl-core": "^0.29.7"
+    "winston-transport": "^4.4.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.1",

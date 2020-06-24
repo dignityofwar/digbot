@@ -18,7 +18,7 @@ module.exports = class DiscordProvider extends ServiceProvider {
 
             client.on('ready', () => logger.info(log('Connected to Discord')));
 
-            client.on('reconnecting', () => logger.info(log('Reconnected to Discord')));
+            client.on('reconnecting', () => logger.debug(log('Reconnected to Discord')));
 
             client.on('disconnect',
                 event => logger.warn(log(`Disconnected from Discord(code ${event.code}): ${event.reason}`)));
