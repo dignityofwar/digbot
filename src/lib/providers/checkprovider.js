@@ -5,6 +5,9 @@ const autodelete = require('../admin/channels/autodelete.js');
 const mentionSpam = require('../admin/antispam/mentionspam.js');
 const server = require('../server/server.js');
 
+// eslint-disable-next-line no-mixed-operators
+const mod = (a, N) => (a % N + N) % N;
+
 module.exports = class CheckProvider extends ServiceProvider {
     async boot() {
         // Interval call auto delete to get rid of inactive temp channels
@@ -21,6 +24,6 @@ module.exports = class CheckProvider extends ServiceProvider {
             setInterval(() => {
                 mentionSpam.dailyReset();
             }, 24 * 3600 * 1000);
-        }, (28 * 3600 * 1000) - (Date.now() % (24 * 3600 * 1000)));
+        }, mod(4 * 3600 * 1000 - Date.now(), 24 * 3600 * 1000));
     }
 };
