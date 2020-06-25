@@ -24,6 +24,6 @@ module.exports = class CheckProvider extends ServiceProvider {
             setInterval(() => {
                 mentionSpam.dailyReset();
             }, 24 * 3600 * 1000);
-        }, mod(4 * 3600 * 1000 - Date.now(), 24 * 3600 * 1000));
+        }, mod(2 * 3600 * 1000 - Date.now(), 24 * 3600 * 1000));
     }
 };
