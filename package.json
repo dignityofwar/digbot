@@ -32,7 +32,7 @@
     "csv-stringify": "^5.5.0",
     "discord.js": "^11.6.4",
     "ioredis": "^4.17.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.27.0",
     "mongoose": "^5.9.20",
     "os-utils": "^0.0.14",
