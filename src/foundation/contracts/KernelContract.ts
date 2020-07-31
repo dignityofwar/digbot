@@ -1,4 +1,4 @@
-export default interface Kernelcontract {
+export default interface KernelContract {
     /**
      * Starts running the app
      *

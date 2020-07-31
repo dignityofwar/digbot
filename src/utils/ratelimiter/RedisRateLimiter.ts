@@ -1,6 +1,6 @@
 import { inject, injectable, optional } from 'inversify';
 import { RedisClient } from 'redis';
-import RateLimiter from './ratelimiter';
+import RateLimiter from './RateLimiter';
 
 export type RedisRateLimiterOptions = {
     keyPrefix?: string;

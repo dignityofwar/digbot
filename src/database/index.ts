@@ -1,14 +1,14 @@
 import { ContainerModule, interfaces } from 'inversify';
 import Bind = interfaces.Bind;
-import Runnable, { RUNNABLE } from '../foundation/runnable';
-import Connector from './connector';
+import Runnable, { RUNNABLE } from '../foundation/Runnable';
+import Connector from './Connector';
 import config from '../config';
 import { Connection, ConnectionManager, EntityManager } from 'typeorm';
 import { createClient, RedisClient } from 'redis';
 import { getLogger } from '../logger';
-import Kernel from '../foundation/kernel';
-import RateLimiter, { RATELIMITER } from '../utils/ratelimiter/ratelimiter';
-import RedisRateLimiter from '../utils/ratelimiter/redisratelimiter';
+import Kernel from '../foundation/Kernel';
+import RateLimiter, { RATELIMITER } from '../utils/ratelimiter/RateLimiter';
+import RedisRateLimiter from '../utils/ratelimiter/RedisRateLimiter';
 
 export default new ContainerModule((bind: Bind) => {
     bind<Runnable>(RUNNABLE).to(Connector);

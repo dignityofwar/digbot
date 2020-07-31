@@ -2,7 +2,7 @@ require('reflect-metadata');
 require('dotenv').config();
 
 import { Container } from 'inversify';
-import Kernel from './foundation/kernel';
+import Kernel from './foundation/Kernel';
 import config from './config';
 
 const app = new Container({autoBindInjectable: true, skipBaseClassChecks: true});

@@ -1,4 +1,4 @@
-import Request from './request';
+import Request from './Request';
 import { injectable } from 'inversify';
 
 /**

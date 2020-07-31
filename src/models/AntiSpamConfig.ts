@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import MessageActionEmbed from './embeds/messageactionembed';
+import MessageActionEmbed from './embeds/MessageActionEmbed';
 
 @Entity()
 export default class AntiSpamConfig {

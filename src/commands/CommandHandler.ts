@@ -1,8 +1,8 @@
 import { injectable } from 'inversify';
 import { getLogger } from '../logger';
-import Handler from '../bot/handler';
+import Handler from '../bot/Handler';
 import { Client, Message } from 'discord.js';
-import Executor from './executor';
+import Executor from './Executor';
 import { catchAndLogAsync } from '../utils/logger';
 
 /**

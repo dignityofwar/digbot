@@ -1,6 +1,6 @@
 import app from './bootstrap';
 
-import Kernel from './foundation/kernel';
+import Kernel from './foundation/Kernel';
 
 const kernel = app.get<Kernel>(Kernel);
 

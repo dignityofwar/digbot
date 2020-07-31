@@ -6,7 +6,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import Snowflake, { SnowflakeType } from './snowflake';
+import Snowflake, { SnowflakeType } from './Snowflake';
 
 @Entity()
 export default class List {

@@ -1,7 +1,7 @@
-import Action from '../action';
+import Action from '../Action';
 import { injectable } from 'inversify';
-import TheCatsApi from '../../services/thecatsapi';
-import Request from '../request';
+import TheCatsApi from '../../services/TheCatsApi';
+import Request from '../Request';
 import { MessageEmbed } from 'discord.js';
 
 /**

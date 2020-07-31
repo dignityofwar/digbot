@@ -1,14 +1,14 @@
-import Handler from '../bot/handler';
+import Handler from '../../bot/Handler';
 import { Client, Guild, GuildMember, Message, MessageEmbed, PartialGuildMember, User } from 'discord.js';
-import RateLimiter, { RATELIMITER } from '../utils/ratelimiter/ratelimiter';
+import RateLimiter, { RATELIMITER } from '../../utils/ratelimiter/RateLimiter';
 import { inject, injectable } from 'inversify';
-import AntiSpamConfig from '../models/antispamconfig';
+import AntiSpamConfig from '../../models/AntiSpamConfig';
 import { EntityManager } from 'typeorm';
-import { catchAndLogAsync } from '../utils/logger';
-import { getLogger } from '../logger';
+import { catchAndLogAsync } from '../../utils/logger';
+import { getLogger } from '../../logger';
 
 @injectable()
-export default class AntiSpam extends Handler {
+export default class AntiSpamHandler extends Handler {
     private static readonly logger = getLogger('anti-spam-moderator');
 
     /**
@@ -35,7 +35,7 @@ export default class AntiSpam extends Handler {
      * @param {GuildMember | PartialGuildMember} member
      * @return {Promise<void>}
      */
-    @catchAndLogAsync(AntiSpam.logger)
+    @catchAndLogAsync(AntiSpamHandler.logger)
     public async onGuildMemberUpdate(old: GuildMember | PartialGuildMember, member: GuildMember | PartialGuildMember): Promise<void> {
         const config = await this.getConfig(old.guild);
 
@@ -50,7 +50,7 @@ export default class AntiSpam extends Handler {
      * @param {Message} message
      * @return {Promise<void>}
      */
-    @catchAndLogAsync(AntiSpam.logger)
+    @catchAndLogAsync(AntiSpamHandler.logger)
     public async onMessage(message: Message): Promise<void> {
         if (message.author.bot || !message.member || !message.guild) return;
 

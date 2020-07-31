@@ -1,7 +1,7 @@
 import { ContainerModule, interfaces } from 'inversify';
 import Bind = interfaces.Bind;
-import Runnable, { RUNNABLE } from '../foundation/runnable';
-import Bot from './bot';
+import Runnable, { RUNNABLE } from '../foundation/Runnable';
+import Bot from './Bot';
 import { Client, Guild } from 'discord.js';
 import defaultLogger, { getLogger } from '../logger';
 import { CloseEvent } from 'ws';

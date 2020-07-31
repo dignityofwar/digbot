@@ -1,7 +1,7 @@
-import Action from '../action';
+import Action from '../Action';
 import { injectable } from 'inversify';
-import JService from '../../services/jservice';
-import Request from '../request';
+import JService from '../../services/JService';
+import Request from '../Request';
 import { MessageEmbed } from 'discord.js';
 
 @injectable()

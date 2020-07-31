@@ -1,12 +1,12 @@
 import { inject, injectable } from 'inversify';
-import CommandLexer from './lexer';
-import Request from './request';
+import CommandLexer from './Lexer';
+import Request from './Request';
 import { Channel, GuildMember, Message } from 'discord.js';
-import Action from './action';
-import Command from '../models/command';
-import { FilterType } from '../models/filter';
-import Throttle, { ThrottleType } from '../models/throttle';
-import RateLimiter, { RATELIMITER } from '../utils/ratelimiter/ratelimiter';
+import Action from './Action';
+import Command from '../models/Command';
+import { FilterType } from '../models/Filter';
+import Throttle, { ThrottleType } from '../models/Throttle';
+import RateLimiter, { RATELIMITER } from '../utils/ratelimiter/RateLimiter';
 import { EntityManager } from 'typeorm';
 
 /**

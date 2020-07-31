@@ -6,20 +6,22 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import List from './list';
-
-export enum FilterType {
-    BLACKLIST,
-    WHITELIST
-}
+import Filter from './Filter';
+import Throttle from './Throttle';
 
 @Entity()
-export default class Filter {
+export default class Command {
     @PrimaryGeneratedColumn()
     public ID: number;
 
-    @Column({type: 'simple-enum', enum: FilterType})
-    public type: FilterType;
+    @ManyToOne(() => Filter)
+    public roleFilter: Filter;
+
+    @ManyToOne(() => Filter)
+    public channelFilter: Filter;
+
+    @ManyToOne(() => Throttle)
+    public throttle: Throttle;
 
     @Column()
     public guild: string;
@@ -27,8 +29,11 @@ export default class Filter {
     @Column()
     public name: string;
 
-    @ManyToOne(() => List)
-    public list: List;
+    @Column({type: 'text'})
+    public help: string;
+
+    @Column()
+    public action: string;
 
     @CreateDateColumn()
     public createdAt: Date;

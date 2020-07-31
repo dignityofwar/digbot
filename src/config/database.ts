@@ -3,12 +3,12 @@ import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionO
 import { EntitySchema } from 'typeorm/entity-schema/EntitySchema';
 import { get, getBool, getInt } from '../utils/env';
 
-import Command from '../models/command';
-import Filter from '../models/filter';
-import List from '../models/list';
-import Snowflake from '../models/snowflake';
-import Throttle from '../models/throttle';
-import AntiSpamConfig from '../models/antispamconfig';
+import Command from '../models/Command';
+import Filter from '../models/Filter';
+import List from '../models/List';
+import Snowflake from '../models/Snowflake';
+import Throttle from '../models/Throttle';
+import AntiSpamConfig from '../models/AntiSpamConfig';
 
 export default class Database {
     public readonly entities: (Function | string | EntitySchema)[] = [

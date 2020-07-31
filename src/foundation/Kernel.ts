@@ -1,8 +1,7 @@
 import { injectable, Container, multiInject } from 'inversify';
-import { Logger } from 'winston';
 import { getLogger } from '../logger';
-import KernelContract from './contracts/kernelcontract';
-import Runnable, { RUNNABLE } from './runnable';
+import KernelContract from './contracts/KernelContract';
+import Runnable, { RUNNABLE } from './Runnable';
 import config from '../config';
 
 enum KernelState {

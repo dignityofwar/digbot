@@ -1,15 +1,15 @@
 import { ContainerModule, interfaces } from 'inversify';
-import Handler from '../bot/handler';
-import CommandHandler from './commandhandler';
-import Action from './action';
-import Executor from './executor';
-import CaseInsensitiveMap from '../utils/caseinsensitivemap';
-import Throttle, { ThrottleType } from '../models/throttle';
+import Handler from '../bot/Handler';
+import CommandHandler from './CommandHandler';
+import Action from './Action';
+import Executor from './Executor';
+import CaseInsensitiveMap from '../utils/maps/CaseInsensitiveMap';
+import Throttle, { ThrottleType } from '../models/Throttle';
 import Bind = interfaces.Bind;
 import Context = interfaces.Context;
 
-import Cats from './actions/cats';
-import Trivia from './actions/trivia';
+import Cats from './actions/Cats';
+import Trivia from './actions/Trivia';
 
 export default new ContainerModule((bind: Bind) => {
     bind<Executor>(Executor).toSelf().inSingletonScope();
