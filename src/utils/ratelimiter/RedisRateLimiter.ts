@@ -61,7 +61,7 @@ export default class RedisRateLimiter extends RateLimiter {
     public async attempts(key: string): Promise<number> {
         return new Promise(async (resolve, reject) => {
             key = this.key(key);
-            this.redis.get(key, (e, n) => e ? reject(e) : resolve(parseInt(n)));
+            this.redis.get(key, (e, n) => e ? reject(e) : resolve(parseInt(n!, 10)));
         });
     }
 
