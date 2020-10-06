@@ -1,8 +1,10 @@
 import { injectable, Container, multiInject } from 'inversify';
 import { getLogger } from '../logger';
-import KernelContract from './contracts/KernelContract';
-import Runnable, { RUNNABLE } from './Runnable';
+import { groupBy } from 'lodash';
+import KernelContract from './concerns/KernelContract';
+import Runnable, { RUNNABLE } from './concerns/Runnable';
 import config from '../config';
+import { version } from '../../package.json';
 
 enum KernelState {
     Idle,
@@ -18,7 +20,7 @@ enum KernelState {
 export default class Kernel implements KernelContract {
     private static readonly logger = getLogger('kernel');
 
-    public static readonly version: string = '2.0.0-alfa';
+    public static readonly version: string = version;
 
     private status: KernelState = KernelState.Idle;
 
@@ -47,7 +49,12 @@ export default class Kernel implements KernelContract {
 
         try {
             Kernel.logger.info('Booting services');
-            await Promise.all(this.runnables.map((runnable) => runnable.boot?.apply(runnable)));
+
+            const bootGroups = groupBy(this.runnables, r => (r.bootPriority ?? 0));
+
+            // @ts-ignore
+            for (const bootKey of Object.keys(bootGroups).sort((x, y) => (x - y)))
+                await Promise.all(bootGroups[bootKey].map((runnable) => runnable.boot?.apply(runnable)));
 
             Kernel.logger.info('Starting services');
             await Promise.all(this.runnables.map(runnable => runnable.start?.apply(runnable)));
@@ -72,6 +79,12 @@ export default class Kernel implements KernelContract {
         Kernel.logger.info(`Terminating (code: ${code})`);
 
         try {
+            const terminateGroups = groupBy(this.runnables, r => (r.terminatePriority ?? 0));
+
+            // @ts-ignore
+            for (const terminateKey of Object.keys(terminateGroups).sort((x, y) => (y - x)))
+                await Promise.all(terminateGroups[terminateKey].map((runnable) => runnable.terminate?.apply(runnable)));
+
             await Promise.all(this.runnables.map(runnable => runnable.terminate?.apply(runnable)));
         } catch (e) {
             Kernel.logger.error(`Error on termination: ${e}`);

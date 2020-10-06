@@ -14,6 +14,9 @@ export default class Command {
     @PrimaryGeneratedColumn()
     public ID: number;
 
+    @Column()
+    public guild: string;
+
     @ManyToOne(() => Filter)
     public roleFilter: Filter;
 
@@ -22,9 +25,6 @@ export default class Command {
 
     @ManyToOne(() => Throttle)
     public throttle: Throttle;
-
-    @Column()
-    public guild: string;
 
     @Column()
     public name: string;

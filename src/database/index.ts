@@ -1,6 +1,6 @@
 import { ContainerModule, interfaces } from 'inversify';
 import Bind = interfaces.Bind;
-import Runnable, { RUNNABLE } from '../foundation/Runnable';
+import Runnable, { RUNNABLE } from '../foundation/concerns/Runnable';
 import Connector from './Connector';
 import config from '../config';
 import { Connection, ConnectionManager, EntityManager } from 'typeorm';

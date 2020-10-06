@@ -1,4 +1,8 @@
 export default interface Runnable {
+    bootPriority?: number;
+
+    terminatePriority?: number;
+
     boot?(): Promise<void>;
 
     start?(): Promise<void>;
@@ -6,4 +10,4 @@ export default interface Runnable {
     terminate?(): Promise<void>;
 }
 
-export const RUNNABLE = Symbol.for('foundation.Runnable');
+export const RUNNABLE = Symbol.for('foundation.concern.Runnable');

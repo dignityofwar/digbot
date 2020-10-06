@@ -10,6 +10,7 @@
   "rules"        : {
     "@typescript-eslint/quotes": ["error", "single"],
     "@typescript-eslint/explicit-member-accessibility": ["error"],
-    "@typescript-eslint/camelcase": ["off"]
+    "@typescript-eslint/camelcase": ["off"],
+    "@typescript-eslint/ban-ts-ignore": ["off"]
   }
 }

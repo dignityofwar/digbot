@@ -1,4 +1,4 @@
-import Runnable from '../foundation/Runnable';
+import Runnable from '../foundation/concerns/Runnable';
 import { injectable } from 'inversify';
 import { Connection } from 'typeorm';
 

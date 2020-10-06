@@ -1,6 +1,6 @@
 import { ContainerModule, interfaces } from 'inversify';
 import Bind = interfaces.Bind;
-import Runnable, { RUNNABLE } from '../foundation/Runnable';
+import Runnable, { RUNNABLE } from '../foundation/concerns/Runnable';
 import Bot from './Bot';
 import { Client, Guild } from 'discord.js';
 import defaultLogger, { getLogger } from '../logger';

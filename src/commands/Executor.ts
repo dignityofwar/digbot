@@ -25,8 +25,7 @@ export default class Executor {
         private readonly repository: Map<string, Action>,
         @inject(RATELIMITER) private readonly rateLimiter: RateLimiter,
         private readonly defaultThrottle: Throttle,
-    ) {
-    }
+    ) {}
 
     /**
      * Tries to run a command if the message triggers one
@@ -66,7 +65,7 @@ export default class Executor {
      * @param {Throttle} throttle
      * @return {Promise<boolean>}
      */
-    public async throttled(command: Command, message: Message, throttle: Throttle): Promise<boolean> {
+    private async throttled(command: Command, message: Message, throttle: Throttle): Promise<boolean> {
         const key = this.throttleKey(command, message, throttle);
 
         if (await this.rateLimiter.tooManyAttempts(key, throttle.max))
@@ -99,8 +98,7 @@ export default class Executor {
      * @param {GuildMember} member
      * @return {boolean}
      */
-    public filterRole(command: Command, member: GuildMember): boolean {
-        const {roleFilter} = command;
+    public filterRole({roleFilter}: Command, member: GuildMember): boolean {
         // TODO: Should probably be a query
         return (roleFilter.type == FilterType.WHITELIST) == (roleFilter.list.snowflakes.some(({snowflake}) => member.roles.cache.has(snowflake)));
     }
@@ -110,8 +108,7 @@ export default class Executor {
      * @param {Channel} channel
      * @return {boolean}
      */
-    public filterChannel(command: Command, channel: Channel): boolean {
-        const {channelFilter} = command;
+    public filterChannel({channelFilter}: Command, channel: Channel): boolean {
         // TODO: Should probably be a query
         return (channelFilter.type == FilterType.WHITELIST) == (channelFilter.list.snowflakes.some(({snowflake}) => snowflake == channel.id));
     }
