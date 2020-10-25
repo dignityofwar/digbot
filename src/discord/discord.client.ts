@@ -16,5 +16,4 @@ export class DiscordClient extends Client implements OnApplicationBootstrap, OnA
     onApplicationShutdown(): void {
         this.destroy();
     }
-
 }

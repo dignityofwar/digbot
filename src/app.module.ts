@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
+import { DiscordModule } from './modules/discord.module';
 
 @Module({
-    imports: [],
+    imports: [
+        DiscordModule
+    ],
     controllers: [],
     providers: [],
 })
