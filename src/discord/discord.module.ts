@@ -2,7 +2,7 @@ import { DynamicModule, Provider } from '@nestjs/common';
 import { DiscordClient } from './discord.client';
 import { DiscordModuleOptions } from './interfaces/discordmodule.options';
 import { DiscordModuleAsyncOptions } from './interfaces/discordmoduleasync.options';
-import { DISCORD_MODULE_OPTIONS } from './constants/discord.constant';
+import { DISCORD_MODULE_OPTIONS } from './constants/discord.constants';
 import { DiscordOptionsFactory } from './interfaces/discordoptions.factory';
 
 export class DiscordModule {
@@ -56,7 +56,7 @@ export class DiscordModule {
                 provide: DISCORD_MODULE_OPTIONS,
                 useFactory: async (factory: DiscordOptionsFactory): Promise<DiscordModuleOptions> =>
                     await factory.createDiscordOptions(),
-                inject: [options.useExisting || options.useClass],
+                inject: [options.useExisting ?? options.useClass],
             };
         }
 
