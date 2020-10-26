@@ -3,7 +3,9 @@ import { OnDecoratorOptions } from '../decorators/interfaces/ondecorator.options
 import { ON_DECORATOR } from '../constants/discord.constants';
 import { ClientEvents } from 'discord.js';
 import { DiscordClient } from '../discord.client';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class OnResolver implements DiscordResolver {
     public resolve(instance: Record<string, any>, methodName: string, discordClient: DiscordClient): void {
         const metadata: OnDecoratorOptions | keyof ClientEvents = Reflect.getMetadata(ON_DECORATOR, instance, methodName);

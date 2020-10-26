@@ -1,15 +1,23 @@
-import { DynamicModule, Provider } from '@nestjs/common';
+import { DynamicModule, Module, Provider } from '@nestjs/common';
+import { DiscoveryModule } from '@nestjs/core';
 import { DiscordClient } from './discord.client';
 import { DiscordModuleOptions } from './interfaces/discordmodule.options';
 import { DiscordModuleAsyncOptions } from './interfaces/discordmoduleasync.options';
 import { DISCORD_MODULE_OPTIONS } from './constants/discord.constants';
 import { DiscordOptionsFactory } from './interfaces/discordoptions.factory';
+import { OnResolver } from './resolvers/on.resolver';
+import { DiscordService } from './discord.service';
 
+@Module({
+    imports: [DiscoveryModule],
+})
 export class DiscordModule {
     static forRoot(options: DiscordModuleOptions): DynamicModule {
         return {
             module: DiscordModule,
             providers: [
+                OnResolver,
+                DiscordService,
                 {
                     provide: DISCORD_MODULE_OPTIONS,
                     useValue: options ?? {},
@@ -29,6 +37,8 @@ export class DiscordModule {
             module: DiscordModule,
             imports: options.imports ?? [],
             providers: [
+                OnResolver,
+                DiscordService,
                 DiscordModule.createDiscordOptionsProvider(options),
                 {
                     provide: DiscordClient,

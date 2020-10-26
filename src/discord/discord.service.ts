@@ -1,10 +1,11 @@
-import { OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { DiscoveryService, MetadataScanner } from '@nestjs/core';
 import { DiscordClient } from './discord.client';
 import { DiscordResolver } from './interfaces/discord.resolver';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 import { OnResolver } from './resolvers/on.resolver';
 
+@Injectable()
 export class DiscordService implements OnApplicationBootstrap {
     private readonly resolvers: DiscordResolver[];
 
