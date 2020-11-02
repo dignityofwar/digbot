@@ -4,7 +4,7 @@ import { DiscordModuleOptions } from './interfaces/discordmodule.options';
 
 @Injectable()
 export class DiscordClient extends Client implements OnApplicationBootstrap, OnApplicationShutdown {
-    private static logger = new Logger('DiscordClient');
+    private static readonly logger = new Logger('DiscordClient');
 
     constructor(options: DiscordModuleOptions) {
         super(options);
