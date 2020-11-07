@@ -5,8 +5,8 @@ import { DiscordModuleOptions } from './interfaces/discordmodule.options';
 import { DiscordModuleAsyncOptions } from './interfaces/discordmoduleasync.options';
 import { DISCORD_MODULE_OPTIONS } from './constants/discord.constants';
 import { DiscordOptionsFactory } from './interfaces/discordoptions.factory';
-import { OnResolver } from './resolvers/on.resolver';
-import { DiscordService } from './discord.service';
+import { DiscordExplorer } from './discord.explorer';
+import { MetadataAccessor } from './helpers/metadata.accessor';
 
 @Module({
     imports: [DiscoveryModule],
@@ -16,8 +16,8 @@ export class DiscordModule {
         return {
             module: DiscordModule,
             providers: [
-                OnResolver,
-                DiscordService,
+                MetadataAccessor,
+                DiscordExplorer,
                 {
                     provide: DISCORD_MODULE_OPTIONS,
                     useValue: options ?? {},
@@ -37,8 +37,8 @@ export class DiscordModule {
             module: DiscordModule,
             imports: options.imports ?? [],
             providers: [
-                OnResolver,
-                DiscordService,
+                MetadataAccessor,
+                DiscordExplorer,
                 DiscordModule.createDiscordOptionsProvider(options),
                 {
                     provide: DiscordClient,

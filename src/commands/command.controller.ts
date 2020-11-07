@@ -1,7 +1,7 @@
 import { Controller, Logger } from '@nestjs/common';
 import { Message } from 'discord.js';
 import { On } from '../discord/decorators/on.decorator';
-import { CommandRepository } from './command.repository';
+import { CommandContainer } from './command.container';
 import { ArgumentLexer } from './utils/argument.lexer';
 
 @Controller()
@@ -9,7 +9,7 @@ export class CommandController {
     private static readonly logger = new Logger('CommandController');
 
     constructor(
-        private readonly repository: CommandRepository,
+        private readonly repository: CommandContainer,
     ) {}
 
     @On('message')
