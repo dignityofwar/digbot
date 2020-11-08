@@ -47,6 +47,6 @@ export class CommandExplorer implements OnModuleInit {
         container: CommandContainer,
         metadata: CommandDecoratorOptions,
     ): void {
-        container.register(metadata, instance[key]);
+        container.register(metadata, instance[key].bind(instance));
     }
 }
