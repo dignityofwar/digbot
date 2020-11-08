@@ -5,14 +5,12 @@ import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 import { MetadataAccessor } from './helpers/metadata.accessor';
 import { OnDecoratorOptions } from './decorators/interfaces/ondecorator.options';
 
-/* eslint-disable @typescript-eslint/ban-types */
-
 @Injectable()
 export class DiscordExplorer implements OnModuleInit {
     constructor(
         private readonly discoveryService: DiscoveryService,
         private readonly metadataScanner: MetadataScanner,
-        private readonly accessor: MetadataAccessor,
+        private readonly metadataAccessor: MetadataAccessor,
         private readonly discordClient: DiscordClient,
     ) {}
 
@@ -31,7 +29,7 @@ export class DiscordExplorer implements OnModuleInit {
                 instance,
                 Object.getPrototypeOf(instance),
                 (key) => {
-                    const metadata = this.accessor.getOnMetadata(instance[key]);
+                    const metadata = this.metadataAccessor.getOnMetadata(instance[key]);
 
                     if (metadata) {
                         this.handleOn(

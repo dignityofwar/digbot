@@ -11,26 +11,17 @@ export class CommandContainer {
     private readonly commands = new Map<string, Command>();
 
     register(options: CommandDecoratorOptions, handler: commandHandler): void {
-        const command = {
-            ...options,
-            handler,
-        };
-
         if (this.commands.has(options.command))
             throw new Error(`Command ${options.command} is already registered`);
 
-        this.commands.set(options.command, command);
-
-        if (options.alias) {
-            if (this.commands.has(options.alias))
-                throw new Error(`Command ${options.command} cannot be registered with the alias ${options.alias}`);
-
-            this.commands.set(options.alias, command);
-        }
+        this.commands.set(options.command, {
+            ...options,
+            handler,
+        });
     }
 
-    get(command: string): commandHandler {
-        return this.commands.get(command)?.handler;
+    get(command: string): Command | undefined {
+        return this.commands.get(command);
     }
 
     all(): Command[] {

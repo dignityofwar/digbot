@@ -1,9 +1,7 @@
 import { Injectable, Type } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { OnDecoratorOptions } from '../decorators/interfaces/ondecorator.options';
-import { ON_DECORATOR } from '../constants/discord.constants';
-
-/* eslint-disable @typescript-eslint/ban-types */
+import { ON_DECORATOR } from '../discord.constants';
 
 @Injectable()
 export class MetadataAccessor {
