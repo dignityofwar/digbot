@@ -3,7 +3,7 @@ import { ImageSearchOptions } from './interfaces/images/search.options';
 import { ImageSchema } from './interfaces/images/image.schema';
 
 @Injectable()
-export class TheCatsApiService {
+export class TheCatApiService {
     constructor(
         private readonly httpService: HttpService,
     ) {}

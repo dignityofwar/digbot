@@ -5,13 +5,13 @@ import { PingController } from './controllers/ping.controller';
 import { CommandExplorer } from './command.explorer';
 import { DiscoveryModule } from '@nestjs/core';
 import { MetadataAccessor } from './helpers/metadata.accessor';
-import { TheCatsApiModule } from '../apis/thecatsapi/thecatsapi.module';
+import { TheCatApiModule } from '../apis/thecatapi/thecatapi.module';
 import { CatsController } from './controllers/cats.controller';
 
 @Module({
     imports: [
         DiscoveryModule,
-        TheCatsApiModule, // For the cats controller
+        TheCatApiModule, // For the cats controller
     ],
     providers: [
         CommandContainer,

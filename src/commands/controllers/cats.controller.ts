@@ -1,12 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { Command } from '../decorators/command.decorator';
-import { TheCatsApiService } from '../../apis/thecatsapi/thecatsapi.service';
+import { TheCatApiService } from '../../apis/thecatapi/thecatapi.service';
 import { Message, MessageEmbed } from 'discord.js';
 
 @Controller()
 export class CatsController {
     constructor(
-        private readonly catsApi: TheCatsApiService,
+        private readonly theCatApi: TheCatApiService,
     ) {}
 
     @Command({
@@ -14,7 +14,7 @@ export class CatsController {
         help: 'Shows a random image of cats',
     })
     cats(message: Message): void {
-        this.catsApi.imagesSearch({
+        this.theCatApi.imagesSearch({
             limit: 1,
             mime_types: ['jpg', 'png'],
         })
@@ -29,7 +29,7 @@ export class CatsController {
         help: 'Shows a random gif of cats',
     })
     catsGif(message: Message) {
-        this.catsApi.imagesSearch({
+        this.theCatApi.imagesSearch({
             limit: 1,
             mime_types: ['gif'],
         })
