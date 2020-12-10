@@ -19,26 +19,26 @@ export class CommandExplorer implements OnModuleInit {
 
 
     explore(): void {
-        this.discoveryService.getControllers().forEach(({instance}) => {
-            if (!instance) return;
+        this.discoveryService.getControllers()
+            .filter(wrapper => wrapper.instance)
+            .forEach(({instance}) => {
+                this.metadataScanner.scanFromPrototype(
+                    instance,
+                    Object.getPrototypeOf(instance),
+                    (key) => {
+                        const metadata = this.metadataAccessor.getCommandMetadata(instance[key]);
 
-            this.metadataScanner.scanFromPrototype(
-                instance,
-                Object.getPrototypeOf(instance),
-                (key) => {
-                    const metadata = this.metadataAccessor.getCommandMetadata(instance[key]);
-
-                    if (metadata) {
-                        this.registerCommand(
-                            instance,
-                            key,
-                            this.commandContainer,
-                            metadata,
-                        );
-                    }
-                },
-            );
-        });
+                        if (metadata) {
+                            this.registerCommand(
+                                instance,
+                                key,
+                                this.commandContainer,
+                                metadata,
+                            );
+                        }
+                    },
+                );
+            });
     }
 
     registerCommand(

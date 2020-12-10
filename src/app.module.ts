@@ -3,6 +3,7 @@ import { CommandModule } from './commands/command.module';
 import { DiscordModule } from './discord/discord.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ModularChannelModule } from './mcs/modular-channel.module';
 
 @Module({
     imports: [
@@ -10,6 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         TypeOrmModule.forRoot(),
         DiscordModule,
         CommandModule,
+        ModularChannelModule,
     ],
 })
 export class AppModule {

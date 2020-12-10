@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { DynamicGroupEntity } from './dynamic-group.entity';
 
 @Entity()
@@ -9,9 +9,12 @@ export class DynamicChannelEntity {
     @Column()
     channel: string;
 
-    @Column()
+    @ManyToOne(() => DynamicGroupEntity)
     group?: DynamicGroupEntity;
 
     @Column()
     removable: boolean;
+
+    @Column()
+    members?: number;
 }

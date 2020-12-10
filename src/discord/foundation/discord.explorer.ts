@@ -22,26 +22,26 @@ export class DiscordExplorer implements OnModuleInit {
         ([
             ...this.discoveryService.getProviders(),
             ...this.discoveryService.getControllers(),
-        ] as InstanceWrapper[]).forEach(({instance}) => {
-            if (!instance) return;
+        ] as InstanceWrapper[])
+            .filter(w => w.instance)
+            .forEach(({instance}) => {
+                this.metadataScanner.scanFromPrototype(
+                    instance,
+                    Object.getPrototypeOf(instance),
+                    (key) => {
+                        const metadata = this.metadataAccessor.getOnMetadata(instance[key]);
 
-            this.metadataScanner.scanFromPrototype(
-                instance,
-                Object.getPrototypeOf(instance),
-                (key) => {
-                    const metadata = this.metadataAccessor.getOnMetadata(instance[key]);
-
-                    if (metadata) {
-                        this.handleOn(
-                            instance,
-                            key,
-                            this.discordClient,
-                            metadata,
-                        );
-                    }
-                },
-            );
-        });
+                        if (metadata) {
+                            this.handleOn(
+                                instance,
+                                key,
+                                this.discordClient,
+                                metadata,
+                            );
+                        }
+                    },
+                );
+            });
     }
 
     handleOn(

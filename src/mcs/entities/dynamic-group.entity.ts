@@ -1,6 +1,7 @@
 import { DynamicChannelEntity } from './dynamic-channel.entity';
-import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class DynamicGroupEntity {
     @PrimaryGeneratedColumn()
     readonly id: number;
@@ -10,4 +11,10 @@ export class DynamicGroupEntity {
 
     @Column()
     format: string;
+
+    @Column()
+    minChannels: number;
+
+    @Column()
+    maxChannels: number;
 }
