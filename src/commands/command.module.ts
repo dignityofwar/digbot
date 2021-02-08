@@ -7,10 +7,12 @@ import { DiscoveryModule } from '@nestjs/core';
 import { MetadataAccessor } from './helpers/metadata.accessor';
 import { TheCatApiModule } from '../apis/thecatapi/thecatapi.module';
 import { CatsController } from './controllers/cats.controller';
+import {DiscordModule} from '../discord/discord.module';
 
 @Module({
     imports: [
         DiscoveryModule,
+        DiscordModule,
         TheCatApiModule, // For the cats controller
     ],
     providers: [

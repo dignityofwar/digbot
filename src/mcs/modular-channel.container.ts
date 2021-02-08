@@ -1,22 +1,47 @@
-import { Injectable } from '@nestjs/common';
-import { Snowflake } from 'discord.js';
-import { DynamicChannelEntity } from './entities/dynamic-channel.entity';
+import {Snowflake} from 'discord.js';
+import {Group} from './entities/group.entity';
+import {Channel} from './entities/channel.entity';
+import {EventEmitter} from 'events';
 
-@Injectable()
-export class ModularChannelContainer {
-    private readonly channels = new Map<Snowflake, DynamicChannelEntity>();
+export enum MCCEvents {
+    SAVE = 'save',
+    DESTROY = 'destroy'
+}
 
-    hasChannel(id: Snowflake): boolean {
-        return this.channels.has(id);
+export class ModularChannelContainer extends EventEmitter {
+    private readonly groups = new Set<Group>();
+    private readonly channels = new Map<Snowflake, Channel>();
+
+    initGroup(group: Group): void {
+        this.groups.add(group);
+        group.channels.forEach(channel => this.channels.set(channel.snowflake, channel));
+
+        this.emit(MCCEvents.SAVE, group);
     }
 
-    getChannel(id: Snowflake): DynamicChannelEntity {
-        if (!this.hasChannel(id)) throw new Error('Channel does not exist');
-
-        return this.channels.get(id);
+    getChannel(snowflake: string): Channel | undefined {
+        return this.channels.get(snowflake);
     }
 
-    registerChannel(channel: DynamicChannelEntity): void {
-        this.channels.set(channel.channel, channel);
+    removeGroup(group: Group): boolean {
+        group.channels.forEach(({snowflake}) => this.channels.delete(snowflake));
+        const result = this.groups.delete(group);
+
+        this.emit(MCCEvents.DESTROY, group);
+        return result;
+    }
+
+    addChannel(channel: Channel): void {
+        channel.group.channels.push(channel);
+        this.channels.set(channel.snowflake, channel);
+
+        this.emit(MCCEvents.SAVE, channel.group);
+    }
+
+    deleteChannel(channel: Channel): void {
+        this.channels.delete(channel.snowflake);
+        channel.group.removeChannel(channel);
+
+        this.emit(MCCEvents.SAVE, channel.group);
     }
 }
