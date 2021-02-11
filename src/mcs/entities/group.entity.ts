@@ -1,5 +1,5 @@
 import {Channel} from './channel.entity';
-import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import Timeout = NodeJS.Timeout;
 import {Guild} from 'discord.js';
 import {JobType} from '../modular-channel.service';
@@ -10,13 +10,19 @@ export class Group {
     readonly id: number;
 
     @Column()
-    snowflake: string;
+    guildId: string;
 
     @Column()
     format: string;
 
     @Column()
-    parent: string;
+    parentId?: string;
+
+    @Column()
+    position: number;
+
+    @Column()
+    userLimit?: number;
 
     @Column({type: 'int'})
     minFreeChannels: number;
@@ -30,7 +36,13 @@ export class Group {
     @Column({default: 10})
     creationDelay: number;
 
-    @OneToMany(() => Channel, 'group', {eager: true, cascade: true})
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
+
+    @OneToMany(() => Channel, 'group', {eager: true, cascade: true, onDelete: 'CASCADE'})
     channels: Channel[];
 
     guild: Guild;
@@ -57,9 +69,5 @@ export class Group {
 
     get nextName(): string {
         return this.format;
-    }
-
-    get nextPosition(): number {
-        return 25;
     }
 }

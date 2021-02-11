@@ -1,22 +1,25 @@
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn} from 'typeorm';
 import {Group} from './group.entity';
 import {VoiceChannel} from 'discord.js';
 
 @Entity()
 export class Channel {
-    @PrimaryGeneratedColumn()
-    readonly id: number;
+    @PrimaryColumn()
+    id: string;
 
-    @Column()
-    snowflake: string;
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
 
     @ManyToOne(() => Group, 'channels', {onDelete: 'CASCADE'})
     group: Group;
 
-    channel: VoiceChannel;
+    voiceChannel: VoiceChannel;
 
     get isEmpty(): boolean {
-        return this.channel.members.size == 0;
+        return this.voiceChannel.members.size == 0;
     }
 
     removeFromGroup(): boolean {

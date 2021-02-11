@@ -1,47 +1,66 @@
-import {Snowflake} from 'discord.js';
+import {CategoryChannel, Snowflake, VoiceChannel} from 'discord.js';
 import {Group} from './entities/group.entity';
 import {Channel} from './entities/channel.entity';
-import {EventEmitter} from 'events';
+import {Injectable} from '@nestjs/common';
+import {SyncService} from '../foundation/sync/sync.service';
 
-export enum MCCEvents {
-    SAVE = 'save',
-    DESTROY = 'destroy'
-}
-
-export class ModularChannelContainer extends EventEmitter {
+@Injectable()
+export class ModularChannelContainer {
     private readonly groups = new Set<Group>();
     private readonly channels = new Map<Snowflake, Channel>();
+    private readonly parents = new Map<Snowflake, Group>();
+
+    constructor(
+        private readonly syncService: SyncService
+    ) {
+    }
+
+    getChannel(channel: VoiceChannel): Channel | undefined {
+        return this.channels.get(channel.id);
+    }
+
+    getGroupFromParent(category: CategoryChannel): Group | undefined {
+        return this.parents.get(category.id);
+    }
 
     initGroup(group: Group): void {
         this.groups.add(group);
-        group.channels.forEach(channel => this.channels.set(channel.snowflake, channel));
-
-        this.emit(MCCEvents.SAVE, group);
+        group.channels.forEach(channel => this.channels.set(channel.id, channel));
+        if (group.parentId) this.parents.set(group.parentId, group);
     }
 
-    getChannel(snowflake: string): Channel | undefined {
-        return this.channels.get(snowflake);
+    updateGroup(group: Group, data: Partial<Group>): void {
+        Object.assign(group, data);
+
+        this.syncService.save(group);
     }
 
-    removeGroup(group: Group): boolean {
-        group.channels.forEach(({snowflake}) => this.channels.delete(snowflake));
+    deleteGroup(group: Group): boolean {
+        group.channels.forEach(({id}) => this.channels.delete(id));
+        if (group.parentId) this.parents.delete(group.parentId);
         const result = this.groups.delete(group);
 
-        this.emit(MCCEvents.DESTROY, group);
+        this.syncService.delete(group);
         return result;
     }
 
     addChannel(channel: Channel): void {
         channel.group.channels.push(channel);
-        this.channels.set(channel.snowflake, channel);
+        this.channels.set(channel.id, channel);
 
-        this.emit(MCCEvents.SAVE, channel.group);
+        this.syncService.save(channel);
+    }
+
+    updateChannel(channel: Channel, data: Partial<Channel>): void {
+        Object.assign(channel, data);
+
+        this.syncService.save(channel);
     }
 
     deleteChannel(channel: Channel): void {
-        this.channels.delete(channel.snowflake);
+        this.channels.delete(channel.id);
         channel.group.removeChannel(channel);
 
-        this.emit(MCCEvents.SAVE, channel.group);
+        this.syncService.delete(channel);
     }
 }
