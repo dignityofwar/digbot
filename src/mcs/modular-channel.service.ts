@@ -72,8 +72,8 @@ export class ModularChannelService implements OnApplicationBootstrap {
     async initParent(group: Group): Promise<void> {
         try {
             await this.channelManager.fetch(group.parentId);
-        } catch (e) {
-            ModularChannelService.logger.warn(`Unable to fetch category "${group.parentId}": ${e}`);
+        } catch (err) {
+            ModularChannelService.logger.warn(`Unable to fetch category "${group.parentId}": ${err}`);
 
             this.container.updateGroup(group, {parentId: undefined})
         }
@@ -82,8 +82,8 @@ export class ModularChannelService implements OnApplicationBootstrap {
     async initChannel(channel: Channel): Promise<void> {
         try {
             channel.voiceChannel = await this.channelManager.fetch(channel.id) as VoiceChannel;
-        } catch (e) {
-            ModularChannelService.logger.warn(`Unable to fetch channel "${channel.id}": ${e}`);
+        } catch (err) {
+            ModularChannelService.logger.warn(`Unable to fetch channel "${channel.id}": ${err}`);
 
             channel.removeFromGroup();
         }
@@ -158,8 +158,8 @@ export class ModularChannelService implements OnApplicationBootstrap {
         if (!releaseChannels)
             group.channels.forEach(({voiceChannel}) => {
                 voiceChannel.delete('Group deleted without channel release')
-                    .catch((e) => {
-                        ModularChannelService.logger.warn(`Unable to delete channel "${voiceChannel.id}" from deleted group: ${e}`)
+                    .catch((err) => {
+                        ModularChannelService.logger.warn(`Unable to delete channel "${voiceChannel.id}" from deleted group: ${err}`)
                     })
             });
     }
@@ -206,8 +206,8 @@ export class ModularChannelService implements OnApplicationBootstrap {
 
             if (group.tare > 0)
                 this.planDelete(group);
-        } catch (e) {
-            ModularChannelService.logger.warn(`Unable to delete channel "${channel.id}": ${e}`);
+        } catch (err) {
+            ModularChannelService.logger.warn(`Unable to delete channel "${channel.id}": ${err}`);
         }
     }
 
@@ -246,8 +246,8 @@ export class ModularChannelService implements OnApplicationBootstrap {
 
             if (group.tare < 0)
                 this.planCreate(group);
-        } catch (e) {
-            ModularChannelService.logger.warn(`Unable to create new channel in group "${group.id}": ${e}`)
+        } catch (err) {
+            ModularChannelService.logger.warn(`Unable to create new channel in group "${group.id}": ${err}`)
         }
     }
 
