@@ -3,7 +3,7 @@ import {Injectable, Logger, OnApplicationBootstrap} from '@nestjs/common';
 import {GroupService} from './services/group.service';
 import {Channel} from './entities/channel.entity';
 import {ModularChannelContainer} from './modular-channel.container';
-import {CategoryChannel, ChannelManager, GuildManager, VoiceChannel} from 'discord.js';
+import {CategoryChannel, ChannelManager, Guild, GuildManager, VoiceChannel} from 'discord.js';
 import {empty, unique} from '../utils/filter.utils';
 import {DiscordClient} from '../discord/foundation/discord.client';
 
@@ -92,8 +92,6 @@ export class ModularChannelService implements OnApplicationBootstrap {
                 this.container.deleteChannel(channel);
                 this.planCreate(group);
             }
-
-
         }
     }
 
@@ -105,20 +103,42 @@ export class ModularChannelService implements OnApplicationBootstrap {
     }
 
     parentDeleted(category: CategoryChannel): void {
-        const group = this.container.getGroupFromParent(category);
+        this.container.getGroupsFromParent(category)
+            .forEach(group => {
+                const position = group.channels.reduce(
+                    (nominated, candidate) =>
+                        nominated < candidate.voiceChannel.position
+                            ? nominated
+                            : candidate.voiceChannel.position, 0)
 
-        if (group) {
-            const position = group.channels.reduce(
-                (nominated, candidate) =>
-                    nominated < candidate.voiceChannel.position
-                        ? nominated
-                        : candidate.voiceChannel.position, 0)
+                this.container.updateGroup(group, {
+                    parentId: undefined,
+                    position
+                })
+            });
+    }
 
-            this.container.updateGroup(group, {
-                parentId: undefined,
-                position
-            })
-        }
+    createGroup(guild: Guild, options: Partial<Group>): void { // TODO: Add DTO for options
+        const group = Object.assign(new Group(), options);
+
+        group.guild = guild;
+        group.guildId = guild.id;
+        group.channels = [];
+
+        this.container.addGroup(group);
+        void this.createChannel(group);
+    }
+
+    deleteGroup(group: Group, releaseChannels = true) {
+        this.container.deleteGroup(group);
+
+        if (!releaseChannels)
+            group.channels.forEach(({voiceChannel}) => {
+                voiceChannel.delete('Group deleted without channel release')
+                    .catch((e) => {
+                        ModularChannelService.logger.warn(`Unable to delete channel "${voiceChannel.id}" from deleted group: ${e}`)
+                    })
+            });
     }
 
     allocate(group: Group): void {

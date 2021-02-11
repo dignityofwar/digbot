@@ -8,7 +8,7 @@ import {SyncService} from '../foundation/sync/sync.service';
 export class ModularChannelContainer {
     private readonly groups = new Set<Group>();
     private readonly channels = new Map<Snowflake, Channel>();
-    private readonly parents = new Map<Snowflake, Group>();
+    private readonly parents = new Map<Snowflake, Set<Group>>();
 
     constructor(
         private readonly syncService: SyncService
@@ -19,14 +19,25 @@ export class ModularChannelContainer {
         return this.channels.get(channel.id);
     }
 
-    getGroupFromParent(category: CategoryChannel): Group | undefined {
-        return this.parents.get(category.id);
+    getGroupsFromParent(category: CategoryChannel): Group[] {
+        return Array.from(this.parents.get(category.id) ?? []);
     }
 
     initGroup(group: Group): void {
         this.groups.add(group);
         group.channels.forEach(channel => this.channels.set(channel.id, channel));
-        if (group.parentId) this.parents.set(group.parentId, group);
+        if (group.parentId) {
+            if (this.parents.has(group.parentId))
+                this.parents.get(group.parentId).add(group);
+            else
+                this.parents.set(group.parentId, new Set([group]));
+        }
+    }
+
+    addGroup(group: Group) {
+        this.initGroup(group);
+
+        this.syncService.save(group);
     }
 
     updateGroup(group: Group, data: Partial<Group>): void {
@@ -37,7 +48,7 @@ export class ModularChannelContainer {
 
     deleteGroup(group: Group): boolean {
         group.channels.forEach(({id}) => this.channels.delete(id));
-        if (group.parentId) this.parents.delete(group.parentId);
+        if (group.parentId) this.parents.get(group.parentId)?.delete(group);
         const result = this.groups.delete(group);
 
         this.syncService.delete(group);
