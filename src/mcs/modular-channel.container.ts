@@ -70,7 +70,7 @@ export class ModularChannelContainer {
 
     deleteChannel(channel: Channel): void {
         this.channels.delete(channel.id);
-        channel.group.removeChannel(channel);
+        channel.removeFromGroup();
 
         this.syncService.delete(channel);
     }
