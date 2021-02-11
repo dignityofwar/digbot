@@ -1,12 +1,13 @@
-import { HttpService, Injectable } from '@nestjs/common';
-import { ImageSearchOptions } from './interfaces/images/search.options';
-import { ImageSchema } from './interfaces/images/image.schema';
+import {HttpService, Injectable} from '@nestjs/common';
+import {ImageSearchOptions} from './interfaces/images/search.options';
+import {ImageSchema} from './interfaces/images/image.schema';
 
 @Injectable()
 export class TheCatApiService {
     constructor(
         private readonly httpService: HttpService,
-    ) {}
+    ) {
+    }
 
     imagesSearch(options?: ImageSearchOptions) {
         const params: any = {...options};

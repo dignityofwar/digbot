@@ -1,7 +1,7 @@
-import { Controller } from '@nestjs/common';
-import { Command } from '../decorators/command.decorator';
-import { CommandContainer } from '../command.container';
-import { Message, MessageEmbed } from 'discord.js';
+import {Controller} from '@nestjs/common';
+import {Command} from '../decorators/command.decorator';
+import {CommandContainer} from '../command.container';
+import {Message, MessageEmbed} from 'discord.js';
 
 @Controller()
 export class HelpController {

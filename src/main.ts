@@ -1,6 +1,6 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { crashOnUnhandledRejection } from './utils/helper.utils';
+import {NestFactory} from '@nestjs/core';
+import {AppModule} from './app.module';
+import {crashOnUnhandledRejection} from './utils/helper.utils';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {

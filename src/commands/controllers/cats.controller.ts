@@ -1,13 +1,14 @@
-import { Controller } from '@nestjs/common';
-import { Command } from '../decorators/command.decorator';
-import { TheCatApiService } from '../../apis/thecatapi/thecatapi.service';
-import { Message, MessageEmbed } from 'discord.js';
+import {Controller} from '@nestjs/common';
+import {Command} from '../decorators/command.decorator';
+import {TheCatApiService} from '../../apis/thecatapi/thecatapi.service';
+import {Message, MessageEmbed} from 'discord.js';
 
 @Controller()
 export class CatsController {
     constructor(
         private readonly theCatApi: TheCatApiService,
-    ) {}
+    ) {
+    }
 
     @Command({
         command: '!cats',

@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { CommandDecoratorOptions } from './decorators/interfaces/commanddecorator.options';
-import { commandHandler } from './interfaces/command.handler';
+import {Injectable} from '@nestjs/common';
+import {CommandDecoratorOptions} from './decorators/interfaces/commanddecorator.options';
+import {commandHandler} from './interfaces/command.handler';
 
 export interface Command extends CommandDecoratorOptions {
     handler: commandHandler;

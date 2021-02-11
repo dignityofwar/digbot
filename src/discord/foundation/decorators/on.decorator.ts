@@ -1,8 +1,8 @@
-import { ON_DECORATOR } from '../discord.constants';
-import { OnDecoratorOptions } from './interfaces/ondecorator.options';
-import { ClientEvents } from 'discord.js';
-import { isString } from 'util';
-import { SetMetadata } from '@nestjs/common';
+import {ON_DECORATOR} from '../discord.constants';
+import {OnDecoratorOptions} from './interfaces/ondecorator.options';
+import {ClientEvents} from 'discord.js';
+import {isString} from 'util';
+import {SetMetadata} from '@nestjs/common';
 
 export function On(event: keyof ClientEvents): MethodDecorator;
 export function On(options: OnDecoratorOptions): MethodDecorator;

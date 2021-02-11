@@ -11,7 +11,7 @@ export class ModularChannelContainer {
     private readonly parents = new Map<Snowflake, Set<Group>>();
 
     constructor(
-        private readonly syncService: SyncService
+        private readonly syncService: SyncService,
     ) {
     }
 

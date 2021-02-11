@@ -8,7 +8,8 @@ export class ArgumentLexer {
 
     constructor(
         private cmd: string,
-    ) {}
+    ) {
+    }
 
     next(): string | null {
         this.skipSpaces();

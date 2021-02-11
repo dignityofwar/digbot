@@ -4,7 +4,7 @@ import {EntityManager} from 'typeorm';
 export class SyncService {
     constructor(
         @InjectEntityManager()
-        private readonly entityManager: EntityManager
+        private readonly entityManager: EntityManager,
     ) {
     }
 

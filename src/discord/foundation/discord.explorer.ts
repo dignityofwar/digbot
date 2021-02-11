@@ -1,9 +1,9 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { DiscoveryService, MetadataScanner } from '@nestjs/core';
-import { DiscordClient } from './discord.client';
-import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
-import { MetadataAccessor } from './helpers/metadata.accessor';
-import { OnDecoratorOptions } from './decorators/interfaces/ondecorator.options';
+import {Injectable, OnModuleInit} from '@nestjs/common';
+import {DiscoveryService, MetadataScanner} from '@nestjs/core';
+import {DiscordClient} from './discord.client';
+import {InstanceWrapper} from '@nestjs/core/injector/instance-wrapper';
+import {MetadataAccessor} from './helpers/metadata.accessor';
+import {OnDecoratorOptions} from './decorators/interfaces/ondecorator.options';
 
 @Injectable()
 export class DiscordExplorer implements OnModuleInit {
@@ -12,7 +12,8 @@ export class DiscordExplorer implements OnModuleInit {
         private readonly metadataScanner: MetadataScanner,
         private readonly metadataAccessor: MetadataAccessor,
         private readonly discordClient: DiscordClient,
-    ) {}
+    ) {
+    }
 
     onModuleInit(): void {
         this.explore();

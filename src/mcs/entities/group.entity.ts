@@ -1,8 +1,8 @@
 import {Channel} from './channel.entity';
 import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import Timeout = NodeJS.Timeout;
 import {Guild} from 'discord.js';
 import {JobType} from '../modular-channel.service';
+import Timeout = NodeJS.Timeout;
 
 @Entity()
 export class Group {
@@ -63,7 +63,7 @@ export class Group {
     get tare(): number {
         return Math.max(
             this.emptyChannels.length - this.minFreeChannels,
-            this.channels.length - this.maxChannels
+            this.channels.length - this.maxChannels,
         );
     }
 

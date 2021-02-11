@@ -22,7 +22,7 @@ export class ModularChannelService implements OnApplicationBootstrap {
     constructor(
         private readonly container: ModularChannelContainer,
         private readonly groupService: GroupService,
-        private readonly discordClient: DiscordClient
+        private readonly discordClient: DiscordClient,
     ) {
         this.channelManager = discordClient.channels;
         this.guildManager = discordClient.guilds;
@@ -40,14 +40,14 @@ export class ModularChannelService implements OnApplicationBootstrap {
                 ModularChannelService.logger.log(`Initializing ${groups.length} group(s)`);
 
                 groups.forEach(group =>
-                    this.initGroup(group)
+                    this.initGroup(group),
                 )
             });
     }
 
     async initGroup(group: Group): Promise<void> {
         await Promise.all(
-            group.channels.map(channel => this.initChannel(channel))
+            group.channels.map(channel => this.initChannel(channel)),
         );
 
         await this.initParent(group);
@@ -60,7 +60,7 @@ export class ModularChannelService implements OnApplicationBootstrap {
         group.channels
             .filter(({voiceChannel}) =>
                 group.channels.some((member) => voiceChannel.position - member.voiceChannel.position == 1)
-                && group.channels.some((member) => voiceChannel.position - member.voiceChannel.position == -1)
+                && group.channels.some((member) => voiceChannel.position - member.voiceChannel.position == -1),
             )
             .forEach((channel) => this.container.deleteChannel(channel));
 
@@ -136,7 +136,7 @@ export class ModularChannelService implements OnApplicationBootstrap {
 
                 this.container.updateGroup(group, {
                     parentId: undefined,
-                    position
+                    position,
                 })
             });
     }
@@ -187,7 +187,7 @@ export class ModularChannelService implements OnApplicationBootstrap {
                 setTimeout(() => {
                     delete group.queued;
                     void this.deleteChannel(group);
-                }, group.deletionDelay * 1000).unref()
+                }, group.deletionDelay * 1000).unref(),
             ];
         }
     }
@@ -197,7 +197,7 @@ export class ModularChannelService implements OnApplicationBootstrap {
             .reduce((nominated, candidate) =>
                 nominated.voiceChannel.position > candidate.voiceChannel.position
                     ? nominated
-                    : candidate
+                    : candidate,
             );
 
         try {
@@ -223,7 +223,7 @@ export class ModularChannelService implements OnApplicationBootstrap {
                 setTimeout(() => {
                     delete group.queued;
                     void this.createChannel(group);
-                }, group.creationDelay * 1000).unref()
+                }, group.creationDelay * 1000).unref(),
             ]
         }
     }
@@ -234,7 +234,7 @@ export class ModularChannelService implements OnApplicationBootstrap {
                 type: 'voice',
                 parent: group.parentId,
                 position: group.position,
-                userLimit: group.userLimit
+                userLimit: group.userLimit,
             });
 
             const channel = new Channel();

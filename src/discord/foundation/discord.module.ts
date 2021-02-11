@@ -1,12 +1,12 @@
-import { DynamicModule, Module, Provider } from '@nestjs/common';
-import { DiscoveryModule } from '@nestjs/core';
-import { DiscordClient } from './discord.client';
-import { DiscordModuleOptions } from './interfaces/discordmodule.options';
-import { DiscordModuleAsyncOptions } from './interfaces/discordmoduleasync.options';
-import { DISCORD_MODULE_OPTIONS } from './discord.constants';
-import { DiscordOptionsFactory } from './interfaces/discordoptions.factory';
-import { DiscordExplorer } from './discord.explorer';
-import { MetadataAccessor } from './helpers/metadata.accessor';
+import {DynamicModule, Module, Provider} from '@nestjs/common';
+import {DiscoveryModule} from '@nestjs/core';
+import {DiscordClient} from './discord.client';
+import {DiscordModuleOptions} from './interfaces/discordmodule.options';
+import {DiscordModuleAsyncOptions} from './interfaces/discordmoduleasync.options';
+import {DISCORD_MODULE_OPTIONS} from './discord.constants';
+import {DiscordOptionsFactory} from './interfaces/discordoptions.factory';
+import {DiscordExplorer} from './discord.explorer';
+import {MetadataAccessor} from './helpers/metadata.accessor';
 
 @Module({
     imports: [DiscoveryModule],

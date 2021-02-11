@@ -1,5 +1,5 @@
-import { HttpModule, Module } from '@nestjs/common';
-import { TheCatApiService } from './thecatapi.service';
+import {HttpModule, Module} from '@nestjs/common';
+import {TheCatApiService} from './thecatapi.service';
 
 @Module({
     imports: [

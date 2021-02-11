@@ -1,14 +1,15 @@
-import { Controller } from '@nestjs/common';
-import { Message } from 'discord.js';
-import { On } from '../discord/foundation/decorators/on.decorator';
-import { CommandContainer } from './command.container';
-import { ArgumentLexer } from './helpers/argument.lexer';
+import {Controller} from '@nestjs/common';
+import {Message} from 'discord.js';
+import {On} from '../discord/foundation/decorators/on.decorator';
+import {CommandContainer} from './command.container';
+import {ArgumentLexer} from './helpers/argument.lexer';
 
 @Controller()
 export class CommandController {
     constructor(
         private readonly repository: CommandContainer,
-    ) {}
+    ) {
+    }
 
     @On('message')
     message(message: Message): void {

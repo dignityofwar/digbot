@@ -1,7 +1,7 @@
-import { COMMAND_DECORATOR } from '../command.constants';
-import { CommandDecoratorOptions } from './interfaces/commanddecorator.options';
-import { isString } from 'util';
-import { SetMetadata } from '@nestjs/common';
+import {COMMAND_DECORATOR} from '../command.constants';
+import {CommandDecoratorOptions} from './interfaces/commanddecorator.options';
+import {isString} from 'util';
+import {SetMetadata} from '@nestjs/common';
 
 export function Command(command: string): MethodDecorator;
 export function Command(options: CommandDecoratorOptions): MethodDecorator;

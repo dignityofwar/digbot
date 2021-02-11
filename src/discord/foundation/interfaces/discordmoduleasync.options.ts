@@ -1,6 +1,6 @@
-import { ModuleMetadata, Type } from '@nestjs/common';
-import { DiscordModuleOptions } from './discordmodule.options';
-import { DiscordOptionsFactory } from './discordoptions.factory';
+import {ModuleMetadata, Type} from '@nestjs/common';
+import {DiscordModuleOptions} from './discordmodule.options';
+import {DiscordOptionsFactory} from './discordoptions.factory';
 
 export interface DiscordModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
     useExisting?: Type<DiscordOptionsFactory>;

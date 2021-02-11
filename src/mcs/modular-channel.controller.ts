@@ -16,7 +16,7 @@ export class ModularChannelController {
         this.modularChannelService.notifyChange(
             states
                 .map(({channel}) => channel)
-                .filter(empty)
+                .filter(empty),
         );
     }
 

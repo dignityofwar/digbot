@@ -1,6 +1,6 @@
-import { Client } from 'discord.js';
-import { Injectable, Logger, OnApplicationBootstrap, OnApplicationShutdown} from '@nestjs/common';
-import { DiscordModuleOptions } from './interfaces/discordmodule.options';
+import {Client} from 'discord.js';
+import {Injectable, Logger, OnApplicationBootstrap, OnApplicationShutdown} from '@nestjs/common';
+import {DiscordModuleOptions} from './interfaces/discordmodule.options';
 
 @Injectable()
 export class DiscordClient extends Client implements OnApplicationBootstrap, OnApplicationShutdown {
@@ -29,11 +29,17 @@ export class DiscordClient extends Client implements OnApplicationBootstrap, OnA
     private prepareListeners(): void {
         this.on('debug', (info) => DiscordClient.logger.debug(info));
         this.on('error', (error) => DiscordClient.logger.error(error.message, error.stack));
-        this.on('guildUnavailable', ({name, id}) => DiscordClient.logger.log(`Guild became unavailable: ${name}(${id})`));
+        this.on('guildUnavailable', ({
+                                         name,
+                                         id,
+                                     }) => DiscordClient.logger.log(`Guild became unavailable: ${name}(${id})`));
         this.on('rateLimit', (info) => DiscordClient.logger.verbose(`Rate limited: ${JSON.stringify(info)}`));
         this.on('ready', () => DiscordClient.logger.log('Client ready'));
         this.on('warn', (warning) => DiscordClient.logger.warn(warning));
-        this.on('shardDisconnect', ({reason = 'No reason given', code = NaN}, shard) => DiscordClient.logger.log(`Shard disconnected: ${reason}(${code})`, `DiscordShard${shard}`));
+        this.on('shardDisconnect', ({
+                                        reason = 'No reason given',
+                                        code = NaN,
+                                    }, shard) => DiscordClient.logger.log(`Shard disconnected: ${reason}(${code})`, `DiscordShard${shard}`));
         this.on('shardError', (error, shard) => DiscordClient.logger.error(error.message, error.stack, `DiscordShard${shard}`));
         this.on('shardReady', (shard) => DiscordClient.logger.verbose('Shard ready', `DiscordShard${shard}`));
         this.on('shardReconnecting', (shard) => DiscordClient.logger.verbose('Shard reconnecting', `DiscordShard${shard}`));
