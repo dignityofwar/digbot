@@ -1,77 +1,45 @@
-import {CategoryChannel, Snowflake, VoiceChannel} from 'discord.js';
-import {Group} from './entities/group.entity';
-import {Channel} from './entities/channel.entity';
 import {Injectable} from '@nestjs/common';
-import {SyncService} from '../foundation/sync/sync.service';
+import {GroupState} from './states/group.state';
+import {ChannelState} from './states/channel.state';
+import {remove} from '../utils/array.utils';
 
 @Injectable()
 export class ModularChannelContainer {
-    private readonly groups = new Set<Group>();
-    private readonly channels = new Map<Snowflake, Channel>();
-    private readonly parents = new Map<Snowflake, Set<Group>>();
+    private readonly channelIndex = new Map<string, [GroupState, ChannelState]>();
+    private readonly parentIndex = new Map<string, GroupState>();
 
-    constructor(
-        private readonly syncService: SyncService,
-    ) {
+    fromChannel(id: string): [GroupState, ChannelState] | undefined {
+        return this.channelIndex.get(id);
     }
 
-    getChannel(channel: VoiceChannel): Channel | undefined {
-        return this.channels.get(channel.id);
+    fromParent(id: string): GroupState | undefined {
+        return this.parentIndex.get(id);
     }
 
-    getGroupsFromParent(category: CategoryChannel): Group[] {
-        return Array.from(this.parents.get(category.id) ?? []);
+    addGroup(group: GroupState): void {
+        for (const channel of group.channelStates)
+            this.channelIndex.set(channel.channelId, [group, channel]);
+
+        if (group.parentId)
+            this.parentIndex.set(group.parentId, group);
     }
 
-    initGroup(group: Group): void {
-        this.groups.add(group);
-        group.channels.forEach(channel => this.channels.set(channel.id, channel));
-        if (group.parentId) {
-            if (this.parents.has(group.parentId))
-                this.parents.get(group.parentId).add(group);
-            else
-                this.parents.set(group.parentId, new Set([group]));
-        }
+    removeGroup(group: GroupState): void {
+        for (const channel of group.channelStates)
+            this.channelIndex.delete(channel.channelId);
+
+        if (group.parentId)
+            this.parentIndex.delete(group.parentId);
     }
 
-    addGroup(group: Group) {
-        this.initGroup(group);
-
-        this.syncService.save(group);
+    addChannel(group: GroupState, channel: ChannelState): void {
+        group.channelStates.push(channel);
+        this.channelIndex.set(channel.channelId, [group, channel]);
     }
 
-    updateGroup(group: Group, data: Partial<Group>): void {
-        Object.assign(group, data);
+    removeChannel(group: GroupState, channel: ChannelState): void {
+        remove(group.channelStates, channel);
 
-        this.syncService.save(group);
-    }
-
-    deleteGroup(group: Group): boolean {
-        group.channels.forEach(({id}) => this.channels.delete(id));
-        if (group.parentId) this.parents.get(group.parentId)?.delete(group);
-        const result = this.groups.delete(group);
-
-        this.syncService.delete(group);
-        return result;
-    }
-
-    addChannel(channel: Channel): void {
-        channel.group.channels.push(channel);
-        this.channels.set(channel.id, channel);
-
-        this.syncService.save(channel);
-    }
-
-    updateChannel(channel: Channel, data: Partial<Channel>): void {
-        Object.assign(channel, data);
-
-        this.syncService.save(channel);
-    }
-
-    deleteChannel(channel: Channel): void {
-        this.channels.delete(channel.id);
-        channel.removeFromGroup();
-
-        this.syncService.delete(channel);
+        this.channelIndex.delete(channel.channelId);
     }
 }

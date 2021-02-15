@@ -7,7 +7,7 @@ import {DiscordModule} from '../discord/discord.module';
 import {ModularChannelService} from './modular-channel.service';
 import {ModularChannelContainer} from './modular-channel.container';
 import {GroupService} from './services/group.service';
-import {SyncService} from '../foundation/sync/sync.service';
+import {ChannelAllocationService} from './services/channel-allocation.service';
 
 @Module({
     imports: [
@@ -18,8 +18,8 @@ import {SyncService} from '../foundation/sync/sync.service';
         DiscordModule,
     ],
     providers: [
-        SyncService,
         GroupService,
+        ChannelAllocationService,
         ModularChannelContainer,
         ModularChannelService,
     ],
