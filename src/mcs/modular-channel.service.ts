@@ -80,6 +80,13 @@ export class ModularChannelService implements OnApplicationBootstrap {
         const [groupState, channelState] = state;
 
         // Evaluate position
+        if (groupState.parentId !== channel.parentID) {
+            this.container.removeChannel(groupState, channelState);
+            this.groupService.deleteChannel(channelState.channel);
+
+            return;
+        }
+
         channelState.position = channel.rawPosition;
 
         // Evaluate name
