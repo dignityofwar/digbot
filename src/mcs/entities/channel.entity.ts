@@ -1,10 +1,16 @@
-import {CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {Group} from './group.entity';
 
 @Entity()
 export class Channel {
-    @PrimaryColumn()
-    id: string;
+    @PrimaryGeneratedColumn()
+    readonly id: number;
+
+    @Column({unique: true})
+    channelId: string;
+
+    // @Column()
+    // order: number;
 
     @CreateDateColumn()
     createdAt: Date;
@@ -12,6 +18,6 @@ export class Channel {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @ManyToOne(() => Group, 'channels', {onDelete: 'CASCADE'})
+    @ManyToOne(() => Group, 'channels', {eager: false, onDelete: 'CASCADE'})
     group: Group;
 }

@@ -5,9 +5,8 @@ import {ModularChannelContainer} from './modular-channel.container';
 import {GroupState} from './states/group.state';
 import {Group} from './entities/group.entity';
 import {GroupService} from './services/group.service';
-import {ChannelState} from './states/channel.state';
-import {Channel} from './entities/channel.entity';
 import {ChannelAllocationService} from './services/channel-allocation.service';
+import {ChannelState} from './states/channel.state';
 
 @Injectable()
 export class ModularChannelService implements OnApplicationBootstrap {
@@ -31,76 +30,126 @@ export class ModularChannelService implements OnApplicationBootstrap {
     }
 
     private async initService(): Promise<void> {
+        ModularChannelService.logger.log('Initializing')
+
         const groups = await this.groupService.getAll();
 
         await Promise.all(
             groups.map((group) => this.initGroup(group)),
         );
+
+        ModularChannelService.logger.log(`Initialized ${groups.length} groups`);
     }
 
     private async initGroup(group: Group): Promise<void> {
-        this.container.addGroup(new GroupState(group, await this.initChannels(group.channels)));
+        const groupState = new GroupState(group);
+
+        if (group.parentId) {
+            try {
+                await this.initChannelsWithParent(
+                    groupState,
+                    await this.channelManager.fetch(group.parentId) as CategoryChannel,
+                );
+
+                this.container.addGroup(groupState);
+                this.allocationService.reevaluate(groupState);
+            } catch (err) {
+                ModularChannelService.logger.log(`Unable to retrieve parent "${group.parentId}": ${err}`);
+                this.groupService.deleteGroup(group);
+            }
+        } else {
+            await this.initChannelsRoot(groupState);
+
+            this.container.addGroup(groupState);
+            this.allocationService.reevaluate(groupState);
+        }
+
+        // TODO: Evaluate positions and names
     }
 
-    private async initChannels(channels: Channel[]): Promise<ChannelState[]> {
-        return (await Promise.all(
-            channels.map<Promise<[Channel, VoiceChannel]>>(async (channel) => [
-                channel,
-                await this.channelManager.fetch(channel.id)
-                    .catch((err) => {
-                        ModularChannelService.logger.log(`Unable to retrieve VoiceChannel "${channel.id}": ${err}`);
+    private async initChannelsRoot(groupState: GroupState): Promise<void> {
+        const {group} = groupState;
+        const {channels} = group;
 
-                        this.groupService.deleteChannel(channel);
-                    }) as VoiceChannel,
-            ]),
-        ))
-            .filter(([, channel]) => channel)
-            .map((args) => new ChannelState(...args));
+        this.initChannels(
+            groupState,
+            (await Promise.all(
+                channels.map((channel) =>
+                    this.channelManager.fetch(channel.channelId)
+                        .catch(() => {
+                        }) as Promise<VoiceChannel | undefined>,
+                ),
+            ))
+                .filter((channel) => channel && channel.parentID == group.parentId),
+        );
+    }
+
+    private async initChannelsWithParent(groupState: GroupState, parent: CategoryChannel): Promise<void> {
+        this.initChannels(
+            groupState,
+            parent.children.array()
+                .filter((channel) => channel instanceof VoiceChannel) as VoiceChannel[],
+        );
+    }
+
+    private initChannels(groupState: GroupState, voiceChannels: VoiceChannel[]): void {
+        const {group} = groupState;
+        const {channels} = group;
+
+        for (const channel of channels) {
+            const voiceChannel = voiceChannels.find(({id}) => id == channel.channelId);
+
+            if (!voiceChannel) {
+                this.groupService.deleteChannel(channel);
+                continue;
+            }
+
+            groupState.addChannel(new ChannelState(groupState, channel, voiceChannel));
+        }
     }
 
     updateOccupationChannel(channel: VoiceChannel): void {
-        const state = this.container.fromChannel(channel.id);
-        if (!state) return;
-        const [groupState, channelState] = state;
+        const channelState = this.container.fromChannel(channel.id);
+        if (!channelState) return;
 
         const occupied = channel.members.size > 0;
         if (channelState.occupied == occupied) return;
 
         channelState.occupied = occupied;
-        this.allocationService.reevaluate(groupState);
+        this.allocationService.reevaluate(channelState.groupState);
 
         if (!occupied) {
-            // Start renaming process
+            // TODO: Start renaming process
         }
     }
 
     updateChannel(channel: VoiceChannel): void {
-        const state = this.container.fromChannel(channel.id);
-        if (!state) return;
-        const [groupState, channelState] = state;
+        const channelState = this.container.fromChannel(channel.id);
+        if (!channelState) return;
 
-        // Evaluate position
-        if (groupState.parentId !== channel.parentID) {
-            this.container.removeChannel(groupState, channelState);
+        if (channelState.groupState.parentId !== channel.parentID) {
+            this.container.removeChannel(channelState);
             this.groupService.deleteChannel(channelState.channel);
+
+            this.allocationService.reevaluate(channelState.groupState);
 
             return;
         }
 
         channelState.position = channel.rawPosition;
+        // TODO: Evaluate position
 
-        // Evaluate name
+        // TODO: Evaluate name
     }
 
     deleteChannel(channel: VoiceChannel): void {
-        const state = this.container.fromChannel(channel.id);
-        if (!state) return;
-        const [groupState, channelState] = state;
+        const channelState = this.container.fromChannel(channel.id);
+        if (!channelState) return;
 
-        this.container.removeChannel(groupState, channelState);
+        this.container.removeChannel(channelState);
         this.groupService.deleteChannel(channelState.channel);
 
-        this.allocationService.reevaluate(groupState);
+        this.allocationService.reevaluate(channelState.groupState);
     }
 
     deleteParent(channel: CategoryChannel): void {
@@ -110,6 +159,6 @@ export class ModularChannelService implements OnApplicationBootstrap {
         this.container.removeGroup(groupState);
         this.groupService.deleteGroup(groupState.group);
 
-        this.allocationService.cancelAllocation(groupState);
+        void this.allocationService.cancelAllocation(groupState);
     }
 }

@@ -33,7 +33,8 @@ export abstract class DelayedJob<T> {
         if (!this.timeout || this._triggered) return false;
 
         clearTimeout(this.timeout);
-        this.stopped(new Error('DelayedJob cancelled'));
+        // this.stopped(new Error('DelayedJob cancelled'));
+        this.done(undefined);
         return true;
     }
 

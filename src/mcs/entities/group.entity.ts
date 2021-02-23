@@ -9,7 +9,7 @@ export class Group {
     @Column()
     guildId: string;
 
-    @Column()
+    @Column({nullable: true})
     parentId?: string;
 
     @Column()
@@ -18,7 +18,7 @@ export class Group {
     @Column()
     format: string;
 
-    @Column()
+    @Column({nullable: true})
     userLimit?: number;
 
     @Column()

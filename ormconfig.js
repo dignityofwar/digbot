@@ -27,4 +27,4 @@ module.exports = ((connection) => {
         default:
             throw new Error(`Database connection "${connection}" not recognized`);
     }
-})(process.env.DB_CONNECTION);
+})(process.env.DB_CONNECTION || 'sqlite');

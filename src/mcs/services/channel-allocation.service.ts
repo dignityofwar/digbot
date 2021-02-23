@@ -6,8 +6,12 @@ import {DeleteChannel} from '../jobs/delete-channel.job';
 import {ModularChannelContainer} from '../modular-channel.container';
 import {ChannelState} from '../states/channel.state';
 import {GroupService} from './group.service';
+import {Injectable, Logger} from '@nestjs/common';
 
+@Injectable()
 export class ChannelAllocationService {
+    private static readonly logger = new Logger('ChannelAllocationService');
+
     private readonly guildManager: GuildManager;
     private readonly channelManager: ChannelManager;
 
@@ -37,8 +41,12 @@ export class ChannelAllocationService {
         const job = this.queue.get(groupState);
         if (!job) return;
 
+        ChannelAllocationService.logger.verbose(`Cancel allocation job for group "${groupState.group.id}"`)
+
         if (!job.cancel())
             await job.await();
+
+        this.queue.delete(groupState);
     }
 
     private planCreate(groupState: GroupState): void {
@@ -47,12 +55,16 @@ export class ChannelAllocationService {
         if (job instanceof CreateChannel) return;
         if (job && (job.triggered || job.cancel())) return;
 
+        ChannelAllocationService.logger.verbose(`Plan new channel for group "${groupState.group.id}"`)
+
         this.queue.set(groupState, new CreateChannel(this, groupState));
     }
 
     async create(groupState: GroupState): Promise<void> {
         const guild = await this.guildManager.fetch(groupState.group.guildId);
         const {group} = groupState;
+
+        ChannelAllocationService.logger.verbose(`Creating channel for group "${groupState.group.id}"`)
 
         const createdChannel = await guild.channels.create(group.format, {
             type: 'voice',
@@ -61,12 +73,12 @@ export class ChannelAllocationService {
             position: group.position,
         });
 
-        const channel = this.groupService.createChannel({
-            id: createdChannel.id,
+        const channel = await this.groupService.createChannel({
+            channelId: createdChannel.id,
             group,
         });
 
-        this.container.addChannel(groupState, new ChannelState(channel, createdChannel));
+        this.container.addChannel(new ChannelState(groupState, channel, createdChannel));
         this.queue.delete(groupState);
 
         if (!groupState.deleted)
@@ -79,11 +91,15 @@ export class ChannelAllocationService {
         if (job instanceof DeleteChannel) return;
         if (job && (job.triggered || job.cancel())) return;
 
+        ChannelAllocationService.logger.verbose(`Plan removal channel for group "${groupState.group.id}"`)
+
         this.queue.set(groupState, new DeleteChannel(this, groupState));
     }
 
     async delete(groupState: GroupState): Promise<void> {
         const nominated = groupState.empty.reduce((nominee, candidate) => nominee.position > candidate.position ? nominee : candidate);
+
+        ChannelAllocationService.logger.verbose(`Deleting channel "${nominated.channelId}" for group "${groupState.group.id}"`)
 
         const channel = await this.channelManager.fetch(nominated.channelId);
         await channel.delete(`MCS: Channel expired`);

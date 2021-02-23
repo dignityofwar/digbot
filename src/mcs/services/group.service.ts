@@ -25,11 +25,10 @@ export class GroupService {
         return groups;
     }
 
-    createGroup(data: Omit<Group, 'id' | 'channels' | 'createdAt' | 'updatedAt'>): Group {
+    createGroup(data: Omit<Group, 'id' | 'channels' | 'createdAt' | 'updatedAt'>): Promise<Group> {
         const group = this.groupRepository.create(data);
-        void this.groupRepository.save(group);
 
-        return group;
+        return this.groupRepository.save(group);
     }
 
     updateGroup(group: Group, data: Partial<Omit<Group, 'id' | 'channels' | 'createdAt' | 'updatedAt'>>): void {
@@ -42,18 +41,13 @@ export class GroupService {
         void this.groupRepository.remove(group);
     }
 
-    createChannel(data: Omit<Channel, 'createdAt' | 'updatedAt'>): Channel {
-        const channel = this.channelRepository.create(data);
+    async createChannel(data: Omit<Channel, 'id' | 'createdAt' | 'updatedAt'>): Promise<Channel> {
+        const channel = await this.channelRepository.save(
+            this.channelRepository.create(data),
+        );
         data.group.channels.push(channel);
-        void this.channelRepository.save(channel);
 
         return channel;
-    }
-
-    updateChannel(channel: Channel, data: Partial<Omit<Channel, 'id' | 'group' | 'createdAt' | 'updatedAt'>>): void {
-        Object.assign(channel, data);
-
-        void this.channelRepository.save(channel);
     }
 
     deleteChannel(channel: Channel): void {
