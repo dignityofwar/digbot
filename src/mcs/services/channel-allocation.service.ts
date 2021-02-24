@@ -46,7 +46,7 @@ export class ChannelAllocationService {
         if (!job.cancel())
             await job.await();
         else
-            ChannelAllocationService.logger.verbose(`Cancel allocation job for group "${groupState.group.id}"`)
+            ChannelAllocationService.logger.verbose(`Cancel allocation job for group "${groupState.group.id}"`);
 
         this.queue.delete(groupState);
     }
@@ -57,7 +57,7 @@ export class ChannelAllocationService {
         if (job instanceof CreateChannel) return;
         if (job && (job.triggered || job.cancel())) return;
 
-        ChannelAllocationService.logger.verbose(`Plan new channel for group "${groupState.group.id}"`)
+        ChannelAllocationService.logger.verbose(`Plan new channel for group "${groupState.group.id}"`);
 
         this.queue.set(groupState, new CreateChannel(this, groupState));
     }
@@ -69,7 +69,7 @@ export class ChannelAllocationService {
         ChannelAllocationService.logger.verbose(`Creating channel for group "${groupState.group.id}"`);
 
         const position = groupState.channelStates.length
-            ? Math.max(...groupState.channelStates.map(({position}) => position))
+            ? Math.max(...groupState.channelStates.map(({position}) => position)) + 1
             : group.position;
 
         const createdChannel = await guild.channels.create(
@@ -77,8 +77,9 @@ export class ChannelAllocationService {
                 type: 'voice',
                 parent: group.parentId,
                 userLimit: group.userLimit,
-                position,
             });
+
+        await createdChannel.setPosition(position);
 
         const channel = await this.groupService.createChannel({
             channelId: createdChannel.id,
@@ -98,7 +99,7 @@ export class ChannelAllocationService {
         if (job instanceof DeleteChannel) return;
         if (job && (job.triggered || job.cancel())) return;
 
-        ChannelAllocationService.logger.verbose(`Plan removal channel for group "${groupState.group.id}"`)
+        ChannelAllocationService.logger.verbose(`Plan removal channel for group "${groupState.group.id}"`);
 
         this.queue.set(groupState, new DeleteChannel(this, groupState));
     }
@@ -106,7 +107,7 @@ export class ChannelAllocationService {
     async delete(groupState: GroupState): Promise<void> {
         const nominated = groupState.empty.reduce((nominee, candidate) => nominee.position > candidate.position ? nominee : candidate);
 
-        ChannelAllocationService.logger.verbose(`Deleting channel "${nominated.channelId}" for group "${groupState.group.id}"`)
+        ChannelAllocationService.logger.verbose(`Deleting channel "${nominated.channelId}" for group "${groupState.group.id}"`);
 
         const channel = await this.channelManager.fetch(nominated.channelId);
         await channel.delete(`MCS: Channel expired`);

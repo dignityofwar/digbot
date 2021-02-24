@@ -120,7 +120,7 @@ export class ModularChannelService implements OnApplicationBootstrap {
 
         channelState.occupied = occupied;
         this.allocationService.reevaluate(channelState.groupState);
-        void this.namingService.renameChannel(channelState);
+        void this.namingService.reevaluateChannel(channelState);
 
     }
 
@@ -138,6 +138,7 @@ export class ModularChannelService implements OnApplicationBootstrap {
         }
 
         channelState.position = channel.rawPosition;
+        channelState.name = channel.name;
         // TODO: Evaluate position
 
         void this.namingService.reevaluate(channelState.groupState);

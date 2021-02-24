@@ -26,7 +26,6 @@ export class ChannelNamingService {
     }
 
     async reevaluateChannel(channelState: ChannelState): Promise<void> {
-
         if (channelState.occupied || channelState.name == this.getName(channelState))
             this.cancel(channelState);
         else
@@ -61,10 +60,12 @@ export class ChannelNamingService {
 
     async renameChannel(channelState: ChannelState): Promise<void> {
         try {
-            ChannelNamingService.logger.verbose(`Renaming `);
+            const name = this.getName(channelState);
+
+            ChannelNamingService.logger.verbose(`Renaming channel "${channelState.channelId}" to "${name}"`);
 
             const voiceChannel = await this.channelManager.fetch(channelState.channelId) as VoiceChannel;
-            voiceChannel.setName(this.getName(channelState));
+            voiceChannel.setName(name);
         } catch (err) {
             ChannelNamingService.logger.warn(`An error occurred while renaming channel "${channelState.channelId}": ${err}`);
         }
