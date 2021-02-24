@@ -33,6 +33,6 @@ export class Group {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @OneToMany(() => Channel, 'group', {eager: true, cascade: false, onDelete: 'CASCADE'})
+    @OneToMany(() => Channel, 'group', {eager: false, cascade: false})
     channels: Channel[];
 }

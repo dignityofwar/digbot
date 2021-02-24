@@ -18,6 +18,6 @@ export class Channel {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @ManyToOne(() => Group, 'channels', {eager: false, onDelete: 'CASCADE'})
+    @ManyToOne(() => Group, 'channels', {eager: false, cascade: false})
     group: Group;
 }

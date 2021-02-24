@@ -7,6 +7,7 @@ import {Group} from './entities/group.entity';
 import {GroupService} from './services/group.service';
 import {ChannelAllocationService} from './services/channel-allocation.service';
 import {ChannelState} from './states/channel.state';
+import {ChannelNamingService} from './services/channel-naming.service';
 
 @Injectable()
 export class ModularChannelService implements OnApplicationBootstrap {
@@ -17,6 +18,7 @@ export class ModularChannelService implements OnApplicationBootstrap {
     constructor(
         private readonly container: ModularChannelContainer,
         private readonly allocationService: ChannelAllocationService,
+        private readonly namingService: ChannelNamingService,
         private readonly groupService: GroupService,
         private readonly discordClient: DiscordClient,
     ) {
@@ -30,7 +32,7 @@ export class ModularChannelService implements OnApplicationBootstrap {
     }
 
     private async initService(): Promise<void> {
-        ModularChannelService.logger.log('Initializing')
+        ModularChannelService.logger.log('Initializing');
 
         const groups = await this.groupService.getAll();
 
@@ -64,7 +66,8 @@ export class ModularChannelService implements OnApplicationBootstrap {
             this.allocationService.reevaluate(groupState);
         }
 
-        // TODO: Evaluate positions and names
+        this.namingService.reevaluate(groupState);
+        // TODO: Evaluate positions
     }
 
     private async initChannelsRoot(groupState: GroupState): Promise<void> {
@@ -117,10 +120,8 @@ export class ModularChannelService implements OnApplicationBootstrap {
 
         channelState.occupied = occupied;
         this.allocationService.reevaluate(channelState.groupState);
+        void this.namingService.renameChannel(channelState);
 
-        if (!occupied) {
-            // TODO: Start renaming process
-        }
     }
 
     updateChannel(channel: VoiceChannel): void {
@@ -139,26 +140,30 @@ export class ModularChannelService implements OnApplicationBootstrap {
         channelState.position = channel.rawPosition;
         // TODO: Evaluate position
 
-        // TODO: Evaluate name
+        void this.namingService.reevaluate(channelState.groupState);
     }
 
     deleteChannel(channel: VoiceChannel): void {
         const channelState = this.container.fromChannel(channel.id);
         if (!channelState) return;
 
+        void this.namingService.cancel(channelState);
+
         this.container.removeChannel(channelState);
         this.groupService.deleteChannel(channelState.channel);
 
         this.allocationService.reevaluate(channelState.groupState);
+        this.namingService.reevaluate(channelState.groupState);
     }
 
     deleteParent(channel: CategoryChannel): void {
         const groupState = this.container.fromParent(channel.id);
         if (!groupState) return;
 
+        void this.namingService.cancelAll(groupState);
+        void this.allocationService.cancelAllocation(groupState);
+
         this.container.removeGroup(groupState);
         this.groupService.deleteGroup(groupState.group);
-
-        void this.allocationService.cancelAllocation(groupState);
     }
 }

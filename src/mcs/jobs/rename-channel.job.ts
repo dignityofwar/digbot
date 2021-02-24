@@ -1,19 +1,19 @@
 import {DelayedJob} from '../../utils/delayed-job';
 import {Injectable} from '@nestjs/common';
-import {ModularChannelService} from '../modular-channel.service';
-import {GroupState} from '../states/group.state';
 import {RENAMING_DELAY} from '../modular-channel.constants';
+import {ChannelState} from '../states/channel.state';
+import {ChannelNamingService} from '../services/channel-naming.service';
 
 @Injectable()
 export class RenameChannel extends DelayedJob<void> {
     constructor(
-        private readonly modularChannelService: ModularChannelService,
-        private readonly state: GroupState,
+        private readonly namingService: ChannelNamingService,
+        private readonly state: ChannelState,
     ) {
         super(RENAMING_DELAY, true);
     }
 
     protected async execute(): Promise<void> {
-        // TODO: Rename channel
+        await this.namingService.renameChannel(this.state);
     }
 }

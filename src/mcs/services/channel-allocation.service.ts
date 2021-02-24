@@ -7,6 +7,7 @@ import {ModularChannelContainer} from '../modular-channel.container';
 import {ChannelState} from '../states/channel.state';
 import {GroupService} from './group.service';
 import {Injectable, Logger} from '@nestjs/common';
+import {ChannelNamingService} from './channel-naming.service';
 
 @Injectable()
 export class ChannelAllocationService {
@@ -20,6 +21,7 @@ export class ChannelAllocationService {
     constructor(
         private readonly container: ModularChannelContainer,
         private readonly groupService: GroupService,
+        private readonly namingService: ChannelNamingService,
         discordClient: DiscordClient,
     ) {
         this.guildManager = discordClient.guilds;
@@ -41,10 +43,10 @@ export class ChannelAllocationService {
         const job = this.queue.get(groupState);
         if (!job) return;
 
-        ChannelAllocationService.logger.verbose(`Cancel allocation job for group "${groupState.group.id}"`)
-
         if (!job.cancel())
             await job.await();
+        else
+            ChannelAllocationService.logger.verbose(`Cancel allocation job for group "${groupState.group.id}"`)
 
         this.queue.delete(groupState);
     }
@@ -64,14 +66,19 @@ export class ChannelAllocationService {
         const guild = await this.guildManager.fetch(groupState.group.guildId);
         const {group} = groupState;
 
-        ChannelAllocationService.logger.verbose(`Creating channel for group "${groupState.group.id}"`)
+        ChannelAllocationService.logger.verbose(`Creating channel for group "${groupState.group.id}"`);
 
-        const createdChannel = await guild.channels.create(group.format, {
-            type: 'voice',
-            parent: group.parentId,
-            userLimit: group.userLimit,
-            position: group.position,
-        });
+        const position = groupState.channelStates.length
+            ? Math.max(...groupState.channelStates.map(({position}) => position))
+            : group.position;
+
+        const createdChannel = await guild.channels.create(
+            this.namingService.getNextName(groupState), {
+                type: 'voice',
+                parent: group.parentId,
+                userLimit: group.userLimit,
+                position,
+            });
 
         const channel = await this.groupService.createChannel({
             channelId: createdChannel.id,

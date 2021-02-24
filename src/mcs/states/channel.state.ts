@@ -7,6 +7,7 @@ export class ChannelState {
     occupied: boolean;
     parent: string;
     position: number;
+    name: string;
 
     constructor(
         public readonly groupState: GroupState,
@@ -16,6 +17,7 @@ export class ChannelState {
         this.occupied = voiceChannel.members.size > 0;
         this.parent = voiceChannel.parentID;
         this.position = voiceChannel.rawPosition;
+        this.name = voiceChannel.name;
     }
 
     get channelId(): string {

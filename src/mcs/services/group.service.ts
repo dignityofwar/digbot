@@ -1,4 +1,4 @@
-import {Repository} from 'typeorm';
+import {DeepPartial, Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Group} from '../entities/group.entity';
 import {Injectable} from '@nestjs/common';
@@ -41,9 +41,9 @@ export class GroupService {
         void this.groupRepository.remove(group);
     }
 
-    async createChannel(data: Omit<Channel, 'id' | 'createdAt' | 'updatedAt'>): Promise<Channel> {
+    async createChannel(data: Omit<DeepPartial<Channel>, 'id' | 'createdAt' | 'updatedAt'>): Promise<Channel> {
         const channel = await this.channelRepository.save(
-            this.channelRepository.create(data),
+            Object.assign(new Channel(), data),
         );
         data.group.channels.push(channel);
 
