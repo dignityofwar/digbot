@@ -1,13 +1,13 @@
-import {Column, Entity, PrimaryColumn} from 'typeorm';
-import {TextChannel} from 'discord.js';
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 
-@Entity()
+@Entity('logger_settings')
 export class LogSettings {
-    @PrimaryColumn()
-    guild: string;
+    @PrimaryGeneratedColumn()
+    readonly id: number;
 
     @Column()
-    channel: string;
+    guildId: string;
 
-    textChannel: TextChannel;
+    @Column()
+    channelId: string;
 }

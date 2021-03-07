@@ -2,7 +2,6 @@ import {Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {LogSettings} from './entities/log-settings.entity';
 import {LogService} from './log.service';
-import {LogSettingsService} from './services/log-settings.service';
 import {DiscordModule} from '../discord/discord.module';
 
 @Module({
@@ -12,7 +11,6 @@ import {DiscordModule} from '../discord/discord.module';
     ],
     providers: [
         LogService,
-        LogSettingsService,
     ],
     exports: [
         LogService,

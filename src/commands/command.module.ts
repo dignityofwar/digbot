@@ -13,6 +13,7 @@ import {DragonsController} from './dragons.controller';
 import {HelpController} from './help.controller';
 import {WhitelistedChannel} from './foundation/entities/whitelisted-channel.entity';
 import {Dragons} from './dragons/dragons.entity';
+import {LogModule} from '../log/log.module';
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import {Dragons} from './dragons/dragons.entity';
             Dragons,
         ]),
         DiscoveryModule,
+        LogModule,
         TheCatApiModule, // For the cats controller
     ],
     providers: [
