@@ -1,5 +1,6 @@
 export interface CommandDecoratorOptions {
     command: string;
-    help: string;
+    description: string;
+    adminOnly?: boolean;
     tags?: string[];
 }

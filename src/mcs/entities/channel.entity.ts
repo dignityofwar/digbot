@@ -1,7 +1,7 @@
 import {Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {Group} from './group.entity';
 
-@Entity()
+@Entity('mcs_channel')
 export class Channel {
     @PrimaryGeneratedColumn()
     readonly id: number;

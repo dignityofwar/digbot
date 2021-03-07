@@ -1,7 +1,8 @@
 import {Controller} from '@nestjs/common';
-import {Command} from '../decorators/command.decorator';
-import {TheCatApiService} from '../../apis/thecatapi/thecatapi.service';
-import {Message, MessageEmbed} from 'discord.js';
+import {Command} from './foundation/decorators/command.decorator';
+import {TheCatApiService} from '../apis/thecatapi/thecatapi.service';
+import {MessageEmbed} from 'discord.js';
+import {CommandRequest} from './foundation/command.request';
 
 @Controller()
 export class CatsController {
@@ -12,9 +13,9 @@ export class CatsController {
 
     @Command({
         command: '!cats',
-        help: 'Shows a random image of cats',
+        description: 'Shows a random image of cats',
     })
-    cats(message: Message): void {
+    cats({message}: CommandRequest): void {
         this.theCatApi.imagesSearch({
             limit: 1,
             mime_types: ['jpg', 'png'],
@@ -27,9 +28,9 @@ export class CatsController {
 
     @Command({
         command: '!cats:gif',
-        help: 'Shows a random gif of cats',
+        description: 'Shows a random gif of cats',
     })
-    catsGif(message: Message) {
+    catsGif({message}: CommandRequest) {
         this.theCatApi.imagesSearch({
             limit: 1,
             mime_types: ['gif'],

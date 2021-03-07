@@ -3,7 +3,6 @@ import {ModularChannelController} from './modular-channel.controller';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {Channel} from './entities/channel.entity';
 import {Group} from './entities/group.entity';
-import {DiscordModule} from '../discord/discord.module';
 import {ModularChannelService} from './modular-channel.service';
 import {ModularChannelContainer} from './modular-channel.container';
 import {GroupService} from './services/group.service';
@@ -17,7 +16,6 @@ import {ChannelOrderService} from './services/channel-order.service';
             Channel,
             Group,
         ]),
-        DiscordModule,
     ],
     providers: [
         GroupService,
