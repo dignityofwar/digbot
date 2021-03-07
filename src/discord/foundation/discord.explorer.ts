@@ -1,4 +1,4 @@
-import {Injectable, OnModuleInit} from '@nestjs/common';
+import {Injectable, Logger, OnModuleInit} from '@nestjs/common';
 import {DiscoveryService, MetadataScanner} from '@nestjs/core';
 import {DiscordClient} from './discord.client';
 import {InstanceWrapper} from '@nestjs/core/injector/instance-wrapper';
@@ -7,6 +7,8 @@ import {OnDecoratorOptions} from './decorators/interfaces/ondecorator.options';
 
 @Injectable()
 export class DiscordExplorer implements OnModuleInit {
+    private static readonly logger = new Logger('DiscordExplorer');
+
     constructor(
         private readonly discoveryService: DiscoveryService,
         private readonly metadataScanner: MetadataScanner,
@@ -51,6 +53,8 @@ export class DiscordExplorer implements OnModuleInit {
         client: DiscordClient,
         metadata: OnDecoratorOptions,
     ): void {
+        DiscordExplorer.logger.log(`Registered event ${metadata.event} on ${instance.constructor.name}@${key}`);
+
         client.on(
             metadata.event,
             instance[key].bind(instance),

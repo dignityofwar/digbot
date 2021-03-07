@@ -28,7 +28,9 @@ export class CommandController {
             if (command.adminOnly && !isAdmin) return; // Check permissions
             if (!isAdmin && !await this.isCommandChannel(message.channel)) return; // Check channel
 
-            command.handler(new CommandRequest(message, lexer.all()));
+            const request = new CommandRequest(message, lexer.all());
+
+            command.handler(request);
         }
     }
 

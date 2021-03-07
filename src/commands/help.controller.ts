@@ -6,14 +6,9 @@ import {CommandRequest} from './foundation/command.request';
 
 @Controller()
 export class HelpController {
-    private defaultHelp: MessageEmbed;
-
-    private adminHelp: MessageEmbed;
-
     constructor(
-        repository: CommandContainer,
+        private readonly repository: CommandContainer,
     ) {
-        this.prepareMessages(repository);
     }
 
     @Command({
@@ -21,7 +16,15 @@ export class HelpController {
         description: 'Show information about the commands',
     })
     async help({channel}: CommandRequest): Promise<void> {
-        await channel.send(this.defaultHelp);
+        const embed = new MessageEmbed();
+
+        this.repository.all()
+            .filter(({command, adminOnly}) => !command.startsWith('!help') && !adminOnly)
+            .forEach(({command, description, adminOnly}) => {
+                embed.addField(`${command}`, description);
+            });
+
+        await channel.send(embed);
     }
 
     @Command({
@@ -30,22 +33,14 @@ export class HelpController {
         description: 'Show information about the admin commands',
     })
     async admin({channel}: CommandRequest): Promise<void> {
-        await channel.send(this.adminHelp);
-    }
+        const embed = new MessageEmbed();
 
-    private prepareMessages(repository: CommandContainer): void {
-        const commands = repository.all()
-            .sort((a, b) => a.command.localeCompare(b.command));
-
-        this.defaultHelp = new MessageEmbed();
-        this.adminHelp = new MessageEmbed();
-
-        commands.filter(({command}) => command.startsWith('!help'))
+        this.repository.all()
+            .filter(({command, adminOnly}) => !command.startsWith('!help') && adminOnly)
             .forEach(({command, description, adminOnly}) => {
-                if (adminOnly)
-                    this.adminHelp.addField(`\`${command}\``, description);
-                else
-                    this.defaultHelp.addField(`\`${command}\``, description);
+                embed.addField(`${command}`, description);
             });
+
+        await channel.send(embed);
     }
 }

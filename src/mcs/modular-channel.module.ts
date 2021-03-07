@@ -9,6 +9,7 @@ import {GroupService} from './services/group.service';
 import {ChannelAllocationService} from './services/channel-allocation.service';
 import {ChannelNamingService} from './services/channel-naming.service';
 import {ChannelOrderService} from './services/channel-order.service';
+import {DiscordModule} from '../discord/discord.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import {ChannelOrderService} from './services/channel-order.service';
             Channel,
             Group,
         ]),
+        DiscordModule,
     ],
     providers: [
         GroupService,
