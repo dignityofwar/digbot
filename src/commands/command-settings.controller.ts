@@ -17,13 +17,16 @@ export class CommandSettingsController {
         command: '!commands:reset',
         description: 'Removes all whitelisted channels',
     })
-    async reset({member, guild}: CommandRequest) {
+    async reset({member, guild, message}: CommandRequest) {
         await this.settingsService.removeAllWhitelistedChannels(guild);
+
+        void message.delete();
 
         this.logService.log(
             'Commands',
             guild,
-            `All whitelisted command channels removed by ${member.displayName}(${member.id})`,
+            'All whitelisted command channels removed',
+            member,
         );
     }
 
@@ -35,22 +38,15 @@ export class CommandSettingsController {
     async whitelist({member, channel, guild, message}: CommandRequest) {
         const result = await this.settingsService.toggleWhitelistedChannel(channel);
 
-        message.delete();
+        void message.delete();
 
         this.logService.log(
             'Commands',
             guild,
             result
-                ? `Channel "${channel.id}" whitelisted for commands by ${member.displayName}(${member.id})`
-                : `Channel "${channel.id}" removed from whitelist for commands by ${member.displayName}(${member.id})`,
+                ? `Channel "${channel.id}" whitelisted for commands`
+                : `Channel "${channel.id}" removed from whitelist for commands`,
+            member,
         );
     }
-
-    // @Command({
-    //     adminOnly: true,
-    //     command: '!commands:channels',
-    //     description: 'Returns a list of all whitelisted channels',
-    // })
-    // async channels(request: CommandRequest) {
-    // }
 }

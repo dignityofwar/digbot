@@ -56,6 +56,8 @@ export class DiscordExplorer implements OnModuleInit {
         DiscordExplorer.logger.log(`Registered event ${metadata.event} on ${instance.constructor.name}@${key}`);
 
         client.on(
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             metadata.event,
             instance[key].bind(instance),
         );

@@ -4,9 +4,9 @@ import {ClientEvents} from 'discord.js';
 import {isString} from 'util';
 import {SetMetadata} from '@nestjs/common';
 
-export function On(event: keyof ClientEvents): MethodDecorator;
+export function On(event: keyof ClientEvents | 'raw'): MethodDecorator;
 export function On(options: OnDecoratorOptions): MethodDecorator;
-export function On(eventOrOptions: OnDecoratorOptions | keyof ClientEvents): MethodDecorator {
+export function On(eventOrOptions: OnDecoratorOptions | keyof ClientEvents | 'raw'): MethodDecorator {
     const options = isString(eventOrOptions)
         ? {event: eventOrOptions}
         : eventOrOptions;

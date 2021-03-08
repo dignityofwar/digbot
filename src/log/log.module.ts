@@ -3,6 +3,7 @@ import {TypeOrmModule} from '@nestjs/typeorm';
 import {LogSettings} from './entities/log-settings.entity';
 import {LogService} from './log.service';
 import {DiscordModule} from '../discord/discord.module';
+import {LogSettingsController} from './log-settings.controller';
 
 @Module({
     imports: [
@@ -14,6 +15,9 @@ import {DiscordModule} from '../discord/discord.module';
     ],
     exports: [
         LogService,
+    ],
+    controllers: [
+        LogSettingsController,
     ],
 })
 export class LogModule {
