@@ -6,6 +6,7 @@ import {TypeOrmModule} from '@nestjs/typeorm';
 import {ModularChannelModule} from './modular-channels/modular-channel.module';
 import {LogModule} from './log/log.module';
 import {ReactionRolesModule} from './reaction-roles/reaction-roles.module';
+import {MessengerModule} from './messenger/messenger.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import {ReactionRolesModule} from './reaction-roles/reaction-roles.module';
         CommandModule,
         ModularChannelModule,
         ReactionRolesModule,
+        MessengerModule,
     ],
 })
 export class AppModule {

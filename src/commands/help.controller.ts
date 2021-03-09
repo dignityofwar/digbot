@@ -13,7 +13,7 @@ export class HelpController {
 
     @Command({
         command: '!help',
-        description: 'Show information about the commands',
+        description: 'Show information about the controllers',
     })
     async help({channel}: CommandRequest): Promise<void> {
         const embed = new MessageEmbed();
@@ -30,7 +30,7 @@ export class HelpController {
     @Command({
         adminOnly: true,
         command: '!help:admin',
-        description: 'Show information about the admin commands',
+        description: 'Show information about the admin controllers',
     })
     async admin({channel}: CommandRequest): Promise<void> {
         const embed = new MessageEmbed();

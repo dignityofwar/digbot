@@ -3,7 +3,7 @@ import {ReactionRolesController} from './reaction-roles.controller';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {ReactionRole} from './entities/reaction-role.entity';
 import {DiscordModule} from '../discord/discord.module';
-import {ReactionRolesSettingsController} from './commands/reaction-roles-settings.controller';
+import {ReactionRolesSettingsController} from './controllers/reaction-roles-settings.controller';
 import {LogModule} from '../log/log.module';
 
 @Module({

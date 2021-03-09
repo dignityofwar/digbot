@@ -70,8 +70,8 @@ Try to test all possible situations the module may encounter. And break up these
 several different tests.
 
 ```js
-// File path: test/src/commands/commands.js (mirror the project directory, test folder = project folder)
-// Example module to test commands.js
+// File path: test/src/controllers/controllers.js (mirror the project directory, test folder = project folder)
+// Example module to test controllers.js
 
 /* Define the styles the test is using (most of the time this will only be 'should'),
 in most instances these requirements aren't technically needed but it's useful to
@@ -82,10 +82,10 @@ const should = require('chai').should();
 const sinon = require('sinon');
 
 // File under inspection (tested unit) and dependencies
-const commands = require('../../src/commands/commands.js');
+const commands = require('../../src/controllers/controllers.js');
 
 // Defined use case for command calls, all tests in this block
-describe('commands/commands.js', function() {
+describe('controllers/controllers.js', function() {
     /* If global variables need to be declared, declare them outside of the 'it' tests, but inside of the
     'describe' block, all code outside of 'it' tests regardless of positioning in the module will run before
     mocha starts to execute the tests*/
@@ -112,7 +112,7 @@ describe('commands/commands.js', function() {
     });
 
     // Test as many cases as possible, here we're iterating through all possibilities
-    it('check should identify commands', function() {
+    it('check should identify controllers', function() {
         // Control input
         commands.check('!ping').should.be.true;
         // Test all on file

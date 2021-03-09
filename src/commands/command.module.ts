@@ -14,6 +14,7 @@ import {HelpController} from './help.controller';
 import {WhitelistedChannel} from './foundation/entities/whitelisted-channel.entity';
 import {Dragons} from './dragons/dragons.entity';
 import {LogModule} from '../log/log.module';
+import {DiscordModule} from '../discord/discord.module';
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import {LogModule} from '../log/log.module';
             Dragons,
         ]),
         DiscoveryModule,
+        DiscordModule,
         LogModule,
         TheCatApiModule, // For the cats controller
     ],

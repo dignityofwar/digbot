@@ -5,12 +5,14 @@ import {Dragons} from './dragons/dragons.entity';
 import {Repository} from 'typeorm';
 import {CommandRequest} from './foundation/command.request';
 import {MessageEmbed} from 'discord.js';
+import {LogService} from '../log/log.service';
 
 @Controller()
 export class DragonsController {
     constructor(
         @InjectRepository(Dragons)
         private readonly dragonsRepository: Repository<Dragons>,
+        private readonly logService: LogService,
     ) {
     }
 
@@ -31,9 +33,16 @@ export class DragonsController {
         command: '!dragons:disable',
         description: 'Disable the dragon command',
     })
-    async disable({message, guild}: CommandRequest) {
+    async disable({message, guild, member}: CommandRequest) {
         await this.dragonsRepository.delete({guildId: guild.id});
-        await message.react('👍');
+        await message.delete();
+
+        this.logService.log(
+            'Dragons Command',
+            guild,
+            'Disabled the dragons command',
+            member,
+        );
     }
 
     @Command({
@@ -41,7 +50,7 @@ export class DragonsController {
         command: '!dragons:set',
         description: 'Set the dragon role',
     })
-    async set({message, channel, guild}: CommandRequest) {
+    async set({message, channel, guild, member}: CommandRequest) {
         if (!message.mentions.roles.first()) {
             await channel.send(new MessageEmbed().setDescription('Missing role mention'));
             return;
@@ -55,6 +64,13 @@ export class DragonsController {
         dragon.roleId = message.mentions.roles.first().id;
         this.dragonsRepository.save(dragon);
 
-        await message.react('👍');
+        await message.delete();
+
+        this.logService.log(
+            'Dragons Command',
+            guild,
+            `Updated the dragons command role to "${dragon.roleId}"`,
+            member,
+        );
     }
 }

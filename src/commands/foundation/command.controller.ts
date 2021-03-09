@@ -1,13 +1,16 @@
-import {Controller} from '@nestjs/common';
-import {GuildMember, Message, Permissions, TextChannel} from 'discord.js';
+import {Controller, Logger} from '@nestjs/common';
+import {GuildMember, Message, MessageEmbed, Permissions, TextChannel} from 'discord.js';
 import {On} from '../../discord/foundation/decorators/on.decorator';
 import {CommandContainer} from './command.container';
 import {ArgumentLexer} from './helpers/argument.lexer';
 import {GuildSettingsService} from './services/guild-settings.service';
 import {CommandRequest} from './command.request';
+import {CommandException} from './exceptions/command.exception';
 
 @Controller()
 export class CommandController {
+    private static readonly logger = new Logger('CommandController');
+
     constructor(
         private readonly repository: CommandContainer,
         private readonly settingsService: GuildSettingsService,
@@ -30,7 +33,23 @@ export class CommandController {
 
             const request = new CommandRequest(message, lexer.all());
 
-            command.handler(request);
+            try {
+                const response = await command.handler(request);
+
+                if (typeof response == 'string' || response instanceof MessageEmbed)
+                    await message.channel.send(response);
+                else if (response)
+                    CommandController.logger.warn(`Command "${command.command}" returned unexpected object of type "${typeof response}"`);
+            } catch (err) {
+                await message.channel.send(
+                    err instanceof CommandException
+                        ? err.response
+                        : new MessageEmbed().setColor('RED').setDescription('Unexpected failure'),
+                );
+
+                if (!(err instanceof CommandException))
+                    CommandController.logger.warn(`Command "${command.command}" failed unexpectedly: ${err}`);
+            }
         }
     }
 

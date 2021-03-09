@@ -12,6 +12,10 @@ export class GuildSettingsService {
     ) {
     }
 
+    getAllWhitelistedChannels(guild: Guild): Promise<WhitelistedChannel[]> {
+        return this.channelRepository.find({guildId: guild.id});
+    }
+
     async removeAllWhitelistedChannels(guild: Guild): Promise<void> {
         await this.channelRepository.delete({guildId: guild.id});
     }
