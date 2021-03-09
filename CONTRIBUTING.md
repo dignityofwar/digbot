@@ -1,4 +1,4 @@
-# Contributing
+# Contributing (OUTDATED)
 If you need help ask in the dev channel in the DIG discord.
 
 ## Setup procedure
