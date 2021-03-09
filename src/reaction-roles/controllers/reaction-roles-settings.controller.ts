@@ -9,6 +9,7 @@ import {LogService} from '../../log/log.service';
 import {DiscordClient} from '../../discord/foundation/discord.client';
 import {CommandException} from '../../commands/foundation/exceptions/command.exception';
 import {parseMentionArg} from '../../commands/foundation/utils/parse.helpers';
+import {channel, role} from '../../utils/discord.utils';
 
 @Controller()
 export class ReactionRolesSettingsController {
@@ -36,17 +37,13 @@ export class ReactionRolesSettingsController {
         if (!rrs.length)
             return new MessageEmbed().setDescription('No reaction roles found');
 
-        const reply = new MessageEmbed();
-
-        for (const rr of rrs)
-            reply.addField(
-                `<#${rr.channelId}> ${rr.emoji}`,
-                `<@&${rr.roleId}>`,
-            );
-
-        return reply;
+        return new MessageEmbed({
+            fields: rrs.map((rr) => ({
+                name: `${channel(rr.channelId)} ${rr.emoji}`,
+                value: role(rr.roleId),
+            })),
+        });
     }
-
 
     @Command({
         adminOnly: true,
@@ -85,7 +82,7 @@ export class ReactionRolesSettingsController {
         this.logService.log(
             'Reaction Roles',
             guild,
-            `Created reaction role for "${role}" in ${channel} with ${emoji}`,
+            `Created reaction role for ${role} in ${channel} with ${emoji}`,
             member,
         );
 

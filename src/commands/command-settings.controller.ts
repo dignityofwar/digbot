@@ -60,21 +60,21 @@ export class CommandSettingsController {
     @Command({
         adminOnly: true,
         command: '!commands:whitelist',
-        description: 'Whitelist a channel to allow the use of controllers',
+        description: 'Whitelist a channel to allow the use of commands',
     })
     async whitelist({args, member, channel, guild}: CommandRequest) {
         const [, channelArg] = args;
 
-        const result = await this.settingsService.toggleWhitelistedChannel(
-            channelArg ? await this.fetchChannel(guild, channelArg) : channel,
-        );
+        const whitelisted = channelArg ? await this.fetchChannel(guild, channelArg) : channel;
+
+        const result = await this.settingsService.toggleWhitelistedChannel(whitelisted);
 
         this.logService.log(
             'Commands',
             guild,
             result
-                ? `Channel "${channel}" whitelisted for commands`
-                : `Channel "${channel}" removed from whitelist for commands`,
+                ? `Channel ${whitelisted} whitelisted for commands`
+                : `Channel ${whitelisted} removed from whitelist for commands`,
             member,
         );
 

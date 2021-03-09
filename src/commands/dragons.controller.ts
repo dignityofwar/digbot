@@ -6,6 +6,7 @@ import {Repository} from 'typeorm';
 import {CommandRequest} from './foundation/command.request';
 import {MessageEmbed} from 'discord.js';
 import {LogService} from '../log/log.service';
+import {role} from '../utils/discord.utils';
 
 @Controller()
 export class DragonsController {
@@ -24,8 +25,13 @@ export class DragonsController {
         const settings = await this.dragonsRepository.findOne({guildId: guild.id});
         if (!settings) return;
 
-        await member.roles.add(settings.roleId);
-        await message.react('🐉');
+        if (member.roles.cache.has(settings.roleId)) {
+            await member.roles.add(settings.roleId);
+            await message.react('🐉');
+        } else {
+            await member.roles.remove(settings.roleId);
+            return `${member}, you already had the herebedragons role. I've removed it. Type !dragons again to resubscribe.`;
+        }
     }
 
     @Command({
@@ -33,9 +39,8 @@ export class DragonsController {
         command: '!dragons:disable',
         description: 'Disable the dragon command',
     })
-    async disable({message, guild, member}: CommandRequest) {
+    async disable({guild, member}: CommandRequest) {
         await this.dragonsRepository.delete({guildId: guild.id});
-        await message.delete();
 
         this.logService.log(
             'Dragons Command',
@@ -43,6 +48,8 @@ export class DragonsController {
             'Disabled the dragons command',
             member,
         );
+
+        return new MessageEmbed().setDescription('Success').setColor('GREEN');
     }
 
     @Command({
@@ -52,7 +59,7 @@ export class DragonsController {
     })
     async set({message, channel, guild, member}: CommandRequest) {
         if (!message.mentions.roles.first()) {
-            await channel.send(new MessageEmbed().setDescription('Missing role mention'));
+            await channel.send(new MessageEmbed().setDescription('Missing dragon role'));
             return;
         }
 
@@ -69,8 +76,10 @@ export class DragonsController {
         this.logService.log(
             'Dragons Command',
             guild,
-            `Updated the dragons command role to "${dragon.roleId}"`,
+            `Updated the dragons command role to ${role(dragon.roleId)}`,
             member,
         );
+
+        return new MessageEmbed().setDescription('Success').setColor('GREEN');
     }
 }

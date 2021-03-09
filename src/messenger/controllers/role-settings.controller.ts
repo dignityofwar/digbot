@@ -90,14 +90,14 @@ export class RoleSettingsController {
 
         await this.roleRepository.save(settings);
 
-        await message.delete();
-
         this.logService.log(
             'Role Messenger',
             guild,
-            `Updated dm message for "${role}"`,
+            `Updated dm message for ${role}`,
             member,
         );
+
+        return new MessageEmbed().setDescription('Success').setColor('GREEN');
     }
 
     @Command({
@@ -116,12 +116,12 @@ export class RoleSettingsController {
         const result = await this.roleRepository.delete({roleId: role.id, channelId: null});
 
         if (!result.affected)
-            return new MessageEmbed().setDescription('No role messages found').setColor('GREEN');
+            return new MessageEmbed().setDescription('No role message found').setColor('GREEN');
 
         this.logService.log(
             'Role Messenger',
             guild,
-            `Deleted dm message for "${role}"`,
+            `Deleted dm message for ${role}`,
             member,
         );
 
@@ -176,7 +176,7 @@ export class RoleSettingsController {
     })
     async removeRole({args, guild, member}: CommandRequest) {
         if (args.length < 3)
-            return new MessageEmbed().setDescription('!roledm:remove [role] [channel]');
+            return new MessageEmbed().setDescription('!roletext:remove [role] [channel]');
 
         const [, roleArg, channelArg] = args;
 
@@ -192,7 +192,7 @@ export class RoleSettingsController {
         this.logService.log(
             'Role Messenger',
             guild,
-            `Deleted text message for "${role}"`,
+            `Deleted text message for ${role} in ${channel}`,
             member,
         );
 
