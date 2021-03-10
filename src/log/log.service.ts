@@ -3,20 +3,16 @@ import {ChannelManager, Guild, GuildMember, MessageEmbed, TextChannel} from 'dis
 import {InjectRepository} from '@nestjs/typeorm';
 import {LogSettings} from './entities/log-settings.entity';
 import {Repository} from 'typeorm';
-import {DiscordClient} from '../discord/foundation/discord.client';
 
 @Injectable()
 export class LogService {
     private static readonly logger = new Logger('LogSettingsService');
 
-    private readonly channelManager: ChannelManager;
-
     constructor(
         @InjectRepository(LogSettings)
         private readonly settingsRepository: Repository<LogSettings>,
-        discordClient: DiscordClient,
+        private readonly channelManager: ChannelManager,
     ) {
-        this.channelManager = discordClient.channels;
     }
 
     async setChannel(channel: TextChannel): Promise<void> {

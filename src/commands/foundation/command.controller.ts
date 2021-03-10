@@ -1,6 +1,6 @@
 import {Controller, Logger} from '@nestjs/common';
 import {GuildMember, Message, MessageEmbed, Permissions, TextChannel} from 'discord.js';
-import {On} from '../../discord/foundation/decorators/on.decorator';
+import {On} from '../../discord/decorators/on.decorator';
 import {CommandContainer} from './command.container';
 import {ArgumentLexer} from './helpers/argument.lexer';
 import {GuildSettingsService} from './services/guild-settings.service';

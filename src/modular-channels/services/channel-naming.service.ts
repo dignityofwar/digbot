@@ -3,21 +3,16 @@ import {GroupState} from '../states/group.state';
 import {ChannelState} from '../states/channel.state';
 import {RenameChannel} from '../jobs/rename-channel.job';
 import {ChannelManager, VoiceChannel} from 'discord.js';
-import {DiscordClient} from '../../discord/foundation/discord.client';
 
 @Injectable()
 export class ChannelNamingService {
     private static readonly logger = new Logger('ChannelNamingService');
 
-    private readonly channelManager: ChannelManager;
-
-
     private readonly queue = new Map<ChannelState, RenameChannel>();
 
     constructor(
-        discordClient: DiscordClient,
+        private readonly channelManager: ChannelManager,
     ) {
-        this.channelManager = discordClient.channels;
     }
 
     reevaluate(groupState: GroupState): void {

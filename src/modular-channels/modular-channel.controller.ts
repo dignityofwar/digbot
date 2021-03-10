@@ -1,6 +1,6 @@
 import {Controller} from '@nestjs/common';
 import {CategoryChannel, Channel, PartialDMChannel, VoiceChannel, VoiceState} from 'discord.js';
-import {On} from '../discord/foundation/decorators/on.decorator';
+import {On} from '../discord/decorators/on.decorator';
 import {ModularChannelService} from './modular-channel.service';
 
 @Controller()

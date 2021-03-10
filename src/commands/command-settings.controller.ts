@@ -6,20 +6,16 @@ import {LogService} from '../log/log.service';
 import {ChannelManager, Guild, MessageEmbed, TextChannel} from 'discord.js';
 import {parseChannelArg} from './foundation/utils/parse.helpers';
 import {CommandException} from './foundation/exceptions/command.exception';
-import {DiscordClient} from '../discord/foundation/discord.client';
 
 @Controller()
 export class CommandSettingsController {
     private static readonly logger = new Logger('CommandSettingsController');
 
-    private readonly channelManager: ChannelManager;
-
     constructor(
         private readonly settingsService: GuildSettingsService,
         private readonly logService: LogService,
-        discordClient: DiscordClient,
+        private readonly channelManager: ChannelManager,
     ) {
-        this.channelManager = discordClient.channels;
     }
 
     @Command({
@@ -60,21 +56,21 @@ export class CommandSettingsController {
     @Command({
         adminOnly: true,
         command: '!commands:whitelist',
-        description: 'Whitelist a channel to allow the use of controllers',
+        description: 'Whitelist a channel to allow the use of commands',
     })
     async whitelist({args, member, channel, guild}: CommandRequest) {
         const [, channelArg] = args;
 
-        const result = await this.settingsService.toggleWhitelistedChannel(
-            channelArg ? await this.fetchChannel(guild, channelArg) : channel,
-        );
+        const whitelisted = channelArg ? await this.fetchChannel(guild, channelArg) : channel;
+
+        const result = await this.settingsService.toggleWhitelistedChannel(whitelisted);
 
         this.logService.log(
             'Commands',
             guild,
             result
-                ? `Channel "${channel}" whitelisted for commands`
-                : `Channel "${channel}" removed from whitelist for commands`,
+                ? `Channel ${whitelisted} whitelisted for commands`
+                : `Channel ${whitelisted} removed from whitelist for commands`,
             member,
         );
 

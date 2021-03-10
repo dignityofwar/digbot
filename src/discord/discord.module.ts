@@ -1,9 +1,37 @@
-import {DiscordModule as BaseDiscordModule} from './foundation/discord.module';
-import {ConfigService} from '@nestjs/config';
-import {DiscordConfig} from './discord.config';
+import {MetadataAccessor} from './helpers/metadata.accessor';
+import {DiscordExplorer} from './discord.explorer';
+import {DiscordClient} from './discord.client';
+import {Module} from '@nestjs/common';
+import {ChannelManager, GuildManager} from 'discord.js';
+import {DiscoveryModule} from '@nestjs/core';
 
-export const DiscordModule = BaseDiscordModule.forRootAsync({
-    imports: [DiscordConfig],
-    useFactory: (config: ConfigService) => config.get('discord'),
-    inject: [ConfigService],
-});
+@Module({
+    imports: [
+        DiscoveryModule,
+    ],
+    providers: [
+        MetadataAccessor,
+        DiscordExplorer,
+        {
+            provide: DiscordClient,
+            useFactory: () => new DiscordClient({
+                token: process.env.DISCORD_TOKEN,
+            }),
+        }, {
+            provide: ChannelManager,
+            useFactory: (client: DiscordClient) => client.channels,
+            inject: [DiscordClient],
+        }, {
+            provide: GuildManager,
+            useFactory: (client: DiscordClient) => client.guilds,
+            inject: [DiscordClient],
+        },
+    ],
+    exports: [
+        DiscordClient,
+        ChannelManager,
+        GuildManager,
+    ],
+})
+export class DiscordModule {
+}

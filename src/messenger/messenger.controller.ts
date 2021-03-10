@@ -1,27 +1,23 @@
 import {Controller, Logger} from '@nestjs/common';
-import {On} from '../discord/foundation/decorators/on.decorator';
+import {On} from '../discord/decorators/on.decorator';
 import {ChannelManager, GuildMember, MessageEmbed, Role, TextChannel} from 'discord.js';
 import {Repository} from 'typeorm';
 import {RoleMessenger} from './entities/role-messenger.entity';
 import {InjectRepository} from '@nestjs/typeorm';
 import {JoinMessenger} from './entities/join-messenger.entity';
-import {DiscordClient} from '../discord/foundation/discord.client';
 import {Messenger} from './entities/concerns/messenger';
 
 @Controller()
 export class MessengerController {
     private static readonly logger = new Logger('MessengerController');
 
-    private readonly channelManager: ChannelManager;
-
     constructor(
         @InjectRepository(RoleMessenger)
         private readonly roleRepository: Repository<RoleMessenger>,
         @InjectRepository(JoinMessenger)
         private readonly joinRepository: Repository<JoinMessenger>,
-        discordClient: DiscordClient,
+        private readonly channelManager: ChannelManager,
     ) {
-        this.channelManager = discordClient.channels;
     }
 
     @On('guildMemberUpdate')

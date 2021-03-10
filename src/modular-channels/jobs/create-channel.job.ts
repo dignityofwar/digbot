@@ -7,7 +7,7 @@ import {ChannelAllocationService} from '../services/channel-allocation.service';
 @Injectable()
 export class CreateChannel extends DelayedJob<void> {
     constructor(
-        private readonly allocationService:ChannelAllocationService,
+        private readonly allocationService: ChannelAllocationService,
         private readonly state: GroupState,
     ) {
         super(CREATION_DELAY, true);
