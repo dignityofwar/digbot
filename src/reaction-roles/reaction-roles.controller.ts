@@ -1,9 +1,9 @@
 import {Controller, Logger} from '@nestjs/common';
-import {On} from 'src/discord/foundation/decorators/on.decorator';
+import {On} from 'src/discord/decorators/on.decorator';
 import {Repository} from 'typeorm';
 import {ReactionRole} from './entities/reaction-role.entity';
 import {InjectRepository} from '@nestjs/typeorm';
-import {DiscordClient} from '../discord/foundation/discord.client';
+import {DiscordClient} from '../discord/discord.client';
 import {GuildManager, MessageEmbed} from 'discord.js';
 
 @Controller()

@@ -6,20 +6,16 @@ import {LogService} from '../log/log.service';
 import {ChannelManager, Guild, MessageEmbed, TextChannel} from 'discord.js';
 import {parseChannelArg} from './foundation/utils/parse.helpers';
 import {CommandException} from './foundation/exceptions/command.exception';
-import {DiscordClient} from '../discord/foundation/discord.client';
 
 @Controller()
 export class CommandSettingsController {
     private static readonly logger = new Logger('CommandSettingsController');
 
-    private readonly channelManager: ChannelManager;
-
     constructor(
         private readonly settingsService: GuildSettingsService,
         private readonly logService: LogService,
-        discordClient: DiscordClient,
+        private readonly channelManager: ChannelManager,
     ) {
-        this.channelManager = discordClient.channels;
     }
 
     @Command({

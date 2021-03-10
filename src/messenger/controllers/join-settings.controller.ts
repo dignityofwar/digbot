@@ -8,21 +8,17 @@ import {CommandException} from '../../commands/foundation/exceptions/command.exc
 import {ChannelManager, Guild, MessageEmbed, TextChannel} from 'discord.js';
 import {LogService} from '../../log/log.service';
 import {parseChannelArg} from '../../commands/foundation/utils/parse.helpers';
-import {DiscordClient} from '../../discord/foundation/discord.client';
 
 @Controller()
 export class JoinSettingsController {
     private static readonly logger = new Logger('JoinSettingsController');
 
-    private readonly channelManager: ChannelManager;
-
     constructor(
         @InjectRepository(JoinMessenger)
         private readonly joinRepository: Repository<JoinMessenger>,
         private readonly logService: LogService,
-        discordClient: DiscordClient,
+        private readonly channelManager: ChannelManager,
     ) {
-        this.channelManager = discordClient.channels;
     }
 
     @Command({

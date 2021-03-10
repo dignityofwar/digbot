@@ -1,6 +1,6 @@
 import {Injectable, Logger, OnApplicationBootstrap} from '@nestjs/common';
 import {CategoryChannel, ChannelManager, VoiceChannel} from 'discord.js';
-import {DiscordClient} from '../discord/foundation/discord.client';
+import {DiscordClient} from '../discord/discord.client';
 import {ModularChannelContainer} from './modular-channel.container';
 import {GroupState} from './states/group.state';
 import {Group} from './entities/group.entity';
@@ -13,16 +13,14 @@ import {ChannelNamingService} from './services/channel-naming.service';
 export class ModularChannelService implements OnApplicationBootstrap {
     private static readonly logger = new Logger('ModularChannelSystem');
 
-    private readonly channelManager: ChannelManager;
-
     constructor(
         private readonly container: ModularChannelContainer,
         private readonly allocationService: ChannelAllocationService,
         private readonly namingService: ChannelNamingService,
         private readonly groupService: GroupService,
         private readonly discordClient: DiscordClient,
+        private readonly channelManager: ChannelManager,
     ) {
-        this.channelManager = discordClient.channels;
     }
 
     onApplicationBootstrap(): void {

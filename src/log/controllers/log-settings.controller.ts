@@ -1,7 +1,7 @@
 import {Controller} from '@nestjs/common';
-import {LogService} from './log.service';
-import {CommandRequest} from '../commands/foundation/command.request';
-import {Command} from '../commands/foundation/decorators/command.decorator';
+import {LogService} from '../log.service';
+import {CommandRequest} from '../../commands/foundation/command.request';
+import {Command} from '../../commands/foundation/decorators/command.decorator';
 
 @Controller()
 export class LogSettingsController {

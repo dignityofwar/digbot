@@ -6,7 +6,7 @@ import {MessengerController} from './messenger.controller';
 import {DiscordModule} from '../discord/discord.module';
 import {JoinSettingsController} from './controllers/join-settings.controller';
 import {RoleSettingsController} from './controllers/role-settings.controller';
-import {LogService} from '../log/log.service';
+import {LogModule} from '../log/log.module';
 
 @Module({
     imports: [
@@ -15,7 +15,7 @@ import {LogService} from '../log/log.service';
             JoinMessenger,
         ]),
         DiscordModule,
-        LogService,
+        LogModule,
     ],
     controllers: [
         MessengerController,

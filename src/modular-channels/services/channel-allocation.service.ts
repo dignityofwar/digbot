@@ -1,4 +1,3 @@
-import {DiscordClient} from '../../discord/foundation/discord.client';
 import {ChannelManager, GuildManager} from 'discord.js';
 import {GroupState} from '../states/group.state';
 import {CreateChannel} from '../jobs/create-channel.job';
@@ -13,19 +12,15 @@ import {ChannelNamingService} from './channel-naming.service';
 export class ChannelAllocationService {
     private static readonly logger = new Logger('ChannelAllocationService');
 
-    private readonly guildManager: GuildManager;
-    private readonly channelManager: ChannelManager;
-
     private readonly queue = new Map<GroupState, CreateChannel | DeleteChannel>();
 
     constructor(
         private readonly container: ModularChannelContainer,
         private readonly groupService: GroupService,
         private readonly namingService: ChannelNamingService,
-        discordClient: DiscordClient,
+        private readonly channelManager: ChannelManager,
+        private readonly guildManager: GuildManager,
     ) {
-        this.guildManager = discordClient.guilds;
-        this.channelManager = discordClient.channels;
     }
 
     reevaluate(groupState: GroupState): void {

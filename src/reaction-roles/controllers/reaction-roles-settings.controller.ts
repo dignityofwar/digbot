@@ -6,7 +6,6 @@ import {Command} from '../../commands/foundation/decorators/command.decorator';
 import {CommandRequest} from '../../commands/foundation/command.request';
 import {ChannelManager, Guild, Message, MessageEmbed, Role, TextChannel} from 'discord.js';
 import {LogService} from '../../log/log.service';
-import {DiscordClient} from '../../discord/foundation/discord.client';
 import {CommandException} from '../../commands/foundation/exceptions/command.exception';
 import {parseMentionArg} from '../../commands/foundation/utils/parse.helpers';
 import {channel, role} from '../../utils/discord.utils';
@@ -15,15 +14,12 @@ import {channel, role} from '../../utils/discord.utils';
 export class ReactionRolesSettingsController {
     private static readonly logger = new Logger('ReactionRolesSettings');
 
-    private readonly channelManager: ChannelManager;
-
     constructor(
         @InjectRepository(ReactionRole)
         private readonly roleRepository: Repository<ReactionRole>,
         private readonly logService: LogService,
-        discordClient: DiscordClient,
+        private readonly channelManager: ChannelManager,
     ) {
-        this.channelManager = discordClient.channels;
     }
 
     @Command({

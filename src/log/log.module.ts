@@ -1,13 +1,15 @@
 import {Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
-import {LogSettings} from './entities/log-settings.entity';
-import {LogService} from './log.service';
 import {DiscordModule} from '../discord/discord.module';
-import {LogSettingsController} from './log-settings.controller';
+import {LogService} from './log.service';
+import {LogSettingsController} from './controllers/log-settings.controller';
+import {LogSettings} from './entities/log-settings.entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([LogSettings]),
+        TypeOrmModule.forFeature([
+            LogSettings,
+        ]),
         DiscordModule,
     ],
     providers: [

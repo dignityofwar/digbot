@@ -8,7 +8,6 @@ import {ChannelManager, Guild, MessageEmbed, Role, TextChannel} from 'discord.js
 import {parseChannelArg, parseMentionArg} from '../../commands/foundation/utils/parse.helpers';
 import {CommandException} from '../../commands/foundation/exceptions/command.exception';
 import {LogService} from '../../log/log.service';
-import {DiscordClient} from '../../discord/foundation/discord.client';
 
 
 @Controller()
@@ -17,15 +16,12 @@ export class RoleSettingsController {
 
     private static readonly MAX_PREVIEW_LENGTH = 100;
 
-    private readonly channelManager: ChannelManager;
-
     constructor(
         @InjectRepository(RoleMessenger)
         private readonly roleRepository: Repository<RoleMessenger>,
         private readonly logService: LogService,
-        discordClient: DiscordClient,
+        private readonly channelManager: ChannelManager,
     ) {
-        this.channelManager = discordClient.channels;
     }
 
     @Command({
