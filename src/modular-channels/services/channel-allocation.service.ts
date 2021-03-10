@@ -107,6 +107,7 @@ export class ChannelAllocationService {
         const channel = await this.channelManager.fetch(nominated.channelId);
         await channel.delete(`MCS: Channel expired`);
 
+        this.container.removeChannel(nominated);
         this.groupService.deleteChannel(nominated.channel);
         this.queue.delete(groupState);
 
