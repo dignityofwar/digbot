@@ -3,8 +3,8 @@ import {Command} from './foundation/decorators/command.decorator';
 import {GuildSettingsService} from './foundation/services/guild-settings.service';
 import {CommandRequest} from './foundation/command.request';
 import {LogService} from '../log/log.service';
-import {ChannelManager, Guild, MessageEmbed, TextChannel} from 'discord.js';
-import {parseChannelArg} from './foundation/utils/parse.helpers';
+import {ChannelManager, Guild, MessageEmbed, Role, TextChannel} from 'discord.js';
+import {parseChannelArg, parseMentionArg} from './foundation/utils/parse.helpers';
 import {CommandException} from './foundation/exceptions/command.exception';
 
 @Controller()
@@ -78,6 +78,34 @@ export class CommandSettingsController {
             return new MessageEmbed().setDescription('Channel whitelisted');
         else
             return new MessageEmbed().setDescription('Channel removed from whitelist');
+    }
+
+    @Command({
+        adminOnly: true,
+        command: '!commands:role',
+        description: 'Make role admin, or remove admin status',
+    })
+    async toggleRole({args, guild}: CommandRequest) {
+        const [, roleArg] = args;
+
+        const role = await this.fetchRole(guild, roleArg);
+
+        if (await this.settingsService.toggleAdminRole(role))
+            return new MessageEmbed().setDescription('Role gained admin status');
+        else
+            return new MessageEmbed().setDescription('Role lost admin status');
+    }
+
+    private async fetchRole(guild: Guild, arg: string): Promise<Role> {
+        const roleId = parseMentionArg(arg);
+        if (roleId)
+            throw new CommandException(new MessageEmbed().setDescription('Unable to parse role'));
+
+        return guild.roles.fetch(roleId)
+            .catch((err) => {
+                CommandSettingsController.logger.warn(`Unable to fetch role "${roleId}": ${err}`);
+                throw new CommandException(new MessageEmbed().setDescription('Unable to find role'));
+            });
     }
 
     private async fetchChannel(guild: Guild, arg: string): Promise<TextChannel> {
