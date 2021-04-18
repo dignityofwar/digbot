@@ -1,6 +1,5 @@
 import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
-import {crashOnUnhandledRejection} from './utils/helper.utils';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
@@ -8,7 +7,10 @@ async function bootstrap() {
     });
 
     app.enableShutdownHooks();
-    crashOnUnhandledRejection();
+
+    process.on('unhandledRejection', (err) => {
+        throw err;
+    });
 
     await app.listen(3000);
 }

@@ -16,6 +16,10 @@ export class GroupState {
         return this.channelStates.filter((state) => !state.occupied);
     }
 
+    get guildId(): string {
+        return this.group.guildId;
+    }
+
     get parentId(): string | undefined {
         return this.group.parentId;
     }

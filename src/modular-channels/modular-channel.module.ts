@@ -8,7 +8,7 @@ import {ModularChannelContainer} from './modular-channel.container';
 import {GroupService} from './services/group.service';
 import {ChannelAllocationService} from './services/channel-allocation.service';
 import {ChannelNamingService} from './services/channel-naming.service';
-import {ChannelOrderService} from './services/channel-order.service';
+import {ChannelPositionService} from './services/channel-position.service';
 import {DiscordModule} from '../discord/discord.module';
 
 @Module({
@@ -23,7 +23,7 @@ import {DiscordModule} from '../discord/discord.module';
         GroupService,
         ChannelAllocationService,
         ChannelNamingService,
-        ChannelOrderService,
+        ChannelPositionService,
         ModularChannelContainer,
         ModularChannelService,
     ],

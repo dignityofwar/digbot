@@ -4,15 +4,17 @@ import {Group} from '../entities/group.entity';
 import {Injectable} from '@nestjs/common';
 import {Channel} from '../entities/channel.entity';
 import {remove} from '../../utils/array.utils';
+import EventEmitter from 'events';
 
 @Injectable()
-export class GroupService {
+export class GroupService extends EventEmitter {
     constructor(
         @InjectRepository(Group)
         private readonly groupRepository: Repository<Group>,
         @InjectRepository(Channel)
         private readonly channelRepository: Repository<Channel>,
     ) {
+        super();
     }
 
     async getAll(): Promise<Group[]> {

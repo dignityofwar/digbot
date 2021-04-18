@@ -7,9 +7,19 @@ import {remove} from '../utils/array.utils';
 export class ModularChannelContainer {
     private readonly channelIndex = new Map<string, ChannelState>();
     private readonly parentIndex = new Map<string, GroupState>();
+    private readonly rootIndex = new Map<string, GroupState>();
+    private readonly guildIndex = new Map<string, Set<GroupState>>();
+
+    fromGuild(id: string): GroupState[] {
+        return Array.from(this.guildIndex.get(id) ?? []);
+    }
 
     fromChannel(id: string): ChannelState | undefined {
         return this.channelIndex.get(id);
+    }
+
+    fromRootGuild(id: string): GroupState | undefined {
+        return this.rootIndex.get(id);
     }
 
     fromParent(id: string): GroupState | undefined {
@@ -22,6 +32,17 @@ export class ModularChannelContainer {
 
         if (group.parentId)
             this.parentIndex.set(group.parentId, group);
+        else
+            this.rootIndex.set(group.guildId, group);
+
+        let guildSet = this.guildIndex.get(group.guildId);
+
+        if (!guildSet) {
+            guildSet = new Set();
+            this.guildIndex.set(group.guildId, guildSet);
+        }
+
+        guildSet.add(group);
     }
 
     removeGroup(group: GroupState): void {
@@ -30,6 +51,13 @@ export class ModularChannelContainer {
 
         if (group.parentId)
             this.parentIndex.delete(group.parentId);
+        else
+            this.rootIndex.delete(group.guildId);
+
+        const guildSet = this.guildIndex.get(group.guildId);
+
+        if (guildSet)
+            guildSet.delete(group);
     }
 
     addChannel(channel: ChannelState): void {
