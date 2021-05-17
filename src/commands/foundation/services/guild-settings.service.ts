@@ -1,9 +1,9 @@
 import {Injectable} from '@nestjs/common';
 import {In, Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
-import {WhitelistedChannel} from '../entities/whitelisted-channel.entity';
+import {WhitelistedChannel} from '../models/whitelisted-channel.entity';
 import {Guild, GuildMember, Role, TextChannel} from 'discord.js';
-import {AdminRole} from '../entities/admin-role.entity';
+import {AdminRole} from '../models/admin-role.entity';
 
 @Injectable()
 export class GuildSettingsService {
