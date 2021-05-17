@@ -11,7 +11,7 @@ import {CommandException} from './exceptions/command.exception';
 export class CommandController {
     private static readonly logger = new Logger('CommandController');
 
-    private readonly devIds: string[] = process.env.DISCORD_DEV_IDS?.split(',');
+    private readonly devIds: string[] = process.env.DISCORD_DEV_IDS?.split(',') ?? [];
 
     constructor(
         private readonly repository: CommandContainer,

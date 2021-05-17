@@ -65,7 +65,7 @@ export class MessengerController {
 
     private formatMessage(message: string, member: GuildMember): string {
         return message
-            .replace(/(?<!\\)\$member/, member.toString)
+            .replace(/(?<!\\)\$member/, member.toString())
             .replace(/(?<!\\)\$name/, member.displayName);
     }
 }
