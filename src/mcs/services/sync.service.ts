@@ -49,13 +49,23 @@ export class SyncService {
             await Promise.all(
                 channels.map(async (channel) => {
                     try {
+                        const vc = await this.channelManager.fetch(channel.channelId) as VoiceChannel;
+
+                        if (vc.parent !== group.parent) {
+                            void this.channelRepository.remove(channel);
+
+                            return;
+                        }
+
                         group.channels.add(
                             new ChannelState(
                                 group,
-                                await this.channelManager.fetch(channel.channelId) as VoiceChannel,
+                                vc,
                             ));
                     } catch (err) {
-                        if (err.httpStatus !== 404)
+                        if (err.httpStatus === 404)
+                            void this.channelRepository.remove(channel);
+                        else
                             SyncService.logger.warn(`Error occurred when initializing channel "${channel.channelId}" for group "${settings.id}": ${err}`);
                     }
                 }));

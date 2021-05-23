@@ -34,6 +34,17 @@ export class McsService extends EventEmitter {
         }
     }
 
+    @On('channelUpdate')
+    onChannelUpdate(prev: VoiceChannel, channel: VoiceChannel): void {
+        if (channel instanceof VoiceChannel) {
+            const state = this.container.getChannel(channel);
+            if (!state) return;
+
+            if (channel.parent !== state.group.parent)
+                this.removeChannel(state);
+        }
+    }
+
     @On('channelDelete')
     onChannelDelete(channel: Channel): void {
         if (channel instanceof VoiceChannel) {
