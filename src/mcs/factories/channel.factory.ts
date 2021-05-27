@@ -17,17 +17,17 @@ export class ChannelFactory {
     }
 
     getName(group: Group): string {
-        return `${group.settings.name}${group.channels.size + 1}`;
+        return group.naming.forNewChannel(group);
     }
 
     getPosition(group: Group): number {
         return group.channels.size == 0
             ? group.settings.initPosition
             : Array.from(group.channels)
-            .reduce(
-                (position, {channel}) =>
-                    position < channel.rawPosition ? channel.rawPosition : position,
-                0,
-            );
+                .reduce(
+                    (position, {channel}) =>
+                        position < channel.rawPosition ? channel.rawPosition : position,
+                    0,
+                );
     }
 }

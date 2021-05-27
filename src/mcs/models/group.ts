@@ -1,6 +1,7 @@
 import {GroupSettings} from './group-settings.entity';
 import {ChannelState} from './channel.state';
 import {CategoryChannel, Guild} from 'discord.js';
+import {NamingContract} from './naming/concerns/naming.contract';
 
 export class Group {
     readonly channels = new Set<ChannelState>();
@@ -8,6 +9,7 @@ export class Group {
     constructor(
         public readonly settings: GroupSettings,
         public readonly guild: Guild,
+        public readonly naming: NamingContract,
         public readonly parent?: CategoryChannel,
     ) {
     }

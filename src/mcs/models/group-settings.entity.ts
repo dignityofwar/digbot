@@ -1,5 +1,10 @@
 import {Column, Entity, Index, PrimaryGeneratedColumn} from 'typeorm';
 
+export enum NamingPolicy {
+    NUMBERED = 'numbered',
+    PRESENCE = 'precence'
+}
+
 @Entity('mcs_group_settings')
 export class GroupSettings {
     @PrimaryGeneratedColumn()
@@ -17,6 +22,13 @@ export class GroupSettings {
 
     @Column()
     name: string;
+
+    @Column({
+        type: 'enum',
+        enum: NamingPolicy,
+        default: NamingPolicy.NUMBERED,
+    })
+    namingPolicy: NamingPolicy;
 
     @Column()
     minFreeChannels: number;

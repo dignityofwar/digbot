@@ -9,6 +9,9 @@ import {ChannelFactory} from './factories/channel.factory';
 import {GroupFactory} from './factories/group.factory';
 import {AllocationService} from './services/allocation.service';
 import {DiscordModule} from '../discord/discord.module';
+import {NumberedNaming} from './models/naming/numbered.naming';
+import {PresenceNaming} from './models/naming/presence.naming';
+import {NamingService} from './services/naming.service';
 
 @Module({
     imports: [
@@ -24,7 +27,10 @@ import {DiscordModule} from '../discord/discord.module';
         ChannelFactory,
         GroupFactory,
         AllocationService,
+        NamingService,
         SyncService,
+        NumberedNaming,
+        PresenceNaming,
     ],
 })
 export class McsModule implements OnApplicationBootstrap {
