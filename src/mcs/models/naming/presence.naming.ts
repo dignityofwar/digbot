@@ -9,7 +9,7 @@ export class PresenceNaming extends NumberedNaming implements NamingContract {
         return this.getPresenceName(state) ?? super.forChannel(state);
     }
 
-    private getPresenceName(state: ChannelState): string | undefined {
+    private getPresenceName(state: ChannelState): string | null {
         // TODO: Normalize?
         return state.owner.presence.activities[0]?.name;
     }

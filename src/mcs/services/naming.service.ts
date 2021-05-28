@@ -53,7 +53,7 @@ export class NamingService {
 
             const name = (state.group.naming as NamingOnJoinContract).forChannelOnJoin(state);
 
-            if (state.channel.name == name) return;
+            if (!name || state.channel.name == name) return;
 
             this.queued.set(
                 state,

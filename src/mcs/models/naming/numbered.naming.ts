@@ -17,7 +17,7 @@ export class NumberedNaming implements NamingContract {
     forNewChannel(group: Group): string {
         return this.makeName(
             group,
-            group.channels.size + 1,
+            group.allChannels + 1,
         );
     }
 
