@@ -6,15 +6,11 @@ import {Injectable} from '@nestjs/common';
 @Injectable()
 export class NumberedNaming implements NamingContract {
     forChannel(state: ChannelState): string {
-        const first = Array.from(state.group.channels)
-            .reduce((a, b) =>
-                a.channel.rawPosition >= b.channel.rawPosition
-                && a.channel.position > b.channel.position
-                    ? b : a);
+        const first = state.group.firstChannel();
 
         return this.makeName(
             state.group,
-            state.channel.position - first.channel.position + 1,
+            first ? (state.channel.position - first.channel.position + 1) : 1,
         );
     }
 
@@ -23,6 +19,10 @@ export class NumberedNaming implements NamingContract {
             group,
             group.channels.size + 1,
         );
+    }
+
+    hasCustomName(state: ChannelState): boolean {
+        return !state.channel.name.startsWith(state.group.settings.name);
     }
 
     private makeName(group: Group, no: number): string {

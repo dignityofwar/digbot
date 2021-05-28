@@ -2,15 +2,16 @@ import {GuildMember, VoiceChannel} from 'discord.js';
 import {Group} from './group';
 
 export class ChannelState {
-    public canBeRenamed: boolean;
+    public hasCustomName = false;
 
-    public owner?: GuildMember;
+    public canBeRenamed = true;
+
+    public owner?: GuildMember = null;
 
     constructor(
         public readonly group: Group,
         public readonly channel: VoiceChannel,
     ) {
-        this.canBeRenamed = channel.members.size == 0;
     }
 
     get channelId(): string {

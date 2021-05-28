@@ -48,7 +48,7 @@ export class AllocationService {
 
     evaluateTare(group: Group): number {
         return Math.max(
-            group.channels.size - group.settings.maxChannels,
+            group.allChannels - group.settings.maxChannels,
             group.emptyChannels - group.settings.minFreeChannels,
         );
     }

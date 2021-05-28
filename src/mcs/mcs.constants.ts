@@ -4,4 +4,5 @@ export enum McsEvents {
     GROUP_OCCUPATION_CHANGE = 'groupOccupationChange',
     CHANNEL_ADDED = 'channelAdded',
     CHANNEL_REMOVED = 'channelRemoved',
+    CHANNEL_UPDATE = 'channelUpdate',
 }

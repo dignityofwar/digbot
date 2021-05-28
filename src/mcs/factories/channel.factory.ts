@@ -21,13 +21,6 @@ export class ChannelFactory {
     }
 
     getPosition(group: Group): number {
-        return group.channels.size == 0
-            ? group.settings.initPosition
-            : Array.from(group.channels)
-                .reduce(
-                    (position, {channel}) =>
-                        position < channel.rawPosition ? channel.rawPosition : position,
-                    0,
-                );
+        return group.lastChannel()?.channel.rawPosition ?? group.settings.initPosition;
     }
 }

@@ -42,6 +42,8 @@ export class McsService extends EventEmitter {
 
             if (channel.parent !== state.group.parent)
                 this.removeChannel(state);
+            else
+                this.emit(McsEvents.CHANNEL_UPDATE, state, prev);
         }
     }
 

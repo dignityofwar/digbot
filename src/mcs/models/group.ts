@@ -18,9 +18,47 @@ export class Group {
         return this.settings.id;
     }
 
+    get allChannels(): number {
+        return this.channels.size;
+    }
+
     get emptyChannels(): number {
         return Array.from(this.channels)
             .filter(({channel}) => channel.members.size === 0)
             .length;
+    }
+
+    firstChannel(exclude?: ChannelState): ChannelState | null {
+        return this.channels.size > 0
+            ? Array.from(this.channels)
+                .filter((state) => state != exclude)
+                .reduce(
+                    (a, b) =>
+                        (
+                            a.channel.rawPosition == b.channel.rawPosition
+                                ? a.channel.position < b.channel.position
+                                : a.channel.rawPosition < b.channel.rawPosition
+                        )
+                            ? a
+                            : b,
+                )
+            : null;
+    }
+
+    lastChannel(exclude?: ChannelState): ChannelState | null {
+        return this.channels.size > 0
+            ? Array.from(this.channels)
+                .filter((state) => state != exclude)
+                .reduce(
+                    (a, b) =>
+                        (
+                            a.channel.rawPosition == b.channel.rawPosition
+                                ? a.channel.position > b.channel.position
+                                : a.channel.rawPosition > b.channel.rawPosition
+                        )
+                            ? a
+                            : b,
+                )
+            : null;
     }
 }
