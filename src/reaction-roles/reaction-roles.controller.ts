@@ -27,16 +27,18 @@ export class ReactionRolesController {
 
         try {
             const guild = await this.guildManager.fetch(reactionRole.guildId);
-            const member = await guild.member(user_id);
+            const member = await guild.members.fetch(user_id);
             const role = await guild.roles.fetch(reactionRole.roleId);
 
             await member.roles.add(role);
 
-            await member.send(
-                new MessageEmbed()
-                    .setTitle('Role Added')
-                    .setDescription(`You assigned the \`${role.name}\` by reacting in ${guild.name}`),
-            );
+            await member.send({
+                embeds: [
+                    new MessageEmbed()
+                        .setTitle('Role Added')
+                        .setDescription(`You assigned the \`${role.name}\` by reacting in ${guild.name}`),
+                ],
+            });
         } catch (err) {
             ReactionRolesController.logger.warn(`Unable to assign role "${reactionRole.id}": ${err}`);
         }
@@ -53,16 +55,18 @@ export class ReactionRolesController {
 
         try {
             const guild = await this.guildManager.fetch(reactionRole.guildId);
-            const member = await guild.member(user_id);
+            const member = await guild.members.fetch(user_id);
             const role = await guild.roles.fetch(reactionRole.roleId);
 
             await member.roles.remove(role);
 
-            await member.send(
-                new MessageEmbed()
+            await member.send({
+                embeds: [
+                    new MessageEmbed()
                     .setTitle('Role Removed')
                     .setDescription(`You removed the \`${role.name}\` by unreacting in ${guild.name}`),
-            );
+                ],
+            });
         } catch (err) {
             ReactionRolesController.logger.warn(`Unable to remove role "${reactionRole.id}": ${err}`);
         }

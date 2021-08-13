@@ -16,6 +16,7 @@ import {DiscoveryModule} from '@nestjs/core';
             provide: DiscordClient,
             useFactory: () => new DiscordClient({
                 token: process.env.DISCORD_TOKEN,
+                intents: 14151,
             }),
         }, {
             provide: ChannelManager,

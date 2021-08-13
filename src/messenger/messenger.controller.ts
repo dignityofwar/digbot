@@ -51,11 +51,13 @@ export class MessengerController {
 
                     channel.send(this.formatMessage(action.message, member));
                 } else {
-                    await member.send(
-                        new MessageEmbed()
-                            .setTitle(`Message from ${member.guild.name}`)
-                            .setDescription(this.formatMessage(action.message, member)),
-                    );
+                    await member.send({
+                        embeds: [
+                            new MessageEmbed()
+                                .setTitle(`Message from ${member.guild.name}`)
+                                .setDescription(this.formatMessage(action.message, member)),
+                        ],
+                    });
                 }
             } catch (err) {
                 MessengerController.logger.warn(`Unable to perform action "${action.id}" for member "${member.id}": ${err}`);

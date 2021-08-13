@@ -1,6 +1,7 @@
-import {HttpService, Injectable} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {ImageSearchOptions} from './interfaces/images/search.options';
 import {ImageSchema} from './interfaces/images/image.schema';
+import {HttpService} from '@nestjs/axios';
 
 @Injectable()
 export class TheCatApiService {

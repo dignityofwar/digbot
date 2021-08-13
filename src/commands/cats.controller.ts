@@ -42,8 +42,12 @@ export class CatsController {
     }
 
     private createEmbed(url: string) {
-        return new MessageEmbed({
-            image: {url},
-        });
+        return {
+            embeds: [
+                new MessageEmbed({
+                    image: {url},
+                }),
+            ],
+        };
     }
 }

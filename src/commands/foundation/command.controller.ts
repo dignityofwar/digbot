@@ -19,9 +19,9 @@ export class CommandController {
     ) {
     }
 
-    @On('message')
+    @On('messageCreate')
     async message(message: Message) {
-        if (message.author.bot || message.channel.type !== 'text') return;
+        if (message.author.bot || message.channel.type !== 'GUILD_TEXT') return;
 
         const lexer = new ArgumentLexer(message.cleanContent);
         const commandName = lexer.next();
@@ -38,15 +38,19 @@ export class CommandController {
             try {
                 const response = await command.handler(request);
 
-                if (typeof response == 'string' || response instanceof MessageEmbed)
+                if (typeof response == 'string')
                     await message.channel.send(response);
+                else if (response instanceof MessageEmbed)
+                    await message.channel.send({
+                        embeds: [response],
+                    });
                 else if (response)
                     CommandController.logger.warn(`Command "${command.command}" returned unexpected object of type "${typeof response}"`);
             } catch (err) {
                 await message.channel.send(
                     err instanceof CommandException
-                        ? err.response
-                        : new MessageEmbed().setColor('RED').setDescription('Unexpected failure'),
+                        ? err.response instanceof MessageEmbed ? {embeds: [err.response]} : err.response
+                        : {embeds: [new MessageEmbed().setColor('RED').setDescription('Unexpected failure')]},
                 );
 
                 if (!(err instanceof CommandException))
@@ -59,7 +63,7 @@ export class CommandController {
         if (this.devIds.includes(member.id))
             return true;
 
-        if (member.hasPermission(Permissions.FLAGS.ADMINISTRATOR))
+        if (member.permissions.has(Permissions.FLAGS.ADMINISTRATOR))
             return true;
 
         return this.settingsService.hasAdminRole(member);
