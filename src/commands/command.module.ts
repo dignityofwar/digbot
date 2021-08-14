@@ -1,7 +1,6 @@
 import {Module} from '@nestjs/common';
 import {TheCatApiModule} from '../apis/thecatapi/thecatapi.module';
 import {CatsController} from './cats.controller';
-import {DragonsController} from './dragons.controller';
 import {CommandCoreModule} from './foundation/command-core.module';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {Dragons} from './dragons/dragons.entity';
@@ -16,7 +15,6 @@ import {Dragons} from './dragons/dragons.entity';
     ],
     controllers: [
         CatsController,
-        DragonsController,
     ],
 })
 export class CommandModule {

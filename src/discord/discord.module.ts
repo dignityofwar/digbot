@@ -4,6 +4,8 @@ import {DiscordClient} from './discord.client';
 import {Module} from '@nestjs/common';
 import {ChannelManager, GuildManager} from 'discord.js';
 import {DiscoveryModule} from '@nestjs/core';
+import {REST} from '@discordjs/rest';
+import {discordConfig} from '../config/discord.config';
 
 @Module({
     imports: [
@@ -15,7 +17,7 @@ import {DiscoveryModule} from '@nestjs/core';
         {
             provide: DiscordClient,
             useFactory: () => new DiscordClient({
-                token: process.env.DISCORD_TOKEN,
+                token: discordConfig.token,
                 intents: 14151,
             }),
         }, {
@@ -27,11 +29,17 @@ import {DiscoveryModule} from '@nestjs/core';
             useFactory: (client: DiscordClient) => client.guilds,
             inject: [DiscordClient],
         },
+        {
+            provide: REST,
+            useFactory: () => new REST({version: '9'})
+                .setToken(discordConfig.token),
+        },
     ],
     exports: [
         DiscordClient,
         ChannelManager,
         GuildManager,
+        REST,
     ],
 })
 export class DiscordModule {

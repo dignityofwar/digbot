@@ -1,8 +1,13 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
+
 import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
 import {Logger} from '@nestjs/common';
 
-async function bootstrap() {
+(async function bootstrap() {
+    const logger = new Logger('App');
+
     process
         .on('uncaughtException', (err) => {
             logger.error(err.message, err.stack);
@@ -21,11 +26,7 @@ async function bootstrap() {
             : ['error', 'warn', 'log', 'debug'],
     });
 
-    const logger = new Logger('App');
-
     app.enableShutdownHooks();
 
     await app.listen(3000);
-}
-
-void bootstrap();
+})();

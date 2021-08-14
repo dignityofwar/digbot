@@ -1,8 +1,7 @@
 import {Controller} from '@nestjs/common';
 import {Command} from './foundation/decorators/command.decorator';
 import {TheCatApiService} from '../apis/thecatapi/thecatapi.service';
-import {MessageEmbed} from 'discord.js';
-import {CommandRequest} from './foundation/command.request';
+import {CommandInteraction, Message, MessageEmbed} from 'discord.js';
 
 @Controller()
 export class CatsController {
@@ -12,42 +11,38 @@ export class CatsController {
     }
 
     @Command({
-        command: '!cats',
+        command: 'cats',
         description: 'Shows a random image of cats',
     })
-    cats({message}: CommandRequest): void {
-        this.theCatApi.imagesSearch({
-            limit: 1,
-            mime_types: ['jpg', 'png'],
-        })
-            .subscribe(async ({data}) => {
-                const reply = await message.channel.send(this.createEmbed(data[0].url));
-                await reply.react('❤');
-            });
+    cats(interaction: CommandInteraction): void {
+        this.runCommand(interaction, false);
     }
 
     @Command({
-        command: '!cats:gif',
+        command: 'catsgif',
         description: 'Shows a random gif of cats',
     })
-    catsGif({message}: CommandRequest) {
-        this.theCatApi.imagesSearch({
-            limit: 1,
-            mime_types: ['gif'],
-        })
-            .subscribe(async ({data}) => {
-                const reply = await message.channel.send(this.createEmbed(data[0].url));
-                await reply.react('❤');
-            });
+    catsGif(interaction: CommandInteraction) {
+        this.runCommand(interaction, true);
     }
 
-    private createEmbed(url: string) {
-        return {
-            embeds: [
-                new MessageEmbed({
-                    image: {url},
-                }),
-            ],
-        };
+    private runCommand(interaction: CommandInteraction, gif: boolean) {
+        this.theCatApi.imagesSearch({
+            limit: 1,
+            mime_types: gif ? ['gif'] : ['jpg', 'png'],
+        })
+            .subscribe(async ({data}) => {
+                const reply = await interaction.reply(
+                    {
+                        embeds: [
+                            new MessageEmbed()
+                                .setImage(data[0].url),
+                        ],
+                        fetchReply: true,
+                    });
+
+                if (reply instanceof Message)
+                    await reply.react('❤');
+            });
     }
 }

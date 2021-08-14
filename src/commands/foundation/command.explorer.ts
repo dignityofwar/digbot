@@ -1,11 +1,11 @@
 import {DiscoveryService, MetadataScanner} from '@nestjs/core';
-import {Injectable, Logger, OnModuleInit} from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import {MetadataAccessor} from './helpers/metadata.accessor';
 import {CommandContainer} from './command.container';
 import {CommandDecoratorOptions} from './decorators/interfaces/commanddecorator.options';
 
 @Injectable()
-export class CommandExplorer implements OnModuleInit {
+export class CommandExplorer {
     private static readonly logger = new Logger('CommandExplorer');
 
     constructor(
@@ -14,10 +14,6 @@ export class CommandExplorer implements OnModuleInit {
         private readonly metadataAccessor: MetadataAccessor,
         private readonly commandContainer: CommandContainer,
     ) {
-    }
-
-    onModuleInit(): void {
-        this.explore();
     }
 
     explore(): void {
