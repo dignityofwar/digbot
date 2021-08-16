@@ -10,6 +10,10 @@ import {PrismaClient} from '@prisma/client';
             useClass: PrismaService,
         },
     ],
+    exports: [
+        PrismaService,
+        PrismaClient,
+    ],
 })
 export class DatabaseModule {
 }
