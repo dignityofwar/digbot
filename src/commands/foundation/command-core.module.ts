@@ -36,7 +36,6 @@ export class CommandCoreModule implements OnModuleInit {
     async onModuleInit(): Promise<void> {
         this.explorer.explore();
 
-
         try {
             await this.rest.put(
                 Routes.applicationCommands(discordConfig.clientId),

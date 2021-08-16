@@ -1,5 +1,5 @@
 import {Controller, Logger} from '@nestjs/common';
-import {CommandInteraction, GuildMember, Interaction, MessageEmbed} from 'discord.js';
+import {CommandInteraction, Interaction, MessageEmbed} from 'discord.js';
 import {On} from '../../discord/decorators/on.decorator';
 import {CommandContainer} from './command.container';
 import {CommandException} from './exceptions/command.exception';
@@ -15,7 +15,7 @@ export class CommandController {
 
     @On('interactionCreate')
     async message(interaction: Interaction) {
-        if (!interaction.isCommand() || !(interaction.member instanceof GuildMember)) return;
+        if (!interaction.isCommand()) return;
 
         const command = this.repository.get(interaction.commandName);
 
