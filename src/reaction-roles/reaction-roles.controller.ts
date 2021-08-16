@@ -1,17 +1,14 @@
 import {Controller, Logger} from '@nestjs/common';
-import {Repository} from 'typeorm';
-import {ReactionRole} from './models/reaction-role.entity';
-import {InjectRepository} from '@nestjs/typeorm';
 import {GuildManager, MessageEmbed} from 'discord.js';
 import {On} from '../discord/decorators/on.decorator';
+import {SettingsService} from './settings.service';
 
 @Controller()
 export class ReactionRolesController {
     private static readonly logger = new Logger('ReactionRolesController');
 
     constructor(
-        @InjectRepository(ReactionRole)
-        private readonly roleRepository: Repository<ReactionRole>,
+        private readonly settings: SettingsService,
         private readonly guildManager: GuildManager,
     ) {
     }
@@ -20,9 +17,12 @@ export class ReactionRolesController {
     async reactionAdded(packet: any) {
         if (packet.t !== 'MESSAGE_REACTION_ADD') return;
 
+        // TODO: Add ratelimiter
+
+
         const {user_id, message_id, emoji} = packet.d;
 
-        const reactionRole = await this.roleRepository.findOne({messageId: message_id, emoji: emoji.name});
+        const reactionRole = await this.settings.getRole(message_id, emoji.name);
         if (!reactionRole) return;
 
         try {
@@ -48,9 +48,11 @@ export class ReactionRolesController {
     async reactionRemoved(packet: any) {
         if (packet.t !== 'MESSAGE_REACTION_REMOVE') return;
 
+        // TODO: Add ratelimiter
+
         const {user_id, message_id, emoji} = packet.d;
 
-        const reactionRole = await this.roleRepository.findOne({messageId: message_id, emoji: emoji.name});
+        const reactionRole = await this.settings.getRole(message_id, emoji.name);
         if (!reactionRole) return;
 
         try {
@@ -63,8 +65,8 @@ export class ReactionRolesController {
             await member.send({
                 embeds: [
                     new MessageEmbed()
-                    .setTitle('Role Removed')
-                    .setDescription(`You removed the \`${role.name}\` by unreacting in ${guild.name}`),
+                        .setTitle('Role Removed')
+                        .setDescription(`You removed the \`${role.name}\` by unreacting in ${guild.name}`),
                 ],
             });
         } catch (err) {

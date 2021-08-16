@@ -4,6 +4,7 @@ require('dotenv').config();
 import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
 import {Logger} from '@nestjs/common';
+import {loggerConfig} from './config/logger.config';
 
 (async function bootstrap() {
     const logger = new Logger('App');
@@ -21,9 +22,7 @@ import {Logger} from '@nestjs/common';
         });
 
     const app = await NestFactory.create(AppModule, {
-        logger: process.env.NODE_ENV === 'production'
-            ? ['error', 'warn', 'log']
-            : ['error', 'warn', 'log', 'debug'],
+        logger: loggerConfig.levels,
     });
 
     app.enableShutdownHooks();

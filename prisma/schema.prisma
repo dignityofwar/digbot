@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model messenger_join {
+  id        Int      @id @default(autoincrement())
+  guildId   String   @db.VarChar(255)
+  channelId String?  @db.VarChar(255)
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, channelId], name: "guild_channel_unique")
+  @@index([guildId], name: "guild_index")
+}
+
+model messenger_role {
+  id        Int      @id @default(autoincrement())
+  guildId   String   @db.VarChar(255)
+  roleId    String   @db.VarChar(255)
+  channelId String?  @db.VarChar(255)
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+
+
+  @@unique([roleId, channelId], name: "role_channel_unique")
+  @@index([roleId], name: "role_index")
+  @@index([guildId], name: "guild_index")
+}
+
+model messenger_boost {
+  id        Int      @id @default(autoincrement())
+  guildId   String   @db.VarChar(255)
+  channelId String?  @db.VarChar(255)
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, channelId], name: "guild_channel_unique")
+  @@index([guildId], name: "guild_index")
+}
+
+model rr_role {
+  id        Int      @id @default(autoincrement())
+  guildId   String   @db.VarChar(255)
+  channelId String   @db.VarChar(255)
+  messageId String   @db.VarChar(255)
+  emoji     String   @db.VarChar(255)
+  roleId    String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+
+  @@unique([messageId, emoji], name: "message_emoji_unique")
+  @@index([roleId], name: "role_index")
+  @@index([guildId], name: "guild_index")
+  @@index([channelId], name: "channel_index")
+  @@index([messageId], name: "message_index")
+}
+
+enum mcs_group_settings_namingPolicy {
+  numbered
+  presence
+}

@@ -10,3 +10,7 @@ export function envRequired(key: string): string {
 
     return process.env[key];
 }
+
+export function envMap<T>(key: string, map: (val?: string) => T): T {
+    return map(process.env[key]);
+}

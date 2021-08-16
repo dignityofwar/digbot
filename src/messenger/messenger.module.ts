@@ -1,17 +1,12 @@
 import {Module} from '@nestjs/common';
-import {TypeOrmModule} from '@nestjs/typeorm';
-import {RoleMessenger} from './models/role-messenger.entity';
-import {JoinMessenger} from './models/join-messenger.entity';
 import {MessengerController} from './messenger.controller';
 import {DiscordModule} from '../discord/discord.module';
+import {SettingsService} from './settings.service';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([
-            RoleMessenger,
-            JoinMessenger,
-        ]),
         DiscordModule,
+        SettingsService,
     ],
     controllers: [
         MessengerController,
