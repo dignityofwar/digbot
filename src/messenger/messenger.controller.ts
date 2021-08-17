@@ -2,7 +2,7 @@ import {Controller, Logger} from '@nestjs/common';
 import {On} from '../discord/decorators/on.decorator';
 import {ChannelManager, GuildMember, MessageEmbed, TextChannel} from 'discord.js';
 import {SettingsService} from './settings.service';
-import {messenger_boost, messenger_join, messenger_role} from '@prisma/client';
+import {MessengerBoost, MessengerJoin, MessengerRole} from '@prisma/client';
 
 @Controller()
 export class MessengerController {
@@ -53,7 +53,7 @@ export class MessengerController {
         messages.forEach(message => this.message(member, message));
     }
 
-    private async message(member: GuildMember, message: messenger_role | messenger_join | messenger_boost): Promise<void> {
+    private async message(member: GuildMember, message: MessengerRole | MessengerJoin | MessengerBoost): Promise<void> {
         try {
             if (message.channelId) {
                 const channel = await this.channelManager.fetch(message.channelId) as TextChannel;

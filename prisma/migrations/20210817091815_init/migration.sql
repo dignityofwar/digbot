@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE `messenger_join` (
+CREATE TABLE `MessengerJoin` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `guildId` VARCHAR(255) NOT NULL,
     `channelId` VARCHAR(255),
@@ -12,7 +12,7 @@ CREATE TABLE `messenger_join` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `messenger_role` (
+CREATE TABLE `MessengerRole` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `guildId` VARCHAR(255) NOT NULL,
     `roleId` VARCHAR(255) NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE `messenger_role` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `messenger_boost` (
+CREATE TABLE `MessengerBoost` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `guildId` VARCHAR(255) NOT NULL,
     `channelId` VARCHAR(255),
@@ -40,13 +40,14 @@ CREATE TABLE `messenger_boost` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `rr_role` (
+CREATE TABLE `ReactionRole` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `guildId` VARCHAR(255) NOT NULL,
     `channelId` VARCHAR(255) NOT NULL,
     `messageId` VARCHAR(255) NOT NULL,
     `emoji` VARCHAR(255) NOT NULL,
     `roleId` VARCHAR(255) NOT NULL,
+    `joinId` INTEGER,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     INDEX `role_index`(`roleId`),
@@ -56,3 +57,21 @@ CREATE TABLE `rr_role` (
     UNIQUE INDEX `message_emoji_unique`(`messageId`, `emoji`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `ReactionRoleJoin` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `emoji` VARCHAR(255) NOT NULL,
+    `roleId` VARCHAR(255) NOT NULL,
+    `messengerId` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    UNIQUE INDEX `messenger_emoji_unique`(`messengerId`, `emoji`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `ReactionRole` ADD FOREIGN KEY (`joinId`) REFERENCES `ReactionRoleJoin`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ReactionRoleJoin` ADD FOREIGN KEY (`messengerId`) REFERENCES `MessengerJoin`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

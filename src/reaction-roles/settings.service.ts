@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {PrismaClient, rr_role} from '@prisma/client';
+import {PrismaClient, ReactionRole} from '@prisma/client';
 
 @Injectable()
 export class SettingsService {
@@ -8,8 +8,8 @@ export class SettingsService {
     ) {
     }
 
-    getRole(messageId: string, emoji: string): Promise<rr_role> {
-        return this.prisma.rr_role.findFirst({
+    getRole(messageId: string, emoji: string): Promise<ReactionRole> {
+        return this.prisma.reactionRole.findFirst({
             where: {
                 messageId,
                 emoji,

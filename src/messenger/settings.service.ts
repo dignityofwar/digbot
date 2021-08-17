@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {messenger_boost, messenger_join, messenger_role, PrismaClient} from '@prisma/client';
+import {MessengerBoost, MessengerJoin, MessengerRole, PrismaClient} from '@prisma/client';
 
 @Injectable()
 export class SettingsService {
@@ -8,24 +8,24 @@ export class SettingsService {
     ) {
     }
 
-    getRoleMessagesByRoles(roleIds: string[]): Promise<messenger_role[]> {
-        return this.prisma.messenger_role.findMany({
+    getRoleMessagesByRoles(roleIds: string[]): Promise<MessengerRole[]> {
+        return this.prisma.messengerRole.findMany({
             where: {
                 roleId: {in: roleIds},
             },
         });
     }
 
-    getJoinMessagesByGuild(guildId: string): Promise<messenger_join[]> {
-        return this.prisma.messenger_join.findMany({
+    getJoinMessagesByGuild(guildId: string): Promise<MessengerJoin[]> {
+        return this.prisma.messengerJoin.findMany({
             where: {
                 guildId,
             },
         });
     }
 
-    getBoostMessagesByGuild(guildId: string): Promise<messenger_boost[]> {
-        return this.prisma.messenger_boost.findMany({
+    getBoostMessagesByGuild(guildId: string): Promise<MessengerBoost[]> {
+        return this.prisma.messengerBoost.findMany({
             where: {
                 guildId,
             },

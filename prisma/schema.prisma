@@ -7,18 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model messenger_join {
+model MessengerJoin {
   id        Int      @id @default(autoincrement())
   guildId   String   @db.VarChar(255)
   channelId String?  @db.VarChar(255)
   message   String   @db.Text
   createdAt DateTime @default(now())
 
+  reactionRoles ReactionRoleJoin[]
+
   @@unique([guildId, channelId], name: "guild_channel_unique")
   @@index([guildId], name: "guild_index")
 }
 
-model messenger_role {
+model MessengerRole {
   id        Int      @id @default(autoincrement())
   guildId   String   @db.VarChar(255)
   roleId    String   @db.VarChar(255)
@@ -32,7 +34,7 @@ model messenger_role {
   @@index([guildId], name: "guild_index")
 }
 
-model messenger_boost {
+model MessengerBoost {
   id        Int      @id @default(autoincrement())
   guildId   String   @db.VarChar(255)
   channelId String?  @db.VarChar(255)
@@ -43,20 +45,36 @@ model messenger_boost {
   @@index([guildId], name: "guild_index")
 }
 
-model rr_role {
+model ReactionRole {
   id        Int      @id @default(autoincrement())
   guildId   String   @db.VarChar(255)
   channelId String   @db.VarChar(255)
   messageId String   @db.VarChar(255)
   emoji     String   @db.VarChar(255)
   roleId    String   @db.VarChar(255)
+  joinId    Int?
   createdAt DateTime @default(now())
+
+  join ReactionRoleJoin? @relation(fields: [joinId], references: [id])
 
   @@unique([messageId, emoji], name: "message_emoji_unique")
   @@index([roleId], name: "role_index")
   @@index([guildId], name: "guild_index")
   @@index([channelId], name: "channel_index")
   @@index([messageId], name: "message_index")
+}
+
+model ReactionRoleJoin {
+  id          Int      @id @default(autoincrement())
+  emoji       String   @db.VarChar(255)
+  roleId      String   @db.VarChar(255)
+  messengerId Int
+  createdAt   DateTime @default(now())
+
+  messenger     MessengerJoin  @relation(fields: [messengerId], references: [id])
+  reactionRoles ReactionRole[]
+
+  @@unique([messengerId, emoji], name: "messenger_emoji_unique")
 }
 
 enum mcs_group_settings_namingPolicy {
