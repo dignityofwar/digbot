@@ -1,7 +1,13 @@
 import {Controller, Logger} from '@nestjs/common';
-import {GuildManager, MessageEmbed} from 'discord.js';
 import {On} from '../discord/decorators/on.decorator';
 import {SettingsService} from './settings.service';
+import {ClusterClient, GatewayClientEvents} from 'detritus-client';
+import {Client as RestClient} from 'detritus-client-rest';
+import {timestampRelative} from '../utils/discord.utils';
+import MessageReactionAdd = GatewayClientEvents.MessageReactionAdd;
+import MessageReactionRemove = GatewayClientEvents.MessageReactionRemove;
+import GuildMemberAdd = GatewayClientEvents.GuildMemberAdd;
+import ClusterEvent = GatewayClientEvents.ClusterEvent;
 
 @Controller()
 export class ReactionRolesController {
@@ -9,68 +15,87 @@ export class ReactionRolesController {
 
     constructor(
         private readonly settings: SettingsService,
-        private readonly guildManager: GuildManager,
+        private readonly client: ClusterClient,
+        private readonly rest: RestClient,
     ) {
     }
 
-    @On('raw')
-    async reactionAdded(packet: any) {
-        if (packet.t !== 'MESSAGE_REACTION_ADD') return;
-
-        // TODO: Add ratelimiter
-
-
-        const {user_id, message_id, emoji} = packet.d;
-
-        const reactionRole = await this.settings.getRole(message_id, emoji.name);
+    @On('messageReactionAdd')
+    async reactionAdded({userId, messageId, reaction: {emoji}}: MessageReactionAdd) {
+        const reactionRole = await this.settings.getRole(messageId, emoji.name, emoji.id);
         if (!reactionRole) return;
 
+        const {guildId, roleId} = reactionRole;
+
         try {
-            const guild = await this.guildManager.fetch(reactionRole.guildId);
-            const member = await guild.members.fetch(user_id);
-            const role = await guild.roles.fetch(reactionRole.roleId);
-
-            await member.roles.add(role);
-
-            await member.send({
-                embeds: [
-                    new MessageEmbed()
-                        .setTitle('Role Added')
-                        .setDescription(`You assigned the \`${role.name}\` by reacting in ${guild.name}`),
-                ],
-            });
+            await this.rest.addGuildMemberRole(guildId, userId, roleId, {reason: 'ReactionRole'});
         } catch (err) {
             ReactionRolesController.logger.warn(`Unable to assign role "${reactionRole.id}": ${err}`);
         }
     }
 
-    @On('raw')
-    async reactionRemoved(packet: any) {
-        if (packet.t !== 'MESSAGE_REACTION_REMOVE') return;
-
-        // TODO: Add ratelimiter
-
-        const {user_id, message_id, emoji} = packet.d;
-
-        const reactionRole = await this.settings.getRole(message_id, emoji.name);
+    @On('messageReactionRemove')
+    async reactionRemoved({userId, messageId, reaction: {emoji}}: MessageReactionRemove) {
+        const reactionRole = await this.settings.getRole(messageId, emoji.name, emoji.id);
         if (!reactionRole) return;
 
+        const {guildId, roleId} = reactionRole;
+
         try {
-            const guild = await this.guildManager.fetch(reactionRole.guildId);
-            const member = await guild.members.fetch(user_id);
-            const role = await guild.roles.fetch(reactionRole.roleId);
-
-            await member.roles.remove(role);
-
-            await member.send({
-                embeds: [
-                    new MessageEmbed()
-                        .setTitle('Role Removed')
-                        .setDescription(`You removed the \`${role.name}\` by unreacting in ${guild.name}`),
-                ],
-            });
+            await this.rest.removeGuildMemberRole(guildId, userId, roleId, {reason: `ReactionRole`});
         } catch (err) {
             ReactionRolesController.logger.warn(`Unable to remove role "${reactionRole.id}": ${err}`);
         }
+    }
+
+    @On('guildMemberAdd')
+    async guildMemberAdd({member, guildId, shard}: GuildMemberAdd & ClusterEvent) {
+        const [roles, settings] = await Promise.all([
+            this.settings.getJoinRoles(guildId),
+            this.settings.getJoinSettings(guildId),
+        ]);
+        if (roles.length == 0) return;
+
+        const {description, expireDelay} = settings ?? {};
+        const expireAt = this.calculateExpireAt(expireDelay);
+
+        try {
+            const guild = shard.guilds.get(guildId);
+            const message = await member.createMessage({
+                embed: {
+                    title: `Reaction Roles for ${guild.name}`,
+                    description: `${description ?? 'Assign yourself roles'}\n`
+                        + roles.map(role => `<${role.isAnimated ? 'a' : ''}:${role.emojiName}:${role.emojiId}> ${role.name}`).join('\n'),
+                    footer: {text: expireAt ? `Expires in ${timestampRelative(expireAt)}` : undefined},
+                },
+            });
+
+            await Promise.all(
+                roles.map(async (role) => {
+                    try {
+                        await this.rest.createReaction(
+                            message.channelId,
+                            message.id,
+                            role.emojiId ? `${role.emojiName}:${role.emojiId}` : role.emojiName,
+                        );
+
+                        await this.settings.createJoinRole(message.channelId, message.id, role, expireAt);
+                    } catch (e) {
+                        ReactionRolesController.logger.warn(`Error when creating reaction role: ${e}`);
+                    }
+                }),
+            );
+        } catch (e) {
+            ReactionRolesController.logger.warn(`Unable to send join message: ${e}`);
+        }
+    }
+
+    private calculateExpireAt(expireDelay?: number): Date | null {
+        if (!expireDelay) return null;
+
+        const expireAt = new Date();
+        expireAt.setHours(expireAt.getHours() + expireDelay);
+
+        return expireAt;
     }
 }

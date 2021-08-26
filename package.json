@@ -22,15 +22,13 @@
     "postversion": "git push && git push --tags"
   },
   "dependencies": {
-    "@discordjs/rest": "^0.1.0-canary.0",
     "@nestjs/axios": "^0.0.1",
     "@nestjs/common": "^8.0.6",
     "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.6",
     "@nestjs/platform-express": "^8.0.6",
     "@prisma/client": "^2.29.1",
-    "discord-api-types": "^0.22.0",
-    "discord.js": "^13.1.0",
+    "detritus-client": "^0.16.1",
     "dotenv": "^10.0.0",
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.1.13",
@@ -40,8 +38,7 @@
   "optionalDependencies": {
     "bufferutil": "^4.0.3",
     "erlpack": "github:discord/erlpack",
-    "utf-8-validate": "^5.0.5",
-    "zlib-sync": "^0.1.7"
+    "utf-8-validate": "^5.0.5"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.1.1",

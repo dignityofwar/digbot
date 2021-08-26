@@ -7,77 +7,106 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Messenger
+
 model MessengerJoin {
   id        Int      @id @default(autoincrement())
-  guildId   String   @db.VarChar(255)
-  channelId String?  @db.VarChar(255)
+  guildId   String
+  channelId String?
   message   String   @db.Text
   createdAt DateTime @default(now())
 
-  reactionRoles ReactionRoleJoin[]
-
-  @@unique([guildId, channelId], name: "guild_channel_unique")
-  @@index([guildId], name: "guild_index")
+  @@unique([guildId, channelId])
+  @@index([guildId])
 }
 
 model MessengerRole {
   id        Int      @id @default(autoincrement())
-  guildId   String   @db.VarChar(255)
-  roleId    String   @db.VarChar(255)
-  channelId String?  @db.VarChar(255)
+  guildId   String
+  roleId    String
+  channelId String?
   message   String   @db.Text
   createdAt DateTime @default(now())
 
-
-  @@unique([roleId, channelId], name: "role_channel_unique")
-  @@index([roleId], name: "role_index")
-  @@index([guildId], name: "guild_index")
+  @@unique([roleId, channelId])
+  @@index([roleId])
+  @@index([guildId])
 }
 
 model MessengerBoost {
   id        Int      @id @default(autoincrement())
-  guildId   String   @db.VarChar(255)
-  channelId String?  @db.VarChar(255)
+  guildId   String
+  channelId String?
   message   String   @db.Text
   createdAt DateTime @default(now())
 
-  @@unique([guildId, channelId], name: "guild_channel_unique")
-  @@index([guildId], name: "guild_index")
+  @@unique([guildId, channelId])
+  @@index([guildId])
 }
 
+// Reaction Roles
+
 model ReactionRole {
-  id        Int      @id @default(autoincrement())
-  guildId   String   @db.VarChar(255)
-  channelId String   @db.VarChar(255)
-  messageId String   @db.VarChar(255)
-  emoji     String   @db.VarChar(255)
-  roleId    String   @db.VarChar(255)
-  joinId    Int?
-  createdAt DateTime @default(now())
+  id        Int              @id @default(autoincrement())
+  guildId   String
+  roleId    String
+  channelId String
+  messageId String
+  emojiName String
+  emojiId   String?
+  type      ReactionRoleType
+  expireAt  DateTime?
+  createdAt DateTime         @default(now())
 
-  join ReactionRoleJoin? @relation(fields: [joinId], references: [id])
+  join ReactionRoleJoined?
 
-  @@unique([messageId, emoji], name: "message_emoji_unique")
-  @@index([roleId], name: "role_index")
-  @@index([guildId], name: "guild_index")
-  @@index([channelId], name: "channel_index")
-  @@index([messageId], name: "message_index")
+  @@unique([messageId, emojiName, emojiId])
+  @@index([guildId])
+  @@index([roleId])
+  @@index([messageId])
+}
+
+enum ReactionRoleType {
+  STATIC
+  DYNAMIC
+}
+
+model ReactionRoleJoinSettings {
+  id          Int    @id @default(autoincrement())
+  guildId     String
+  description String @db.Text
+  expireDelay Int
+
+  @@unique([guildId])
 }
 
 model ReactionRoleJoin {
-  id          Int      @id @default(autoincrement())
-  emoji       String   @db.VarChar(255)
-  roleId      String   @db.VarChar(255)
-  messengerId Int
-  createdAt   DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  guildId    String
+  roleId     String
+  emojiName  String
+  emojiId    String?
+  isAnimated Boolean
+  name       String
+  order      Int
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
 
-  messenger     MessengerJoin  @relation(fields: [messengerId], references: [id])
-  reactionRoles ReactionRole[]
+  joins ReactionRoleJoined[]
 
-  @@unique([messengerId, emoji], name: "messenger_emoji_unique")
+  @@unique([emojiName, emojiId])
+  @@index([guildId])
+  @@index([roleId])
 }
 
-enum mcs_group_settings_namingPolicy {
-  numbered
-  presence
+model ReactionRoleJoined {
+  joinId         Int
+  reactionRoleId Int
+
+  join         ReactionRoleJoin @relation(fields: [joinId], references: [id])
+  reactionRole ReactionRole     @relation(fields: [reactionRoleId], references: [id])
+
+  @@id([joinId, reactionRoleId])
+  @@unique([reactionRoleId])
+  @@index([joinId])
 }

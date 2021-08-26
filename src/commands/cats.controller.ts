@@ -1,11 +1,13 @@
 import {Controller} from '@nestjs/common';
 import {Command} from './foundation/decorators/command.decorator';
 import {TheCatApiService} from '../apis/thecatapi/thecatapi.service';
-import {CommandInteraction, Message, MessageEmbed} from 'discord.js';
+import {ClusterClient, Structures} from 'detritus-client';
+import Interaction = Structures.Interaction;
 
 @Controller()
 export class CatsController {
     constructor(
+        private readonly discord: ClusterClient,
         private readonly theCatApi: TheCatApiService,
     ) {
     }
@@ -14,7 +16,7 @@ export class CatsController {
         command: 'cats',
         description: 'Shows a random image of cats',
     })
-    cats(interaction: CommandInteraction): void {
+    cats(interaction: Interaction): void {
         this.runCommand(interaction, false);
     }
 
@@ -22,27 +24,26 @@ export class CatsController {
         command: 'catsgif',
         description: 'Shows a random gif of cats',
     })
-    catsGif(interaction: CommandInteraction) {
+    catsGif(interaction: Interaction) {
         this.runCommand(interaction, true);
     }
 
-    private runCommand(interaction: CommandInteraction, gif: boolean) {
+    private runCommand(interaction: Interaction, gif: boolean) {
         this.theCatApi.imagesSearch({
             limit: 1,
             mime_types: gif ? ['gif'] : ['jpg', 'png'],
         })
             .subscribe(async ({data}) => {
-                const reply = await interaction.reply(
-                    {
-                        embeds: [
-                            new MessageEmbed()
-                                .setImage(data[0].url),
-                        ],
-                        fetchReply: true,
-                    });
+                const {url} = data[0];
 
-                if (reply instanceof Message)
-                    await reply.react('❤');
+                await interaction.createResponse({
+                    type: 4,
+                    data: {
+                        embed: {
+                            image: {url},
+                        },
+                    },
+                });
             });
     }
 }

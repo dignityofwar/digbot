@@ -1,5 +1,5 @@
-import {ClientEvents} from 'discord.js';
+import {ClientEvents} from '../../interfaces/client.events';
 
 export interface OnDecoratorOptions {
-    event: keyof ClientEvents | 'raw';
+    event: ClientEvents;
 }

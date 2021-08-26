@@ -9,21 +9,20 @@ import {loggerConfig} from './config/logger.config';
 (async function bootstrap() {
     const logger = new Logger('App');
 
-    process
-        .on('uncaughtException', (err) => {
-            logger.error(err.message, err.stack);
-
-            process.exit(1);
-        })
-        .on('unhandledRejection', (err: any) => {
-            logger.error(err, err.stack);
-
-            process.exit(1);
-        });
-
     const app = await NestFactory.create(AppModule, {
         logger: loggerConfig.levels,
     });
+
+    process
+        .on('uncaughtException', async (err) => {
+            logger.error(err.message ?? err, err.stack);
+
+            await app.close();
+            process.exit(1);
+        })
+        .on('unhandledRejection', async (err) => {
+            throw err;
+        });
 
     app.enableShutdownHooks();
 

@@ -1,13 +1,13 @@
-import {Logger, Module, OnModuleInit} from '@nestjs/common';
+import {Logger, Module, OnApplicationBootstrap, OnModuleInit} from '@nestjs/common';
 import {DiscoveryModule} from '@nestjs/core';
 import {DiscordModule} from '../../discord/discord.module';
 import {Command, CommandContainer} from './command.container';
 import {MetadataAccessor} from './helpers/metadata.accessor';
 import {CommandExplorer} from './command.explorer';
 import {CommandController} from './command.controller';
-import {Routes} from 'discord-api-types/v9';
-import {REST} from '@discordjs/rest';
-import {discordConfig} from '../../config/discord.config';
+import {ClusterClient} from 'detritus-client';
+import {RequestTypes} from 'detritus-client-rest';
+import CreateApplicationCommand = RequestTypes.CreateApplicationCommand
 
 @Module({
     imports: [
@@ -23,11 +23,11 @@ import {discordConfig} from '../../config/discord.config';
         CommandController,
     ],
 })
-export class CommandCoreModule implements OnModuleInit {
+export class CommandCoreModule implements OnModuleInit, OnApplicationBootstrap {
     private static readonly logger = new Logger('CommandModule');
 
     constructor(
-        private rest: REST,
+        private discord: ClusterClient,
         private explorer: CommandExplorer,
         private commandContainer: CommandContainer,
     ) {
@@ -35,21 +35,22 @@ export class CommandCoreModule implements OnModuleInit {
 
     async onModuleInit(): Promise<void> {
         this.explorer.explore();
+    }
 
+    async onApplicationBootstrap() {
         try {
-            await this.rest.put(
-                Routes.applicationCommands(discordConfig.clientId),
-                {
-                    body: this.commandContainer.all()
-                        .map(command => this.transformCommand(command)),
-                },
-            );
+            await this.discord.rest.bulkOverwriteApplicationCommands(
+                this.discord.applicationId,
+                this.commandContainer.all()
+                    .map(command => this.transformCommand(command)));
+
+            CommandCoreModule.logger.log(`Synced commands`);
         } catch (err) {
             CommandCoreModule.logger.error(`Failed to sync commands to Discord: ${err}`, err.stack);
         }
     }
 
-    private transformCommand(command: Command) {
+    private transformCommand(command: Command): CreateApplicationCommand {
         return {
             name: command.command,
             description: command.description,

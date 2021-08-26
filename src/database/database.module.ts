@@ -15,32 +15,21 @@ import {PrismaClient} from '@prisma/client';
 export class DatabaseModule implements OnModuleInit, OnApplicationShutdown {
     private static readonly logger = new Logger('PrismaClient');
 
-    private shutdownPromise: Promise<void>;
-
-    private shutdownResolve: () => void;
-
     constructor(
         private readonly prisma: PrismaClient,
     ) {
+        this.prisma.$on('beforeExit', () => new Promise(() => null));
     }
 
-    onModuleInit() {
-        DatabaseModule.logger.log('Connecting');
+    async onModuleInit() {
+        await this.prisma.$connect();
 
-        this.shutdownPromise = new Promise((resolve) => {
-            this.shutdownResolve = resolve;
-        });
-
-        this.prisma.$on('beforeExit', async () => {
-            await this.shutdownPromise;
-
-            DatabaseModule.logger.log('Disconnect and clean-up');
-        });
-
-        this.prisma.$connect();
+        DatabaseModule.logger.log('Connected');
     }
 
-    onApplicationShutdown() {
-        this.shutdownResolve();
+    async onApplicationShutdown() {
+        this.prisma.$disconnect();
+
+        DatabaseModule.logger.log('Disconnected');
     }
 }

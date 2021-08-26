@@ -1,9 +1,9 @@
 import {Injectable, Logger, OnModuleInit} from '@nestjs/common';
 import {DiscoveryService, MetadataScanner} from '@nestjs/core';
-import {DiscordClient} from './discord.client';
 import {InstanceWrapper} from '@nestjs/core/injector/instance-wrapper';
 import {MetadataAccessor} from './helpers/metadata.accessor';
 import {OnDecoratorOptions} from './decorators/interfaces/ondecorator.options';
+import {ClusterClient} from 'detritus-client';
 
 @Injectable()
 export class DiscordExplorer implements OnModuleInit {
@@ -13,7 +13,7 @@ export class DiscordExplorer implements OnModuleInit {
         private readonly discoveryService: DiscoveryService,
         private readonly metadataScanner: MetadataScanner,
         private readonly metadataAccessor: MetadataAccessor,
-        private readonly discordClient: DiscordClient,
+        private readonly discord: ClusterClient,
     ) {
     }
 
@@ -38,7 +38,7 @@ export class DiscordExplorer implements OnModuleInit {
                             this.handleOn(
                                 instance,
                                 key,
-                                this.discordClient,
+                                this.discord,
                                 metadata,
                             );
                         }
@@ -50,14 +50,12 @@ export class DiscordExplorer implements OnModuleInit {
     handleOn(
         instance: object,
         key: string,
-        client: DiscordClient,
+        client: ClusterClient,
         metadata: OnDecoratorOptions,
     ): void {
         DiscordExplorer.logger.log(`Registered event ${metadata.event} on ${instance.constructor.name}@${key}`);
 
         client.on(
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             metadata.event,
             instance[key].bind(instance),
         );

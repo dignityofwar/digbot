@@ -1,8 +1,9 @@
 import {Controller, Logger} from '@nestjs/common';
-import {CommandInteraction, Interaction, MessageEmbed} from 'discord.js';
 import {On} from '../../discord/decorators/on.decorator';
 import {CommandContainer} from './command.container';
-import {CommandException} from './exceptions/command.exception';
+import {GatewayClientEvents, Structures} from 'detritus-client';
+import InteractionDataApplicationCommand = Structures.InteractionDataApplicationCommand;
+import InteractionCreate = GatewayClientEvents.InteractionCreate;
 
 @Controller()
 export class CommandController {
@@ -14,32 +15,24 @@ export class CommandController {
     }
 
     @On('interactionCreate')
-    async message(interaction: Interaction) {
-        if (!interaction.isCommand()) return;
+    async message({interaction}: InteractionCreate) {
+        if (!interaction.isFromApplicationCommand) return;
 
-        const command = this.repository.get(interaction.commandName);
+        const command = this.repository.get((interaction.data as InteractionDataApplicationCommand).name);
 
         if (command) {
             try {
-                const response = await command.handler(interaction as CommandInteraction);
-
-                if (typeof response == 'string')
-                    await interaction.reply(response);
-                else if (response instanceof MessageEmbed)
-                    await interaction.reply({
-                        embeds: [response],
-                    });
-                else if (response)
-                    CommandController.logger.warn(`Command "${command.command}" returned unexpected object of type "${typeof response}"`);
+                await command.handler(interaction);
             } catch (err) {
-                await interaction.reply(
-                    err instanceof CommandException
-                        ? err.response instanceof MessageEmbed ? {embeds: [err.response]} : err.response
-                        : {embeds: [new MessageEmbed().setColor('RED').setDescription('Unexpected failure')]},
-                );
+                await interaction.createResponse({
+                    type: 4,
+                    data: {
+                        content: 'I failed you',
+                        flags: 1 << 6,
+                    },
+                });
 
-                if (!(err instanceof CommandException))
-                    CommandController.logger.warn(`Command "${command.command}" failed unexpectedly: ${err}`);
+                CommandController.logger.warn(`Command "${command.command}" failed unexpectedly: ${err}`);
             }
         }
     }
