@@ -12,26 +12,27 @@
 </div>
 
 ## About
+
+DigBot is a custom discord bot ran on the [DIG community's discord server](https://discord.gg/cjQBNpc), it was originally created to fulfil all the functionality of the current bots that were on the server and allow the community to implement any feature's they desired.
   
-  DIGBot is a custom discord bot ran on the [DIG community's discord server](https://discord.gg/cjQBNpc), it was originally created to fulfil all the functionality of the current bots that were on the server and allow the community to implement any feature's they desired.
-  
-### Tech
+## Usage
 
-Language: Node.js  
-Deployment: Docker  
-Discord API handler: discord.js  
+DigBot is releases as a Docker image on [Docker Hub](https://hub.docker.com/r/dignityofwar/digbot). Pull the latest version using `docker pull dignityofwar/digbot:latest`. Further requirements are a [MariaDB](https://mariadb.org/) database.
 
-## Development
+To configure DigBot you only need to set 2 environment variables:
 
-### Contributing
+- `DISCORD_TOKEN` contains a Disord Bot application token, which can be created in the [Discord developer portal](https://discord.com/developers/applications);
+- `DATABASE_URL` contains the connection url to MariaDB(e.g. `mysql://username:password@host:3306/dbname`).
 
-See the [contribution guidelines](CONTRIBUTING.md) file for information on how to contribute to the project and setting up your local development version of the project.
+## Technical requirements
 
-### Code Usage
+DigBot is written in Typescript on top of the [NestJS framework](https://nestjs.com/) and requires Node.js v16+. Internally it uses [Detritus](https://detritusjs.com/), and [Prisma](https://www.prisma.io/) to manage the connections to Discord, and MariaDB respectively.
 
-The project is open-sourced under the [MIT license](LICENSE.md).
+## Code Usage
 
-### Acknowledgements
+The project is open-sourced under the [MIT license](LICENSE).
+
+## Acknowledgements
 
 This repository was created from an [existing private codebase](https://github.com/JamesLongman/DIGBot/releases/tag/0.0.1). The previous project was headed by Maelstromeous who was ultimately responsible for code review, design decisions and deployment.
 
