@@ -14,6 +14,7 @@ model MessengerJoin {
   guildId   String
   channelId String?
   message   String   @db.Text
+  updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
   @@unique([guildId, channelId])
@@ -26,6 +27,7 @@ model MessengerRole {
   roleId    String
   channelId String?
   message   String   @db.Text
+  updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
   @@unique([roleId, channelId])
@@ -38,6 +40,7 @@ model MessengerBoost {
   guildId   String
   channelId String?
   message   String   @db.Text
+  updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
   @@unique([guildId, channelId])
@@ -56,6 +59,7 @@ model ReactionRole {
   emojiId   String?
   type      ReactionRoleType
   expireAt  DateTime?
+  updatedAt DateTime         @updatedAt
   createdAt DateTime         @default(now())
 
   join ReactionRoleJoined?
@@ -64,6 +68,7 @@ model ReactionRole {
   @@index([guildId])
   @@index([roleId])
   @@index([messageId])
+  @@index([expireAt])
 }
 
 enum ReactionRoleType {
@@ -72,10 +77,12 @@ enum ReactionRoleType {
 }
 
 model ReactionRoleJoinSettings {
-  id          Int    @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   guildId     String
-  description String @db.Text
+  description String   @db.Text
   expireDelay Int
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
 
   @@unique([guildId])
 }
@@ -94,7 +101,7 @@ model ReactionRoleJoin {
 
   joins ReactionRoleJoined[]
 
-  @@unique([emojiName, emojiId])
+  @@unique([guildId, emojiName, emojiId])
   @@index([guildId])
   @@index([roleId])
 }
