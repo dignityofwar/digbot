@@ -1,6 +1,6 @@
 # DIGBot
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/dignityofwar/digbot)](https://github.com/dignityofwar/digbot/releases)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/dignityofwar/digbot?label=version)](https://github.com/dignityofwar/digbot/releases)
 ![example workflow](https://github.com/dignityofwar/digbot/actions/workflows/main.yml/badge.svg)
 [![David](https://img.shields.io/david/dignityofwar/digbot)](https://david-dm.org/dignityofwar/digbot)
 
