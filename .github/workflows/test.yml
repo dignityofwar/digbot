@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  compile-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependecies
+        run: npm ci
+      - name: Build Prisma client
+        run: npx prisma generate
+      - name: Compile
+        run: npm run build
