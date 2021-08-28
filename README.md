@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://i.imgur.com/OzmLmw1.png"/>
+  <img src="https://i.imgur.com/0V1aNuw.png"/>
 
   # DigBot
 
