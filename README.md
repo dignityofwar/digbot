@@ -1,6 +1,8 @@
 # DIGBot
 
-[![David DM Badge](https://david-dm.org/dignityofwar/digbot.svg)](https://david-dm.org/dignityofwar/digbot)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/dignityofwar/digbot)](https://github.com/dignityofwar/digbot/releases)
+![example workflow](https://github.com/dignityofwar/digbot/actions/workflows/main.yml/badge.svg)
+[![David](https://img.shields.io/david/dignityofwar/digbot)](https://david-dm.org/dignityofwar/digbot)
 
 ## About
 
