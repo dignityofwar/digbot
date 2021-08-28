@@ -1,15 +1,20 @@
-# DIGBot
+<div align="center">
+  <img src="https://i.imgur.com/OzmLmw1.png"/>
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/dignityofwar/digbot?label=version)](https://github.com/dignityofwar/digbot/releases)
-![Release](https://github.com/dignityofwar/digbot/actions/workflows/main.yml/badge.svg)
-![Testing](https://github.com/dignityofwar/digbot/actions/workflows/test.yml/badge.svg)
-[![David](https://img.shields.io/david/dignityofwar/digbot)](https://david-dm.org/dignityofwar/digbot)
-[![GitHub](https://img.shields.io/github/license/dignityofwar/digbot)](https://github.com/dignityofwar/digbot/blob/main/LICENSE)
+  # DigBot
+
+  [![GitHub release (latest by date)](https://img.shields.io/github/v/release/dignityofwar/digbot?label=version)](https://github.com/dignityofwar/digbot/releases)
+  ![Release](https://github.com/dignityofwar/digbot/actions/workflows/main.yml/badge.svg)
+  ![Testing](https://github.com/dignityofwar/digbot/actions/workflows/test.yml/badge.svg)
+  [![David](https://img.shields.io/david/dignityofwar/digbot)](https://david-dm.org/dignityofwar/digbot)
+  [![GitHub](https://img.shields.io/github/license/dignityofwar/digbot)](https://github.com/dignityofwar/digbot/blob/main/LICENSE)
+
+</div>
 
 ## About
-
-DIGBot is a custom discord bot ran on the [DIG community's discord server](https://discord.gg/cjQBNpc), it was originally created to fulfil all the functionality of the current bots that were on the server and allow the community to implement any feature's they desired.
-
+  
+  DIGBot is a custom discord bot ran on the [DIG community's discord server](https://discord.gg/cjQBNpc), it was originally created to fulfil all the functionality of the current bots that were on the server and allow the community to implement any feature's they desired.
+  
 ### Tech
 
 Language: Node.js  
