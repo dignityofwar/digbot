@@ -1,7 +1,8 @@
 # DIGBot
 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/dignityofwar/digbot?label=version)](https://github.com/dignityofwar/digbot/releases)
-![example workflow](https://github.com/dignityofwar/digbot/actions/workflows/main.yml/badge.svg)
+![Release](https://github.com/dignityofwar/digbot/actions/workflows/main.yml/badge.svg)
+![Testing](https://github.com/dignityofwar/digbot/actions/workflows/test.yml/badge.svg)
 [![David](https://img.shields.io/david/dignityofwar/digbot)](https://david-dm.org/dignityofwar/digbot)
 [![GitHub](https://img.shields.io/github/license/dignityofwar/digbot)](https://github.com/dignityofwar/digbot/blob/main/LICENSE)
 
