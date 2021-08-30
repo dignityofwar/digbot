@@ -8,7 +8,6 @@
   ![Testing](https://github.com/dignityofwar/digbot/actions/workflows/test.yml/badge.svg)
   [![David](https://img.shields.io/david/dignityofwar/digbot)](https://david-dm.org/dignityofwar/digbot)
   [![GitHub](https://img.shields.io/github/license/dignityofwar/digbot)](https://github.com/dignityofwar/digbot/blob/main/LICENSE)
-
 </div>
 
 ## About
@@ -19,14 +18,20 @@ DigBot is a custom discord bot ran on the [DIG community's discord server](https
 
 DigBot is releases as a Docker image on [Docker Hub](https://hub.docker.com/r/dignityofwar/digbot). Pull the latest version using `docker pull dignityofwar/digbot:latest`. Further requirements are a [MariaDB](https://mariadb.org/) database.
 
-To configure DigBot you only need to set 2 environment variables:
+To configure DigBot the following environment variables:
 
-- `DISCORD_TOKEN` contains a Disord Bot application token, which can be created in the [Discord developer portal](https://discord.com/developers/applications);
-- `DATABASE_URL` contains the connection url to MariaDB(e.g. `mysql://username:password@host:3306/dbname`).
+- `DISCORD_TOKEN`: a Discord Bot application token, which can be created in the [Discord developer portal](https://discord.com/developers/applications);
+- `DB_HOST`: the host address of MariaDB(default `localhost`);
+- `DB_PORT`: the port at which MariaDB is exposed(default `3306`);
+- `DB_NAME`: the database name(default `digbot`);
+- `DB_USER`: the username to login to MariaDB(default `diglet`);
+- `DB_PASS`: the password to login to MariaDB(default `pass`).
 
 ## Technical requirements
 
-DigBot is written in Typescript on top of the [NestJS framework](https://nestjs.com/) and requires Node.js v16+. Internally it uses [Detritus](https://detritusjs.com/), and [Prisma](https://www.prisma.io/) to manage the connections to Discord, and MariaDB respectively.
+DigBot is written in Typescript on top of the [NestJS framework](https://nestjs.com/) and requires Node.js v16+.
+Internally it uses [Detritus](https://detritusjs.com/), and [Mikro ORM](https://mikro-orm.io/) to manage the connections to Discord, and MariaDB respectively.
+Whenever the bot is started it will try to update the database using migrations, with the exception when `NODE_ENV` is equal to `development`(this is the default).
 
 ## Code Usage
 
