@@ -22,7 +22,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependecies
         run: npm ci
-      - name: Build Prisma client
-        run: npx prisma generate
       - name: Compile
         run: npm run build
