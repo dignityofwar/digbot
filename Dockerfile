@@ -5,10 +5,9 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci
 
-RUN npx mikro-orm cache:generate
-
 COPY . .
 RUN npm run build
+RUN npx mikro-orm cache:generate
 
 FROM node:16-alpine
 

@@ -1,11 +1,6 @@
-# Copyright © 2018 DIG Development team. All rights reserved.
-
 # Ignore local npm modules and logs
 node_modules
 npm-debug.log
-
-# Ignore local configuration
-config/local.json
 
 # Ignore all md files
 *.md
@@ -15,6 +10,8 @@ config/local.json
 
 # Ignore all docker files
 Dockerfile
-docker-compose*.yml
+docker-compose.yml
 
+/dist
+/storage
 /temp
