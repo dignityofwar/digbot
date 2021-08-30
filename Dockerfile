@@ -16,6 +16,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci --only=production
 
+COPY mikro-orm.config.js .
 COPY --from=build /usr/src/app/temp ./temp
 COPY --from=build /usr/src/app/dist ./dist
 
