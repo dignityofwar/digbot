@@ -2,9 +2,11 @@ import {Controller, Logger} from '@nestjs/common';
 import {On} from '../discord/decorators/on.decorator';
 import {SettingsService} from './settings.service';
 import {Client as RestClient} from 'detritus-client-rest';
-import {MessengerBoost, MessengerJoin, MessengerRole} from '@prisma/client';
 import {GatewayClientEvents} from 'detritus-client';
 import {Member} from 'detritus-client/lib/structures';
+import {OnRoleMessage} from './entities/on-role-message.entity';
+import {OnJoinMessage} from './entities/on-join-message.entity';
+import {OnBoostMessage} from './entities/on-boost-message.entity';
 import GuildMemberUpdate = GatewayClientEvents.GuildMemberUpdate;
 import GuildMemberAdd = GatewayClientEvents.GuildMemberAdd;
 
@@ -57,7 +59,7 @@ export class MessengerController {
         id,
         channelId,
         message,
-    }: MessengerRole | MessengerJoin | MessengerBoost): Promise<void> {
+    }: OnRoleMessage | OnJoinMessage | OnBoostMessage): Promise<void> {
         try {
             if (channelId) {
                 await this.rest.createMessage(channelId, this.formatMessage(message, member));

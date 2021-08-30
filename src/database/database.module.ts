@@ -1,35 +1,9 @@
-import {Logger, Module, OnApplicationShutdown, OnModuleInit} from '@nestjs/common';
-import {PrismaClient} from '@prisma/client';
+import {MikroOrmModule} from '@mikro-orm/nestjs';
+import {MigrationService} from './migration.service';
 
-@Module({
-    providers: [
-        {
-            provide: PrismaClient,
-            useFactory: () => new PrismaClient(),
-        },
-    ],
-    exports: [
-        PrismaClient,
-    ],
-})
-export class DatabaseModule implements OnModuleInit, OnApplicationShutdown {
-    private static readonly logger = new Logger('PrismaClient');
+export const DatabaseModule = MikroOrmModule.forRoot();
 
-    constructor(
-        private readonly prisma: PrismaClient,
-    ) {
-        this.prisma.$on('beforeExit', () => new Promise(() => null));
-    }
+if (!DatabaseModule.providers)
+    DatabaseModule.providers = [];
 
-    async onModuleInit() {
-        await this.prisma.$connect();
-
-        DatabaseModule.logger.log('Connected');
-    }
-
-    async onApplicationShutdown() {
-        this.prisma.$disconnect();
-
-        DatabaseModule.logger.log('Disconnected');
-    }
-}
+DatabaseModule.providers.push(MigrationService);

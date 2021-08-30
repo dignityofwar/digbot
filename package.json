@@ -22,15 +22,18 @@
     "postversion": "git push && git push --tags"
   },
   "dependencies": {
+    "@mikro-orm/core": "^4.5.9",
+    "@mikro-orm/mariadb": "^4.5.9",
+    "@mikro-orm/migrations": "^4.5.9",
+    "@mikro-orm/nestjs": "^4.3.0",
+    "@mikro-orm/reflection": "^4.5.9",
     "@nestjs/axios": "^0.0.1",
     "@nestjs/common": "^8.0.6",
     "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.6",
     "@nestjs/platform-express": "^8.0.6",
-    "@prisma/client": "^2.29.1",
     "detritus-client": "^0.16.1",
     "dotenv": "^10.0.0",
-    "mysql": "^2.18.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.3.0"
@@ -55,7 +58,6 @@
     "eslint-plugin-prettier": "^3.4.0",
     "jest": "27.0.6",
     "prettier": "^2.3.2",
-    "prisma": "^2.29.1",
     "supertest": "^6.1.5",
     "ts-jest": "27.0.4",
     "ts-loader": "^9.2.5",
@@ -76,5 +78,11 @@
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./mikro-orm.config.js"
+    ]
   }
 }

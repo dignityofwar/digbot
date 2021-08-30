@@ -16,3 +16,5 @@ config/local.json
 # Ignore all docker files
 Dockerfile
 docker-compose*.yml
+
+/temp
