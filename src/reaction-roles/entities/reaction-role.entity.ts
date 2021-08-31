@@ -1,6 +1,6 @@
 import {Entity, Index, PrimaryKey, Property, Unique} from '@mikro-orm/core';
 
-@Entity({tableName: 'assigner_reaction_roles'})
+@Entity({tableName: 'reaction_roles'})
 @Unique({properties: ['messageId', 'emojiName', 'emojiId']})
 export class ReactionRole {
     constructor(data: Omit<ReactionRole, 'id' | 'createdAt' | 'updatedAt'>) {

@@ -6,9 +6,12 @@ import {OnBoostMessage} from './entities/on-boost-message.entity';
 
 @Injectable()
 export class SettingsService {
+    private readonly entityManager: EntityManager;
+
     constructor(
-        private readonly entityManager: EntityManager,
+        entityManager: EntityManager,
     ) {
+        this.entityManager = entityManager.fork();
     }
 
     getRoleMessagesByRoles(roleIds: string[]): Promise<OnRoleMessage[]> {

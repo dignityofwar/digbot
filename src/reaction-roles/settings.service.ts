@@ -6,9 +6,12 @@ import {OnJoinSettings} from './entities/on-join-settings.entity';
 
 @Injectable()
 export class SettingsService {
+    private readonly entityManager: EntityManager;
+
     constructor(
-        private readonly entityManager: EntityManager,
+        entityManager: EntityManager,
     ) {
+        this.entityManager = entityManager.fork();
     }
 
     getRole(messageId: string, emojiName: string, emojiId?: string): Promise<ReactionRole | null> {
@@ -22,11 +25,10 @@ export class SettingsService {
 
     getJoinSettings(guildId: string): Promise<OnJoinSettings | null> {
         return this.entityManager.findOne(OnJoinSettings, {guildId});
-
     }
 
-    createJoinRole(channelId: string, messageId: string, join: OnJoinRole, expireAt: Date | null) {
-        return this.entityManager.create(ReactionRole, {
+    async createJoinRole(channelId: string, messageId: string, join: OnJoinRole, expireAt: Date | null): Promise<ReactionRole> {
+        const reactionRole = new ReactionRole({
             guildId: join.guildId,
             roleId: join.roleId,
             channelId,
@@ -35,7 +37,11 @@ export class SettingsService {
             emojiId: join.emojiId,
             expireAt,
             referenceType: 'join',
-            referenceId: join.id,
+            referenceId: join.id.toString(),
         });
+
+        await this.entityManager.persistAndFlush(reactionRole);
+
+        return reactionRole;
     }
 }
