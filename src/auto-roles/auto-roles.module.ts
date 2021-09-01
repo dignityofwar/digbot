@@ -1,7 +1,7 @@
 import {Module} from '@nestjs/common';
-import {MessengerController} from './messenger.controller';
-import {DiscordModule} from '../discord/discord.module';
 import {SettingsService} from './settings.service';
+import {AutoRolesController} from './auto-roles.controller';
+import {DiscordModule} from '../discord/discord.module';
 
 @Module({
     imports: [
@@ -11,8 +11,8 @@ import {SettingsService} from './settings.service';
         SettingsService,
     ],
     controllers: [
-        MessengerController,
+        AutoRolesController,
     ],
 })
-export class MessengerModule {
+export class AutoRolesModule {
 }

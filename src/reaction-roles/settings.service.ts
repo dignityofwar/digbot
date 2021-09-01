@@ -14,9 +14,8 @@ export class SettingsService {
         this.entityManager = entityManager.fork();
     }
 
-    getRole(messageId: string, emojiName: string, emojiId?: string): Promise<ReactionRole | null> {
-        return this.entityManager.findOne(ReactionRole, {messageId, emojiName, emojiId});
-
+    getRole(channelId: string, messageId: string, emojiName: string, emojiId?: string): Promise<ReactionRole | null> {
+        return this.entityManager.findOne(ReactionRole, {channelId, messageId, emojiName, emojiId});
     }
 
     getJoinRoles(guildId: string): Promise<OnJoinRole[]> {

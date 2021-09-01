@@ -4,9 +4,7 @@ import {SettingsService} from './settings.service';
 import {Client as RestClient} from 'detritus-client-rest';
 import {GatewayClientEvents} from 'detritus-client';
 import {Member} from 'detritus-client/lib/structures';
-import {OnRoleMessage} from './entities/on-role-message.entity';
-import {OnJoinMessage} from './entities/on-join-message.entity';
-import {OnBoostMessage} from './entities/on-boost-message.entity';
+import {BaseMessage} from './entities/base-message.entity';
 import GuildMemberUpdate = GatewayClientEvents.GuildMemberUpdate;
 import GuildMemberAdd = GatewayClientEvents.GuildMemberAdd;
 
@@ -27,6 +25,7 @@ export class MessengerController {
         // TODO: Add ratelimiter
 
         const messages = await this.settings.getRoleMessagesByRoles(
+            member.guildId,
             Array.from(member.roles.keys())
                 .filter(role => !old.roles.has(role)),
         );
@@ -55,11 +54,7 @@ export class MessengerController {
         }
     }
 
-    private async message(member: Member, {
-        id,
-        channelId,
-        message,
-    }: OnRoleMessage | OnJoinMessage | OnBoostMessage): Promise<void> {
+    private async message(member: Member, {id, channelId, message}: BaseMessage): Promise<void> {
         try {
             if (channelId) {
                 await this.rest.createMessage(channelId, this.formatMessage(message, member));

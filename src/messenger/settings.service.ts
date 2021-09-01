@@ -14,8 +14,8 @@ export class SettingsService {
         this.entityManager = entityManager.fork();
     }
 
-    getRoleMessagesByRoles(roleIds: string[]): Promise<OnRoleMessage[]> {
-        return this.entityManager.find(OnRoleMessage, {roleId: {$in: roleIds}});
+    getRoleMessagesByRoles(guildId: string, roleIds: string[]): Promise<OnRoleMessage[]> {
+        return this.entityManager.find(OnRoleMessage, {guildId, roleId: {$in: roleIds}});
     }
 
     getJoinMessagesByGuild(guildId: string): Promise<OnJoinMessage[]> {

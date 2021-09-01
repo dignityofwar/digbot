@@ -1,15 +1,16 @@
-import {Entity, PrimaryKey, Property} from '@mikro-orm/core';
+import {Entity, Property, Unique} from '@mikro-orm/core';
+import {BaseEntity} from '../../database/base.entity';
 
 @Entity({tableName: 'reaction_roles_on_join_settings'})
-export class OnJoinSettings {
+export class OnJoinSettings extends BaseEntity {
     constructor(data: Omit<OnJoinSettings, 'id' | 'createdAt' | 'updatedAt'>) {
+        super();
+
         Object.assign(this, data);
     }
 
-    @PrimaryKey()
-    readonly id: number;
-
     @Property()
+    @Unique()
     guildId: string;
 
     @Property({columnType: 'text'})
@@ -17,10 +18,4 @@ export class OnJoinSettings {
 
     @Property()
     expireDelay: number;
-
-    @Property({onUpdate: () => new Date()})
-    readonly updatedAt: Date = new Date();
-
-    @Property()
-    readonly createdAt: Date = new Date();
 }

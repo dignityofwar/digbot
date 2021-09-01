@@ -1,21 +1,21 @@
-import {Entity, Index, PrimaryKey, Property, Unique} from '@mikro-orm/core';
+import {Entity, Index, Property, Unique} from '@mikro-orm/core';
+import {BaseEntity} from '../../database/base.entity';
 
 @Entity({tableName: 'reaction_roles_on_join'})
 @Unique({properties: ['guildId', 'emojiName', 'emojiId']})
-export class OnJoinRole {
+@Index({properties: ['guildId', 'roleId']})
+export class OnJoinRole extends BaseEntity {
     constructor(data: Omit<OnJoinRole, 'id' | 'createdAt' | 'updatedAt'>) {
+        super();
+
         Object.assign(this, data);
     }
-
-    @PrimaryKey()
-    readonly id: number;
 
     @Property()
     @Index()
     guildId: string;
 
     @Property()
-    @Index()
     roleId: string;
 
     @Property()
@@ -32,10 +32,4 @@ export class OnJoinRole {
 
     @Property()
     order: number;
-
-    @Property({onUpdate: () => new Date()})
-    readonly updatedAt = new Date();
-
-    @Property()
-    readonly createdAt = new Date();
 }

@@ -1,28 +1,28 @@
-import {Entity, Index, PrimaryKey, Property, Unique} from '@mikro-orm/core';
+import {Entity, Index, Property, Unique} from '@mikro-orm/core';
+import {BaseEntity} from '../../database/base.entity';
 
 @Entity({tableName: 'reaction_roles'})
-@Unique({properties: ['messageId', 'emojiName', 'emojiId']})
-export class ReactionRole {
+@Unique({properties: ['channelId', 'messageId', 'emojiName', 'emojiId']})
+@Index({properties: ['channelId', 'messageId']})
+@Index({properties: ['guildId', 'roleId']})
+export class ReactionRole extends BaseEntity {
     constructor(data: Omit<ReactionRole, 'id' | 'createdAt' | 'updatedAt'>) {
+        super();
+
         Object.assign(this, data);
     }
-
-    @PrimaryKey()
-    readonly id: number;
 
     @Property()
     @Index()
     guildId: string;
 
     @Property()
-    @Index()
     roleId: string;
 
     @Property()
     channelId: string;
 
     @Property()
-    @Index()
     messageId: string;
 
     @Property()
@@ -32,7 +32,6 @@ export class ReactionRole {
     emojiId?: string;
 
     @Property()
-    @Index()
     expireAt?: Date;
 
     @Property()
@@ -40,10 +39,4 @@ export class ReactionRole {
 
     @Property()
     referenceId?: string;
-
-    @Property({onUpdate: () => new Date()})
-    readonly updatedAt: Date = new Date();
-
-    @Property()
-    readonly createdAt: Date = new Date();
 }

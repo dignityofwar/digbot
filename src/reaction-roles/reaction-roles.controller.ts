@@ -21,8 +21,8 @@ export class ReactionRolesController {
     }
 
     @On('messageReactionAdd')
-    async reactionAdded({userId, messageId, reaction: {emoji}}: MessageReactionAdd) {
-        const reactionRole = await this.settings.getRole(messageId, emoji.name, emoji.id);
+    async reactionAdded({userId, channelId, messageId, reaction: {emoji}}: MessageReactionAdd) {
+        const reactionRole = await this.settings.getRole(channelId, messageId, emoji.name, emoji.id);
         if (!reactionRole) return;
 
         const {guildId, roleId} = reactionRole;
@@ -35,8 +35,8 @@ export class ReactionRolesController {
     }
 
     @On('messageReactionRemove')
-    async reactionRemoved({userId, messageId, reaction: {emoji}}: MessageReactionRemove) {
-        const reactionRole = await this.settings.getRole(messageId, emoji.name, emoji.id);
+    async reactionRemoved({userId, channelId, messageId, reaction: {emoji}}: MessageReactionRemove) {
+        const reactionRole = await this.settings.getRole(channelId, messageId, emoji.name, emoji.id);
         if (!reactionRole) return;
 
         const {guildId, roleId} = reactionRole;

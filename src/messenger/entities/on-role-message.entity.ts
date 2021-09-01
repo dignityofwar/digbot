@@ -1,32 +1,16 @@
-import {Entity, Index, PrimaryKey, Property, Unique} from '@mikro-orm/core';
+import {Entity, Index, Property, Unique} from '@mikro-orm/core';
+import {BaseMessage} from './base-message.entity';
 
 @Entity({tableName: 'messenger_role'})
-@Unique({properties: ['roleId', 'channelId']})
-export class OnRoleMessage {
+@Unique({properties: ['guildId', 'roleId', 'channelId']})
+@Index({properties: ['guildId', 'roleId']})
+export class OnRoleMessage extends BaseMessage {
     constructor(data: Omit<OnRoleMessage, 'id' | 'createdAt' | 'updatedAt'>) {
+        super();
+
         Object.assign(this, data);
     }
 
-    @PrimaryKey()
-    readonly id: number;
-
     @Property()
-    @Index()
-    guildId: string;
-
-    @Property()
-    @Index()
     roleId: string;
-
-    @Property()
-    channelId?: string;
-
-    @Property({columnType: 'text'})
-    message: string;
-
-    @Property({onUpdate: () => new Date()})
-    readonly updatedAt = new Date();
-
-    @Property()
-    readonly createdAt = new Date();
 }
