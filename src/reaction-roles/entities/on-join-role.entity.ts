@@ -5,12 +5,6 @@ import {BaseEntity} from '../../database/base.entity';
 @Unique({properties: ['guildId', 'emojiName', 'emojiId']})
 @Index({properties: ['guildId', 'roleId']})
 export class OnJoinRole extends BaseEntity {
-    constructor(data: Omit<OnJoinRole, 'id' | 'createdAt' | 'updatedAt'>) {
-        super();
-
-        Object.assign(this, data);
-    }
-
     @Property()
     @Index()
     guildId: string;

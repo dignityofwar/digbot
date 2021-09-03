@@ -8,7 +8,7 @@ import ClusterEvent = GatewayClientEvents.ClusterEvent;
 import Timeout = NodeJS.Timeout;
 
 @Controller()
-export class AutoRolesController {
+export class RoleHierarchyController {
     private static readonly logger = new Logger('AutoRoles');
 
     private static readonly PARENT_ROLE_EVALUATE_DELAY = 10000;
@@ -53,10 +53,10 @@ export class AutoRolesController {
                                 },
                             });
                         } catch (e) {
-                            AutoRolesController.logger.warn(`Something went wrong when auto assigning parent role "${link.roleId}": ${e}`);
+                            RoleHierarchyController.logger.warn(`Something went wrong when auto assigning parent role "${link.roleId}": ${e}`);
                         }
                     });
-            }, AutoRolesController.PARENT_ROLE_EVALUATE_DELAY).unref(),
+            }, RoleHierarchyController.PARENT_ROLE_EVALUATE_DELAY).unref(),
         );
     }
 }

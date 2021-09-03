@@ -5,12 +5,6 @@ import {BaseMessage} from './base-message.entity';
 @Unique({properties: ['guildId', 'roleId', 'channelId']})
 @Index({properties: ['guildId', 'roleId']})
 export class OnRoleMessage extends BaseMessage {
-    constructor(data: Omit<OnRoleMessage, 'id' | 'createdAt' | 'updatedAt'>) {
-        super();
-
-        Object.assign(this, data);
-    }
-
     @Property()
     roleId: string;
 }

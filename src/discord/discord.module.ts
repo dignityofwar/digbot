@@ -5,6 +5,8 @@ import {DiscoveryModule} from '@nestjs/core';
 import {discordConfig} from '../config/discord.config';
 import {ClusterClient, ShardClient} from 'detritus-client';
 import {Client as RestClient} from 'detritus-client-rest';
+import {GuildController} from './http/guild.controller';
+import {DiscordAccessor} from './helpers/discord.accessor';
 
 @Module({
     imports: [
@@ -34,10 +36,17 @@ import {Client as RestClient} from 'detritus-client-rest';
             useFactory: (discord: ClusterClient) => discord.rest,
             inject: [ClusterClient],
         },
+
+        DiscordAccessor,
     ],
     exports: [
         ClusterClient,
         RestClient,
+
+        DiscordAccessor,
+    ],
+    controllers: [
+        GuildController,
     ],
 })
 export class DiscordModule implements OnApplicationBootstrap, OnApplicationShutdown {

@@ -11,7 +11,7 @@ export class MigrationService implements OnModuleInit {
     }
 
     async onModuleInit() {
-        if (process.env.NODE_ENV == 'development') return;
+        if (process.env.NODE_ENV || process.env.NODE_ENV == 'development') return;
 
         const migrations = await this.orm.getMigrator().up();
 

@@ -6,12 +6,6 @@ import {BaseEntity} from '../../database/base.entity';
 @Index({properties: ['channelId', 'messageId']})
 @Index({properties: ['guildId', 'roleId']})
 export class ReactionRole extends BaseEntity {
-    constructor(data: Omit<ReactionRole, 'id' | 'createdAt' | 'updatedAt'>) {
-        super();
-
-        Object.assign(this, data);
-    }
-
     @Property()
     @Index()
     guildId: string;

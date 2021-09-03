@@ -4,7 +4,7 @@ import {ReactionRolesModule} from './reaction-roles/reaction-roles.module';
 import {MessengerModule} from './messenger/messenger.module';
 import {DatabaseModule} from './database/database.module';
 import {DiscordModule} from './discord/discord.module';
-import {AutoRolesModule} from './auto-roles/auto-roles.module';
+import {RoleHierarchyModule} from './role-hierarchy/role-hierarchy.module';
 
 @Module({
     imports: [
@@ -13,7 +13,7 @@ import {AutoRolesModule} from './auto-roles/auto-roles.module';
         CommandModule,
         ReactionRolesModule,
         MessengerModule,
-        AutoRolesModule,
+        RoleHierarchyModule,
     ],
 })
 export class AppModule {

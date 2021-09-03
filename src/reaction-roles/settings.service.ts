@@ -18,6 +18,10 @@ export class SettingsService {
         return this.entityManager.findOne(ReactionRole, {channelId, messageId, emojiName, emojiId});
     }
 
+    getStaticRolesByGuild(guildId: string): Promise<ReactionRole[]> {
+        return this.entityManager.find(ReactionRole, {referenceType: 'static', guildId});
+    }
+
     getJoinRoles(guildId: string): Promise<OnJoinRole[]> {
         return this.entityManager.find(OnJoinRole, {guildId});
     }
@@ -27,7 +31,7 @@ export class SettingsService {
     }
 
     async createJoinRole(channelId: string, messageId: string, join: OnJoinRole, expireAt: Date | null): Promise<ReactionRole> {
-        const reactionRole = new ReactionRole({
+        const reactionRole = this.entityManager.create(ReactionRole, {
             guildId: join.guildId,
             roleId: join.roleId,
             channelId,
@@ -38,7 +42,6 @@ export class SettingsService {
             referenceType: 'join',
             referenceId: join.id.toString(),
         });
-
         await this.entityManager.persistAndFlush(reactionRole);
 
         return reactionRole;

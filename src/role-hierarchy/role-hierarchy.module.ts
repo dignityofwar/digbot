@@ -1,7 +1,8 @@
 import {Module} from '@nestjs/common';
 import {SettingsService} from './settings.service';
-import {AutoRolesController} from './auto-roles.controller';
+import {RoleHierarchyController} from './role-hierarchy.controller';
 import {DiscordModule} from '../discord/discord.module';
+import {SettingsController} from './http/settings.controller';
 
 @Module({
     imports: [
@@ -11,8 +12,10 @@ import {DiscordModule} from '../discord/discord.module';
         SettingsService,
     ],
     controllers: [
-        AutoRolesController,
+        RoleHierarchyController,
+
+        SettingsController,
     ],
 })
-export class AutoRolesModule {
+export class RoleHierarchyModule {
 }
