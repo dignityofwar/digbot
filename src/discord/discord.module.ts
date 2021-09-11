@@ -84,7 +84,7 @@ export class DiscordModule implements OnApplicationBootstrap, OnApplicationShutd
             .on('gatewayReady',
                 ({shard}) => shardLogger.log('Shard ready', _(shard)))
             .on('gatewayResumed',
-                ({shard}) => shardLogger.log('Shard resumed', _(shard)));
+                ({shard}) => shardLogger.verbose('Shard resumed', _(shard)));
     }
 
     async onApplicationBootstrap(): Promise<void> {

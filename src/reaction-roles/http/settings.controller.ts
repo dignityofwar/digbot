@@ -1,4 +1,4 @@
-import {Controller, Get, Param, Post} from '@nestjs/common';
+import {Controller, Get, Param} from '@nestjs/common';
 import {SettingsService} from '../settings.service';
 import {DiscordAccessor} from '../../discord/helpers/discord.accessor';
 
@@ -17,12 +17,5 @@ export class SettingsController {
         this.accessor.getGuildOrFail(guildId);
 
         return this.settings.getStaticRolesByGuild(guildId);
-    }
-
-    @Post()
-    createStatic(
-        @Param('guildId') guildId: string,
-    ) {
-        this.accessor.getGuildOrFail(guildId);
     }
 }

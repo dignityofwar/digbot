@@ -2,10 +2,10 @@ import {Controller, Logger} from '@nestjs/common';
 import {SettingsService} from './settings.service';
 import {On} from '../discord/decorators/on.decorator';
 import {GatewayClientEvents} from 'detritus-client';
-import {Client as RestClient} from 'detritus-client-rest/lib/client';
+import {DelayedJobs} from '../utils/delayed-jobs';
 import GuildMemberUpdate = GatewayClientEvents.GuildMemberUpdate;
 import ClusterEvent = GatewayClientEvents.ClusterEvent;
-import Timeout = NodeJS.Timeout;
+import {Member, Role} from 'detritus-client/lib/structures';
 
 @Controller()
 export class RoleHierarchyController {
@@ -13,50 +13,51 @@ export class RoleHierarchyController {
 
     private static readonly PARENT_ROLE_EVALUATE_DELAY = 10000;
 
-    private readonly queued = new Map<string, Timeout>();
+    private readonly queued = new DelayedJobs();
 
     constructor(
         private readonly settings: SettingsService,
-        private readonly rest: RestClient,
     ) {
     }
 
     @On('guildMemberUpdate')
-    async role({member, old, shard}: GuildMemberUpdate & ClusterEvent) {
+    async role({member, old}: GuildMemberUpdate & ClusterEvent) {
         if (member.bot) return;
 
-        const queued = this.queued.get(member.id);
-        if (queued) clearTimeout(queued);
+        const addedRoles = member.roles.toArray()
+            .filter(role => !old.roles.has(role.id));
 
-        this.queued.set(
-            member.id,
-            setTimeout(async () => {
-                this.queued.delete(member.id);
+        for (const role of addedRoles) {
+            const key = `${member.guildId}:${member.id}:${role.id}`;
+            if (this.queued.has(key)) continue;
 
-                const links = await this.settings.getParentsByRoles(
-                    member.guildId,
-                    Array.from(member.roles.keys())
-                        .filter(role => !old.roles.has(role)),
-                );
+            this.queued.queue(
+                key,
+                RoleHierarchyController.PARENT_ROLE_EVALUATE_DELAY,
+                () => this.evaluateRole(member, role),
+            );
+        }
+    }
 
-                links.filter(link => !member.roles.has(link.parentId))
-                    .forEach(async (link) => {
-                        try {
-                            await this.rest.addGuildMemberRole(member.guildId, member.id, link.parentId, {reason: 'Assigned as parent role'});
+    private async evaluateRole(member: Member, role: Role): Promise<void> {
+        if (!member.roles.has(role.id)) return;
 
-                            const parent = shard.roles.get(member.guildId, link.parentId);
+        const link = await this.settings.getParentsByRole(member.guildId, role.id);
+        if (!link || member.roles.has(link.parentId)) return;
 
-                            await member.createMessage({
-                                embed: {
-                                    title: `Auto-assigned role on ${member.guild.name}`,
-                                    description: `I have auto assigned you the role ${parent.name} as you have the role ${member.roles.get(link.roleId).name}`,
-                                },
-                            });
-                        } catch (e) {
-                            RoleHierarchyController.logger.warn(`Something went wrong when auto assigning parent role "${link.roleId}": ${e}`);
-                        }
-                    });
-            }, RoleHierarchyController.PARENT_ROLE_EVALUATE_DELAY).unref(),
-        );
+        try {
+            await member.addRole(link.parentId, {reason: 'Assigned as parent role'});
+
+            const parent = member.guild.roles.get(link.parentId);
+
+            await member.createMessage({
+                embed: {
+                    title: `Auto-assigned role on ${member.guild.name}`,
+                    description: `I have auto assigned you the role ${parent.name} as you have the role ${role.name}`,
+                },
+            });
+        } catch (e) {
+            RoleHierarchyController.logger.warn(`Something went wrong when auto assigning parent role "${link.roleId}": ${e}`);
+        }
     }
 }

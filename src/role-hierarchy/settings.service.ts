@@ -16,6 +16,10 @@ export class SettingsService {
         return this.entityManager.find(RoleHierarchyLink, {guildId});
     }
 
+    getParentsByRole(guildId: string, roleId: string): Promise<RoleHierarchyLink> {
+        return this.entityManager.findOne(RoleHierarchyLink, {guildId, roleId});
+    }
+
     async createLink(guildId: string, roleId: string, parentId: string): Promise<RoleHierarchyLink> {
         const link = this.entityManager.create(RoleHierarchyLink, {guildId, roleId, parentId});
         await this.entityManager.persistAndFlush(link);
@@ -27,12 +31,5 @@ export class SettingsService {
         const link = await this.entityManager.findOneOrFail(RoleHierarchyLink, {guildId, roleId, parentId});
 
         await this.entityManager.removeAndFlush(link);
-    }
-
-    getParentsByRoles(guildId: string, roleIds: string[]): Promise<RoleHierarchyLink[]> {
-        return this.entityManager.createQueryBuilder(RoleHierarchyLink)
-            .where({guildId, roleId: {$in: roleIds}})
-            .groupBy('parentId')
-            .getResult();
     }
 }
