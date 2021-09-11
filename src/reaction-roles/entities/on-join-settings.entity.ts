@@ -11,5 +11,8 @@ export class OnJoinSettings extends BaseEntity {
     description: string;
 
     @Property()
-    expireDelay: number;
+    expireDelay: number; // hours
+
+    @Property()
+    delay?: number; // minutes
 }
