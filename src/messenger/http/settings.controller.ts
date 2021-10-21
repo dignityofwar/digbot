@@ -1,6 +1,6 @@
 import {Controller, Get, Param} from '@nestjs/common';
 import {DiscordAccessor} from '../../discord/helpers/discord.accessor';
-import {SettingsService} from '../settings.service';
+import {SettingsService} from '../services/settings.service';
 
 @Controller('/messenger')
 export class SettingsController {
@@ -14,18 +14,18 @@ export class SettingsController {
     listJoin(
         @Param('guildId') guildId: string,
     ) {
-        this.accessor.getGuildOrFail(guildId);
+        const guild = this.accessor.getGuild(guildId);
 
-        return this.settings.getJoinMessagesByGuild(guildId);
+        return this.settings.getJoinMessagesByGuild(guild);
     }
 
     @Get('/:guildId/boost')
     listBoost(
         @Param('guildId') guildId: string,
     ) {
-        this.accessor.getGuildOrFail(guildId);
+        const guild = this.accessor.getGuild(guildId);
 
-        return this.settings.getBoostMessagesByGuild(guildId);
+        return this.settings.getBoostMessagesByGuild(guild);
     }
 
     @Get('/:guildId/role/:roleId')
@@ -33,9 +33,8 @@ export class SettingsController {
         @Param('guildId') guildId: string,
         @Param('roleId') roleId: string,
     ) {
-        const guild = this.accessor.getGuildOrFail(guildId);
-        this.accessor.getRoleOrFail(guild, roleId);
+        const role = this.accessor.getRole(guildId, roleId);
 
-        return this.settings.getRoleMessagesByRoles(guildId, [roleId]);
+        return this.settings.getRoleMessagesByRole(role);
     }
 }

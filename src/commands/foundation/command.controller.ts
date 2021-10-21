@@ -1,11 +1,11 @@
-import {Controller, Logger} from '@nestjs/common';
-import {On} from '../../discord/decorators/on.decorator';
-import {CommandContainer} from './command.container';
+import {Injectable, Logger} from '@nestjs/common';
+import {DiscordEvent} from '../../discord/foundation/decorators/discord-event.decorator';
+import {CommandContainer} from './helpers/command.container';
 import {GatewayClientEvents, Structures} from 'detritus-client';
 import InteractionDataApplicationCommand = Structures.InteractionDataApplicationCommand;
 import InteractionCreate = GatewayClientEvents.InteractionCreate;
 
-@Controller()
+@Injectable()
 export class CommandController {
     private static readonly logger = new Logger('CommandController');
 
@@ -14,7 +14,7 @@ export class CommandController {
     ) {
     }
 
-    @On('interactionCreate')
+    @DiscordEvent('interactionCreate')
     async message({interaction}: InteractionCreate) {
         if (!interaction.isFromApplicationCommand) return;
 

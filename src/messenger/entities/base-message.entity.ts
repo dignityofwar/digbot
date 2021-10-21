@@ -1,14 +1,24 @@
-import {BaseEntity} from '../../database/base.entity';
-import {Index, Property} from '@mikro-orm/core';
+import {ManyToOne, PrimaryKey, Property} from '@mikro-orm/core';
+import {CreatedAt, UpdatedAt} from '../../database/decorators/date.decorators';
+import {Guild} from '../../discord/entities/guild.entity';
+import {Channel} from '../../discord/entities/channel.entity';
 
-export abstract class BaseMessage extends BaseEntity{
-    @Property()
-    @Index()
-    guildId: string;
+export abstract class BaseMessage {
+    @PrimaryKey()
+    readonly id: number;
 
-    @Property()
-    channelId?: string;
+    @ManyToOne()
+    guild: Guild;
+
+    @ManyToOne()
+    channel?: Channel;
 
     @Property({columnType: 'text'})
     message: string;
+
+    @CreatedAt()
+    readonly createdAt: Date;
+
+    @UpdatedAt()
+    readonly updatedAt: Date;
 }

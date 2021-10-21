@@ -1,5 +1,5 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
-import {ClusterClient} from 'detritus-client';
+import {ClusterClient, ShardClient} from 'detritus-client';
 import {Emoji, Guild, Role} from 'detritus-client/lib/structures';
 
 @Injectable()
@@ -11,51 +11,54 @@ export class DiscordAccessor {
 
     getGuilds(): Guild[] {
         return this.discord.shards.map(
-            shard => shard.guilds.toArray(),
+            shard => shard.guilds.toArray().filter(guild => !guild.unavailable),
         ).flat();
     }
 
-    getGuild(guildId: string): Guild | null {
-        const shardId = (Number.parseInt(guildId, 10) >> 22) % this.discord.shardCount;
+    getGuild(guildId: string): Guild {
+        const shard = this.getShard(guildId);
+        const guild = shard.guilds.get(guildId);
 
-        return this.discord.shards.get(shardId)
-            .guilds.get(guildId) ?? null;
+        if (!guild)
+            throw new NotFoundException('Guild not found');
+
+        if (guild.unavailable)
+            throw new NotFoundException('Guild not available');
+
+        return guild;
     }
 
-    getGuildOrFail(guildId: string): Guild | null {
-        const guild = this.getGuild(guildId);
-        if (guild) return guild;
-
-        throw new NotFoundException('Guild Not Found');
+    getRoles(guildId: string): Role[] {
+        return this.getGuild(guildId).roles.toArray();
     }
 
-    getRoles(guild: Guild): Role[] {
-        return guild.roles.toArray();
+    getRole(guildId: string, roleId: string): Role {
+        const shard = this.getShard(guildId);
+        const role = shard.roles.get(guildId, roleId);
+
+        if (!role)
+            throw new NotFoundException('Role not found');
+
+        return role;
     }
 
-    getRole(guild: Guild, roleId: string): Role | null {
-        return guild.roles.get(roleId) ?? null;
+    getEmojis(guildId: string): Emoji[] {
+        return this.getGuild(guildId).emojis.toArray();
     }
 
-    getRoleOrFail(guild: Guild, roleId: string): Role {
-        const role = this.getRole(guild, roleId);
-        if (role) return role;
+    getEmoji(guildId: string, emojiId: string): Emoji {
+        const shard = this.getShard(guildId);
+        const emoji = shard.emojis.get(guildId, emojiId);
 
-        throw new NotFoundException('Role Not Found');
+        if (!emoji)
+            throw new NotFoundException('Emoji not found');
+
+        return emoji;
     }
 
-    getEmojis(guild: Guild): Emoji[] {
-        return guild.emojis.toArray();
-    }
-
-    getEmoji(guild: Guild, emojiId: string): Emoji | null {
-        return guild.emojis.get(emojiId) ?? null;
-    }
-
-    getEmojiOrFail(guild: Guild, emojiId: string): Emoji {
-        const emoji = this.getEmoji(guild, emojiId);
-        if (emoji) return emoji;
-
-        throw new NotFoundException('Emoji Not Found');
+    private getShard(guildId: string): ShardClient {
+        return this.discord.shards.get(
+            Number(BigInt(guildId) >> 22n) % this.discord.shardCount,
+        );
     }
 }

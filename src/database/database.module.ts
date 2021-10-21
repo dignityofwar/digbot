@@ -1,9 +1,17 @@
 import {MikroOrmModule} from '@mikro-orm/nestjs';
-import {MigrationService} from './migration.service';
+import {MigrationService} from './services/migration.service';
+import {Module} from '@nestjs/common';
 
-export const DatabaseModule = MikroOrmModule.forRoot();
-
-if (!DatabaseModule.providers)
-    DatabaseModule.providers = [];
-
-DatabaseModule.providers.push(MigrationService);
+@Module({
+    imports: [
+        MikroOrmModule.forRoot(),
+    ],
+    providers: [
+        MigrationService,
+    ],
+    exports: [
+        MikroOrmModule,
+    ],
+})
+export class DatabaseModule {
+}

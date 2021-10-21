@@ -1,20 +1,23 @@
-import {Entity, Index, Property, Unique} from '@mikro-orm/core';
-import {BaseEntity} from '../../database/base.entity';
+import {Entity, ManyToOne, PrimaryKey, Property} from '@mikro-orm/core';
+import {CreatedAt, UpdatedAt} from '../../database/decorators/date.decorators';
+import {Guild} from '../../discord/entities/guild.entity';
+import {Role} from '../../discord/entities/role.entity';
+import {Channel} from '../../discord/entities/channel.entity';
+import {Emoji} from '../../discord/entities/emoji.entity';
 
 @Entity({tableName: 'reaction_roles'})
-@Unique({properties: ['channelId', 'messageId', 'emojiName', 'emojiId']})
-@Index({properties: ['channelId', 'messageId']})
-@Index({properties: ['guildId', 'roleId']})
-export class ReactionRole extends BaseEntity {
-    @Property()
-    @Index()
-    guildId: string;
+export class ReactionRole {
+    @PrimaryKey()
+    readonly id: number;
 
-    @Property()
-    roleId: string;
+    @ManyToOne()
+    guild: Guild;
 
-    @Property()
-    channelId: string;
+    @ManyToOne()
+    role: Role;
+
+    @ManyToOne()
+    channel: Channel;
 
     @Property()
     messageId: string;
@@ -22,8 +25,8 @@ export class ReactionRole extends BaseEntity {
     @Property()
     emojiName: string;
 
-    @Property()
-    emojiId?: string;
+    @ManyToOne()
+    emoji?: Emoji;
 
     @Property()
     expireAt?: Date;
@@ -33,4 +36,10 @@ export class ReactionRole extends BaseEntity {
 
     @Property()
     referenceId?: string;
+
+    @CreatedAt()
+    readonly createdAt: Date;
+
+    @UpdatedAt()
+    readonly updatedAt: Date;
 }

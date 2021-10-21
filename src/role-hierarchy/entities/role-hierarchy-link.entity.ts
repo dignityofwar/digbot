@@ -1,17 +1,25 @@
-import {Entity, Index, Property, Unique} from '@mikro-orm/core';
-import {BaseEntity} from '../../database/base.entity';
+import {Entity, ManyToOne, PrimaryKey} from '@mikro-orm/core';
+import {CreatedAt, UpdatedAt} from '../../database/decorators/date.decorators';
+import {Guild} from '../../discord/entities/guild.entity';
+import {Role} from '../../discord/entities/role.entity';
 
 @Entity()
-@Unique({properties: ['guildId', 'roleId']})
-@Index({properties: ['guildId', 'parentId']})
-export class RoleHierarchyLink extends BaseEntity {
-    @Property()
-    @Index()
-    guildId: string;
+export class RoleHierarchyLink {
+    @PrimaryKey()
+    readonly id: number;
 
-    @Property()
-    roleId: string;
+    @ManyToOne()
+    guild: Guild;
 
-    @Property()
-    parentId: string;
+    @ManyToOne()
+    role: Role;
+
+    @ManyToOne()
+    parent: Role;
+
+    @CreatedAt()
+    readonly createdAt: Date;
+
+    @UpdatedAt()
+    readonly updatedAt: Date;
 }

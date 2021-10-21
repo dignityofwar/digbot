@@ -1,5 +1,5 @@
 import {Controller, Delete, Get, Param, Post} from '@nestjs/common';
-import {SettingsService} from '../settings.service';
+import {SettingsService} from '../services/settings.service';
 import {DiscordAccessor} from '../../discord/helpers/discord.accessor';
 
 @Controller('/role-hierarchy')
@@ -14,9 +14,9 @@ export class SettingsController {
     listLinks(
         @Param('guildId') guildId: string,
     ) {
-        const guild = this.accessor.getGuildOrFail(guildId);
+        const guild = this.accessor.getGuild(guildId);
 
-        return this.settings.getLinksByGuild(guild.id);
+        return this.settings.getLinksByGuild(guild);
     }
 
     @Post('/:guildId/:roleId/:parentId')
@@ -25,11 +25,10 @@ export class SettingsController {
         @Param('roleId') roleId: string,
         @Param('parentId') parentId: string,
     ) {
-        const guild = this.accessor.getGuildOrFail(guildId);
-        this.accessor.getRoleOrFail(guild, roleId);
-        this.accessor.getRoleOrFail(guild, parentId);
+        const role = this.accessor.getRole(guildId, roleId);
+        const parent = this.accessor.getRole(guildId, parentId);
 
-        await this.settings.createLink(guildId, roleId, parentId);
+        await this.settings.createLink(role, parent);
     }
 
     @Delete('/:guildId/:roleId/:parentId')
@@ -38,10 +37,9 @@ export class SettingsController {
         @Param('roleId') roleId: string,
         @Param('parentId') parentId: string,
     ) {
-        const guild = this.accessor.getGuildOrFail(guildId);
-        this.accessor.getRoleOrFail(guild, roleId);
-        this.accessor.getRoleOrFail(guild, parentId);
+        const role = this.accessor.getRole(guildId, roleId);
+        const parent = this.accessor.getRole(guildId, parentId);
 
-        await this.settings.deleteLink(guildId, roleId, parentId);
+        await this.settings.deleteLink(role, parent);
     }
 }

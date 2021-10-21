@@ -1,7 +1,7 @@
 import {Injectable, Type} from '@nestjs/common';
 import {Reflector} from '@nestjs/core';
-import {CommandDecoratorOptions} from '../decorators/interfaces/commanddecorator.options';
-import {COMMAND_DECORATOR} from '../command.constants';
+import {COMMAND_DECORATOR} from './command.constants';
+import {DiscordCommandOptions} from '../decorators/discord-command.decorator';
 
 @Injectable()
 export class MetadataAccessor {
@@ -10,7 +10,7 @@ export class MetadataAccessor {
     ) {
     }
 
-    getCommandMetadata(target: Type<any> | Function): CommandDecoratorOptions | undefined {
+    getCommandMetadata(target: Type<any> | Function): DiscordCommandOptions | undefined {
         return this.reflector.get(COMMAND_DECORATOR, target);
     }
 }

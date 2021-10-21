@@ -1,29 +1,35 @@
-import {Entity, Index, Property, Unique} from '@mikro-orm/core';
-import {BaseEntity} from '../../database/base.entity';
+import {Entity, ManyToOne, PrimaryKey, Property} from '@mikro-orm/core';
+import {CreatedAt, UpdatedAt} from '../../database/decorators/date.decorators';
+import {Role} from '../../discord/entities/role.entity';
+import {Emoji} from '../../discord/entities/emoji.entity';
+import {Guild} from '../../discord/entities/guild.entity';
 
 @Entity({tableName: 'reaction_roles_on_join'})
-@Unique({properties: ['guildId', 'emojiName', 'emojiId']})
-@Index({properties: ['guildId', 'roleId']})
-export class OnJoinRole extends BaseEntity {
-    @Property()
-    @Index()
-    guildId: string;
-
-    @Property()
-    roleId: string;
-
-    @Property()
-    emojiName: string;
-
-    @Property()
-    emojiId?: string;
-
-    @Property()
-    isAnimated: boolean;
+export class OnJoinRole {
+    @PrimaryKey()
+    readonly id: number;
 
     @Property()
     name: string;
 
     @Property()
     order: number;
+
+    @ManyToOne()
+    guild: Guild;
+
+    @ManyToOne()
+    role: Role;
+
+    @Property()
+    emojiName: string;
+
+    @ManyToOne()
+    emoji?: Emoji;
+
+    @CreatedAt()
+    readonly createdAt: Date;
+
+    @UpdatedAt()
+    readonly updatedAt: Date;
 }

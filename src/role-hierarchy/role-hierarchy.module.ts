@@ -1,8 +1,8 @@
 import {Module} from '@nestjs/common';
-import {SettingsService} from './settings.service';
-import {RoleHierarchyController} from './role-hierarchy.controller';
-import {DiscordModule} from '../discord/discord.module';
+import {SettingsService} from './services/settings.service';
+import {RoleHierarchyController} from './controllers/role-hierarchy.controller';
 import {SettingsController} from './http/settings.controller';
+import {DiscordModule} from '../discord/discord.module';
 
 @Module({
     imports: [
@@ -10,10 +10,9 @@ import {SettingsController} from './http/settings.controller';
     ],
     providers: [
         SettingsService,
+        RoleHierarchyController,
     ],
     controllers: [
-        RoleHierarchyController,
-
         SettingsController,
     ],
 })

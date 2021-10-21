@@ -22,26 +22,24 @@ export class GuildController {
     roles(
         @Param('guildId') guildId: string,
     ) {
-        return this.accessor.getRoles(
-            this.accessor.getGuildOrFail(guildId),
-        ).map(role => ({
-            id: role.id,
-            name: role.name,
-            color: role.color,
-        }));
+        return this.accessor.getRoles(guildId)
+            .map(role => ({
+                id: role.id,
+                name: role.name,
+                color: role.color,
+            }));
     }
 
     @Get('/:guildId/emojis')
     emojis(
         @Param('guildId') guildId: string,
     ) {
-        return this.accessor.getEmojis(
-            this.accessor.getGuildOrFail(guildId),
-        ).map(emoji => ({
-            id: emoji.id,
-            name: emoji.name,
-            animated: emoji.animated,
-            url: emoji.url,
-        }));
+        return this.accessor.getEmojis(guildId)
+            .map(emoji => ({
+                id: emoji.id,
+                name: emoji.name,
+                animated: emoji.animated,
+                url: emoji.url,
+            }));
     }
 }

@@ -1,11 +1,14 @@
-import {Entity, Property, Unique} from '@mikro-orm/core';
-import {BaseEntity} from '../../database/base.entity';
+import {Entity, ManyToOne, PrimaryKey, Property} from '@mikro-orm/core';
+import {CreatedAt, UpdatedAt} from '../../database/decorators/date.decorators';
+import {Guild} from '../../discord/entities/guild.entity';
 
 @Entity({tableName: 'reaction_roles_on_join_settings'})
-export class OnJoinSettings extends BaseEntity {
-    @Property()
-    @Unique()
-    guildId: string;
+export class OnJoinSettings {
+    @PrimaryKey()
+    readonly id: number;
+
+    @ManyToOne()
+    guild: Guild;
 
     @Property({columnType: 'text'})
     description: string;
@@ -15,4 +18,10 @@ export class OnJoinSettings extends BaseEntity {
 
     @Property()
     delay?: number; // minutes
+
+    @CreatedAt()
+    readonly createdAt: Date;
+
+    @UpdatedAt()
+    readonly updatedAt: Date;
 }
