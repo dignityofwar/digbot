@@ -1,8 +1,9 @@
-import {Entity, ManyToOne, PrimaryKey, Property} from '@mikro-orm/core';
+import {Entity, PrimaryKey, Property} from '@mikro-orm/core';
 import {CreatedAt, UpdatedAt} from '../../database/decorators/date.decorators';
 import {Role} from '../../discord/entities/role.entity';
 import {Emoji} from '../../discord/entities/emoji.entity';
 import {Guild} from '../../discord/entities/guild.entity';
+import {DiscordEmoji, DiscordGuild, DiscordRole} from '../../discord/decorators/relation.decorators';
 
 @Entity({tableName: 'reaction_roles_on_join'})
 export class OnJoinRole {
@@ -15,16 +16,16 @@ export class OnJoinRole {
     @Property()
     order: number;
 
-    @ManyToOne()
+    @DiscordGuild()
     guild: Guild;
 
-    @ManyToOne()
+    @DiscordRole()
     role: Role;
 
     @Property()
     emojiName: string;
 
-    @ManyToOne()
+    @DiscordEmoji()
     emoji?: Emoji;
 
     @CreatedAt()

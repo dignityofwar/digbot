@@ -1,20 +1,21 @@
-import {Entity, ManyToOne, PrimaryKey} from '@mikro-orm/core';
+import {Entity, PrimaryKey} from '@mikro-orm/core';
 import {CreatedAt, UpdatedAt} from '../../database/decorators/date.decorators';
 import {Guild} from '../../discord/entities/guild.entity';
 import {Role} from '../../discord/entities/role.entity';
+import {DiscordChannel, DiscordRole} from '../../discord/decorators/relation.decorators';
 
 @Entity()
 export class RoleHierarchyLink {
     @PrimaryKey()
     readonly id: number;
 
-    @ManyToOne()
+    @DiscordChannel()
     guild: Guild;
 
-    @ManyToOne()
+    @DiscordRole()
     role: Role;
 
-    @ManyToOne()
+    @DiscordRole()
     parent: Role;
 
     @CreatedAt()

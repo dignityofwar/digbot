@@ -48,12 +48,10 @@ export class DiscordManager implements OnApplicationBootstrap, OnApplicationShut
 
         await this.client.run();
 
-        DiscordManager.logger.log('Connected client');
+        DiscordManager.logger.log('Client ready');
     }
 
     onApplicationShutdown(): void {
         this.client.kill();
-
-        DiscordManager.logger.log('Client destroyed');
     }
 }

@@ -5,6 +5,9 @@ import {ClusterClient, GatewayClientEvents} from 'detritus-client';
 import {Member} from 'detritus-client/lib/structures';
 import {DelayedJobs} from '../../utils/delayed-jobs';
 import {Client as RestClient} from 'detritus-client-rest';
+import {timestampRelative} from '../../utils/discord.utils';
+import {DiscordAccessor} from '../../discord/helpers/discord.accessor';
+import {OnJoinRole} from '../entities/on-join-role.entity';
 
 @Injectable()
 export class ReactionRolesController {
@@ -16,6 +19,7 @@ export class ReactionRolesController {
         private readonly settings: SettingsService,
         private readonly client: ClusterClient,
         private readonly rest: RestClient,
+        private readonly discordAccessor: DiscordAccessor,
     ) {
     }
 
@@ -59,58 +63,57 @@ export class ReactionRolesController {
     }
 
     private async planEvaluateMember(member: Member): Promise<void> {
-        // const key = this.evaluateKey(member);
-        // if (this.queued.has(key)) return;
-        //
-        // const [roles, settings] = await Promise.all([
-        //     this.settings.getJoinRoles(member.guildId),
-        //     this.settings.getJoinSettings(member.guildId),
-        // ]);
-        //
-        // if (roles.length == 0) return;
-        //
-        // this.queued.queue(
-        //     key,
-        //     (settings.delay ?? 0) * 60 * 1000,
-        //     async () => {
-        //         if (member.roles.length > 0) return;
-        //
-        //         const {description, expireDelay} = settings ?? {};
-        //         const expireAt = this.calculateExpireAt(expireDelay);
-        //
-        //         try {
-        //             const {guild} = member;
-        //             const emoji = guild.emojis.get();
-        //
-        //             const message = await member.createMessage({
-        //                 embed: {
-        //                     title: `Reaction Roles for ${guild.name}`,
-        //                     description: `${description ?? 'Assign yourself roles'}\n`
-        //                         + roles.map(role => `<${role.isAnimated ? 'a' : ''}:${role.emojiName}:${role.emoji.id}> ${role.name}`).join('\n'),
-        //                     footer: {text: expireAt ? `Expires in ${timestampRelative(expireAt)}` : undefined},
-        //                 },
-        //             });
-        //
-        //             await Promise.all(
-        //                 roles.map(async (role) => {
-        //                     try {
-        //                         await this.rest.createReaction(
-        //                             message.channelId,
-        //                             message.id,
-        //                             role.emojiId ? `${role.emojiName}:${role.emojiId}` : role.emojiName,
-        //                         );
-        //
-        //                         await this.settings.createJoinRole(message.channelId, message.id, role, expireAt);
-        //                     } catch (e) {
-        //                         ReactionRolesController.logger.warn(`Error when creating reaction role: ${e}`);
-        //                     }
-        //                 }),
-        //             );
-        //         } catch (e) {
-        //             ReactionRolesController.logger.warn(`Unable to send join message: ${e}`);
-        //         }
-        //     },
-        // );
+        const key = this.evaluateKey(member);
+        if (this.queued.has(key)) return;
+
+        const [roles, settings] = await Promise.all([
+            this.settings.getJoinRoles(member.guildId),
+            this.settings.getJoinSettings(member.guildId),
+        ]);
+
+        if (roles.length == 0) return;
+
+        this.queued.queue(
+            key,
+            (settings.delay ?? 0) * 60 * 1000,
+            async () => {
+                if (member.roles.length > 0) return;
+
+                const {description, expireDelay} = settings ?? {};
+                const expireAt = this.calculateExpireAt(expireDelay);
+
+                try {
+                    const {guild} = member;
+
+                    const message = await member.createMessage({
+                        embed: {
+                            title: `Reaction Roles for ${guild.name}`,
+                            description: `${description ?? 'Assign yourself roles'}\n`
+                                + roles.map(role => `${this.emojiToString(role)} ${role.name}`).join('\n'),
+                            footer: {text: expireAt ? `Expires in ${timestampRelative(expireAt)}` : undefined},
+                        },
+                    });
+
+                    await Promise.all(
+                        roles.map(async (role) => {
+                            try {
+                                await this.rest.createReaction(
+                                    message.channelId,
+                                    message.id,
+                                    role.emoji ? `${role.emojiName}:${role.emoji.id}` : role.emojiName,
+                                );
+
+                                await this.settings.createJoinRole(message.channelId, message.id, role, expireAt);
+                            } catch (e) {
+                                ReactionRolesController.logger.warn(`Error when creating reaction role: ${e}`);
+                            }
+                        }),
+                    );
+                } catch (e) {
+                    ReactionRolesController.logger.warn(`Unable to send join message: ${e}`);
+                }
+            },
+        );
     }
 
     private cancelEvaluate(member: Member): void {
@@ -130,5 +133,12 @@ export class ReactionRolesController {
         expireAt.setHours(expireAt.getHours() + expireDelay);
 
         return expireAt;
+    }
+
+    private emojiToString(role: OnJoinRole): string {
+        if (!role.emoji)
+            return `<:${role.emojiName}:>`;
+
+        return this.discordAccessor.getEmoji(role.guild.id, role.emoji.id).toString();
     }
 }

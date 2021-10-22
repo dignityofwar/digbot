@@ -1,13 +1,14 @@
-import {Entity, ManyToOne, PrimaryKey, Property} from '@mikro-orm/core';
+import {Entity, PrimaryKey, Property} from '@mikro-orm/core';
 import {CreatedAt, UpdatedAt} from '../../database/decorators/date.decorators';
 import {Guild} from '../../discord/entities/guild.entity';
+import {DiscordGuild} from '../../discord/decorators/relation.decorators';
 
 @Entity({tableName: 'reaction_roles_on_join_settings'})
 export class OnJoinSettings {
     @PrimaryKey()
     readonly id: number;
 
-    @ManyToOne()
+    @DiscordGuild()
     guild: Guild;
 
     @Property({columnType: 'text'})
