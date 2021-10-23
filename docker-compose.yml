@@ -10,6 +10,8 @@ services:
       - MYSQL_PASSWORD=${DB_PASS:-pass}
     ports:
       - 3306:3306
+  redis:
+    image: redis
   digbot:
     build: .
     depends_on:
@@ -17,5 +19,9 @@ services:
     tty: true
     environment:
       - DISCORD_TOKEN
-      - DATABASE_URL=mysql://${DB_USER:-dig}:${DB_PASS:-pass}@mariadb:3306/${DB_NAME:-digbot}
+      - DB_HOST=mariadb
+      - DB_NAME=${DB_NAME:-digbot}
+      - DB_USER=${DB_USER:-dig}
+      - DB_PASS=${DB_PASS:-pass}
+      - REDIS_HOST=redis
 

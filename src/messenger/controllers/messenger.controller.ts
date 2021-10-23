@@ -6,8 +6,7 @@ import {GatewayClientEvents} from 'detritus-client';
 import {Member} from 'detritus-client/lib/structures';
 import {BaseMessage} from '../entities/base-message.entity';
 import {MemberUpdateAccessor} from '../../discord/helpers/member-update.accessor';
-import GuildMemberUpdate = GatewayClientEvents.GuildMemberUpdate;
-import GuildMemberAdd = GatewayClientEvents.GuildMemberAdd;
+import {RateLimiter} from '../../utils/ratelimit/rate-limiter';
 
 @Injectable()
 export class MessengerController {
@@ -17,26 +16,29 @@ export class MessengerController {
         private readonly settings: SettingsService,
         private readonly rest: RestClient,
         private readonly memberUpdateAccessor: MemberUpdateAccessor,
+        private readonly rateLimiter: RateLimiter,
     ) {
     }
 
     @DiscordEvent('guildMemberUpdate')
-    async role(update: GuildMemberUpdate) {
+    async role(update: GatewayClientEvents.GuildMemberUpdate) {
         const {member} = update;
         if (member.bot) return;
 
-        // TODO: Add ratelimiter
-
         this.memberUpdateAccessor.addedRoles(update)
             .forEach(async role => {
+                await this.rateLimiter.attempt(`messenger:role:${member.guildId}:${member.id}:${role.id}`, 1, 60);
+
                 const messages = await this.settings.getRoleMessagesByRole(role);
 
                 messages.forEach(message => this.message(member, message));
             });
+
+        // TODO: On role remove set ratelimit?
     }
 
     @DiscordEvent('guildMemberAdd')
-    async join({member}: GuildMemberAdd) {
+    async join({member}: GatewayClientEvents.GuildMemberAdd) {
         if (member.bot) return;
 
         const messages = await this.settings.getJoinMessagesByGuild(member.guild);
@@ -46,7 +48,7 @@ export class MessengerController {
 
 
     @DiscordEvent('guildMemberUpdate')
-    async boost(update: GuildMemberUpdate) {
+    async boost(update: GatewayClientEvents.GuildMemberUpdate) {
         const {member} = update;
 
         if (member.bot) return;

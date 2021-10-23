@@ -3,7 +3,6 @@ import {DiscordEvent} from '../../discord/foundation/decorators/discord-event.de
 import {CommandContainer} from './helpers/command.container';
 import {GatewayClientEvents, Structures} from 'detritus-client';
 import InteractionDataApplicationCommand = Structures.InteractionDataApplicationCommand;
-import InteractionCreate = GatewayClientEvents.InteractionCreate;
 
 @Injectable()
 export class CommandController {
@@ -15,7 +14,7 @@ export class CommandController {
     }
 
     @DiscordEvent('interactionCreate')
-    async message({interaction}: InteractionCreate) {
+    async message({interaction}: GatewayClientEvents.InteractionCreate) {
         if (!interaction.isFromApplicationCommand) return;
 
         const command = this.repository.get((interaction.data as InteractionDataApplicationCommand).name);

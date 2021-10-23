@@ -4,8 +4,6 @@ import {DiscordEvent} from '../../discord/foundation/decorators/discord-event.de
 import {GatewayClientEvents} from 'detritus-client';
 import {DelayedJobs} from '../../utils/delayed-jobs';
 import {Member, Role} from 'detritus-client/lib/structures';
-import GuildMemberUpdate = GatewayClientEvents.GuildMemberUpdate;
-import ClusterEvent = GatewayClientEvents.ClusterEvent;
 
 @Injectable()
 export class RoleHierarchyController {
@@ -21,7 +19,7 @@ export class RoleHierarchyController {
     }
 
     @DiscordEvent('guildMemberUpdate')
-    async role({member, old}: GuildMemberUpdate & ClusterEvent) {
+    async role({member, old}: GatewayClientEvents.GuildMemberUpdate & GatewayClientEvents.ClusterEvent) {
         if (member.bot) return;
 
         const addedRoles = member.roles.toArray()
