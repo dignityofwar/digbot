@@ -5,7 +5,7 @@ import {ClusterClient, GatewayClientEvents} from 'detritus-client';
 import {Member} from 'detritus-client/lib/structures';
 import {DelayedJobs} from '../../utils/delayed-jobs';
 import {Client as RestClient} from 'detritus-client-rest';
-import {timestampRelative} from '../../utils/discord.utils';
+import {timestampRelative} from '../../discord/utils/reference.helpers';
 import {DiscordAccessor} from '../../discord/helpers/discord.accessor';
 import {OnJoinRole} from '../entities/on-join-role.entity';
 
