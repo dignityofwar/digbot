@@ -1,5 +1,5 @@
 import {config} from './foundation/config';
-import {Env} from './foundation/decorators/env-var.decorator';
+import {Env} from './foundation/decorators/env.decorator';
 import {IsInt, IsNotEmpty, IsPositive, IsString} from 'class-validator';
 import {Type} from 'class-transformer';
 

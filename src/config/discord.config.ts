@@ -1,4 +1,4 @@
-import {Env} from './foundation/decorators/env-var.decorator';
+import {Env} from './foundation/decorators/env.decorator';
 import {IsNotEmpty, IsString} from 'class-validator';
 import {config} from './foundation/config';
 

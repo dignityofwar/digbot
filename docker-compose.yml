@@ -12,6 +12,8 @@ services:
       - 3306:3306
   redis:
     image: redis
+    ports:
+      - 6379:6379
   digbot:
     build: .
     depends_on:

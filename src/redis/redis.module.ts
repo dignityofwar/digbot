@@ -9,6 +9,9 @@ import {redisConfig} from '../config/redis.config';
             useFactory: () => new IORedis(redisConfig.port, redisConfig.host),
         },
     ],
+    exports: [
+        IORedis,
+    ],
 })
 export class RedisModule {
 }
