@@ -13,7 +13,6 @@ class Migration20211023222214 extends Migration {
     this.addSql('alter table `discord_roles` add index `discord_roles_guild_id_index`(`guild_id`);');
 
     this.addSql('alter table `reaction_roles_on_join_settings` modify `guild_id` varchar(255);');
-    this.addSql('alter table `reaction_roles_on_join_settings` drop index `reaction_roles_on_join_settings_guild_id_index`;');
     this.addSql('alter table `reaction_roles_on_join_settings` add index `reaction_roles_on_join_settings_guild_id_index`(`guild_id`);');
 
     this.addSql('alter table `role_hierarchy_link` modify `guild_id` varchar(255), modify `role_id` varchar(255), modify `parent_id` varchar(255);');
