@@ -7,13 +7,12 @@ import {Member, Role} from 'detritus-client/lib/structures';
 
 @Injectable()
 export class RoleHierarchyController {
-    private static readonly logger = new Logger('AutoRoles');
-
     private static readonly PARENT_ROLE_EVALUATE_DELAY = 10000;
 
     private readonly queued = new DelayedJobs();
 
     constructor(
+        private readonly logger: Logger,
         private readonly settings: SettingsService,
     ) {
     }
@@ -55,7 +54,7 @@ export class RoleHierarchyController {
                 },
             });
         } catch (e) {
-            RoleHierarchyController.logger.warn(`Something went wrong when auto assigning parent role "${link.role.id}": ${e}`);
+            this.logger.warn(`Something went wrong when auto assigning parent role "${link.role.id}": ${e}`);
         }
     }
 }

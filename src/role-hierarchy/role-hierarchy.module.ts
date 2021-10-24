@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common';
+import {Logger, Module} from '@nestjs/common';
 import {SettingsService} from './services/settings.service';
 import {RoleHierarchyController} from './controllers/role-hierarchy.controller';
 import {SettingsController} from './http/settings.controller';
@@ -11,6 +11,10 @@ import {DiscordModule} from '../discord/discord.module';
     providers: [
         SettingsService,
         RoleHierarchyController,
+        {
+            provide: Logger,
+            useFactory: () => new Logger('RoleHierarchyModule'),
+        },
     ],
     controllers: [
         SettingsController,

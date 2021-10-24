@@ -10,9 +10,8 @@ import {RateLimiter} from '../../utils/ratelimit/rate-limiter';
 
 @Injectable()
 export class MessengerController {
-    private static readonly logger = new Logger('MessengerController');
-
     constructor(
+        private readonly logger: Logger,
         private readonly settings: SettingsService,
         private readonly rest: RestClient,
         private readonly memberUpdateAccessor: MemberUpdateAccessor,
@@ -73,7 +72,7 @@ export class MessengerController {
                 });
             }
         } catch (err) {
-            MessengerController.logger.warn(`Unable to perform action "${id}" for member "${member.id}": ${err}`);
+            this.logger.warn(`Unable to perform action "${id}" for member "${member.id}": ${err}`);
         }
     }
 

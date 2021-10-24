@@ -1,6 +1,6 @@
 import {MikroOrmModule} from '@mikro-orm/nestjs';
 import {MigrationService} from './services/migration.service';
-import {Module} from '@nestjs/common';
+import {Logger, Module} from '@nestjs/common';
 
 @Module({
     imports: [
@@ -8,6 +8,10 @@ import {Module} from '@nestjs/common';
     ],
     providers: [
         MigrationService,
+        {
+            provide: Logger,
+            useFactory: () => new Logger('DatabaseModule'),
+        },
     ],
     exports: [
         MikroOrmModule,

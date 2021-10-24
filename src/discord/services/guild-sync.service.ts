@@ -9,21 +9,22 @@ import {Emoji} from '../entities/emoji.entity';
 
 @Injectable()
 export class GuildSyncService implements OnModuleInit {
-    private static readonly logger = new Logger('DiscordGuildSync');
-
     constructor(
+        private readonly logger: Logger,
         private readonly entityManager: EntityManager,
     ) {
     }
 
     async onModuleInit(): Promise<void> {
-        await this.entityManager.nativeUpdate(Guild, {}, {inactiveSince: new Date()});
+        this.logger.log('Initializing synced guilds');
 
-        GuildSyncService.logger.log('Initialized');
+        await this.entityManager.nativeUpdate(Guild, {}, {inactiveSince: new Date()});
     }
 
     @DiscordEvent('guildCreate')
-    async guildCreate({guild}: GatewayClientEvents.GuildCreate) {
+    async guildCreate({guild, fromUnavailable}: GatewayClientEvents.GuildCreate) {
+        this.logger.log(`Guild "${guild.name}"(${guild.id}) became active: ${JSON.stringify({fromUnavailable})}`);
+
         await this.entityManager.createQueryBuilder(Guild)
             .insert({id: guild.id, inactiveSince: null})
             .onConflict('id')
@@ -69,12 +70,19 @@ export class GuildSyncService implements OnModuleInit {
     }
 
     @DiscordEvent('guildDelete')
-    async guildDelete({guildId, isUnavailable}: GatewayClientEvents.GuildDelete) {
-        if (!isUnavailable)
+    async guildDelete({guild, guildId, isUnavailable}: GatewayClientEvents.GuildDelete) {
+        if (!isUnavailable) {
+            this.logger.log(
+                isUnavailable
+                    ? `Guild "${guild.name ?? 'unkown'}"(${guildId}) became inactive`
+                    : `Guild "${guild.name ?? 'unkown'}"(${guildId}) became unavailable`,
+            );
+
             await this.entityManager.createQueryBuilder(Guild)
                 .update({inactiveSince: new Date()})
                 .where({id: guildId})
                 .execute();
+        }
     }
 
     @DiscordEvent('guildRoleCreate')

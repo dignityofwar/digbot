@@ -6,9 +6,8 @@ import InteractionDataApplicationCommand = Structures.InteractionDataApplication
 
 @Injectable()
 export class CommandController {
-    private static readonly logger = new Logger('CommandController');
-
     constructor(
+        private readonly logger: Logger,
         private readonly repository: CommandContainer,
     ) {
     }
@@ -31,7 +30,7 @@ export class CommandController {
                     },
                 });
 
-                CommandController.logger.warn(`Command "${command.command}" failed unexpectedly: ${err}`);
+                this.logger.warn(`Command "${command.command}" failed unexpectedly: ${err}`);
             }
         }
     }

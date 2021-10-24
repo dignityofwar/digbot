@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common';
+import {Logger, Module} from '@nestjs/common';
 import {DiscordCoreModule} from './foundation/discord-core.module';
 import {DiscordAccessor} from './helpers/discord.accessor';
 import {MemberUpdateAccessor} from './helpers/member-update.accessor';
@@ -13,6 +13,10 @@ import {GuildSyncService} from './services/guild-sync.service';
         DiscordAccessor,
         MemberUpdateAccessor,
         GuildSyncService,
+        {
+            provide: Logger,
+            useFactory: () => new Logger('DiscordModule'),
+        },
     ],
     controllers: [
         GuildController,

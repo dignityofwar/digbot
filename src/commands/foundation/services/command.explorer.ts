@@ -6,9 +6,8 @@ import {DiscordCommandOptions} from '../decorators/discord-command.decorator';
 
 @Injectable()
 export class CommandExplorer implements OnModuleInit {
-    private static readonly logger = new Logger('CommandExplorer');
-
     constructor(
+        private readonly logger: Logger,
         private readonly discoveryService: DiscoveryService,
         private readonly metadataScanner: MetadataScanner,
         private readonly metadataAccessor: MetadataAccessor,
@@ -49,7 +48,7 @@ export class CommandExplorer implements OnModuleInit {
         container: CommandContainer,
         metadata: DiscordCommandOptions,
     ): void {
-        CommandExplorer.logger.verbose(`Registered command ${metadata.command} on ${instance.constructor.name}@${key}`);
+        this.logger.verbose(`Registered command ${metadata.command} on ${instance.constructor.name}@${key}`);
 
         container.register(metadata, instance[key].bind(instance));
     }

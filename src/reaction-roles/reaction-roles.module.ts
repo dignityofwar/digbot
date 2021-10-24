@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common';
+import {Logger, Module} from '@nestjs/common';
 import {ReactionRolesController} from './controllers/reaction-roles.controller';
 import {SettingsService} from './services/settings.service';
 import {SettingsController} from './http/settings.controller';
@@ -11,6 +11,10 @@ import {DiscordModule} from '../discord/discord.module';
     providers: [
         SettingsService,
         ReactionRolesController,
+        {
+            provide: Logger,
+            useFactory: () => new Logger('ReactionRolesModule'),
+        },
     ],
     controllers: [
         SettingsController,

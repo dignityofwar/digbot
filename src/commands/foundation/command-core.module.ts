@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common';
+import {Logger, Module} from '@nestjs/common';
 import {DiscoveryModule} from '@nestjs/core';
 import {CommandContainer} from './helpers/command.container';
 import {MetadataAccessor} from './helpers/metadata.accessor';
@@ -18,6 +18,10 @@ import {SyncService} from './services/sync.service';
         CommandExplorer,
         SyncService,
         CommandController,
+        {
+            provide: Logger,
+            useFactory: () => new Logger('CommandCoreModule'),
+        },
     ],
 })
 export class CommandCoreModule {

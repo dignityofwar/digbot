@@ -7,9 +7,8 @@ import {DiscordEventOptions} from '../decorators/discord-event.decorator';
 
 @Injectable()
 export class DiscordExplorer implements OnModuleInit {
-    private static readonly logger = new Logger('DiscordExplorer');
-
     constructor(
+        private readonly logger: Logger,
         private readonly discoveryService: DiscoveryService,
         private readonly metadataScanner: MetadataScanner,
         private readonly metadataAccessor: MetadataAccessor,
@@ -50,7 +49,7 @@ export class DiscordExplorer implements OnModuleInit {
         client: ClusterClient,
         metadata: DiscordEventOptions,
     ): void {
-        DiscordExplorer.logger.verbose(`Registered event ${metadata.event} on ${instance.constructor.name}@${key}`);
+        this.logger.verbose(`Registered event handler for ${metadata.event} on ${instance.constructor.name}@${key}`);
 
         fromEvent(client, metadata.event)
             .subscribe(instance[key].bind(instance));

@@ -11,11 +11,10 @@ import {OnJoinRole} from '../entities/on-join-role.entity';
 
 @Injectable()
 export class ReactionRolesController {
-    private static readonly logger = new Logger('ReactionRolesController');
-
     private readonly queued = new DelayedJobs();
 
     constructor(
+        private readonly logger: Logger,
         private readonly settings: SettingsService,
         private readonly client: ClusterClient,
         private readonly rest: RestClient,
@@ -31,7 +30,7 @@ export class ReactionRolesController {
         try {
             await this.rest.addGuildMemberRole(reactionRole.guild.id, userId, reactionRole.role.id, {reason: 'ReactionRole'});
         } catch (err) {
-            ReactionRolesController.logger.warn(`Unable to assign role "${reactionRole.id}": ${err}`);
+            this.logger.warn(`Unable to assign role "${reactionRole.id}": ${err}`);
         }
     }
 
@@ -48,7 +47,7 @@ export class ReactionRolesController {
         try {
             await this.rest.removeGuildMemberRole(reactionRole.guild.id, userId, reactionRole.role.id, {reason: `ReactionRole`});
         } catch (err) {
-            ReactionRolesController.logger.warn(`Unable to remove role "${reactionRole.id}": ${err}`);
+            this.logger.warn(`Unable to remove role "${reactionRole.id}": ${err}`);
         }
     }
 
@@ -105,12 +104,12 @@ export class ReactionRolesController {
 
                                 await this.settings.createJoinRole(message.channelId, message.id, role, expireAt);
                             } catch (e) {
-                                ReactionRolesController.logger.warn(`Error when creating reaction role: ${e}`);
+                                this.logger.warn(`Error when creating reaction role: ${e}`);
                             }
                         }),
                     );
                 } catch (e) {
-                    ReactionRolesController.logger.warn(`Unable to send join message: ${e}`);
+                    this.logger.warn(`Unable to send join message: ${e}`);
                 }
             },
         );
