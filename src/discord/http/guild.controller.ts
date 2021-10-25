@@ -15,6 +15,7 @@ export class GuildController {
                 id: guild.id,
                 name: guild.name,
                 description: guild.description,
+                icon: guild.icon,
             }));
     }
 
@@ -27,6 +28,21 @@ export class GuildController {
                 id: role.id,
                 name: role.name,
                 color: role.color,
+                position: role.position,
+            }));
+    }
+
+    @Get('/:guildId/channels')
+    channels(
+        @Param('guildId') guildId: string,
+    ) {
+        return this.accessor.getChannels(guildId)
+            .map(channel => ({
+                id: channel.id,
+                type: channel.type,
+                name: channel.name,
+                parent: channel.parentId,
+                position: channel.position,
             }));
     }
 

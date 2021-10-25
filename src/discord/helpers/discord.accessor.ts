@@ -1,6 +1,6 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {ClusterClient, ShardClient} from 'detritus-client';
-import {Emoji, Guild, Role} from 'detritus-client/lib/structures';
+import {Channel, Emoji, Guild, Role} from 'detritus-client/lib/structures';
 
 @Injectable()
 export class DiscordAccessor {
@@ -40,6 +40,20 @@ export class DiscordAccessor {
             throw new NotFoundException('Role not found');
 
         return role;
+    }
+
+    getChannels(guildId: string): Channel[] {
+        return this.getGuild(guildId).channels.toArray();
+    }
+
+    getChannel(guildId: string, channelId: string): Channel {
+        const guild = this.getGuild(guildId);
+        const channel = guild.channels.get(channelId);
+
+        if (!channel)
+            throw new NotFoundException('Channel not found');
+
+        return channel;
     }
 
     getEmojis(guildId: string): Emoji[] {
