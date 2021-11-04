@@ -5,7 +5,7 @@ import {ClusterClient, GatewayClientEvents} from 'detritus-client';
 import {Member} from 'detritus-client/lib/structures';
 import {DelayedJobs} from '../../utils/delayed-jobs';
 import {Client as RestClient} from 'detritus-client-rest';
-import {timestampRelative} from '../../discord/utils/reference.helpers';
+import {timestamp, TimestampFormat} from '../../discord/utils/reference.helpers';
 import {DiscordAccessor} from '../../discord/helpers/discord.accessor';
 import {OnJoinRole} from '../entities/on-join-role.entity';
 
@@ -89,7 +89,7 @@ export class ReactionRolesController {
                             title: `Reaction Roles for ${guild.name}`,
                             description: `${description ?? 'Assign yourself roles'}\n`
                                 + roles.map(role => `${this.emojiToString(role)} ${role.name}`).join('\n'),
-                            footer: {text: expireAt ? `Expires in ${timestampRelative(expireAt)}` : undefined},
+                            footer: {text: expireAt ? `Expires in ${timestamp(expireAt, TimestampFormat.RELATIVE)}` : undefined},
                         },
                     });
 

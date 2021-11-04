@@ -1,5 +1,5 @@
-import {Module} from '@nestjs/common';
-import IORedis from 'ioredis';
+import {Inject, Module} from '@nestjs/common';
+import IORedis, {Redis} from 'ioredis';
 import {redisConfig} from '../config/redis.config';
 
 @Module({
@@ -14,4 +14,12 @@ import {redisConfig} from '../config/redis.config';
     ],
 })
 export class RedisModule {
+    constructor(
+        @Inject(IORedis)
+        private readonly redis: Redis,
+    ) {
+        redis.on('error', err => {
+            throw err;
+        });
+    }
 }

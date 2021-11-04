@@ -40,7 +40,7 @@ export class DiscordManager implements OnApplicationBootstrap, OnApplicationShut
             .on('gatewayReady',
                 ({shard}) => shardLogger.log('Shard ready', _(shard)))
             .on('gatewayResumed',
-                ({shard}) => shardLogger.verbose('Shard resumed', _(shard)));
+                ({shard, raw}) => shardLogger.log(`Shard resumed: ${JSON.stringify(raw)}`, _(shard)));
     }
 
     async onApplicationBootstrap(): Promise<void> {

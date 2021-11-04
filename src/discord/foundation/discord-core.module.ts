@@ -1,6 +1,6 @@
 import {MetadataAccessor} from './helpers/metadata.accessor';
 import {DiscordExplorer} from './services/discord.explorer';
-import {Module} from '@nestjs/common';
+import {Logger, Module} from '@nestjs/common';
 import {DiscoveryModule} from '@nestjs/core';
 import {discordConfig} from '../../config/discord.config';
 import {ClusterClient} from 'detritus-client';
@@ -37,6 +37,10 @@ import {DiscordManager} from './services/discord.manager';
             provide: RestClient,
             useFactory: (discord: ClusterClient) => discord.rest,
             inject: [ClusterClient],
+        },
+        {
+            provide: Logger,
+            useFactory: () => new Logger('DiscordCoreModule'),
         },
     ],
     exports: [
