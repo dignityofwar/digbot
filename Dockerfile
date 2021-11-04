@@ -3,10 +3,10 @@ FROM node:16-alpine AS build
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-RUN npm ci
+RUN yarn install --frozen-lockfile
 
 COPY . .
-RUN npm run build
+RUN yarn run build
 RUN npx mikro-orm cache:generate
 
 FROM node:16-alpine
@@ -14,7 +14,7 @@ FROM node:16-alpine
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-RUN npm ci --only=production
+RUN yarn install --production --frozen-lockfile
 
 COPY mikro-orm.config.js .
 COPY migrations ./migrations
