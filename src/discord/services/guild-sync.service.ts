@@ -88,7 +88,7 @@ export class GuildSyncService implements OnModuleInit {
     @DiscordEvent('guildRoleCreate')
     async roleCreate({role}: GatewayClientEvents.GuildRoleCreate) {
         await this.entityManager.createQueryBuilder(Role)
-            .insert({id: role.id, guild_id: role.guildId, unavailable: false})
+            .insert({id: role.id, guild_id: role.guildId})
             .execute();
     }
 
