@@ -1,5 +1,5 @@
 # Ignore local npm modules and logs
-node_modules
+node_modules/
 npm-debug.log
 
 # Ignore all md files
@@ -12,6 +12,6 @@ npm-debug.log
 Dockerfile
 docker-compose.yml
 
-/dist
-/storage
-/temp
+dist/
+data/
+temp/

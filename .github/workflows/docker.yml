@@ -7,10 +7,10 @@ on:
 
 jobs:
   build:
-    name: Release
+    name: Release Docker image
     if: github.repository == 'dignityofwar/digbot'
     runs-on: ubuntu-latest
-    environment: release
+    environment: docker
     steps:
       - uses: actions/checkout@v3
 
@@ -40,8 +40,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v4
         with:
-          context: .
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

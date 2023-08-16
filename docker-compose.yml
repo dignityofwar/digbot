@@ -1,29 +1,10 @@
 version: '3.8'
 
 services:
-  mariadb:
-    image: mariadb
-    environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASS:-pass}
-      - MYSQL_DATABASE=${DB_NAME:-digbot}
-      - MYSQL_USER=${DB_USER:-dig}
-      - MYSQL_PASSWORD=${DB_PASS:-pass}
-    ports:
-      - 3306:3306
-  redis:
-    image: redis
-    ports:
-      - 6379:6379
   digbot:
     build: .
-    depends_on:
-      - mariadb
-    tty: true
     environment:
       - DISCORD_TOKEN
-      - DB_HOST=mariadb
-      - DB_NAME=${DB_NAME:-digbot}
-      - DB_USER=${DB_USER:-dig}
-      - DB_PASS=${DB_PASS:-pass}
-      - REDIS_HOST=redis
+    volumes:
+      - ./data:/data
 
