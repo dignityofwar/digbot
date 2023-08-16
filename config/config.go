@@ -14,7 +14,7 @@ var (
 	}
 
 	DB struct {
-		FilePath string `env:"DB_PATH" default:"./db.sqlite"`
+		FilePath string `env:"DB_PATH" default:"./data/db.sqlite"`
 	}
 )
 
