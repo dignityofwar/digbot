@@ -43,11 +43,11 @@ func initConfigStruct(config any) {
 		fieldType := configType.Field(i)
 
 		// TODO: Add parsing to support int, float, bool, arrays
-		fieldValue.Set(reflect.ValueOf(fieldType.Tag.Get("default")))
+		fieldValue.SetString(fieldType.Tag.Get("default"))
 
 		if key, ok := fieldType.Tag.Lookup("env"); ok {
 			if value := os.Getenv(key); value != "" {
-				fieldValue.Set(reflect.ValueOf(value))
+				fieldValue.SetString(value)
 			}
 		}
 	}

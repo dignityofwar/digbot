@@ -9,6 +9,10 @@ import (
 	"log"
 )
 
+type Meep struct {
+	Test string
+}
+
 var Module = core.Module{
 	Name: "Herald",
 	OnInit: func() {
@@ -25,59 +29,35 @@ var Module = core.Module{
 		})
 	},
 	OnBoot: func() {
-		err := interactor.RegisterCommand(&interactor.SlashCommandOptions{
-			Type:        interactor.SlashCommandGroup,
+		err := interactor.RegisterCommand(&interactor.SlashCommandGroup{
 			Name:        "herald",
 			Description: "Manage automated messages send by the bot",
-			SubCommands: []*interactor.SlashCommandOptions{
-				{
-					Type:        interactor.SlashCommandGroup,
-					Name:        "role",
-					Description: "Manage messages send when a member receives a role",
-					SubCommands: []*interactor.SlashCommandOptions{
-						//{
-						//	Type:        interactor.SlashCommand,
-						//	Name:        "list",
-						//	Description: "List role messages",
-						//	Callback:    listRoleMessages,
-						//},
-						{
-							Type:        interactor.SlashCommand,
-							Name:        "edit",
-							Description: "Edit role message",
-							Callback:    editRoleMessage,
-						},
-						{
-							Type:        interactor.SlashCommand,
-							Name:        "delete",
-							Description: "Delete role message",
-							Callback:    deleteRoleMessage,
-						},
-					},
-				},
-				{
-					Type:        interactor.SlashCommandGroup,
-					Name:        "join",
-					Description: "Manage messages send when a member joins the server",
-					SubCommands: []*interactor.SlashCommandOptions{
-						{
-							Type:        interactor.SlashCommand,
-							Name:        "edit",
-							Description: "Edit join message",
-							Callback:    editJoinMessage,
-						},
-						{
-							Type:        interactor.SlashCommand,
-							Name:        "delete",
-							Description: "Delete join message",
-							Callback:    deleteJoinMessage,
-						},
-					},
-				},
+			SubCommands: []interactor.CommandOptions{
+				roleCommands,
 			},
 		}, nil)
 
 		if err != nil {
+			log.Fatalf(err.Error())
+		}
+
+		if err := interactor.RegisterButtonComponent(editRoleMessageButton); err != nil {
+			log.Fatalf(err.Error())
+		}
+
+		if err := interactor.RegisterButtonComponent(deleteRoleMessageButton); err != nil {
+			log.Fatalf(err.Error())
+		}
+
+		if err := interactor.RegisterSelectorComponent(roleMessageRoleSelect); err != nil {
+			log.Fatalf(err.Error())
+		}
+
+		if err := interactor.RegisterSelectorComponent(roleMessageChannelSelect); err != nil {
+			log.Fatalf(err.Error())
+		}
+
+		if err := interactor.RegisterModal(editRoleMessageModal); err != nil {
 			log.Fatalf(err.Error())
 		}
 	},

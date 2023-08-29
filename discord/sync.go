@@ -49,7 +49,7 @@ func initSync() {
 		})
 
 		{
-			db.Connection.Model(&ChannelRef{}).Where(&ChannelRef{GuildID: g.ID}).Updates(&ChannelRef{Available: false})
+			db.Connection.Where(&ChannelRef{GuildID: g.ID}).Updates(&ChannelRef{Available: false})
 
 			channels := make([]ChannelRef, len(g.Channels))
 			for i, c := range g.Channels {
@@ -65,7 +65,7 @@ func initSync() {
 			}).Create(&channels)
 		}
 		{
-			db.Connection.Model(&RoleRef{}).Where(&RoleRef{GuildID: g.ID}).Update("available", false)
+			db.Connection.Where(&RoleRef{GuildID: g.ID}).Update("available", false)
 
 			roles := make([]RoleRef, len(g.Roles))
 			for i, r := range g.Roles {
