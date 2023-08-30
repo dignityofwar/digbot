@@ -57,6 +57,10 @@ var Module = core.Module{
 			log.Fatalf(err.Error())
 		}
 
+		if err := interactor.RegisterModal(createRoleMessageModal); err != nil {
+			log.Fatalf(err.Error())
+		}
+
 		if err := interactor.RegisterModal(editRoleMessageModal); err != nil {
 			log.Fatalf(err.Error())
 		}

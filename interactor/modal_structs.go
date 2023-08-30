@@ -26,10 +26,10 @@ func (m *modalDescriptor) handle(ctx *ModalContext) error {
 		paramsValue.Elem().FieldByName(input.CustomID).SetString(input.Value)
 	}
 
-	returnValues := m.Callback.Call([]reflect.Value{reflect.ValueOf(ctx), paramsValue})
+	args := []reflect.Value{reflect.ValueOf(ctx), paramsValue}
 
-	if i := len(returnValues); i > 0 {
-		return returnValues[i-1].Interface().(error)
+	if err := captureError(m.Callback.Call(args)); err != nil {
+		return err
 	}
 
 	return nil

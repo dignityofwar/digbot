@@ -176,9 +176,10 @@ func (c *SlashCommand) inferParams(param reflect.Type) (options []*discordgo.App
 
 	gen = func(ctx *CommandContext, options []*discordgo.ApplicationCommandInteractionDataOption) (value reflect.Value) {
 		value = reflect.New(param)
+		elemValue := value.Elem()
 
 		for _, option := range options {
-			value.FieldByIndex(nameToFieldMap[option.Name]).Set(castCommandOption(option, ctx.Data.Resolved))
+			elemValue.FieldByIndex(nameToFieldMap[option.Name]).Set(castCommandOption(option, ctx.Data.Resolved))
 		}
 
 		return

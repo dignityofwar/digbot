@@ -51,9 +51,8 @@ func (d *commandDescriptor) execute(ctx *CommandContext, options []*discordgo.Ap
 		args = append(args, d.ParamGenerator(ctx, options))
 	}
 
-	rValues := d.Callback.Call(args)
-	if i := len(rValues); i > 0 {
-		return rValues[i-1].Interface().(error)
+	if err := captureError(d.Callback.Call(args)); err != nil {
+		return err
 	}
 
 	return nil

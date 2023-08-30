@@ -29,10 +29,8 @@ func (c *messageComponentDescriptor) handle(ctx *MessageComponentContext) error 
 		args = append(args, value)
 	}
 
-	returnValues := c.Callback.Call(args)
-
-	if i := len(returnValues); i > 0 {
-		return returnValues[i-1].Interface().(error)
+	if err := captureError(c.Callback.Call(args)); err != nil {
+		return err
 	}
 
 	return nil

@@ -4,7 +4,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/dignityofwar/digbot/db"
 	"github.com/dignityofwar/digbot/interactor"
-	"log"
 )
 
 type RoleMessageParams struct {
@@ -19,7 +18,7 @@ var roleCommands = &interactor.SlashCommandGroup{
 		&interactor.SlashCommand{
 			Name:        "find",
 			Description: "Find role message",
-			Callback: func(ctx *interactor.CommandContext, params *RoleMessageParams) {
+			Callback: func(ctx *interactor.CommandContext, params *RoleMessageParams) error {
 				channelID := ""
 				if params.Channel != nil {
 					channelID = params.Channel.ID
@@ -36,23 +35,17 @@ var roleCommands = &interactor.SlashCommandGroup{
 				res := db.Connection.First(&message)
 
 				if res.Error == nil {
-					err := ctx.Respond(&discordgo.InteractionResponse{
+					return ctx.Respond(&discordgo.InteractionResponse{
 						Type: discordgo.InteractionResponseChannelMessageWithSource,
 						Data: formatRoleMessageResponse(&ctx.Context, &message),
 					})
 
-					if err != nil {
-						log.Fatalln(err)
-					}
 				} else {
-					err := ctx.ModalRespond(&interactor.Modal{
-						ModalID: editRoleMessageModalID,
+					return ctx.ModalRespond(&interactor.Modal{
+						ModalID: createRoleMessageModalID,
 						Title:   "Create message",
+						ID:      params.Role.ID + ":" + channelID,
 					})
-
-					if err != nil {
-						log.Fatalln(err)
-					}
 				}
 			},
 		},

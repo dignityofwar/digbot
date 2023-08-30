@@ -12,8 +12,8 @@ var editRoleMessageButton = &interactor.ButtonOptions{
 	ComponentID: editRoleMessageButtonID,
 	Style:       discordgo.PrimaryButton,
 	Label:       "Edit",
-	Callback: func(ctx *interactor.MessageComponentContext) {
-		ctx.ModalRespond(&interactor.Modal{
+	Callback: func(ctx *interactor.MessageComponentContext) error {
+		return ctx.ModalRespond(&interactor.Modal{
 			ModalID: editRoleMessageModalID,
 			ID:      ctx.ID,
 			Title:   "Create message",
@@ -27,10 +27,10 @@ var deleteRoleMessageButton = &interactor.ButtonOptions{
 	ComponentID: deleteRoleMessageButtonID,
 	Style:       discordgo.DangerButton,
 	Label:       "Delete",
-	Callback: func(ctx *interactor.MessageComponentContext) {
+	Callback: func(ctx *interactor.MessageComponentContext) error {
 		db.Connection.Delete(&RoleMessageEntity{}, ctx.ID)
 
-		err := ctx.Respond(&discordgo.InteractionResponse{
+		return ctx.Respond(&discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseUpdateMessage,
 			Data: &discordgo.InteractionResponseData{
 				Embeds: []*discordgo.MessageEmbed{
@@ -41,10 +41,6 @@ var deleteRoleMessageButton = &interactor.ButtonOptions{
 				},
 			},
 		})
-
-		if err != nil {
-			panic(err)
-		}
 	},
 }
 
@@ -55,46 +51,23 @@ var roleMessageRoleSelect = &interactor.SelectMenuOptions{
 	Placeholder: "Change role",
 	MinValues:   ptr(1),
 	MaxValues:   1,
-	Callback: func(ctx *interactor.MessageComponentContext, values []*discordgo.Role) {
-
+	Callback: func(ctx *interactor.MessageComponentContext, values []*discordgo.Role) error {
 		var message RoleMessageEntity
 		if db.Connection.First(&message, ctx.ID).Error != nil {
-			return
+			return ctx.UpsertRespond(roleResponseNotFound)
 		}
 
 		message.RoleID = values[0].ID
 
-		if db.Connection.Save(message).Error != nil {
-			return
+		if err := db.Connection.Save(message).Error; err != nil {
+			return err
 		}
+		// TODO: catch conflict and send better response
 
-		//if res.RowsAffected == 0 {
-		//	msg := "Message failed"
-		//	if res.Error != nil {
-		//		msg = res.Error.Error()
-		//	}
-		//
-		//	err := ctx.Respond(&discordgo.InteractionResponse{
-		//		Type: discordgo.InteractionResponseUpdateMessage,
-		//		Data: formatRoleMessageResponse(&ctx.Context, &message, &discordgo.MessageEmbed{
-		//			Color:       colorError,
-		//			Description: msg,
-		//		}),
-		//	})
-		//
-		//	if err != nil {
-		//		panic(err)
-		//	}
-		//} else {
-		err := ctx.Respond(&discordgo.InteractionResponse{
+		return ctx.Respond(&discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseUpdateMessage,
 			Data: formatRoleMessageResponse(&ctx.Context, &message),
 		})
-
-		if err != nil {
-			panic(err)
-		}
-		//}
 	},
 }
 
@@ -103,31 +76,31 @@ const roleMessageChannelSelectID = "herald_role_channel"
 var roleMessageChannelSelect = &interactor.SelectMenuOptions{
 	ComponentID: roleMessageChannelSelectID,
 	Placeholder: "Change channel",
+	MinValues:   ptr(0),
 	MaxValues:   1,
 	ChannelTypes: []discordgo.ChannelType{
 		discordgo.ChannelTypeGuildText,
 	},
-	Callback: func(ctx *interactor.MessageComponentContext, values []*discordgo.Channel) {
-		//roleID, channelID := parseRoleMessageID(ctx.ID)
-		//
-		//newChannelID := ""
-		//if len(values) > 0 {
-		//	newChannelID = values[0].ID
-		//}
-		//
-		//var messages []RoleMessageEntity
-		//db.Connection.Model(&messages).Clauses(clause.Returning{}).Where(RoleMessageEntity{
-		//	MessageEntity: MessageEntity{
-		//		GuildID:   ctx.Interaction.GuildID,
-		//		ChannelID: channelID,
-		//	},
-		//	RoleID: roleID,
-		//}).Updates(RoleMessageEntity{MessageEntity: MessageEntity{ChannelID: newChannelID}})
-		//
-		//err := ctx.UpsertRespond(formatRoleMessageResponse(&ctx.Context, &messages[0]))
-		//
-		//if err != nil {
-		//	panic(err)
-		//}
+	Callback: func(ctx *interactor.MessageComponentContext, values []*discordgo.Channel) error {
+		var message RoleMessageEntity
+		if db.Connection.First(&message, ctx.ID).Error != nil {
+			return ctx.UpsertRespond(roleResponseNotFound)
+		}
+
+		if len(values) == 0 {
+			message.ChannelID = ""
+		} else {
+			message.ChannelID = values[0].ID
+		}
+
+		if err := db.Connection.Save(message).Error; err != nil {
+			return err
+		}
+		// TODO: catch conflict and send better response
+
+		return ctx.Respond(&discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseUpdateMessage,
+			Data: formatRoleMessageResponse(&ctx.Context, &message),
+		})
 	},
 }

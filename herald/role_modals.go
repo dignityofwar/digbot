@@ -3,8 +3,6 @@ package herald
 import (
 	"github.com/dignityofwar/digbot/db"
 	"github.com/dignityofwar/digbot/interactor"
-	"gorm.io/gorm/clause"
-	"strconv"
 	"strings"
 )
 
@@ -16,7 +14,7 @@ const createRoleMessageModalID = "herald_role_create"
 
 var createRoleMessageModal = &interactor.ModalOptions{
 	ModalID: createRoleMessageModalID,
-	Callback: func(ctx *interactor.ModalContext, params *EditMessageParams) {
+	Callback: func(ctx *interactor.ModalContext, params *EditMessageParams) error {
 		ids := strings.SplitN(ctx.ID, ":", 2)
 
 		message := RoleMessageEntity{
@@ -28,15 +26,11 @@ var createRoleMessageModal = &interactor.ModalOptions{
 			RoleID: ids[0],
 		}
 
-		if db.Connection.Save(&message).Error != nil {
-			return
+		if err := db.Connection.Save(&message).Error; err != nil {
+			return err
 		}
 
-		err := ctx.UpsertRespond(formatRoleMessageResponse(&ctx.Context, &message))
-
-		if err != nil {
-			panic(err)
-		}
+		return ctx.UpsertRespond(formatRoleMessageResponse(&ctx.Context, &message))
 	},
 }
 
@@ -44,25 +38,19 @@ const editRoleMessageModalID = "herald_role_edit"
 
 var editRoleMessageModal = &interactor.ModalOptions{
 	ModalID: editRoleMessageModalID,
-	Callback: func(ctx *interactor.ModalContext, params *EditMessageParams) {
+	Callback: func(ctx *interactor.ModalContext, params *EditMessageParams) error {
 		var message RoleMessageEntity
 
 		if db.Connection.First(&message, ctx.ID).Error != nil {
-			return
+			return ctx.UpsertRespond(roleResponseNotFound)
 		}
 
-		if id, err := strconv.Atoi(ctx.ID); err != nil {
-			message.ID = uint(id)
+		message.Content = params.Message
+
+		if err := db.Connection.Save(&message).Error; err != nil {
+			return err
 		}
 
-		db.Connection.Clauses(clause.OnConflict{
-			UpdateAll: true,
-		}).Create(&message)
-
-		err := ctx.UpsertRespond(formatRoleMessageResponse(&ctx.Context, &message))
-
-		if err != nil {
-			panic(err)
-		}
+		return ctx.UpsertRespond(formatRoleMessageResponse(&ctx.Context, &message))
 	},
 }

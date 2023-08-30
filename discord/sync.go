@@ -34,7 +34,7 @@ func initSync() {
 
 	now := time.Now()
 
-	db.Connection.Updates(&GuildRef{
+	db.Connection.Where(&GuildRef{InactiveSince: &time.Time{}}).Updates(&GuildRef{
 		InactiveSince: &now,
 	})
 
