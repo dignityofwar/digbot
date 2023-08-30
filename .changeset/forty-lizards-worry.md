@@ -1,5 +1,5 @@
 ---
-"undefined": major
+"digbot": major
 ---
 
 refactor: switched to go
