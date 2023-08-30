@@ -6,15 +6,15 @@ import (
 	"strings"
 )
 
-type EditMessageParams struct {
-	Message string `style:"paragraph"`
+type EditRoleMessageParams struct {
+	Message string `style:"paragraph" min:"1" max:"3500"`
 }
 
 const createRoleMessageModalID = "herald_role_create"
 
 var createRoleMessageModal = &interactor.ModalOptions{
 	ModalID: createRoleMessageModalID,
-	Callback: func(ctx *interactor.ModalContext, params *EditMessageParams) error {
+	Callback: func(ctx *interactor.ModalContext, params *EditRoleMessageParams) error {
 		ids := strings.SplitN(ctx.ID, ":", 2)
 
 		message := RoleMessageEntity{
@@ -38,7 +38,7 @@ const editRoleMessageModalID = "herald_role_edit"
 
 var editRoleMessageModal = &interactor.ModalOptions{
 	ModalID: editRoleMessageModalID,
-	Callback: func(ctx *interactor.ModalContext, params *EditMessageParams) error {
+	Callback: func(ctx *interactor.ModalContext, params *EditRoleMessageParams) error {
 		var message RoleMessageEntity
 
 		if db.Connection.First(&message, ctx.ID).Error != nil {

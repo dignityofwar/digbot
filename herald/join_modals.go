@@ -6,7 +6,7 @@ import (
 )
 
 type EditJoinMessageParams struct {
-	Message string `style:"paragraph"`
+	Message string `style:"paragraph" min:"1" max:"3500"`
 }
 
 const createJoinMessageModalID = "herald_join_create"
