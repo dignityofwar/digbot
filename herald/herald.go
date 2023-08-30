@@ -9,10 +9,6 @@ import (
 	"log"
 )
 
-type Meep struct {
-	Test string
-}
-
 var Module = core.Module{
 	Name: "Herald",
 	OnInit: func() {
@@ -34,34 +30,40 @@ var Module = core.Module{
 			Description: "Manage automated messages send by the bot",
 			SubCommands: []interactor.CommandOptions{
 				roleCommands,
+				joinCommands,
 			},
-		}, nil)
+		}, &interactor.CommandPermissions{
+			DefaultMemberPermissions: ptr[int64](0),
+			DMPermission:             ptr(false),
+		})
 
 		if err != nil {
 			log.Fatalf(err.Error())
 		}
 
-		if err := interactor.RegisterButtonComponent(editRoleMessageButton); err != nil {
+		if err := interactor.RegisterButtonComponents(
+			editRoleMessageButton,
+			deleteRoleMessageButton,
+			editJoinMessageButton,
+			deleteJoinMessageButton,
+		); err != nil {
 			log.Fatalf(err.Error())
 		}
 
-		if err := interactor.RegisterButtonComponent(deleteRoleMessageButton); err != nil {
+		if err := interactor.RegisterSelectorComponents(
+			roleMessageRoleSelect,
+			roleMessageChannelSelect,
+			joinMessageChannelSelect,
+		); err != nil {
 			log.Fatalf(err.Error())
 		}
 
-		if err := interactor.RegisterSelectorComponent(roleMessageRoleSelect); err != nil {
-			log.Fatalf(err.Error())
-		}
-
-		if err := interactor.RegisterSelectorComponent(roleMessageChannelSelect); err != nil {
-			log.Fatalf(err.Error())
-		}
-
-		if err := interactor.RegisterModal(createRoleMessageModal); err != nil {
-			log.Fatalf(err.Error())
-		}
-
-		if err := interactor.RegisterModal(editRoleMessageModal); err != nil {
+		if err := interactor.RegisterModals(
+			createRoleMessageModal,
+			editRoleMessageModal,
+			createJoinMessageModal,
+			editJoinMessageModal,
+		); err != nil {
 			log.Fatalf(err.Error())
 		}
 	},

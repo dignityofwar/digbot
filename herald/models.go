@@ -1,6 +1,7 @@
 package herald
 
 import (
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/dignityofwar/digbot/discord"
 	"log"
@@ -9,11 +10,12 @@ import (
 )
 
 type MessageEntity struct {
-	ID        uint             `gorm:"primaryKey"`
-	GuildID   string           `gorm:"index:,unique,composite:umc"`
-	GuildRef  discord.GuildRef `gorm:"foreignKey:GuildID"`
-	ChannelID string           `gorm:"index:,unique,composite:umc"`
-	Content   string
+	ID         uint                `gorm:"primaryKey"`
+	GuildID    string              `gorm:"not null;index:,unique,composite:umc"`
+	GuildRef   *discord.GuildRef   `gorm:"foreignKey:GuildID"`
+	ChannelID  *string             `gorm:"index:,unique,composite:umc"`
+	ChannelRef *discord.ChannelRef `gorm:"foreignKey:ChannelID"`
+	Content    string              `gorm:"not null"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -22,8 +24,8 @@ type MessageEntity struct {
 type RoleMessageEntity struct {
 	MessageEntity `gorm:"embedded"`
 
-	RoleID string `gorm:"index:,unique,composite:umc"`
-	Role   discord.RoleRef
+	RoleID  string          `gorm:"not null;index:,unique,composite:umc"`
+	RoleRef discord.RoleRef `gorm:"foreignKey:RoleID"`
 }
 
 type JoinMessageEntity struct {
@@ -43,20 +45,30 @@ func (msg *MessageEntity) compile(member *discordgo.Member) string {
 }
 
 func (msg *MessageEntity) send(s *discordgo.Session, member *discordgo.Member) {
-	channelID := msg.ChannelID
-	if channelID == "" {
+	embed := &discordgo.MessageEmbed{
+		Description: msg.compile(member),
+	}
+
+	channelID := ""
+	if *msg.ChannelID == "" {
 		userChannel, err := s.UserChannelCreate(member.User.ID)
 		if err != nil {
 			log.Fatalf("Failed to create user channel: %v", err)
 		}
 
+		guild, _ := s.State.Guild(member.GuildID)
+
 		channelID = userChannel.ID
+		embed.Footer = &discordgo.MessageEmbedFooter{
+			Text:    fmt.Sprintf("Welcome message from %s", guild.Name),
+			IconURL: guild.IconURL("128"),
+		}
+	} else {
+		channelID = *msg.ChannelID
 	}
 
 	_, err := s.ChannelMessageSendComplex(channelID, &discordgo.MessageSend{
-		Embed: &discordgo.MessageEmbed{
-			Description: msg.compile(member),
-		},
+		Embed: embed,
 	})
 
 	if err != nil {

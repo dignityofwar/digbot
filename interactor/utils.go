@@ -4,8 +4,10 @@ import "reflect"
 
 func captureError(values []reflect.Value) error {
 	if l := len(values); l > 0 {
-		if errValue := values[l-1]; !errValue.IsZero() {
-			return errValue.Interface().(error)
+		if err := values[l-1]; !err.IsZero() {
+			if err, ok := err.Interface().(error); ok {
+				return err
+			}
 		}
 	}
 

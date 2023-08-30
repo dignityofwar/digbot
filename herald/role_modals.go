@@ -20,7 +20,7 @@ var createRoleMessageModal = &interactor.ModalOptions{
 		message := RoleMessageEntity{
 			MessageEntity: MessageEntity{
 				GuildID:   ctx.Interaction.GuildID,
-				ChannelID: ids[1],
+				ChannelID: &ids[1],
 				Content:   params.Message,
 			},
 			RoleID: ids[0],
@@ -51,6 +51,6 @@ var editRoleMessageModal = &interactor.ModalOptions{
 			return err
 		}
 
-		return ctx.UpsertRespond(formatRoleMessageResponse(&ctx.Context, &message))
+		return ctx.UpsertRespond(formatRoleMessageResponse(&ctx.Context, &message, roleResponseNotificationUpdated))
 	},
 }

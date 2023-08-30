@@ -6,22 +6,17 @@ import (
 	"strconv"
 )
 
-func formatRoleMessageResponse(ctx *interactor.Context, roleMessage *RoleMessageEntity, embeds ...*discordgo.MessageEmbed) *discordgo.InteractionResponseData {
-	id := strconv.Itoa(int(roleMessage.ID))
+func formatJoinMessageResponse(ctx *interactor.Context, joinMessage *JoinMessageEntity, embeds ...*discordgo.MessageEmbed) *discordgo.InteractionResponseData {
+	id := strconv.Itoa(int(joinMessage.ID))
 	channel := "DM"
-	if *roleMessage.ChannelID != "" {
-		channel = "<#" + *roleMessage.ChannelID + ">"
+	if *joinMessage.ChannelID != "" {
+		channel = "<#" + *joinMessage.ChannelID + ">"
 	}
 
 	embeds = append(embeds, &discordgo.MessageEmbed{
-		Description: roleMessage.compile(ctx.Interaction.Member),
+		Description: joinMessage.compile(ctx.Interaction.Member),
 		Color:       interactor.ColorPrimary,
 		Fields: []*discordgo.MessageEmbedField{
-			{
-				Name:   "Role",
-				Value:  "<@&" + roleMessage.RoleID + ">",
-				Inline: true,
-			},
 			{
 				Name:   "Channel",
 				Value:  channel,
@@ -37,7 +32,7 @@ func formatRoleMessageResponse(ctx *interactor.Context, roleMessage *RoleMessage
 			discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{
 					interactor.MakeMessageComponent(&interactor.MessageComponentOptions{
-						ComponentID: roleMessageRoleSelectID,
+						ComponentID: joinMessageChannelSelectID,
 						ID:          id,
 					}),
 				},
@@ -45,19 +40,11 @@ func formatRoleMessageResponse(ctx *interactor.Context, roleMessage *RoleMessage
 			discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{
 					interactor.MakeMessageComponent(&interactor.MessageComponentOptions{
-						ComponentID: roleMessageChannelSelectID,
-						ID:          id,
-					}),
-				},
-			},
-			discordgo.ActionsRow{
-				Components: []discordgo.MessageComponent{
-					interactor.MakeMessageComponent(&interactor.MessageComponentOptions{
-						ComponentID: editRoleMessageButtonID,
+						ComponentID: editJoinMessageButtonID,
 						ID:          id,
 					}),
 					interactor.MakeMessageComponent(&interactor.MessageComponentOptions{
-						ComponentID: deleteRoleMessageButtonID,
+						ComponentID: deleteJoinMessageButtonID,
 						ID:          id,
 					}),
 				},

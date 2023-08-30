@@ -19,6 +19,16 @@ func RegisterModal(options *ModalOptions) error {
 	return nil
 }
 
+func RegisterModals(options ...*ModalOptions) error {
+	for _, option := range options {
+		if err := RegisterModal(option); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func MakeModal(modal *Modal) *discordgo.InteractionResponse {
 	return modalHandlers[modal.ModalID].make(modal)
 }

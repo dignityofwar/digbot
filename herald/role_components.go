@@ -4,6 +4,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/dignityofwar/digbot/db"
 	"github.com/dignityofwar/digbot/interactor"
+	"github.com/mattn/go-sqlite3"
 )
 
 const editRoleMessageButtonID = "herald_role_edit"
@@ -20,6 +21,10 @@ var editRoleMessageButton = &interactor.ButtonOptions{
 		})
 	},
 }
+
+//
+//
+//
 
 const deleteRoleMessageButtonID = "herald_role_delete"
 
@@ -44,6 +49,10 @@ var deleteRoleMessageButton = &interactor.ButtonOptions{
 	},
 }
 
+//
+//
+//
+
 const roleMessageRoleSelectID = "herald_role_role"
 
 var roleMessageRoleSelect = &interactor.SelectMenuOptions{
@@ -57,19 +66,32 @@ var roleMessageRoleSelect = &interactor.SelectMenuOptions{
 			return ctx.UpsertRespond(roleResponseNotFound)
 		}
 
-		message.RoleID = values[0].ID
+		updatedMessage := message
 
-		if err := db.Connection.Save(message).Error; err != nil {
+		updatedMessage.RoleID = values[0].ID
+
+		if err := db.Connection.Save(updatedMessage).Error; err != nil {
+			switch err.(sqlite3.Error).ExtendedCode {
+			case sqlite3.ErrConstraintUnique:
+				return ctx.Respond(&discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseUpdateMessage,
+					Data: formatRoleMessageResponse(&ctx.Context, &message, roleResponseNotificationFailed),
+				})
+			}
+
 			return err
 		}
-		// TODO: catch conflict and send better response
 
 		return ctx.Respond(&discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseUpdateMessage,
-			Data: formatRoleMessageResponse(&ctx.Context, &message),
+			Data: formatRoleMessageResponse(&ctx.Context, &updatedMessage, roleResponseNotificationUpdated),
 		})
 	},
 }
+
+//
+//
+//
 
 const roleMessageChannelSelectID = "herald_role_channel"
 
@@ -87,20 +109,29 @@ var roleMessageChannelSelect = &interactor.SelectMenuOptions{
 			return ctx.UpsertRespond(roleResponseNotFound)
 		}
 
+		updatedMessage := message
+
 		if len(values) == 0 {
-			message.ChannelID = ""
+			updatedMessage.ChannelID = ptr("")
 		} else {
-			message.ChannelID = values[0].ID
+			updatedMessage.ChannelID = &values[0].ID
 		}
 
-		if err := db.Connection.Save(message).Error; err != nil {
+		if err := db.Connection.Save(updatedMessage).Error; err != nil {
+			switch err.(sqlite3.Error).ExtendedCode {
+			case sqlite3.ErrConstraintUnique:
+				return ctx.Respond(&discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseUpdateMessage,
+					Data: formatRoleMessageResponse(&ctx.Context, &message, roleResponseNotificationFailed),
+				})
+			}
+
 			return err
 		}
-		// TODO: catch conflict and send better response
 
 		return ctx.Respond(&discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseUpdateMessage,
-			Data: formatRoleMessageResponse(&ctx.Context, &message),
+			Data: formatRoleMessageResponse(&ctx.Context, &updatedMessage, roleResponseNotificationUpdated),
 		})
 	},
 }

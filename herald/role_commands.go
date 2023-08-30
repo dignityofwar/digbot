@@ -24,15 +24,15 @@ var roleCommands = &interactor.SlashCommandGroup{
 					channelID = params.Channel.ID
 				}
 
-				var message = RoleMessageEntity{
+				var message RoleMessageEntity
+
+				res := db.Connection.Where(RoleMessageEntity{
 					MessageEntity: MessageEntity{
 						GuildID:   ctx.Interaction.GuildID,
-						ChannelID: channelID,
+						ChannelID: &channelID,
 					},
 					RoleID: params.Role.ID,
-				}
-
-				res := db.Connection.First(&message)
+				}).First(&message)
 
 				if res.Error == nil {
 					return ctx.Respond(&discordgo.InteractionResponse{
@@ -47,37 +47,6 @@ var roleCommands = &interactor.SlashCommandGroup{
 						ID:      params.Role.ID + ":" + channelID,
 					})
 				}
-			},
-		},
-		&interactor.SlashCommand{
-			Name:        "list",
-			Description: "List role messages",
-			Callback: func(ctx *interactor.CommandContext, params *RoleMessageParams) {
-				channelID := ""
-				if params.Channel != nil {
-					channelID = params.Channel.ID
-				}
-
-				d := db.Connection.Delete(&RoleMessageEntity{
-					MessageEntity: MessageEntity{
-						GuildID:   ctx.Interaction.GuildID,
-						ChannelID: channelID,
-					},
-					RoleID: params.Role.ID,
-				})
-
-				message := "No message exist for this role + channel"
-				if d.RowsAffected > 0 {
-					message = "Message deleted"
-				}
-
-				ctx.Session.InteractionRespond(ctx.Interaction, &discordgo.InteractionResponse{
-					Type: discordgo.InteractionResponseChannelMessageWithSource,
-					Data: &discordgo.InteractionResponseData{
-						Content: message,
-						Flags:   discordgo.MessageFlagsEphemeral,
-					},
-				})
 			},
 		},
 	},
