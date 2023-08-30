@@ -1,26 +1,24 @@
-FROM node:16-alpine AS build
+# syntax=docker/dockerfile:1
+FROM golang:1.20 AS build
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY go.mod go.sum ./
+RUN go mod download
 
-COPY . .
-RUN yarn run build
-RUN npx mikro-orm cache:generate
+COPY *.go ./
 
-FROM node:16-alpine
+RUN CGO_ENABLED=0 GOOS=linux go build -o /digbot
 
-WORKDIR /usr/src/app
 
-COPY package.json yarn.lock ./
-RUN yarn install --production --frozen-lockfile
+FROM gcr.io/distroless/base-debian11 AS build-release-stage
 
-COPY mikro-orm.config.js .
-COPY migrations ./migrations
-COPY --from=build /usr/src/app/temp ./temp
-COPY --from=build /usr/src/app/dist ./dist
+WORKDIR /
 
-EXPOSE 3000
+COPY --from=build /digbot /digbot
 
-CMD ["node", "dist/main"]
+VOLUME /data
+
+USER nonroot:nonroot
+
+ENTRYPOINT ["/digbot"]

@@ -1,91 +1,15 @@
 {
   "name": "digbot",
-  "version": "3.4.5",
-  "description": "DigBot is a custom made discord bot for the DIG gaming community.",
-  "author": "dig",
   "private": true,
-  "license": "MIT",
+  "version": "3.4.5",
   "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "postversion": "git push && git push --tags"
+    "prepare": "husky install"
   },
   "dependencies": {
-    "@mikro-orm/core": "^4.5.9",
-    "@mikro-orm/mariadb": "^4.5.9",
-    "@mikro-orm/migrations": "^4.5.9",
-    "@mikro-orm/nestjs": "^4.3.0",
-    "@mikro-orm/reflection": "^4.5.9",
-    "@nestjs/axios": "^0.0.3",
-    "@nestjs/common": "^8.1.1",
-    "@nestjs/core": "^8.1.1",
-    "@nestjs/platform-fastify": "^8.1.1",
-    "class-transformer": "^0.4.0",
-    "class-validator": "^0.13.1",
-    "detritus-client": "^0.16.3",
-    "dotenv": "^10.0.0",
-    "ioredis": "^4.28.0",
-    "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2",
-    "rxjs": "^7.4.0"
-  },
-  "optionalDependencies": {
-    "bufferutil": "^4.0.3",
-    "erlpack": "^0.1.3",
-    "utf-8-validate": "^5.0.5"
-  },
-  "devDependencies": {
-    "@mikro-orm/cli": "^4.5.9",
-    "@nestjs/cli": "^8.1.1",
-    "@nestjs/schematics": "^8.0.2",
-    "@nestjs/testing": "^8.0.6",
-    "@types/ioredis": "^4.27.8",
-    "@types/jest": "^26.0.24",
-    "@types/node": "^16.6.1",
-    "@types/supertest": "^2.0.11",
-    "@typescript-eslint/eslint-plugin": "4.29.1",
-    "@typescript-eslint/parser": "4.29.1",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "jest": "27.0.6",
-    "prettier": "^2.3.2",
-    "supertest": "^6.1.5",
-    "ts-jest": "27.0.4",
-    "ts-loader": "^9.2.5",
-    "ts-node": "^10.2.0",
-    "tsconfig-paths": "^3.10.1",
-    "typescript": "^4.3.5"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".spec.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
-  },
-  "mikro-orm": {
-    "useTsNode": true,
-    "configPaths": [
-      "./mikro-orm.config.js"
-    ]
+    "@changesets/changelog-github": "^0.4.8",
+    "@changesets/cli": "^2.26.2",
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
+    "husky": "^8.0.3"
   }
 }
