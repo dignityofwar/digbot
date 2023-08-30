@@ -41,18 +41,13 @@ var Module = core.Module{
 			log.Fatalf(err.Error())
 		}
 
-		if err := interactor.RegisterButtonComponents(
+		if err := interactor.RegisterMessageComponents(
 			editRoleMessageButton,
 			deleteRoleMessageButton,
-			editJoinMessageButton,
-			deleteJoinMessageButton,
-		); err != nil {
-			log.Fatalf(err.Error())
-		}
-
-		if err := interactor.RegisterSelectorComponents(
 			roleMessageRoleSelect,
 			roleMessageChannelSelect,
+			editJoinMessageButton,
+			deleteJoinMessageButton,
 			joinMessageChannelSelect,
 		); err != nil {
 			log.Fatalf(err.Error())

@@ -6,6 +6,14 @@ import (
 	"reflect"
 )
 
+type MessageComponent interface {
+	compileMessageComponent() (*messageComponentDescriptor, error)
+}
+
+//
+//
+//
+
 type ButtonOptions struct {
 	ComponentID string
 	Callback    any
@@ -15,7 +23,7 @@ type ButtonOptions struct {
 	Emoji discordgo.ComponentEmoji
 }
 
-func (o *ButtonOptions) convert() (cmp *messageComponentDescriptor, err error) {
+func (o *ButtonOptions) compileMessageComponent() (cmp *messageComponentDescriptor, err error) {
 	callbackValue := reflect.ValueOf(o.Callback)
 	callbackType := callbackValue.Type()
 
@@ -46,6 +54,10 @@ func (o *ButtonOptions) convert() (cmp *messageComponentDescriptor, err error) {
 	return
 }
 
+//
+//
+//
+
 type SelectMenuOptions struct {
 	ComponentID string
 	Callback    any
@@ -57,7 +69,7 @@ type SelectMenuOptions struct {
 	ChannelTypes []discordgo.ChannelType
 }
 
-func (o *SelectMenuOptions) convert() (cmp *messageComponentDescriptor, err error) {
+func (o *SelectMenuOptions) compileMessageComponent() (cmp *messageComponentDescriptor, err error) {
 	callbackValue := reflect.ValueOf(o.Callback)
 	callbackType := callbackValue.Type()
 
@@ -101,6 +113,10 @@ func (o *SelectMenuOptions) resolveType(i reflect.Type) (discordgo.SelectMenuTyp
 
 	return 0, errors.New("")
 }
+
+//
+//
+//
 
 type MessageComponentOptions struct {
 	ComponentID string
