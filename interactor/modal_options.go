@@ -35,18 +35,22 @@ func (o *ModalOptions) convert() (modal *modalDescriptor, err error) {
 		modal.ParamFieldMap[field.Name] = modalParamField{
 			ComponentPrototype: discordgo.TextInput{
 				CustomID:    field.Name,
-				Label:       field.Name,               // TODO: Infer from tag
-				Style:       discordgo.TextInputShort, // TODO: Infer from tag
+				Label:       resolveTextInputLabel(field),
+				Style:       resolveTextInputStyle(field),
 				Placeholder: field.Tag.Get("placeholder"),
 				Required:    field.Tag.Get("required") == "true",
-				//MinLength:   0,
-				//MaxLength:   0,
+				MinLength:   resolveTextInputMinLength(field),
+				MaxLength:   resolveTextInputMaxLength(field),
 			},
 		}
 	}
 
 	return
 }
+
+//
+//
+//
 
 type Modal struct {
 	ModalID string

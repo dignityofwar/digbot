@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/bwmarrin/discordgo"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -102,4 +103,44 @@ func castCommandOption(o *discordgo.ApplicationCommandInteractionDataOption, r *
 	}
 
 	panic("No idea what I am suppose to do with that type: " + o.Name)
+}
+
+func resolveOptionMinValue(t reflect.StructField, optionType discordgo.ApplicationCommandOptionType) *float64 {
+	if optionType == discordgo.ApplicationCommandOptionInteger || optionType == discordgo.ApplicationCommandOptionNumber {
+		if min, err := strconv.ParseFloat(t.Tag.Get("min"), 64); err != nil {
+			return &min
+		}
+	}
+
+	return nil
+}
+
+func resolveOptionMaxValue(t reflect.StructField, optionType discordgo.ApplicationCommandOptionType) float64 {
+	if optionType == discordgo.ApplicationCommandOptionInteger || optionType == discordgo.ApplicationCommandOptionNumber {
+		if max, err := strconv.ParseFloat(t.Tag.Get("max"), 64); err != nil {
+			return max
+		}
+	}
+
+	return 0
+}
+
+func resolveOptionMinLength(t reflect.StructField, optionType discordgo.ApplicationCommandOptionType) *int {
+	if optionType == discordgo.ApplicationCommandOptionString {
+		if min, err := strconv.Atoi(t.Tag.Get("min")); err != nil {
+			return &min
+		}
+	}
+
+	return nil
+}
+
+func resolveOptionMaxLength(t reflect.StructField, optionType discordgo.ApplicationCommandOptionType) int {
+	if optionType == discordgo.ApplicationCommandOptionString {
+		if max, err := strconv.Atoi(t.Tag.Get("max")); err != nil {
+			return max
+		}
+	}
+
+	return 0
 }

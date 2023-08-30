@@ -31,9 +31,6 @@ type MemberCommand struct {
 }
 
 func (c *MemberCommand) compileCommand(perms *CommandPermissions) (*discordgo.ApplicationCommand, commandExecuteDescriptor, error) {
-	const MEMBER = 1
-	const USER = 2
-
 	cmd := &discordgo.ApplicationCommand{
 		Type:                     discordgo.UserApplicationCommand,
 		Name:                     c.Name,
@@ -190,6 +187,9 @@ func (c *SlashCommand) inferParams(param reflect.Type) (options []*discordgo.App
 
 func (c *SlashCommand) inferFieldOption(field reflect.StructField) (*discordgo.ApplicationCommandOption, error) {
 	optionType, err := resolveCommandOptionType(field.Type)
+	if err != nil {
+		return nil, err
+	}
 
 	option := &discordgo.ApplicationCommandOption{
 		Type:         optionType,
@@ -198,10 +198,10 @@ func (c *SlashCommand) inferFieldOption(field reflect.StructField) (*discordgo.A
 		Required:     field.Tag.Get("required") == "true",
 		ChannelTypes: resolveOptionsChannelTypes(field),
 		Choices:      c.Choices[field.Name],
-		//MinValue:     nil,
-		//MaxValue:     0,
-		//MinLength:    nil,
-		//MaxLength:    0,
+		MinValue:     resolveOptionMinValue(field, optionType),
+		MaxValue:     resolveOptionMaxValue(field, optionType),
+		MinLength:    resolveOptionMinLength(field, optionType),
+		MaxLength:    resolveOptionMaxLength(field, optionType),
 	}
 
 	return option, err

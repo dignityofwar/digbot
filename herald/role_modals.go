@@ -7,7 +7,7 @@ import (
 )
 
 type EditMessageParams struct {
-	Message string
+	Message string `style:"paragraph"`
 }
 
 const createRoleMessageModalID = "herald_role_create"
