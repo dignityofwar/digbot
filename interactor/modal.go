@@ -1,6 +1,7 @@
 package interactor
 
 import (
+	"errors"
 	"github.com/bwmarrin/discordgo"
 	"log"
 )
@@ -8,13 +9,17 @@ import (
 var modalHandlers = make(map[string]*modalDescriptor)
 
 func RegisterModal(options *ModalOptions) error {
+	if _, found := modalHandlers[options.ModalID]; found {
+		return errors.New("modalID needs to be unique")
+	}
+
 	if modal, err := options.convert(); err == nil {
 		modalHandlers[options.ModalID] = modal
 	} else {
 		return err
 	}
 
-	log.Println("Registered button component: " + options.ModalID)
+	log.Println("Registered modal: " + options.ModalID)
 
 	return nil
 }

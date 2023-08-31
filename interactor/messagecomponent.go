@@ -1,6 +1,7 @@
 package interactor
 
 import (
+	"errors"
 	"github.com/bwmarrin/discordgo"
 	"log"
 	"reflect"
@@ -12,6 +13,10 @@ var messageComponentHandlers = make(map[string]*messageComponentDescriptor)
 func RegisterMessageComponent(cmp MessageComponent) error {
 	cmpValue := reflect.ValueOf(cmp).Elem()
 	cmpID := cmpValue.FieldByName("ComponentID").String()
+
+	if _, found := messageComponentHandlers[cmpID]; found {
+		return errors.New("componentID needs to be unique")
+	}
 
 	if desc, err := cmp.compileMessageComponent(); err == nil {
 		messageComponentHandlers[cmpID] = desc
