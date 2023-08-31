@@ -20,21 +20,25 @@ func RegisterCommand(cmd Command, perms *CommandPermissions) (err error) {
 		perms = &CommandPermissions{}
 	}
 
-	ap, desc, err := cmd.compileCommand(perms)
+	ac, desc, err := cmd.compileCommand(perms)
+
+	if _, found := commandHandlers[ac.Name]; found {
+		return errors.New("command name needs to be unique")
+	}
 
 	if err != nil {
 		return
 	}
 
-	res, err := discord.Discord.ApplicationCommandCreate(discord.Discord.State.User.ID, "", ap)
+	res, err := discord.Discord.ApplicationCommandCreate(discord.Discord.State.User.ID, "", ac)
 
 	if err != nil {
 		return
 	}
 
-	log.Println("Registered command: " + ap.Name + "(" + res.Version + ")")
+	log.Println("Registered command: " + ac.Name + "(" + res.Version + ")")
 
-	commandHandlers[ap.Name] = desc
+	commandHandlers[ac.Name] = desc
 
 	return
 }
