@@ -60,7 +60,7 @@ func (msg *MessageEntity) send(s *discordgo.Session, member *discordgo.Member) {
 
 		channelID = userChannel.ID
 		embed.Footer = &discordgo.MessageEmbedFooter{
-			Text:    fmt.Sprintf("Welcome message from %s", guild.Name),
+			Text:    fmt.Sprintf("Send from from %s", guild.Name),
 			IconURL: guild.IconURL("128"),
 		}
 	} else {

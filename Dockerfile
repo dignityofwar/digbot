@@ -6,12 +6,12 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY *.go ./
+COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /digbot
+RUN CGO_ENABLED=1 GOOS=linux go build -o /digbot
 
 
-FROM gcr.io/distroless/base-debian11 AS build-release-stage
+FROM gcr.io/distroless/base-debian12 as apps
 
 WORKDIR /
 

@@ -23,11 +23,7 @@ var Module = core.Module{
 	OnInit: func() {
 		log.Println("Loading config")
 
-		err := godotenv.Load()
-
-		if err != nil {
-			log.Fatalf("Failed to load dotenv")
-		}
+		godotenv.Load()
 
 		initConfigStruct(&Discord)
 		initConfigStruct(&DB)

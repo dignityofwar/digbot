@@ -7,4 +7,3 @@ services:
       - DISCORD_TOKEN
     volumes:
       - ./data:/data
-
