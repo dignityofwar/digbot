@@ -1,7 +1,7 @@
 {
   "name": "digbot",
   "private": true,
-  "version": "3.4.5",
+  "version": "4.0.0",
   "scripts": {
     "prepare": "husky install"
   },
