@@ -105,7 +105,7 @@ func (o *SelectMenuOptions) resolveType(i reflect.Type) (discordgo.SelectMenuTyp
 		return discordgo.UserSelectMenu, nil
 	case reflect.TypeOf((*discordgo.Role)(nil)):
 		return discordgo.RoleSelectMenu, nil
-	case reflect.TypeOf((*Mentionable)(nil)):
+	case reflect.TypeOf(Mentionable{}):
 		return discordgo.MentionableSelectMenu, nil
 	case reflect.TypeOf((*discordgo.Channel)(nil)):
 		return discordgo.ChannelSelectMenu, nil

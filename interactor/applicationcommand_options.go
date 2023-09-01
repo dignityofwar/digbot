@@ -26,14 +26,16 @@ type CommandOptions interface {
 //
 
 type MemberCommand struct {
-	Name     string
-	Callback any
+	Name              string
+	NameLocalizations *map[discordgo.Locale]string
+	Callback          any
 }
 
 func (c *MemberCommand) compileCommand(perms *CommandPermissions) (*discordgo.ApplicationCommand, commandExecuteDescriptor, error) {
 	cmd := &discordgo.ApplicationCommand{
 		Type:                     discordgo.UserApplicationCommand,
 		Name:                     c.Name,
+		NameLocalizations:        c.NameLocalizations,
 		DefaultMemberPermissions: perms.DefaultMemberPermissions,
 		DMPermission:             perms.DMPermission,
 		NSFW:                     perms.NSFW,
@@ -71,15 +73,16 @@ func (c *MemberCommand) compileCommand(perms *CommandPermissions) (*discordgo.Ap
 //
 
 type MessageCommand struct {
-	Name        string
-	Description string
-	Callback    any
+	Name              string
+	NameLocalizations *map[discordgo.Locale]string
+	Callback          any
 }
 
 func (c *MessageCommand) compileCommand(perms *CommandPermissions) (*discordgo.ApplicationCommand, commandExecuteDescriptor, error) {
 	cmd := &discordgo.ApplicationCommand{
 		Type:                     discordgo.MessageApplicationCommand,
 		Name:                     c.Name,
+		NameLocalizations:        c.NameLocalizations,
 		DefaultMemberPermissions: perms.DefaultMemberPermissions,
 		DMPermission:             perms.DMPermission,
 		NSFW:                     perms.NSFW,
@@ -104,10 +107,11 @@ func (c *MessageCommand) compileCommand(perms *CommandPermissions) (*discordgo.A
 //
 
 type SlashCommand struct {
-	Name        string
-	Description string
-	Callback    any
-	Choices     map[string][]*discordgo.ApplicationCommandOptionChoice
+	Name                     string
+	NameLocalizations        *map[discordgo.Locale]string
+	Description              string
+	DescriptionLocalizations *map[discordgo.Locale]string
+	Callback                 any
 }
 
 func (c *SlashCommand) compileCommand(perms *CommandPermissions) (*discordgo.ApplicationCommand, commandExecuteDescriptor, error) {
@@ -120,7 +124,9 @@ func (c *SlashCommand) compileCommand(perms *CommandPermissions) (*discordgo.App
 	cmd := &discordgo.ApplicationCommand{
 		Type:                     discordgo.ChatApplicationCommand,
 		Name:                     option.Name,
+		NameLocalizations:        c.NameLocalizations,
 		Description:              option.Description,
+		DescriptionLocalizations: c.DescriptionLocalizations,
 		DefaultMemberPermissions: perms.DefaultMemberPermissions,
 		DMPermission:             perms.DMPermission,
 		NSFW:                     perms.NSFW,
@@ -176,7 +182,7 @@ func (c *SlashCommand) inferParams(param reflect.Type) (options []*discordgo.App
 		elemValue := value.Elem()
 
 		for _, option := range options {
-			elemValue.FieldByIndex(nameToFieldMap[option.Name]).Set(castCommandOption(option, ctx.Data.Resolved))
+			setCommandOption(elemValue.FieldByIndex(nameToFieldMap[option.Name]), option, ctx.Data.Resolved)
 		}
 
 		return
@@ -192,16 +198,18 @@ func (c *SlashCommand) inferFieldOption(field reflect.StructField) (*discordgo.A
 	}
 
 	option := &discordgo.ApplicationCommandOption{
-		Type:         optionType,
-		Name:         strings.ToLower(field.Name),
-		Description:  field.Tag.Get("description"),
-		Required:     field.Tag.Get("required") == "true",
-		ChannelTypes: resolveOptionsChannelTypes(field),
-		Choices:      c.Choices[field.Name],
-		MinValue:     resolveOptionMinValue(field, optionType),
-		MaxValue:     resolveOptionMaxValue(field, optionType),
-		MinLength:    resolveOptionMinLength(field, optionType),
-		MaxLength:    resolveOptionMaxLength(field, optionType),
+		Type:                     optionType,
+		Name:                     strings.ToLower(field.Name),
+		NameLocalizations:        nil,
+		Description:              field.Tag.Get("description"),
+		DescriptionLocalizations: nil,
+		Required:                 field.Tag.Get("required") == "true",
+		ChannelTypes:             resolveOptionsChannelTypes(field),
+		Choices:                  resolveOptionChoices(field),
+		MinValue:                 resolveOptionMinValue(field, optionType),
+		MaxValue:                 resolveOptionMaxValue(field, optionType),
+		MinLength:                resolveOptionMinLength(field, optionType),
+		MaxLength:                resolveOptionMaxLength(field, optionType),
 	}
 
 	return option, err
@@ -212,9 +220,11 @@ func (c *SlashCommand) inferFieldOption(field reflect.StructField) (*discordgo.A
 //
 
 type SlashCommandGroup struct {
-	Name        string
-	Description string
-	SubCommands []CommandOptions
+	Name                     string
+	NameLocalizations        *map[discordgo.Locale]string
+	Description              string
+	DescriptionLocalizations *map[discordgo.Locale]string
+	SubCommands              []CommandOptions
 }
 
 func (c *SlashCommandGroup) compileCommand(perms *CommandPermissions) (*discordgo.ApplicationCommand, commandExecuteDescriptor, error) {
@@ -223,7 +233,9 @@ func (c *SlashCommandGroup) compileCommand(perms *CommandPermissions) (*discordg
 	cmd := &discordgo.ApplicationCommand{
 		Type:                     discordgo.ChatApplicationCommand,
 		Name:                     option.Name,
+		NameLocalizations:        c.NameLocalizations,
 		Description:              option.Description,
+		DescriptionLocalizations: c.DescriptionLocalizations,
 		Options:                  option.Options,
 		DefaultMemberPermissions: perms.DefaultMemberPermissions,
 		DMPermission:             perms.DMPermission,
@@ -262,5 +274,10 @@ func (c *SlashCommandGroup) compileOption() (*discordgo.ApplicationCommandOption
 	return option, desc, nil
 }
 
-type Ghost struct {
+//
+//
+//
+
+type choiceParam interface {
+	Choices() []*discordgo.ApplicationCommandOptionChoice
 }

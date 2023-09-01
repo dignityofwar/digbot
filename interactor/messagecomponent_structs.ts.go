@@ -48,7 +48,18 @@ func (c *messageComponentDescriptor) resolveValues(ctx *MessageComponentContext)
 	case discordgo.RoleSelectMenuComponent:
 		return reflect.ValueOf(mapToArray(ctx.Data.Resolved.Roles)), nil
 	case discordgo.MentionableSelectMenuComponent:
-		return reflect.ValueOf([]Mentionable{}), nil
+		mentionables := make([]Mentionable, len(ctx.Data.Values))
+
+		for i, id := range ctx.Data.Values {
+			mentionables[i] = Mentionable{
+				id:              id,
+				resolvedUsers:   ctx.Data.Resolved.Users,
+				resolvedMembers: ctx.Data.Resolved.Members,
+				resolvedRoles:   ctx.Data.Resolved.Roles,
+			}
+		}
+
+		return reflect.ValueOf(mentionables), nil
 	case discordgo.ChannelSelectMenuComponent:
 		return reflect.ValueOf(mapToArray(ctx.Data.Resolved.Channels)), nil
 	}
