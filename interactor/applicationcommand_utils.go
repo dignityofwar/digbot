@@ -9,6 +9,11 @@ import (
 )
 
 func resolveCommandOptionType(i reflect.Type) (optionType discordgo.ApplicationCommandOptionType, err error) {
+	if i.Kind() == reflect.String {
+		optionType = discordgo.ApplicationCommandOptionString
+		return
+	}
+
 	//TODO: Support user and members
 	switch i {
 	case reflect.TypeOf(""):
@@ -79,27 +84,31 @@ func resolveOptionsChannelTypes(f reflect.StructField) []discordgo.ChannelType {
 	return nil
 }
 
-func castCommandOption(o *discordgo.ApplicationCommandInteractionDataOption, r *discordgo.ApplicationCommandInteractionDataResolved) reflect.Value {
+func setCommandOption(v reflect.Value, o *discordgo.ApplicationCommandInteractionDataOption, r *discordgo.ApplicationCommandInteractionDataResolved) {
 	switch o.Type {
 	case discordgo.ApplicationCommandOptionString:
-		return reflect.ValueOf(o.Value)
+		v.SetString(o.Value.(string))
 	case discordgo.ApplicationCommandOptionInteger:
-		return reflect.ValueOf(int64(o.Value.(float64)))
+		v.SetInt(int64(o.Value.(float64)))
 	case discordgo.ApplicationCommandOptionBoolean:
-		return reflect.ValueOf(o.Value)
+		v.SetBool(o.Value.(bool))
 	case discordgo.ApplicationCommandOptionNumber:
-		return reflect.ValueOf(o.Value)
+		v.SetFloat(o.Value.(float64))
 	case discordgo.ApplicationCommandOptionUser:
-		return reflect.ValueOf(r.Members[o.Value.(string)])
+		v.Set(reflect.ValueOf(r.Members[o.Value.(string)]))
 	case discordgo.ApplicationCommandOptionChannel:
-		return reflect.ValueOf(r.Channels[o.Value.(string)])
+		v.Set(reflect.ValueOf(r.Channels[o.Value.(string)]))
 	case discordgo.ApplicationCommandOptionRole:
-		return reflect.ValueOf(r.Roles[o.Value.(string)])
+		v.Set(reflect.ValueOf(r.Roles[o.Value.(string)]))
 	case discordgo.ApplicationCommandOptionMentionable:
-		// TODO: Find actual value to assign
-		return reflect.ValueOf(&Mentionable{})
+		v.Set(reflect.ValueOf(&Mentionable{
+			id:              o.Value.(string),
+			resolvedUsers:   r.Users,
+			resolvedMembers: r.Members,
+			resolvedRoles:   r.Roles,
+		}))
 	case discordgo.ApplicationCommandOptionAttachment:
-		return reflect.ValueOf(r.Attachments[o.Value.(string)])
+		v.Set(reflect.ValueOf(r.Attachments[o.Value.(string)]))
 	}
 
 	panic("No idea what I am suppose to do with that type: " + o.Name)
@@ -143,4 +152,14 @@ func resolveOptionMaxLength(t reflect.StructField, optionType discordgo.Applicat
 	}
 
 	return 0
+}
+
+func resolveOptionChoices(t reflect.StructField) []*discordgo.ApplicationCommandOptionChoice {
+	if t.Type.Implements(reflect.TypeOf((*choiceParam)(nil)).Elem()) {
+		gen, _ := t.Type.MethodByName("Choices")
+
+		return gen.Func.Call(nil)[0].Interface().([]*discordgo.ApplicationCommandOptionChoice)
+	}
+
+	return nil
 }
